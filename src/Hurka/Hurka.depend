@@ -1567,3 +1567,10 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
+1517414742 source:c:\github\lumo\src\hurka\src\core.cpp
+	<stdlib.h>
+	<iostream>
+	<string>
+	<SFML/Graphics.hpp>
+	<chrono>
+
