@@ -39,9 +39,18 @@ public:
         for(int y = 0; y < 600; y+=25)
         {
             float yF = y;
-            sprite.setPosition({0,yF});
-            rt.draw(sprite);
+            float xF = 0.f;
 
+            sprite.setPosition({0,yF});
+
+            for(int x = 0; x < 800; x+=32)
+            {
+                yF += 14;   // Go down a bit so we get diagonal, isometric drawing
+                xF = x;
+
+                sprite.setPosition({xF, yF});
+                rt.draw(sprite);
+            }
 
         }
 
@@ -213,7 +222,8 @@ private:
 int main()
 {
     // Setup Window
-    RenderWindow window(sf::VideoMode(800, 600), "Hurkalumo Editor 0.1-alpha", Style::Fullscreen);
+    // , Style::Fullscreen);
+    RenderWindow window(sf::VideoMode(800, 600), "Hurkalumo Editor 0.1-alpha");
 
 
 
