@@ -9,23 +9,139 @@
 using namespace sf;
 
 
+/// WORDS FOR LUMOHURKA
+///
+/// isometric matrix:           The matrix of size N,M that is the gamespace, where all the things fit onto
+///
+
+
 
 /// //////////////////////////////////////////////
 /// Globals
 
+const int SPRITE_HEIGHT = 64;
+const int SPRITE_WIDTH  = 64;
+
+
+
+
+/// //////////////////////////////////////////////
+/// (--) GameMatrix
+/// 64 x 32 pixels
+
+class GameMatrix
+{
+public:
+    GameMatrix(int _height, int _width)
+    {
+        height = _height;
+        width = _width;
+
+        if( (height%2 != 0) || (width%2 != 0)) {
+            std::cout << "Warning! GameMatrix height Not divisible by 2! \n";
+        }
+    }
+
+    int getWidth()
+    {
+        return width;
+    }
+
+    int getHeight()
+    {
+        return height;
+    }
+
+    static int getWindowXPos(int cellWidthPosition, int cellHeightPosition)
+    {
+
+        //            1                                      0
+        //                        * 64                                * 64  /2
+
+
+        return cellWidthPosition * SPRITE_WIDTH;// - (cellWidthPosition * SPRITE_HEIGHT/2);
+
+    }
+
+    static int getWindowYPos(int cellWidthPosition, int cellHeightPosition)
+    {
+        return cellHeightPosition * SPRITE_HEIGHT + (cellWidthPosition * SPRITE_WIDTH / 2);// - (cellWidthPosition * SPRITE_HEIGHT/2);
+    }
+
+
+
+private:
+    int width;
+    int height;
+};
+
+
+
+/// //////////////////////////////////////////////
+/// (--) House
+/// 64 x 32 pixels
+
+class House
+{
+public:
+    House(const Vector2f& _pos, int textureID)
+        :
+        pos(_pos)
+    {
+        switch(textureID)
+        {
+        case 1:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_001.png");
+            break;
+        case 2:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_002.png");
+            break;
+        default:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TEMPLATE.png");
+            break;
+
+        }
+
+        sprite = Sprite(texture);
+    }
+
+
+    void draw( RenderTarget& rt)
+    {
+        // haha this will be hell to figure out
+        // I need functions for getting the X,Y of the [N,M]th position in the matrix
+        int x = GameMatrix::getWindowXPos(pos.x,1);
+        int y = GameMatrix::getWindowYPos(pos.y,1);
+        Vector2f pos = {(float)x,(float)y};
+        sprite.setPosition(pos);
+        rt.draw(sprite);
+
+
+
+    }
+
+
+private:
+    Texture texture;
+    Sprite sprite;
+    Vector2f pos;
+    const int width = 64;
+    const int height = 32;
+};
 
 
 
 
 /// //////////////////////////////////////////////
 /// Grid on the ground
+/// 64 x 32 pixels
 
 class Grid
 {
 public:
     Grid(void)
     {
-        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID.png");
+        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_1.png");
         sprite = Sprite(texture);
     }
 
@@ -36,16 +152,21 @@ public:
         // I need functions for getting the X,Y of the [N,M]th position in the matrix
 
 
-        for(int y = 0; y < 600; y+=25)
+        // Use a function to figure out what the REAL window X,Y is
+        // given the position inside the Isometric Matrix
+
+
+        for(int y = 0; y < 600; y+=height)
         {
             float yF = y;
             float xF = 0.f;
 
             sprite.setPosition({0,yF});
 
-            for(int x = 0; x < 800; x+=32)
+            for(int x = 0; x < 800; x+=width)
             {
-                yF += 14;   // Go down a bit so we get diagonal, isometric drawing
+                //yF += floor(height/2);   // Go down a bit so we get diagonal, isometric drawing
+                yF += height;
                 xF = x;
 
                 sprite.setPosition({xF, yF});
@@ -60,6 +181,8 @@ public:
 private:
     Texture texture;
     Sprite sprite;
+    const int width = 64;
+    const int height = 32;
 };
 
 
@@ -158,10 +281,6 @@ private:
                                 // 1 = show the top one (unpressed)
                                 // 0 = show the one below (pressed)
 
-
-
-
-
     const int nrButtons = 6;
     const int widthPx = 16;
 };
@@ -232,6 +351,9 @@ int main()
     Locomotive loco({10.0f, 10.0f});
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid;
+    House house001({1,1},1);
+    House house002({2,1},2);
+    House house003({3,1},3);
 
     // Setup timing
     auto tp = std::chrono::steady_clock::now();
@@ -308,10 +430,10 @@ int main()
                 dir.x -= 1.0f;
             }
             if(belowof) {
-                dir.y += 1.0f;
+                dir.y += 0.5f;
             }
             if(topof) {
-                dir.y -= 1.0f;
+                dir.y -= 0.5f;
             }
 
             // if we are right of the object
@@ -331,9 +453,14 @@ int main()
         window.clear({198, 198, 198});
 
         // Draw sprites
-        loco.draw(window);
-        toolbarTop.draw(window);
         grid.draw(window);
+        loco.draw(window);
+        house001.draw(window);
+        house002.draw(window);
+        house003.draw(window);
+
+
+        toolbarTop.draw(window);
 
 
         window.display();
