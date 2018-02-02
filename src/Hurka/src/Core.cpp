@@ -52,20 +52,46 @@ public:
         return height;
     }
 
-    static int getWindowXPos(int cellWidthPosition, int cellHeightPosition)
+    // (--)
+    // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
+    static int getWindowXPos(int N, int M)
     {
 
-        //            1                                      0
-        //                        * 64                                * 64  /2
+        int initialXOffset = 400;   // Start in the middle
 
 
-        return cellWidthPosition * SPRITE_WIDTH;// - (cellWidthPosition * SPRITE_HEIGHT/2);
 
+
+        /// N = Width index in the grid
+        /// M = Height index in the grid
+
+        /// Calculate the X-offset
+        // intialXOffset - where we are in the height=M index TIMES the sprite_width/2
+        int xOffset = initialXOffset - M*(SPRITE_WIDTH/2);
+
+
+        // now for every step to the right=N index we have to go right a bit
+        int xStep = N*(SPRITE_WIDTH/2);
+
+        if(M>0) {
+
+        }
+
+
+        return xOffset + xStep;
     }
 
-    static int getWindowYPos(int cellWidthPosition, int cellHeightPosition)
+    // (--)
+    // DOCS: see "GameMatrix_How_the_y_position_is_calculated.png"
+    static int getWindowYPos(int N, int M)
     {
-        return cellHeightPosition * SPRITE_HEIGHT + (cellWidthPosition * SPRITE_WIDTH / 2);// - (cellWidthPosition * SPRITE_HEIGHT/2);
+        int initialYOffset = 0;     // Start at the top
+
+        int yOffset = initialYOffset;
+
+        int yStep = (M*SPRITE_HEIGHT/4) + (N*SPRITE_HEIGHT/4);
+
+        return yOffset + yStep;
     }
 
 
@@ -73,21 +99,26 @@ public:
 private:
     int width;
     int height;
+
+
+
 };
 
 
 
 /// //////////////////////////////////////////////
 /// (--) House
-/// 64 x 32 pixels
+/// 64 x 64 pixels
 
 class House
 {
 public:
-    House(const Vector2f& _pos, int textureID)
+    House(const Vector2f& _pos, int _textureID)
         :
         pos(_pos)
     {
+        textureID = _textureID;
+
         switch(textureID)
         {
         case 1:
@@ -95,6 +126,12 @@ public:
             break;
         case 2:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_002.png");
+            break;
+        case 3:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_003.png");
+            break;
+        case 4:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_004.png");
             break;
         default:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TEMPLATE.png");
@@ -108,25 +145,28 @@ public:
 
     void draw( RenderTarget& rt)
     {
-        // haha this will be hell to figure out
-        // I need functions for getting the X,Y of the [N,M]th position in the matrix
-        int x = GameMatrix::getWindowXPos(pos.x,1);
-        int y = GameMatrix::getWindowYPos(pos.y,1);
+
+        /*std::cout << "---------------------------------------\n";
+        std::cout << "ID: " << textureID << "\n";
+        std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << GameMatrix::getWindowXPos(pos.x,pos.y) << "\n";
+        std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << GameMatrix::getWindowYPos(pos.x,pos.y) << "\n";
+        */
+
+        int x = GameMatrix::getWindowXPos(pos.x,pos.y);
+        int y = GameMatrix::getWindowYPos(pos.x,pos.y);
         Vector2f pos = {(float)x,(float)y};
         sprite.setPosition(pos);
         rt.draw(sprite);
-
-
 
     }
 
 
 private:
+    int textureID;
     Texture texture;
     Sprite sprite;
     Vector2f pos;
-    const int width = 64;
-    const int height = 32;
+
 };
 
 
@@ -344,6 +384,8 @@ int main()
     // , Style::Fullscreen);
     RenderWindow window(sf::VideoMode(800, 600), "Hurkalumo Editor 0.1-alpha");
 
+window.setFramerateLimit(60);
+
 
 
 
@@ -351,12 +393,29 @@ int main()
     Locomotive loco({10.0f, 10.0f});
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid;
-    House house001({1,1},1);
-    House house002({2,1},2);
-    House house003({3,1},3);
+
+
+
+//                  N M
+//                  X Y
+    House house001({0,0},1);
+    House house002({1,0},1);
+    House house003({2,0},1);
+
+    House house004({0,0},3);
+    House house005({0,1},3);
+    House house006({0,2},3);
+
+    House house007({1,1},4);
+    House house008({2,1},4);
+    House house009({3,1},4);
 
     // Setup timing
     auto tp = std::chrono::steady_clock::now();
+
+
+
+
 
 
 
@@ -402,6 +461,7 @@ int main()
 
             // if (toolbarTop.within(mousePos_i.x, mousepPos_i.y) { pushbutton(x,y));
             toolbarTop.pushButton(0); // debug test
+
 
             bool rightof = false;
             bool belowof = false;
@@ -455,9 +515,25 @@ int main()
         // Draw sprites
         grid.draw(window);
         loco.draw(window);
+
+
+
+        /// Add these to a list
+        /// Go over which order they should be drawn in
+        /// Assign them renderorder
+
         house001.draw(window);
         house002.draw(window);
         house003.draw(window);
+
+        house004.draw(window);
+        house005.draw(window);
+        house006.draw(window);
+
+        house007.draw(window);
+        house008.draw(window);
+        house009.draw(window);
+
 
 
         toolbarTop.draw(window);
