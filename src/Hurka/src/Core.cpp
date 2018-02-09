@@ -26,20 +26,31 @@ const int SPRITE_WIDTH  = 64;
 
 
 /// //////////////////////////////////////////////
-/// (--) GameMatrix
-/// 64 x 32 pixels
+/// (--) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
+/// Maaaaaaaaaaan. Cant it just be a grid of grass first to make things easy?
+///
+
 
 class GameMatrix
 {
 public:
-    GameMatrix(int _height, int _width)
+
+    GameMatrix(int _height, int _width, int _textureID)
     {
         height = _height;
         width = _width;
+        textureID = _textureID;
+
+
+        // Hardcoded for now
+        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_1.png");
+        sprite = Sprite(texture);
 
         if( (height%2 != 0) || (width%2 != 0)) {
             std::cout << "Warning! GameMatrix height Not divisible by 2! \n";
         }
+
+
     }
 
     int getWidth()
@@ -58,8 +69,6 @@ public:
     {
 
         int initialXOffset = 400;   // Start in the middle
-
-
 
 
         /// N = Width index in the grid
@@ -95,13 +104,56 @@ public:
     }
 
 
+    void draw( RenderTarget& rt)
+    {
+        int x = 0;
+        int y = 0;
+
+        // What a bunny brained idea!
+        for(int M= 0; M<height; M++){
+            for(int N= 0; N < width; N++) {
+
+                x = GameMatrix::getWindowXPos(N,M);
+                y = GameMatrix::getWindowYPos(N,M);
+                Vector2f pos = {(float)x,(float)y};
+
+                sprite.setPosition(pos);
+                rt.draw(sprite);
+            }
+
+        }
+
+        /*
+
+        for(int y = 0; y < 600; y+=height)
+        {
+            float yF = y;
+            float xF = 0.f;
+
+            sprite.setPosition({0,yF});
+
+            for(int x = 0; x < 800; x+=width)
+            {
+                //yF += floor(height/2);   // Go down a bit so we get diagonal, isometric drawing
+                yF += height;
+                xF = x;
+
+                sprite.setPosition({xF, yF});
+                rt.draw(sprite);
+            }
+
+        }*/
+
+    }
+
+
 
 private:
     int width;
     int height;
-
-
-
+    int textureID;
+    Sprite sprite;
+    Texture texture;
 };
 
 
@@ -173,14 +225,15 @@ private:
 
 
 /// //////////////////////////////////////////////
-/// Grid on the ground
-/// 64 x 32 pixels
+/// Grid
 
 class Grid
 {
 public:
-    Grid(void)
+    Grid(int _height, int _width)
     {
+        width = _width;
+        height = _height;
         texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_1.png");
         sprite = Sprite(texture);
     }
@@ -196,6 +249,25 @@ public:
         // given the position inside the Isometric Matrix
 
 
+        int x = 0;
+        int y = 0;
+
+        // What a bunny brained idea!
+        for(int M= 0; M<height; M++){
+            for(int N= 0; N < width; N++) {
+
+                x = GameMatrix::getWindowXPos(N,M);
+                y = GameMatrix::getWindowYPos(N,M);
+                Vector2f pos = {(float)x,(float)y};
+
+                sprite.setPosition(pos);
+                rt.draw(sprite);
+            }
+
+        }
+
+
+/*
         for(int y = 0; y < 600; y+=height)
         {
             float yF = y;
@@ -214,6 +286,8 @@ public:
             }
 
         }
+        2018-02-09
+        */
 
     }
 
@@ -221,8 +295,8 @@ public:
 private:
     Texture texture;
     Sprite sprite;
-    const int width = 64;
-    const int height = 32;
+    int width;
+    int height;
 };
 
 
@@ -384,15 +458,23 @@ int main()
     // , Style::Fullscreen);
     RenderWindow window(sf::VideoMode(800, 600), "Hurkalumo Editor 0.1-alpha");
 
-window.setFramerateLimit(60);
+    //window.setFramerateLimit(60);
+
+    int GAME_WIDTH = 64;
+    int GAME_HEIGHT = 64;
 
 
-
-
+    // What to draw
+    bool drawGm = true;
+    bool drawLoco = true;
+    bool drawToolbar = true;
+    bool drawGrid = true;
+    bool drawHouses = true;
     // Setup objects
+    GameMatrix gm({GAME_HEIGHT,GAME_WIDTH,1});
     Locomotive loco({10.0f, 10.0f});
     Toolbar toolbarTop({260.0f, 0.0f});
-    Grid grid;
+    Grid grid(GAME_HEIGHT, GAME_WIDTH);
 
 
 
@@ -415,6 +497,13 @@ window.setFramerateLimit(60);
 
 
 
+
+
+    drawGm = true;
+    drawLoco = false;
+    drawToolbar = false;
+    drawGrid = true;
+    drawHouses = false;
 
 
 
@@ -512,31 +601,35 @@ window.setFramerateLimit(60);
         /// Render
         window.clear({198, 198, 198});
 
-        // Draw sprites
-        grid.draw(window);
-        loco.draw(window);
+
+    // Setup objects
 
 
+        // Draw the game board
+        if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
+        if(drawGrid) {  grid.draw(window); } // If we want a visible grid to know the borders of each cell
+        if(drawLoco) {  loco.draw(window); }
+        if(drawHouses) {
 
-        /// Add these to a list
-        /// Go over which order they should be drawn in
-        /// Assign them renderorder
+            /// Add these to a list
+            /// Go over which order they should be drawn in
+            /// Assign them renderorder
 
-        house001.draw(window);
-        house002.draw(window);
-        house003.draw(window);
+            house001.draw(window);
+            house002.draw(window);
+            house003.draw(window);
 
-        house004.draw(window);
-        house005.draw(window);
-        house006.draw(window);
+            house004.draw(window);
+            house005.draw(window);
+            house006.draw(window);
 
-        house007.draw(window);
-        house008.draw(window);
-        house009.draw(window);
+            house007.draw(window);
+            house008.draw(window);
+            house009.draw(window);
 
+        }
 
-
-        toolbarTop.draw(window);
+        if(drawToolbar) {   toolbarTop.draw(window); }
 
 
         window.display();
