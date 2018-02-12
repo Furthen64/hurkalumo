@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 
+// TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
+
 
 using namespace sf;
 
@@ -19,14 +21,14 @@ using namespace sf;
 /// //////////////////////////////////////////////
 /// Globals
 
-const int SPRITE_HEIGHT = 64;
-const int SPRITE_WIDTH  = 64;
+const int GRID_HEIGHT = 64;
+const int GRID_WIDTH  = 64;
 
 
 
 
 /// //////////////////////////////////////////////
-/// (--) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
+/// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
 /// Maaaaaaaaaaan. Cant it just be a grid of grass first to make things easy?
 ///
 
@@ -63,9 +65,13 @@ public:
         return height;
     }
 
-    // (--)
+    // (-+)
     // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
-    static int getWindowXPos(int N, int M)
+    // N = along the width axis
+    // M = along the height axis of the gameboard
+    // width = width of the texture
+    // height = height of the texture
+    static int getWindowXPos(int N, int M, int width, int height)
     {
 
         int initialXOffset = 400;   // Start in the middle
@@ -76,15 +82,13 @@ public:
 
         /// Calculate the X-offset
         // intialXOffset - where we are in the height=M index TIMES the sprite_width/2
-        int xOffset = initialXOffset - M*(SPRITE_WIDTH/2);
+        int xOffset = initialXOffset - M*(GRID_WIDTH/2);
 
 
         // now for every step to the right=N index we have to go right a bit
-        int xStep = N*(SPRITE_WIDTH/2);
 
-        if(M>0) {
-
-        }
+        // TODO: adjust for small width textures! all mine are 64 so... I need more examples
+        int xStep = N*(width/2);
 
 
         return xOffset + xStep;
@@ -92,18 +96,45 @@ public:
 
     // (--)
     // DOCS: see "GameMatrix_How_the_y_position_is_calculated.png"
-    static int getWindowYPos(int N, int M)
+    // N = along the width axis
+    // M = along the height axis of the gameboard
+    // width = width of the texture
+    // height = height of the texture
+    static int getWindowYPos(int N, int M, int width, int height)
     {
         int initialYOffset = 0;     // Start at the top
 
         int yOffset = initialYOffset;
 
-        int yStep = (M*SPRITE_HEIGHT/4) + (N*SPRITE_HEIGHT/4);
+
+
+        int yStep = 0;
+
+        if(height < GRID_HEIGHT) {
+            // Smaller, IF the sprite height is less than the 64 GRID height we have to move it down
+            // the division by 4 is now division by 2
+
+            //std::cout << "Texture height: " << height << "  kod (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/2); \n";
+            //std::cout << "M=" << M << ", N=" << N << "\n";
+
+            yStep = (M*GRID_HEIGHT/2) + (N*GRID_HEIGHT/4);
+
+        } else if(height > GRID_HEIGHT) {
+            // Taller, like high buildings, make sure you start drawing HIGHER (lower y value)
+            yStep = (M*GRID_HEIGHT/4) - (N*GRID_HEIGHT/4);
+
+        } else {
+            // (++)
+            // Equal to the grid size
+            yStep = (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
+        }
+
 
         return yOffset + yStep;
     }
 
 
+    // (-+)
     void draw( RenderTarget& rt)
     {
         int x = 0;
@@ -113,8 +144,8 @@ public:
         for(int M= 0; M<height; M++){
             for(int N= 0; N < width; N++) {
 
-                x = GameMatrix::getWindowXPos(N,M);
-                y = GameMatrix::getWindowYPos(N,M);
+                x = GameMatrix::getWindowXPos(N,M, GRID_WIDTH, GRID_HEIGHT);
+                y = GameMatrix::getWindowYPos(N,M, GRID_WIDTH, GRID_HEIGHT);
                 Vector2f pos = {(float)x,(float)y};
 
                 sprite.setPosition(pos);
@@ -159,13 +190,13 @@ private:
 
 
 /// //////////////////////////////////////////////
-/// (--) House
-/// 64 x 64 pixels
+/// (--) Block
+/// ? x ? pixels        Auto adjusted where its positioned for drawing based upon its texture resolution
 
-class House
+class Block
 {
 public:
-    House(const Vector2f& _pos, int _textureID)
+    Block(const Vector2f& _pos, int _textureID)
         :
         pos(_pos)
     {
@@ -185,13 +216,28 @@ public:
         case 4:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_004.png");
             break;
+        case 5:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_005.png");
+            break;
+        case 6:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_006.png");
+            break;
         default:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TEMPLATE.png");
             break;
 
         }
 
+
         sprite = Sprite(texture);
+
+
+
+        textureSize = sprite.getTextureRect();
+
+
+        std::cout << "height= " << textureSize.height << ", width=" << textureSize.width << "\n";
+
     }
 
 
@@ -204,12 +250,11 @@ public:
         std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << GameMatrix::getWindowYPos(pos.x,pos.y) << "\n";
         */
 
-        int x = GameMatrix::getWindowXPos(pos.x,pos.y);
-        int y = GameMatrix::getWindowYPos(pos.x,pos.y);
+        int x = GameMatrix::getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height);
+        int y = GameMatrix::getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height);
         Vector2f pos = {(float)x,(float)y};
         sprite.setPosition(pos);
         rt.draw(sprite);
-
     }
 
 
@@ -218,6 +263,7 @@ private:
     Texture texture;
     Sprite sprite;
     Vector2f pos;
+    IntRect textureSize;
 
 };
 
@@ -226,6 +272,7 @@ private:
 
 /// //////////////////////////////////////////////
 /// Grid
+// The grid follows the static grid size of 64 x 64 px
 
 class Grid
 {
@@ -256,8 +303,8 @@ public:
         for(int M= 0; M<height; M++){
             for(int N= 0; N < width; N++) {
 
-                x = GameMatrix::getWindowXPos(N,M);
-                y = GameMatrix::getWindowYPos(N,M);
+                x = GameMatrix::getWindowXPos(N,M, GRID_WIDTH, GRID_HEIGHT);
+                y = GameMatrix::getWindowYPos(N,M, GRID_WIDTH, GRID_HEIGHT);
                 Vector2f pos = {(float)x,(float)y};
 
                 sprite.setPosition(pos);
@@ -267,27 +314,6 @@ public:
         }
 
 
-/*
-        for(int y = 0; y < 600; y+=height)
-        {
-            float yF = y;
-            float xF = 0.f;
-
-            sprite.setPosition({0,yF});
-
-            for(int x = 0; x < 800; x+=width)
-            {
-                //yF += floor(height/2);   // Go down a bit so we get diagonal, isometric drawing
-                yF += height;
-                xF = x;
-
-                sprite.setPosition({xF, yF});
-                rt.draw(sprite);
-            }
-
-        }
-        2018-02-09
-        */
 
     }
 
@@ -469,7 +495,7 @@ int main()
     bool drawLoco = true;
     bool drawToolbar = true;
     bool drawGrid = true;
-    bool drawHouses = true;
+    bool drawBlocks = true;
     // Setup objects
     GameMatrix gm({GAME_HEIGHT,GAME_WIDTH,1});
     Locomotive loco({10.0f, 10.0f});
@@ -480,17 +506,18 @@ int main()
 
 //                  N M
 //                  X Y
-    House house001({0,0},1);
-    House house002({1,0},1);
-    House house003({2,0},1);
+    Block house001({0,0},1);
+    Block house002({2,0},1);
+    Block house003({4,0},1);
 
-    House house004({0,0},3);
-    House house005({0,1},3);
-    House house006({0,2},3);
+    Block road001({0,2},5);
+    Block road002({2,2},5);
+    Block road003({4,2},5);
 
-    House house007({1,1},4);
-    House house008({2,1},4);
-    House house009({3,1},4);
+    Block tallhouse001({0,4},1);
+    Block tallhouse002({2,4},1);
+    Block tallhouse003({4,4},1);
+
 
     // Setup timing
     auto tp = std::chrono::steady_clock::now();
@@ -503,7 +530,7 @@ int main()
     drawLoco = false;
     drawToolbar = false;
     drawGrid = true;
-    drawHouses = false;
+    drawBlocks = true;
 
 
 
@@ -609,7 +636,7 @@ int main()
         if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
         if(drawGrid) {  grid.draw(window); } // If we want a visible grid to know the borders of each cell
         if(drawLoco) {  loco.draw(window); }
-        if(drawHouses) {
+        if(drawBlocks) {
 
             /// Add these to a list
             /// Go over which order they should be drawn in
@@ -619,13 +646,13 @@ int main()
             house002.draw(window);
             house003.draw(window);
 
-            house004.draw(window);
-            house005.draw(window);
-            house006.draw(window);
+            road001.draw(window);
+            road002.draw(window);
+            road003.draw(window);
 
-            house007.draw(window);
-            house008.draw(window);
-            house009.draw(window);
+            tallhouse001.draw(window);
+            tallhouse002.draw(window);
+            tallhouse003.draw(window);
 
         }
 
