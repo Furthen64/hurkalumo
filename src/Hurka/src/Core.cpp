@@ -114,14 +114,11 @@ public:
             // Smaller, IF the sprite height is less than the 64 GRID height we have to move it down
             // the division by 4 is now division by 2
 
-            //std::cout << "Texture height: " << height << "  kod (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/2); \n";
-            //std::cout << "M=" << M << ", N=" << N << "\n";
-
-            yStep = (M*GRID_HEIGHT/2) + (N*GRID_HEIGHT/4);
+            yStep =  (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
 
         } else if(height > GRID_HEIGHT) {
             // Taller, like high buildings, make sure you start drawing HIGHER (lower y value)
-            yStep = (M*GRID_HEIGHT/4) - (N*GRID_HEIGHT/4);
+             yStep = (M*GRID_HEIGHT/4) - (N*GRID_HEIGHT/4);
 
         } else {
             // (++)
@@ -486,6 +483,8 @@ int main()
 
     //window.setFramerateLimit(60);
 
+
+    // Nr of Cells on the grid
     int GAME_WIDTH = 64;
     int GAME_HEIGHT = 64;
 
@@ -506,13 +505,32 @@ int main()
 
 //                  N M
 //                  X Y
+
     Block house001({0,0},1);
     Block house002({2,0},1);
     Block house003({4,0},1);
 
-    Block road001({0,2},5);
-    Block road002({2,2},5);
-    Block road003({4,2},5);
+
+
+
+/// ROADS
+
+
+    Block road001({0,0},5);
+    Block road002({1,0},5);
+    Block road003({2,0},5);
+
+    Block road004({0,1},5);
+    Block road005({1,1},5);
+    Block road006({2,1},5);
+
+    Block road007({0,2},5);
+    Block road008({1,2},5);
+    Block road009({2,2},5);
+
+    Block road010({0,3},5);
+    Block road011({1,3},5);
+    Block road012({2,3},5);
 
     Block tallhouse001({0,4},1);
     Block tallhouse002({2,4},1);
@@ -634,7 +652,7 @@ int main()
 
         // Draw the game board
         if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
-        if(drawGrid) {  grid.draw(window); } // If we want a visible grid to know the borders of each cell
+
         if(drawLoco) {  loco.draw(window); }
         if(drawBlocks) {
 
@@ -650,11 +668,25 @@ int main()
             road002.draw(window);
             road003.draw(window);
 
+            road004.draw(window);
+            road005.draw(window);
+            road006.draw(window);
+
+            road007.draw(window);
+            road008.draw(window);
+            road009.draw(window);
+
+            road010.draw(window);
+            road011.draw(window);
+            road012.draw(window);
+
             tallhouse001.draw(window);
             tallhouse002.draw(window);
             tallhouse003.draw(window);
 
         }
+
+        if(drawGrid) {  grid.draw(window); } // If we want a visible grid to know the borders of each cell
 
         if(drawToolbar) {   toolbarTop.draw(window); }
 
