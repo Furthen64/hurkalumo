@@ -1,9 +1,13 @@
 #include <stdlib.h>
 #include <iostream>
+#include <unordered_map>
 #include <string>
 #include <math.h>
 #include <SFML/Graphics.hpp>
 #include <chrono>
+
+
+
 
 // TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
 
@@ -29,7 +33,7 @@ const int GRID_WIDTH  = 64;
 
 /// //////////////////////////////////////////////
 /// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
-/// Maaaaaaaaaaan. Cant it just be a grid of grass first to make things easy?
+/// Or something. Haven't decided yet.
 ///
 
 
@@ -186,23 +190,25 @@ private:
 
 
 
-/// //////////////////////////////////////////////
-/// (--) Block
-/// ? x ? pixels        Auto adjusted where its positioned for drawing based upon its texture resolution
-
-class Block
+// (--)
+class TextureManager
 {
 public:
-    Block(const Vector2f& _pos, int _textureID)
-        :
-        pos(_pos)
-    {
-        textureID = _textureID;
 
-        switch(textureID)
-        {
-        case 1:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_001.png");
+    TextureManager()
+    {
+
+        Texture txt;
+
+        txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_001.png");
+        pushTexture("HOUSE001", txt);
+
+        /*txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_009.png");
+        pushTexture("HOUSE009", txt);
+*/
+
+/*
+
             break;
         case 2:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_002.png");
@@ -214,15 +220,76 @@ public:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_004.png");
             break;
         case 5:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_005.png");
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_001.png");
             break;
         case 6:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_006.png");
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_009.png");
+            break;
+        case 7:
+            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_001.png");
             break;
         default:
             texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TEMPLATE.png");
             break;
+        }
+        */
 
+    };
+
+    void pushTexture(std::string _name, Texture _texture)
+    {
+        textureMap.insert( {_name, _texture});
+    }
+
+    Texture getTexture(std::string _key)
+    {
+        return textureMap[_key];
+    }
+
+    //(--)
+    bool applyTexture(std::string textureName, Texture *texture)
+    {
+        bool result = false;
+
+        std::unordered_map<std::string, Texture>::const_iterator got = textureMap.find(textureName);
+
+        if(got == textureMap.end()) {
+            std::cout << "applyTexture not found texture: \"" << textureName << "\"\n";
+        } else {
+            // Dereference our *texture and set it to the texture we have loaded into the hashmap
+            (*texture) = textureMap[textureName];
+            result = true;
+        }
+
+        return result;
+    }
+
+
+private:
+
+    std::unordered_map<std::string,Texture> textureMap;
+
+
+};
+
+
+/// //////////////////////////////////////////////
+/// (--) Block
+/// ? x ? pixels        Auto adjusted where its positioned for drawing based upon its texture resolution
+
+class Block
+{
+public:
+    Block(const Vector2f& _pos, std::string _textureName, TextureManager *textureMgr)
+        :
+        pos(_pos)
+    {
+
+        bool result = textureMgr->applyTexture(_textureName, &texture);
+
+        if(!result) {
+                std::cout << "ERROR Block creation, cannot find texture \"" << _textureName << "\".\n";
+            return ;
         }
 
 
@@ -500,41 +567,31 @@ int main()
     Locomotive loco({10.0f, 10.0f});
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
-
+    TextureManager textureMgr;
 
 
 //                  N M
 //                  X Y
 
-    Block house001({0,0},1);
-    Block house002({2,0},1);
-    Block house003({4,0},1);
 
-
-
+    Block house001({0,0},std::string("HOUSE001"), &textureMgr);
+    /*Block house002({2,0},std::string("HOUSE001"), &textureMgr);
+    Block house003({4,0},std::string("HOUSE001"), &textureMgr);*/
 
 /// ROADS
 
 
-    Block road001({0,0},5);
-    Block road002({1,0},5);
-    Block road003({2,0},5);
+/*    Block road001({0,2},5);
+    Block road002({2,2},5);
+    Block road003({4,2},5);
 
-    Block road004({0,1},5);
-    Block road005({1,1},5);
-    Block road006({2,1},5);
 
-    Block road007({0,2},5);
-    Block road008({1,2},5);
-    Block road009({2,2},5);
 
-    Block road010({0,3},5);
-    Block road011({1,3},5);
-    Block road012({2,3},5);
 
-    Block tallhouse001({0,4},1);
-    Block tallhouse002({2,4},1);
-    Block tallhouse003({4,4},1);
+    Block tree001({0,4},7);
+    Block tree002({2,4},7);
+    Block tree003({4,4},7);
+*/
 
 
     // Setup timing
@@ -644,7 +701,7 @@ int main()
 
 
         /// Render
-        window.clear({198, 198, 198});
+        window.clear({0, 0, 0});
 
 
     // Setup objects
@@ -661,28 +718,18 @@ int main()
             /// Assign them renderorder
 
             house001.draw(window);
-            house002.draw(window);
-            house003.draw(window);
-
+/*            house002.draw(window);
+            house003.draw(window);*/
+/*
             road001.draw(window);
             road002.draw(window);
             road003.draw(window);
 
-            road004.draw(window);
-            road005.draw(window);
-            road006.draw(window);
 
-            road007.draw(window);
-            road008.draw(window);
-            road009.draw(window);
-
-            road010.draw(window);
-            road011.draw(window);
-            road012.draw(window);
-
-            tallhouse001.draw(window);
-            tallhouse002.draw(window);
-            tallhouse003.draw(window);
+            tree001.draw(window);
+            tree002.draw(window);
+            tree003.draw(window);
+*/
 
         }
 
