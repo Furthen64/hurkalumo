@@ -38,8 +38,8 @@ void Block::draw( RenderTarget& rt)
     std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << GameMatrix::getWindowYPos(pos.x,pos.y) << "\n";
     */
 
-    int x = GameMatrix::getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height);
-    int y = GameMatrix::getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height);
+    int x = getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height);
+    int y = getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height);
     Vector2f pos = {(float)x,(float)y};
     sprite.setPosition(pos);
     rt.draw(sprite);

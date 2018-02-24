@@ -78,26 +78,21 @@ int main()
 //                  X Y
 
 
-    Block house001({0,0},"ROAD001", &textureMgr);
+    Block house001({0,0},"HOUSE001", &textureMgr);
+    Block house002({2,0},"HOUSE001", &textureMgr);
+    Block house003({4,0},"HOUSE001", &textureMgr);
 
-    /*Block house002({2,0},std::string("HOUSE001"), &textureMgr);
-    Block house003({4,0},std::string("HOUSE001"), &textureMgr);*/
+    Block road001({0,1},"ROAD001", &textureMgr);
+    Block road002({2,1},"ROAD001", &textureMgr);
+    Block road003({4,1},"ROAD001", &textureMgr);
 
-/// ROADS
+    Block road004({0,2},"ROAD002", &textureMgr);
+    Block road005({2,2},"ROAD002", &textureMgr);
+    Block road006({4,2},"ROAD002", &textureMgr);
 
-
-
-    /*Block road001({0,0},"ROAD001", &textureMgr);
-    Block road002({0,0},"ROAD001", &textureMgr);
-    Block road003({0,0},"ROAD001", &textureMgr);
-
-    Block road004({2,3},"ROAD002", &textureMgr);
-    Block road005({2,4},"ROAD002", &textureMgr);
-    Block road006({2,5},"ROAD002", &textureMgr);
-
-    Block tree001({0,6},"TREE001", &textureMgr);
-    Block tree002({2,6},"TREE001", &textureMgr);
-    Block tree003({4,6},"TREE001", &textureMgr);*/
+    Block tree001({0,3},"TREE001", &textureMgr);
+    Block tree002({2,3},"TREE001", &textureMgr);
+    Block tree003({4,3},"TREE001", &textureMgr);
 
 
     // Setup timing
@@ -108,8 +103,8 @@ int main()
 
 
     drawGm = true;
-    drawLoco = false;
-    drawToolbar = false;
+    drawLoco = true;
+    drawToolbar = true;
     drawGrid = true;
     drawBlocks = true;
 
@@ -224,9 +219,9 @@ int main()
             /// Assign them renderorder
 
             house001.draw(window);
-/*            house002.draw(window);
-            house003.draw(window);*/
-/*
+            house002.draw(window);
+            house003.draw(window);
+
             road001.draw(window);
             road002.draw(window);
             road003.draw(window);
@@ -239,7 +234,7 @@ int main()
             tree001.draw(window);
             tree002.draw(window);
             tree003.draw(window);
-*/
+
 
         }
 
