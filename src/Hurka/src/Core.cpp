@@ -82,17 +82,13 @@ int main()
     Block house002({2,0},"HOUSE001", &textureMgr);
     Block house003({4,0},"HOUSE001", &textureMgr);
 
-    Block road001({0,1},"ROAD001", &textureMgr);
-    Block road002({2,1},"ROAD001", &textureMgr);
-    Block road003({4,1},"ROAD001", &textureMgr);
+    Block roadA01({0,2},"ROAD001", &textureMgr);
+    Block roadA02({2,2},"ROAD001", &textureMgr);
+    Block roadA03({4,2},"ROAD001", &textureMgr);
 
-    Block road004({0,2},"ROAD002", &textureMgr);
-    Block road005({2,2},"ROAD002", &textureMgr);
-    Block road006({4,2},"ROAD002", &textureMgr);
-
-    Block tree001({0,3},"TREE001", &textureMgr);
-    Block tree002({2,3},"TREE001", &textureMgr);
-    Block tree003({4,3},"TREE001", &textureMgr);
+    Block tree001({0,4},"TREE001", &textureMgr);
+    Block tree002({2,4},"TREE001", &textureMgr);
+    Block tree003({4,4},"TREE001", &textureMgr);
 
 
     // Setup timing
@@ -105,7 +101,7 @@ int main()
     drawGm = true;
     drawLoco = true;
     drawToolbar = true;
-    drawGrid = true;
+    drawGrid = false;
     drawBlocks = true;
 
 
@@ -222,13 +218,10 @@ int main()
             house002.draw(window);
             house003.draw(window);
 
-            road001.draw(window);
-            road002.draw(window);
-            road003.draw(window);
 
-            road004.draw(window);
-            road005.draw(window);
-            road006.draw(window);
+            roadA01.draw(window);
+            roadA02.draw(window);
+            roadA03.draw(window);
 
 
             tree001.draw(window);

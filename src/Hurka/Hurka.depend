@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1519505693 source:c:\github\lumo\src\hurka\src\core.cpp
+1519507029 source:c:\github\lumo\src\hurka\src\core.cpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1597,7 +1597,7 @@
 	<SFML/Graphics.hpp>
 	"Constants.hpp"
 
-1519298127 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
+1519506243 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
 	"TextureManager.hpp"
 
 1519298525 source:c:\github\lumo\src\hurka\src\toolbar.cpp

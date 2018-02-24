@@ -17,6 +17,9 @@ TextureManager::TextureManager()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_002.png");
     pushTexture("ROAD002", txt);
 
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_003.png");
+    pushTexture("ROAD003", txt);
+
 
      txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_001.png");
     pushTexture("TREE001", txt);
