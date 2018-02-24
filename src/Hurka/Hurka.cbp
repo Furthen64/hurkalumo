@@ -46,6 +46,14 @@
 			<Add directory="$(#sfml.lib)" />
 		</Linker>
 		<Unit filename="src/Core.cpp" />
+		<Unit filename="src/GameMatrix.cpp" />
+		<Unit filename="src/GameMatrix.hpp" />
+		<Unit filename="src/Grid.cpp" />
+		<Unit filename="src/Grid.hpp" />
+		<Unit filename="src/TextureManager.cpp" />
+		<Unit filename="src/TextureManager.hpp" />
+		<Unit filename="src/Toolbar.cpp" />
+		<Unit filename="src/Toolbar.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

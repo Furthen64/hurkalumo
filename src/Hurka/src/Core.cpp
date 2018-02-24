@@ -7,6 +7,18 @@
 #include <chrono>
 
 
+// Project includes
+#include "Grid.hpp"
+#include "TextureManager.hpp"
+#include "Toolbar.hpp"
+#include "GameMatrix.hpp"
+
+#include "Constants.hpp"
+
+
+
+// Always commit RUNNING code
+// If it doesnt run, make it run at least.
 
 
 // TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
@@ -22,255 +34,6 @@ using namespace sf;
 
 
 
-/// //////////////////////////////////////////////
-/// Globals
-
-const int GRID_HEIGHT = 64;
-const int GRID_WIDTH  = 64;
-
-
-
-
-/// //////////////////////////////////////////////
-/// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
-/// Or something. Haven't decided yet.
-///
-
-
-class GameMatrix
-{
-public:
-
-    GameMatrix(int _height, int _width, int _textureID)
-    {
-        height = _height;
-        width = _width;
-        textureID = _textureID;
-
-
-        // Hardcoded for now
-        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_1.png");
-        sprite = Sprite(texture);
-
-        if( (height%2 != 0) || (width%2 != 0)) {
-            std::cout << "Warning! GameMatrix height Not divisible by 2! \n";
-        }
-
-
-    }
-
-    int getWidth()
-    {
-        return width;
-    }
-
-    int getHeight()
-    {
-        return height;
-    }
-
-    // (-+)
-    // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
-    // N = along the width axis
-    // M = along the height axis of the gameboard
-    // width = width of the texture
-    // height = height of the texture
-    static int getWindowXPos(int N, int M, int width, int height)
-    {
-
-        int initialXOffset = 400;   // Start in the middle
-
-
-        /// N = Width index in the grid
-        /// M = Height index in the grid
-
-        /// Calculate the X-offset
-        // intialXOffset - where we are in the height=M index TIMES the sprite_width/2
-        int xOffset = initialXOffset - M*(GRID_WIDTH/2);
-
-
-        // now for every step to the right=N index we have to go right a bit
-
-        // TODO: adjust for small width textures! all mine are 64 so... I need more examples
-        int xStep = N*(width/2);
-
-
-        return xOffset + xStep;
-    }
-
-    // (--)
-    // DOCS: see "GameMatrix_How_the_y_position_is_calculated.png"
-    // N = along the width axis
-    // M = along the height axis of the gameboard
-    // width = width of the texture
-    // height = height of the texture
-    static int getWindowYPos(int N, int M, int width, int height)
-    {
-        int initialYOffset = 0;     // Start at the top
-
-        int yOffset = initialYOffset;
-
-
-
-        int yStep = 0;
-
-        if(height < GRID_HEIGHT) {
-            // Smaller, IF the sprite height is less than the 64 GRID height we have to move it down
-            // the division by 4 is now division by 2
-
-            yStep =  (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
-
-        } else if(height > GRID_HEIGHT) {
-            // Taller, like high buildings, make sure you start drawing HIGHER (lower y value)
-             yStep = (M*GRID_HEIGHT/4) - (N*GRID_HEIGHT/4);
-
-        } else {
-            // (++)
-            // Equal to the grid size
-            yStep = (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
-        }
-
-
-        return yOffset + yStep;
-    }
-
-
-    // (-+)
-    void draw( RenderTarget& rt)
-    {
-        int x = 0;
-        int y = 0;
-
-        // What a bunny brained idea!
-        for(int M= 0; M<height; M++){
-            for(int N= 0; N < width; N++) {
-
-                x = GameMatrix::getWindowXPos(N,M, GRID_WIDTH, GRID_HEIGHT);
-                y = GameMatrix::getWindowYPos(N,M, GRID_WIDTH, GRID_HEIGHT);
-                Vector2f pos = {(float)x,(float)y};
-
-                sprite.setPosition(pos);
-                rt.draw(sprite);
-            }
-
-        }
-
-        /*
-
-        for(int y = 0; y < 600; y+=height)
-        {
-            float yF = y;
-            float xF = 0.f;
-
-            sprite.setPosition({0,yF});
-
-            for(int x = 0; x < 800; x+=width)
-            {
-                //yF += floor(height/2);   // Go down a bit so we get diagonal, isometric drawing
-                yF += height;
-                xF = x;
-
-                sprite.setPosition({xF, yF});
-                rt.draw(sprite);
-            }
-
-        }*/
-
-    }
-
-
-
-private:
-    int width;
-    int height;
-    int textureID;
-    Sprite sprite;
-    Texture texture;
-};
-
-
-
-// (--)
-class TextureManager
-{
-public:
-
-    TextureManager()
-    {
-
-        Texture txt;
-
-        txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_001.png");
-        pushTexture("HOUSE001", txt);
-
-        /*txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_009.png");
-        pushTexture("HOUSE009", txt);
-*/
-
-/*
-
-            break;
-        case 2:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_002.png");
-            break;
-        case 3:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_003.png");
-            break;
-        case 4:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_004.png");
-            break;
-        case 5:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_001.png");
-            break;
-        case 6:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_009.png");
-            break;
-        case 7:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_001.png");
-            break;
-        default:
-            texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TEMPLATE.png");
-            break;
-        }
-        */
-
-    };
-
-    void pushTexture(std::string _name, Texture _texture)
-    {
-        textureMap.insert( {_name, _texture});
-    }
-
-    Texture getTexture(std::string _key)
-    {
-        return textureMap[_key];
-    }
-
-    //(--)
-    bool applyTexture(std::string textureName, Texture *texture)
-    {
-        bool result = false;
-
-        std::unordered_map<std::string, Texture>::const_iterator got = textureMap.find(textureName);
-
-        if(got == textureMap.end()) {
-            std::cout << "applyTexture not found texture: \"" << textureName << "\"\n";
-        } else {
-            // Dereference our *texture and set it to the texture we have loaded into the hashmap
-            (*texture) = textureMap[textureName];
-            result = true;
-        }
-
-        return result;
-    }
-
-
-private:
-
-    std::unordered_map<std::string,Texture> textureMap;
-
-
-};
 
 
 /// //////////////////////////////////////////////
@@ -334,160 +97,6 @@ private:
 
 
 
-/// //////////////////////////////////////////////
-/// Grid
-// The grid follows the static grid size of 64 x 64 px
-
-class Grid
-{
-public:
-    Grid(int _height, int _width)
-    {
-        width = _width;
-        height = _height;
-        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_1.png");
-        sprite = Sprite(texture);
-    }
-
-
-    void draw( RenderTarget& rt)
-    {
-        // haha this will be hell to figure out
-        // I need functions for getting the X,Y of the [N,M]th position in the matrix
-
-
-        // Use a function to figure out what the REAL window X,Y is
-        // given the position inside the Isometric Matrix
-
-
-        int x = 0;
-        int y = 0;
-
-        // What a bunny brained idea!
-        for(int M= 0; M<height; M++){
-            for(int N= 0; N < width; N++) {
-
-                x = GameMatrix::getWindowXPos(N,M, GRID_WIDTH, GRID_HEIGHT);
-                y = GameMatrix::getWindowYPos(N,M, GRID_WIDTH, GRID_HEIGHT);
-                Vector2f pos = {(float)x,(float)y};
-
-                sprite.setPosition(pos);
-                rt.draw(sprite);
-            }
-
-        }
-
-
-
-    }
-
-
-private:
-    Texture texture;
-    Sprite sprite;
-    int width;
-    int height;
-};
-
-
-
-/// //////////////////////////////////////////////
-/// and up comes the Toolbar
-
-class Toolbar
-{
-public:
-    Toolbar(const Vector2f& _pos)
-        :
-        pos(_pos)
-    {
-
-        toolbarXOffset = pos.x;
-
-
-        // get the whole texture for all the buttons
-        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TOOLBAR.png");
-
-
-
-        // allocate all the sprites
-        sprites = new Sprite[nrButtons*2];
-        visibleSpritesTopArr = new int [nrButtons];
-        for(int i = 0; i < nrButtons; i++) { visibleSpritesTopArr[i] = true; }
-
-
-        // map all the sprites correctly
-        // position the sprites
-        float x, y;
-
-        for(int i = 0; i < nrButtons*2; i++){
-            sprites[i] = Sprite(texture);
-            sprites[i].setTextureRect( {i*widthPx, 0, 16, 16} );
-
-            x = i*widthPx+ toolbarXOffset;
-            y = 0;
-
-            sprites[i].setPosition({x,y});
-        }
-
-    }
-
-    ~Toolbar()
-    {
-        delete sprites;
-        delete visibleSpritesTopArr;
-    }
-
-    void pushButton(int relXPos)
-    {
-        // set the status of the dang thing
-        visibleSpritesTopArr[0] = !visibleSpritesTopArr[0];
-
-    }
-
-    void draw( RenderTarget& rt)
-    {
-        // draw all the buttons individually
-        for(int i = 0; i < nrButtons; i++){
-            if(visibleSpritesTopArr[i] == true) {
-                sprites[i].setTextureRect( {i*widthPx, 0, 16, 16} );    // Show the top one
-            } else {
-                sprites[i].setTextureRect( {i*widthPx, 16, 16, 16} );
-            }
-
-            // Draw it
-            rt.draw( sprites[i] );
-        }
-    }
-
-
-
-
-    Vector2f getPos()
-    {
-        return pos;
-    }
-
-    int *getVisibleSpritesTopArr()
-    {
-        return visibleSpritesTopArr;
-    }
-
-private:
-    Vector2f pos;
-
-    Texture texture;    // we need one texture but
-    Sprite *sprites;      // we need 12 sprites for each of the 6 buttons
-
-    int toolbarXOffset = 240;
-
-    int *visibleSpritesTopArr;  // Top array that controls which are visible
-                                // 1 = show the top one (unpressed)
-                                // 0 = show the one below (pressed)
-
-    const int nrButtons = 6;
-    const int widthPx = 16;
-};
 
 
 /// //////////////////////////////////////////////
@@ -574,24 +183,26 @@ int main()
 //                  X Y
 
 
-    Block house001({0,0},std::string("HOUSE001"), &textureMgr);
+    Block house001({0,0},"ROAD001", &textureMgr);
+
     /*Block house002({2,0},std::string("HOUSE001"), &textureMgr);
     Block house003({4,0},std::string("HOUSE001"), &textureMgr);*/
 
 /// ROADS
 
 
-/*    Block road001({0,2},5);
-    Block road002({2,2},5);
-    Block road003({4,2},5);
 
+    /*Block road001({0,0},"ROAD001", &textureMgr);
+    Block road002({0,0},"ROAD001", &textureMgr);
+    Block road003({0,0},"ROAD001", &textureMgr);
 
+    Block road004({2,3},"ROAD002", &textureMgr);
+    Block road005({2,4},"ROAD002", &textureMgr);
+    Block road006({2,5},"ROAD002", &textureMgr);
 
-
-    Block tree001({0,4},7);
-    Block tree002({2,4},7);
-    Block tree003({4,4},7);
-*/
+    Block tree001({0,6},"TREE001", &textureMgr);
+    Block tree002({2,6},"TREE001", &textureMgr);
+    Block tree003({4,6},"TREE001", &textureMgr);*/
 
 
     // Setup timing
@@ -724,6 +335,10 @@ int main()
             road001.draw(window);
             road002.draw(window);
             road003.draw(window);
+
+            road004.draw(window);
+            road005.draw(window);
+            road006.draw(window);
 
 
             tree001.draw(window);

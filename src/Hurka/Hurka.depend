@@ -1567,12 +1567,50 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1519219514 source:c:\github\lumo\src\hurka\src\core.cpp
+1519503278 source:c:\github\lumo\src\hurka\src\core.cpp
 	<stdlib.h>
 	<iostream>
+	<unordered_map>
 	<string>
 	<math.h>
 	<SFML/Graphics.hpp>
 	<chrono>
-	<map>
+	"Grid.hpp"
+	"TextureManager.hpp"
+	"Toolbar.hpp"
+	"GameMatrix.hpp"
+
+1519297691 source:c:\github\lumo\src\hurka\src\grid.cpp
+	"Grid.hpp"
+
+1519503804 c:\github\lumo\src\hurka\src\grid.hpp
+	<SFML/Graphics.hpp>
+	"Constants.hpp"
+
+1519503801 c:\github\lumo\src\hurka\src\texturemanager.hpp
+	<string>
+	<iostream>
+	<unordered_map>
+	<SFML/Graphics.hpp>
+	"Constants.hpp"
+
+1519298127 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
+	"TextureManager.hpp"
+
+1519298525 source:c:\github\lumo\src\hurka\src\toolbar.cpp
+	"Toolbar.hpp"
+
+1519298592 c:\github\lumo\src\hurka\src\toolbar.hpp
+	<SFML/Graphics.hpp>
+
+1519503260 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
+	<iostream>
+	"GameMatrix.hpp"
+	"Grid.hpp"
+
+1519503812 c:\github\lumo\src\hurka\src\gamematrix.hpp
+	<SFML/Graphics.hpp>
+	"Constants.hpp"
+
+1519503854 c:\github\lumo\src\hurka\src\constants.hpp
 
