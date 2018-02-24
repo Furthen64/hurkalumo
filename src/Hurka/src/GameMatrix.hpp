@@ -1,3 +1,7 @@
+#ifndef GAMEMATRIX_H
+#define GAMEMATRIX_H
+
+
 #include <SFML/Graphics.hpp>
 
 #include "Constants.hpp"
@@ -99,3 +103,4 @@ private:
     Texture texture;
 };
 
+#endif

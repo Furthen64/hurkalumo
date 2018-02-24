@@ -45,6 +45,9 @@
 		<Linker>
 			<Add directory="$(#sfml.lib)" />
 		</Linker>
+		<Unit filename="src/Block.cpp" />
+		<Unit filename="src/Block.hpp" />
+		<Unit filename="src/Constants.hpp" />
 		<Unit filename="src/Core.cpp" />
 		<Unit filename="src/GameMatrix.cpp" />
 		<Unit filename="src/GameMatrix.hpp" />

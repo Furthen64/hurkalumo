@@ -12,13 +12,15 @@
 #include "TextureManager.hpp"
 #include "Toolbar.hpp"
 #include "GameMatrix.hpp"
+#include "Block.hpp"
+#include "Locomotive.hpp"
 
 #include "Constants.hpp"
 
 
 
-// Always commit RUNNING code
-// If it doesnt run, make it run at least.
+// Always push RUNNING code
+// If it doesn't run, just stub out the errors and make it run before pushing to a branch
 
 
 // TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
@@ -29,122 +31,15 @@ using namespace sf;
 
 /// WORDS FOR LUMOHURKA
 ///
-/// isometric matrix:           The matrix of size N,M that is the gamespace, where all the things fit onto
+/// isometric matrix: The matrix of size N,M that is the gamespace, where all the things fit onto
 ///
 
 
 
 
 
-/// //////////////////////////////////////////////
-/// (--) Block
-/// ? x ? pixels        Auto adjusted where its positioned for drawing based upon its texture resolution
-
-class Block
-{
-public:
-    Block(const Vector2f& _pos, std::string _textureName, TextureManager *textureMgr)
-        :
-        pos(_pos)
-    {
-
-        bool result = textureMgr->applyTexture(_textureName, &texture);
-
-        if(!result) {
-                std::cout << "ERROR Block creation, cannot find texture \"" << _textureName << "\".\n";
-            return ;
-        }
 
 
-        sprite = Sprite(texture);
-
-
-
-        textureSize = sprite.getTextureRect();
-
-
-        std::cout << "height= " << textureSize.height << ", width=" << textureSize.width << "\n";
-
-    }
-
-
-    void draw( RenderTarget& rt)
-    {
-
-        /*std::cout << "---------------------------------------\n";
-        std::cout << "ID: " << textureID << "\n";
-        std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << GameMatrix::getWindowXPos(pos.x,pos.y) << "\n";
-        std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << GameMatrix::getWindowYPos(pos.x,pos.y) << "\n";
-        */
-
-        int x = GameMatrix::getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height);
-        int y = GameMatrix::getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height);
-        Vector2f pos = {(float)x,(float)y};
-        sprite.setPosition(pos);
-        rt.draw(sprite);
-    }
-
-
-private:
-    int textureID;
-    Texture texture;
-    Sprite sprite;
-    Vector2f pos;
-    IntRect textureSize;
-
-};
-
-
-
-
-
-
-/// //////////////////////////////////////////////
-/// Locomotive
-class Locomotive
-{
-public:
-    Locomotive(const Vector2f& _pos)
-        :
-        pos(_pos)
-    {
-        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\LOCOMOTIVE.png");
-        sprite = Sprite(texture);
-        sprite.setTextureRect( {0,0,32,32});
-    }
-
-    void draw( RenderTarget& rt) const
-    {
-        rt.draw( sprite );
-    }
-    void setDirectionConst( const Vector2f& dir)
-    {
-        vel = dir * speed; //??
-    }
-
-    void setDirection( Vector2f dir)
-    {
-        vel = dir * speed; //??
-    }
-
-    void update( float dt)
-    {
-        pos += vel * dt;
-        sprite.setPosition(pos);
-    }
-
-    Vector2f getPos()
-    {
-        return pos;
-    }
-
-private:
-    static constexpr float speed = 100.0f;  // move 100 px per second
-    Vector2f pos;
-    Vector2f vel = {0.0f, 0.0f};
-    Texture texture;
-    Sprite sprite;
-};
 
 
 

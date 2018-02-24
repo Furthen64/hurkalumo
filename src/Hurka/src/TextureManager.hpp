@@ -1,3 +1,6 @@
+#ifndef TEXTUREMANAGER_H
+#define TEXTUREMANAGER_H
+
 #include <string>
 #include <iostream>
 #include <unordered_map>
@@ -26,3 +29,5 @@ private:
 
 
 };
+
+#endif
