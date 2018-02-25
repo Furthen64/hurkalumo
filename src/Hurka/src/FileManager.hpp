@@ -14,6 +14,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "TextureManager.hpp"
 #include "HurkaMap.hpp"
 
 #include "Constants.hpp"
@@ -33,7 +34,7 @@ class FileManager
 public:
 
     FileManager();
-    HurkaMap readRegularFile(std::string _filename);
+    HurkaMap readRegularFile(std::string _filename, TextureManager *textureMgr);
     bool verifyFile(std::string _filename);
     void printWorkingDir();
 

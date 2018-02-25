@@ -23,7 +23,7 @@ public:
 
     void draw( RenderTarget& rt);
 
-
+    int getTextureID();
 
      // (-+)
     // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
@@ -89,6 +89,8 @@ public:
 
         return yOffset + yStep;
     }
+
+
 
 
 private:

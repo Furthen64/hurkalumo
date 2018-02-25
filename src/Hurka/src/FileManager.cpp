@@ -19,18 +19,23 @@ FileManager::FileManager()
 
 // Regular file is the matrix as you would see this game from above without isometricness
 // (--)
-HurkaMap FileManager::readRegularFile(std::string _filename)
+HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *textureMgr)
 {
     /// Verify the File, read the file into a standard blurgh, put the blurgh into right
     /// list format and insert that into a HurkaMap. Return the hurkamap.
-    HurkaMap emptyMap("empty");
-    HurkaMap resultMap("");
+    HurkaMap emptyMap("empty", textureMgr);
+    HurkaMap resultMap("", textureMgr);
 
 
     std::ifstream infile;
     infile.open(_filename);
 
     if (infile.is_open()) {
+
+            std::cout << "TODO read lines into each sublist and put lists in a fulllist";
+
+            //std::list<Block>
+
 
     } else {
         std::cout << "ERROR " << cn << ": Could not open file \"" << _filename << "\"!\n";
@@ -65,6 +70,7 @@ bool FileManager::verifyFile(std::string _filename)
 
     // Get the first line
     std::getline(infile, line);
+    std::cout << "\"" << line << "\"  linelength=" << line.length() <<"\n";
     nrElementsM++;
 
     firstLineLength = line.length();
@@ -82,6 +88,9 @@ bool FileManager::verifyFile(std::string _filename)
 
     while (std::getline(infile, line))
     {
+        std::cout << "\"" << line << "\"  linelength=" << line.length() <<"\n";
+
+
         nrElementsM++;
 
         if(line.length()!= firstLineLength) {
@@ -92,7 +101,7 @@ bool FileManager::verifyFile(std::string _filename)
 
 
 
-        std::cout << "\"" << line << "\"  linelength=" << line.length() <<"\n";
+
 
 
 

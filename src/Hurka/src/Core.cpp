@@ -53,28 +53,26 @@ void waitForInput()
 }
 
 
-bool testFileManager()
+bool testFileManager(TextureManager *textureMgr)
 {
     FileManager fmgr;
     bool result = true;
 
-    std::cout << "*** Working directory ***\n";
+    std::cout << "\n\n*** Working directory ***\n";
 
     fmgr.printWorkingDir();
 
 
 
-    std::cout << "*** Verifying file ***\n";
+    std::cout << "\n\n*** Verifying file ***\n";
     if(!fmgr.verifyFile("data/garden.txt")) {
         result = false;
     }
 
-    std::cout << "*** Testing reading files ***\n";
+    std::cout << "\n\n*** Testing reading files ***\n";
 
 
-
-
-    HurkaMap hmap = fmgr.readRegularFile("data/garden.txt");
+    HurkaMap hmap = fmgr.readRegularFile("data/garden.txt", textureMgr);
     if(hmap.mapName== "empty") {
         result = false;
     }
@@ -87,13 +85,20 @@ bool testFileManager()
 
 int main()
 {
+
+    // Should this manager be a singleton perhaps?
+    TextureManager textureMgr;
+
+
+
+
     // Setup Window
     // , Style::Fullscreen);
     RenderWindow window(sf::VideoMode(800, 600), "Hurkalumo Editor 0.1-alpha");
 
     //window.setFramerateLimit(60);
 
-    if(!testFileManager()) {
+    if(!testFileManager(&textureMgr)) {
             std::cout << "ERROR: testFileManager failed. Something went wrong during integrity test of software!";
         waitForInput();
         return 0;
@@ -111,21 +116,26 @@ int main()
     bool drawToolbar = false;
     bool drawGrid = true;
     bool drawBlocks = true;
+
     // Setup objects
-    GameMatrix gm({GAME_HEIGHT,GAME_WIDTH,1});
-    Locomotive loco({10.0f, 10.0f});
+    GameMatrix gm({GAME_HEIGHT,GAME_WIDTH,1});          /// high level structure of game
+    Locomotive loco({10.0f, 10.0f});                    /// sample locomotive
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
-    TextureManager textureMgr;
-    FileManager fmgr;
-    HurkaMap hmap("garden");
+
+    FileManager fmgr;                                   /// Used to read the garden.txt file for now
+    HurkaMap hmap("garden", &textureMgr);
 
 
 
 
     // Read the map
-    hmap = fmgr.readRegularFile("data/garden.txt");
+    hmap = fmgr.readRegularFile("data/garden.txt", &textureMgr);
 
+    std::cout << hmap.mapName << "\n";
+
+
+    hmap.testList();
 
 
 

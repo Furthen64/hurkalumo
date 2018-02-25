@@ -45,3 +45,8 @@ void Block::draw( RenderTarget& rt)
     rt.draw(sprite);
 }
 
+int Block::getTextureID()
+{
+
+    return textureID;
+}

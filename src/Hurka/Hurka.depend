@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1519564970 source:c:\github\lumo\src\hurka\src\core.cpp
+1519571406 source:c:\github\lumo\src\hurka\src\core.cpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1582,6 +1582,7 @@
 	"Block.hpp"
 	"Locomotive.hpp"
 	"FileManager.hpp"
+	"HurkaMap.hpp"
 	"Constants.hpp"
 
 1519297691 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1618,10 +1619,10 @@
 
 1519503854 c:\github\lumo\src\hurka\src\constants.hpp
 
-1519505618 source:c:\github\lumo\src\hurka\src\block.cpp
+1519570869 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
-1519505782 c:\github\lumo\src\hurka\src\block.hpp
+1519570880 c:\github\lumo\src\hurka\src\block.hpp
 	<SFML/Graphics.hpp>
 	"TextureManager.hpp"
 	"GameMatrix.hpp"
@@ -1633,24 +1634,28 @@
 1519504974 c:\github\lumo\src\hurka\src\locomotive.hpp
 	"SFML/Graphics.hpp"
 
-1519567082 source:c:\github\lumo\src\hurka\src\filemanager.cpp
+1519571382 source:c:\github\lumo\src\hurka\src\filemanager.cpp
 	<iostream>
 	<fstream>
 	<sstream>
 	<string>
 	"FileManager.hpp"
 
-1519566737 c:\github\lumo\src\hurka\src\filemanager.hpp
+1519571172 c:\github\lumo\src\hurka\src\filemanager.hpp
 	<stdio.h>
 	<direct.h>
 	<unistd.h>
 	<SFML/Graphics.hpp>
+	"TextureManager.hpp"
 	"HurkaMap.hpp"
 	"Constants.hpp"
 
-1519566568 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
+1519571600 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
 	"HurkaMap.hpp"
 
-1519567134 c:\github\lumo\src\hurka\src\hurkamap.hpp
+1519570986 c:\github\lumo\src\hurka\src\hurkamap.hpp
+	"TextureManager.hpp"
+	"Block.hpp"
+	<list>
 	<string>
 
