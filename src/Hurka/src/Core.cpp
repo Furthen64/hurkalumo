@@ -14,6 +14,7 @@
 #include "GameMatrix.hpp"
 #include "Block.hpp"
 #include "Locomotive.hpp"
+#include "FileManager.hpp"
 
 #include "Constants.hpp"
 
@@ -24,6 +25,7 @@
 
 
 // TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
+// TODO: lägga alla i en datastruktur som är lätt att rita upp
 
 
 using namespace sf;
@@ -40,8 +42,43 @@ using namespace sf;
 
 
 
+/// Tests
+
+void waitForInput()
+{
+    std::cout << "\nPress enter to continue...\n";
+
+    getchar();
+}
 
 
+bool testFileManager()
+{
+    FileManager fmgr;
+    bool result = true;
+
+    std::cout << "*** Working directory ***\n";
+
+    fmgr.printWorkingDir();
+
+
+
+    std::cout << "*** Verifying file ***\n";
+    if(!fmgr.verifyFile("data/garden.txt")) {
+        result = false;
+    }
+
+    std::cout << "*** Testing reading files ***\n";
+
+
+
+
+    if (!fmgr.readRegularFile("data/garden.txt")) {
+        result = false;
+    }
+
+    return result;
+}
 
 /// ///////////////////////////////////////////////////////////////
 /// Start
@@ -54,6 +91,12 @@ int main()
 
     //window.setFramerateLimit(60);
 
+    if(!testFileManager()) {
+            std::cout << "ERROR: testFileManager failed. Something went wrong during integrity test of software!";
+        waitForInput();
+        return 0;
+    }
+
 
     // Nr of Cells on the grid
     int GAME_WIDTH = 64;
@@ -62,8 +105,8 @@ int main()
 
     // What to draw
     bool drawGm = true;
-    bool drawLoco = true;
-    bool drawToolbar = true;
+    bool drawLoco = false;
+    bool drawToolbar = false;
     bool drawGrid = true;
     bool drawBlocks = true;
     // Setup objects
@@ -72,6 +115,12 @@ int main()
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
     TextureManager textureMgr;
+    FileManager fmgr;
+
+
+    // Read the map
+    fmgr.readRegularFile("data/garden.txt");
+
 
 
 //                  N M
@@ -93,17 +142,6 @@ int main()
 
     // Setup timing
     auto tp = std::chrono::steady_clock::now();
-
-
-
-
-
-    drawGm = true;
-    drawLoco = true;
-    drawToolbar = true;
-    drawGrid = false;
-    drawBlocks = true;
-
 
 
 

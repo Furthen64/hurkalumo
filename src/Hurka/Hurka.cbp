@@ -28,6 +28,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-static -static-libgcc -static-libstdc++" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -49,6 +50,8 @@
 		<Unit filename="src/Block.hpp" />
 		<Unit filename="src/Constants.hpp" />
 		<Unit filename="src/Core.cpp" />
+		<Unit filename="src/FileManager.cpp" />
+		<Unit filename="src/FileManager.hpp" />
 		<Unit filename="src/GameMatrix.cpp" />
 		<Unit filename="src/GameMatrix.hpp" />
 		<Unit filename="src/Grid.cpp" />
