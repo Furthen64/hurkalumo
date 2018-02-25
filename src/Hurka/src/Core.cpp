@@ -15,6 +15,7 @@
 #include "Block.hpp"
 #include "Locomotive.hpp"
 #include "FileManager.hpp"
+#include "HurkaMap.hpp"
 
 #include "Constants.hpp"
 
@@ -73,7 +74,8 @@ bool testFileManager()
 
 
 
-    if (!fmgr.readRegularFile("data/garden.txt")) {
+    HurkaMap hmap = fmgr.readRegularFile("data/garden.txt");
+    if(hmap.mapName== "empty") {
         result = false;
     }
 
@@ -116,10 +118,15 @@ int main()
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
     TextureManager textureMgr;
     FileManager fmgr;
+    HurkaMap hmap("garden");
+
+
 
 
     // Read the map
-    fmgr.readRegularFile("data/garden.txt");
+    hmap = fmgr.readRegularFile("data/garden.txt");
+
+
 
 
 

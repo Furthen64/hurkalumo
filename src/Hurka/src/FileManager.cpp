@@ -5,6 +5,7 @@
 
 #include "FileManager.hpp"
 
+
 /// //////////////////////////////////////////////
 /// (--) FileManager
 
@@ -17,23 +18,31 @@ FileManager::FileManager()
 }
 
 // Regular file is the matrix as you would see this game from above without isometricness
-bool FileManager::readRegularFile(std::string _filename)
+// (--)
+HurkaMap FileManager::readRegularFile(std::string _filename)
 {
-    std::ifstream file1;
-    file1.open(_filename);
+    /// Verify the File, read the file into a standard blurgh, put the blurgh into right
+    /// list format and insert that into a HurkaMap. Return the hurkamap.
+    HurkaMap emptyMap("empty");
+    HurkaMap resultMap("");
 
-    if (file1.is_open()) {
+
+    std::ifstream infile;
+    infile.open(_filename);
+
+    if (infile.is_open()) {
 
     } else {
         std::cout << "ERROR " << cn << ": Could not open file \"" << _filename << "\"!\n";
-        file1.close();
-        return false;
+        infile.close();
+        return emptyMap;
     }
 
-    file1.close();
-    return true;
+    infile.close();
+    return resultMap;
 }
 
+// (-+)
 bool FileManager::verifyFile(std::string _filename)
 {
 
@@ -51,7 +60,7 @@ bool FileManager::verifyFile(std::string _filename)
     int divisor = 4;
     int nrElementsN = 0;
     int nrElementsM = 0;
-    int firstLineLength = 0;
+    unsigned int firstLineLength = 0;
 
 
     // Get the first line
@@ -75,16 +84,15 @@ bool FileManager::verifyFile(std::string _filename)
     {
         nrElementsM++;
 
-        if(line.length()%divisor!=0) {
-            std::cout << "ERROR " << cn << ": Line not divisible by " << divisor << ", missing comma? missing leading zeroes?\n";
+        if(line.length()!= firstLineLength) {
+            std::cout << "ERROR " << cn << ": Line is not same length as the first one !\n";
             infile.close();
             return false;
         }
 
+
+
         std::cout << "\"" << line << "\"  linelength=" << line.length() <<"\n";
-
-
-
 
 
 
@@ -102,6 +110,8 @@ bool FileManager::verifyFile(std::string _filename)
     return true;
 }
 
+
+// (++)
 void FileManager::printWorkingDir()
 {
      char cCurrentPath[FILENAME_MAX];
