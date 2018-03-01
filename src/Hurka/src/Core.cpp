@@ -45,31 +45,38 @@ using namespace sf;
 
 /// Tests
 
+// (++)
 void waitForInput()
 {
     std::cout << "\nPress enter to continue...\n";
-
     getchar();
 }
 
 
-bool testFileManager(TextureManager *textureMgr)
+// (--)
+bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
 {
     FileManager fmgr;
     bool result = true;
 
-    std::cout << "\n\n*** Working directory ***\n";
+    if(debugLevel >0) {
+        std::cout << "\n\n*** Working directory ***\n";
+        fmgr.printWorkingDir();
+    }
 
-    fmgr.printWorkingDir();
 
+    if(debugLevel >0) {
 
+        std::cout << "\n\n*** Verifying file ***\n";
+    }
 
-    std::cout << "\n\n*** Verifying file ***\n";
     if(!fmgr.verifyFile("data/garden.txt")) {
         result = false;
     }
 
-    std::cout << "\n\n*** Testing reading files ***\n";
+    if(debugLevel >0) {
+        std::cout << "\n\n*** Testing reading files ***\n";
+    }
 
 
     HurkaMap hmap = fmgr.readRegularFile("data/garden.txt", textureMgr);
@@ -80,30 +87,73 @@ bool testFileManager(TextureManager *textureMgr)
     return result;
 }
 
+
+
+
+
+
+// (++)
+void testList(TextureManager *textureMgr)
+{
+
+    std::cout << "\n\n*** testList()\n";
+
+    std::list<Block> blockList;
+
+    Block house001 ({0,1}, "HOUSE001", textureMgr);
+    blockList.push_back(house001);
+    std::cout << "    Texturename of first block: " << house001.getTextureName() << "\n";
+
+    Block tree001( {0,0}, "TREE001", textureMgr);
+    blockList.push_back(tree001);
+    std::cout << "    Texturename of second block: " << tree001.getTextureName() << "\n\n";
+
+
+    std::cout << "Blocklist content: \n{\n";
+
+    // iterate over all items
+    int n = 0;
+    for (std::list<Block>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
+    {
+
+     std::cout << "    [" << n << "] texturename of current block: " << (*itAll).getTextureName() << "\n";
+
+     n++;
+    }
+    std::cout << "}\n end of Testlist \n\n";
+
+}
+
 /// ///////////////////////////////////////////////////////////////
 /// Start
 
 int main()
 {
 
+    bool integrityTesting = false;
+
+
     // Should this manager be a singleton perhaps?
     TextureManager textureMgr;
-
-
 
 
     // Setup Window
     // , Style::Fullscreen);
     RenderWindow window(sf::VideoMode(800, 600), "Hurkalumo Editor 0.1-alpha");
 
-    //window.setFramerateLimit(60);
+    window.setFramerateLimit(10);
 
-    if(!testFileManager(&textureMgr)) {
+
+
+
+
+    if(integrityTesting) {
+        if(!testFileManager(&textureMgr)) {
             std::cout << "ERROR: testFileManager failed. Something went wrong during integrity test of software!";
-        waitForInput();
-        return 0;
+            waitForInput();
+            return 0;
+        }
     }
-
 
     // Nr of Cells on the grid
     int GAME_WIDTH = 64;
@@ -124,18 +174,27 @@ int main()
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
 
     FileManager fmgr;                                   /// Used to read the garden.txt file for now
-    HurkaMap hmap("garden", &textureMgr);
 
 
 
 
-    // Read the map
-    hmap = fmgr.readRegularFile("data/garden.txt", &textureMgr);
 
-    std::cout << hmap.mapName << "\n";
+    /// Testing
+
+    //testList(&textureMgr);
 
 
-    hmap.testList();
+
+
+
+    /// Read the map
+
+
+
+    std::cout << "\n\n** Reading garden.txt *** \n";
+
+    HurkaMap hmap = fmgr.readRegularFile("data/garden.txt", &textureMgr);
+
 
 
 
@@ -143,18 +202,6 @@ int main()
 //                  N M
 //                  X Y
 
-
-    Block house001({0,0},"HOUSE001", &textureMgr);
-    Block house002({2,0},"HOUSE001", &textureMgr);
-    Block house003({4,0},"HOUSE001", &textureMgr);
-
-    Block roadA01({0,2},"ROAD001", &textureMgr);
-    Block roadA02({2,2},"ROAD001", &textureMgr);
-    Block roadA03({4,2},"ROAD001", &textureMgr);
-
-    Block tree001({0,4},"TREE001", &textureMgr);
-    Block tree002({2,4},"TREE001", &textureMgr);
-    Block tree003({4,4},"TREE001", &textureMgr);
 
 
     // Setup timing
@@ -253,40 +300,29 @@ int main()
 
 
         /// Render
+
         window.clear({0, 0, 0});
 
-
-    // Setup objects
 
 
         // Draw the game board
         if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
 
+        if(drawGrid) {  grid.draw(window); }
+
         if(drawLoco) {  loco.draw(window); }
         if(drawBlocks) {
 
-            /// Add these to a list
-            /// Go over which order they should be drawn in
-            /// Assign them renderorder
+            /// Iterate list of blocklists to draw them in renderorder
 
-            house001.draw(window);
-            house002.draw(window);
-            house003.draw(window);
+            hmap.draw(window);
 
-
-            roadA01.draw(window);
-            roadA02.draw(window);
-            roadA03.draw(window);
-
-
-            tree001.draw(window);
-            tree002.draw(window);
-            tree003.draw(window);
 
 
         }
 
-        if(drawGrid) {  grid.draw(window); } // If we want a visible grid to know the borders of each cell
+
+
 
         if(drawToolbar) {   toolbarTop.draw(window); }
 
@@ -298,32 +334,3 @@ int main()
 
     return 0;
 }
-
-/*
-KodBös:
-
-
-    RectangleShape shape1(Vector2f(20.f,20.f));
-    shape1.setPosition(Vector2f(50.f, 50.f));
-    shape1.setFillColor(Color(100, 250, 50));
-
-    shape1.setOutlineThickness(10);
-    shape1.setOutlineColor(sf::Color(10, 10, 10));
-
-  texture.loadFromFile("ANIM_001.png");
-        sprite = Sprite(texture);
-        sprite.setTextureRect( {0,0,30,30});
-
-
-
-
-  sf::Rect rect1(0.f, 0.f);
-    rect1.setFillColor(sf::Color(100, 250, 50));
-    sf::Rect rect2(320.f,240.f);
-
-
-     window.draw(shape1);
-        window.draw(sprite);
-*/
-
-

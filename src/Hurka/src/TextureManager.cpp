@@ -48,11 +48,14 @@ TextureManager::TextureManager()
 
 }
 
+// (-+)
 void TextureManager::pushTexture(std::string _name, Texture _texture)
 {
     textureMap.insert( {_name, _texture});
 }
 
+// (-+)
+// FIXME behöver felhantering om vi inte hittar keyn
 Texture TextureManager::getTexture(std::string _key)
 {
     return textureMap[_key];
@@ -66,7 +69,7 @@ bool TextureManager::applyTexture(std::string textureName, Texture *texture)
     std::unordered_map<std::string, Texture>::const_iterator got = textureMap.find(textureName);
 
     if(got == textureMap.end()) {
-        std::cout << "applyTexture not found texture: \"" << textureName << "\"\n";
+        std::cout << "ERROR " << cn << " applyTextureById could not find the texture: \"" << textureName << "\"!\n";
     } else {
         // Dereference our *texture and set it to the texture we have loaded into the hashmap
         (*texture) = textureMap[textureName];
@@ -77,8 +80,42 @@ bool TextureManager::applyTexture(std::string textureName, Texture *texture)
 }
 
 
+
+
+// (--)
+bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
+{
+    bool result = false;
+
+
+    // Convert the integer to the right string name
+
+    std::string _textureName = getTextureNameByIndex(_textureId);
+
+    if(_textureName == "") {
+        std::cout << "ERROR " << cn << " applyTextureById cannot find texturename by id " << _textureId << "\n";
+        return false;
+    }
+
+
+    // Now find it by searching for the string
+    std::unordered_map<std::string, Texture>::const_iterator got = textureMap.find(_textureName);
+
+    if(got == textureMap.end()) {
+        std::cout << "ERROR " << cn << " applyTextureById could not find the texture: \"" << _textureName << "\"!\n";
+    } else {
+        // Dereference our *texture and set it to the texture we have loaded into the hashmap
+        (*texture) = textureMap[_textureName];
+        result = true;
+    }
+
+    return result;
+}
+
+
 // Converts the integer to string version of textures in the library
-std::string textureName(int nr)
+
+std::string TextureManager::getTextureNameByIndex(int nr)
 {
     switch(nr){
         case 1: return "HOUSE001";
@@ -93,9 +130,16 @@ std::string textureName(int nr)
         case 9: return "ROAD003";
 
         case 10: return "TREE001";
-        case 11: return "TREE002";
-        case 12: return "TREE003";
+        default: return "";
     }
 
     return "";
+}
+
+
+
+
+std::unordered_map<std::string,Texture> TextureManager::getTextureMap()
+{
+    return textureMap;
 }

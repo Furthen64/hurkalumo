@@ -20,10 +20,17 @@ class Block
 {
 public:
     Block(const Vector2f& _pos, std::string _textureName, TextureManager *textureMgr);
+    Block(const Vector2f& _pos, int textureId, TextureManager *textureMgr);
 
     void draw( RenderTarget& rt);
 
     int getTextureID();
+    void setTextureByName(std::string _textureName, TextureManager *textureMgr);
+
+
+    Block *clone(TextureManager *textureMgr);
+
+    std::string getTextureName();
 
      // (-+)
     // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
@@ -96,9 +103,11 @@ public:
 private:
     int textureID;
     Texture texture;
+    IntRect textureSize;
+    std::string textureName;
     Sprite sprite;
     Vector2f pos;
-    IntRect textureSize;
+
 
 };
 
