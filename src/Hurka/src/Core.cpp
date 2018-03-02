@@ -70,7 +70,7 @@ bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
         std::cout << "\n\n*** Verifying file ***\n";
     }
 
-    if(!fmgr.verifyFile("data/garden.txt")) {
+    if(!fmgr.verifyFile("data/aztec.txt", nullptr, nullptr)) {
         result = false;
     }
 
@@ -79,7 +79,7 @@ bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
     }
 
 
-    HurkaMap hmap = fmgr.readRegularFile("data/garden.txt", textureMgr);
+    HurkaMap hmap = fmgr.readRegularFile("data/aztec.txt", textureMgr);
     if(hmap.mapName== "empty") {
         result = false;
     }
@@ -162,9 +162,9 @@ int main()
 
     // What to draw
     bool drawGm = true;
-    bool drawLoco = false;
+    bool drawLoco = true;
     bool drawToolbar = false;
-    bool drawGrid = true;
+    bool drawGrid = false;
     bool drawBlocks = true;
 
     // Setup objects
@@ -173,7 +173,7 @@ int main()
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
 
-    FileManager fmgr;                                   /// Used to read the garden.txt file for now
+    FileManager fmgr;                                   /// Used to read the .txt file for now
 
 
 
@@ -189,11 +189,11 @@ int main()
 
     /// Read the map
 
+    HurkaMap hmap = fmgr.readRegularFile("data/aztec.txt", &textureMgr);
 
-
-    std::cout << "\n\n** Reading garden.txt *** \n";
-
-    HurkaMap hmap = fmgr.readRegularFile("data/garden.txt", &textureMgr);
+    if(hmap.mapName == "empty") {
+        return 0;
+    }
 
 
 
@@ -305,12 +305,13 @@ int main()
 
 
 
-        // Draw the game board
+        // Draw the game bo
+        ard
         if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
 
         if(drawGrid) {  grid.draw(window); }
 
-        if(drawLoco) {  loco.draw(window); }
+
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in renderorder
@@ -320,6 +321,9 @@ int main()
 
 
         }
+
+
+        if(drawLoco) {  loco.draw(window); }
 
 
 

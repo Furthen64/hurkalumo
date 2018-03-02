@@ -1,4 +1,12 @@
 #include "TextureManager.hpp"
+
+
+
+// TODO: Make this automatically assign a name to it?
+// WE could doooo it like this? inside the .txt file, it can say
+// "T001" which means TREE001 so it maps the first tree texture to that T001
+// "H001" which means HOUSE001 , maps it to the first house texture   etc.
+
 // (--)
 TextureManager::TextureManager()
 {
@@ -44,9 +52,49 @@ TextureManager::TextureManager()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_001.png");
     pushTexture("TREE001", txt);
 
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_002.png");
+    pushTexture("TREE002", txt);
 
+
+    // Grass
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_001.png");
+    pushTexture("GRASS001", txt);
 
 }
+
+
+
+// Converts the integer to string version of textures in the library
+
+std::string TextureManager::getTextureNameByIndex(int nr)
+{
+
+    switch(nr){
+        case 0: return "GRASS001";
+        case 1: return "HOUSE001";
+        case 2: return "HOUSE002";
+        case 3: return "HOUSE003";
+        case 4: return "HOUSE004";
+        case 5: return "HOUSE005";
+        case 6: return "HOUSE006";
+
+        case 7: return "ROAD001";
+        case 8: return "ROAD002";
+        case 9: return "ROAD003";
+
+        case 10: return "TREE001";
+        case 11: return "TREE002";
+
+        default: return "";
+    }
+
+    return "";
+}
+
+
+
+
+
 
 // (-+)
 void TextureManager::pushTexture(std::string _name, Texture _texture)
@@ -110,30 +158,6 @@ bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
     }
 
     return result;
-}
-
-
-// Converts the integer to string version of textures in the library
-
-std::string TextureManager::getTextureNameByIndex(int nr)
-{
-    switch(nr){
-        case 1: return "HOUSE001";
-        case 2: return "HOUSE002";
-        case 3: return "HOUSE003";
-        case 4: return "HOUSE004";
-        case 5: return "HOUSE005";
-        case 6: return "HOUSE006";
-
-        case 7: return "ROAD001";
-        case 8: return "ROAD002";
-        case 9: return "ROAD003";
-
-        case 10: return "TREE001";
-        default: return "";
-    }
-
-    return "";
 }
 
 

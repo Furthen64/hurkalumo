@@ -35,7 +35,7 @@ void dumpMatrix(int** matrix, int rows, int cols)
 
 }
 
-// (--)
+// (-+)
 void dumpBlockList(std::list<Block *> _blockList, TextureManager *textureMgr)
 {
 
@@ -69,39 +69,61 @@ void dumpBlockList(std::list<Block *> _blockList, TextureManager *textureMgr)
 
 
 
-// Regular file is the matrix as you would see this game from above without isometricness
-//
-// docs: readRegularFile.png
-//
-// TEST!
-// (--)
+/// Regular file is the matrix as you would see this game from above without isometricness
+/// docs: readRegularFile.png
+// (-+)
 HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *textureMgr)
 {
 
+    HurkaMap emptyMap("empty", textureMgr);
+    HurkaMap resultMap(_filename, textureMgr);
+    // The blocklist will be attached to the resultmap if all goes well
+    std::list<Block *> blockList;
 
-    int debugLevel = 1;
+    std::ifstream infile;
+    std::string line;
+
+    int mapRows = 0;
+    int mapCols = 0;
+    int debugLevel = 0;
+
 
     if(debugLevel > 0) {
         std::cout << "\n\n*** readRegularFile( " << _filename << ") \n";
     }
 
-    /// Verify the File, read the file into a standard blurgh, put the blurgh into right
-    /// list format and insert that into a HurkaMap. Return the hurkamap.
-    HurkaMap emptyMap("empty", textureMgr);
-    HurkaMap resultMap(_filename, textureMgr);
-
-    // The blocklist will be attached to the resultmap if all goes well
-    std::list<Block *> blockList;
 
 
-    std::ifstream infile;
-    std::string line;
+
+    /// Verify the File
+
+
+    if(!verifyFile(_filename, &mapRows, &mapCols)) {
+        std::cout << "ERROR " << cn << " unable to verify the file, exiting!\n";
+        return emptyMap;
+    }
+
+
+
+    if(debugLevel > 0) {
+        std::cout << "The file has ROWS=" << mapRows << ", COLS=" << mapCols << "\n";
+    }
+
+
+    /// Open the File here
+
     infile.open(_filename);
 
 
+    /// Get the Rows and Columns out of the map
+
+
+
+
+
     // DEBUG FIXME CORRECT oh god plz fix this, read the width and height from file instead
-    int MTX_ROWS=4;
-    int MTX_COLS=4;
+    int MTX_ROWS=mapRows;
+    int MTX_COLS=mapCols;
 
     if (infile.is_open()) {
 
@@ -121,12 +143,14 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 
 
             /// Read lines from the file
-            /// For every chunk, put it in the matrix
+            /// For every number (001,002,...) , put it in the matrix
 
 
             if(debugLevel > 0) {
                 std::cout << "    read lines from the file\n";
             }
+
+
             unsigned int currRow = 0;
             unsigned int currCol = 0;
             unsigned int w;
@@ -205,7 +229,10 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 
 
            // Loop 1
-           std::cout << "\n\n(Loop 1)\n";
+           if(debugLevel > 0) {
+                std::cout << "\n\n(Loop 1)\n";
+           }
+
            while(yDown < MTX_ROWS)
            {
                while(yUp > -1 && xRight < MTX_COLS)
@@ -214,7 +241,6 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
                    // row = yUp
                    // col = xRight
                    textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
-                   std::cout << "(" << yUp << ", " << xRight << ") \n";
 
                    //Block *block  = new Block({(float)yUp,(float)xRight}, textureName, textureMgr);
                    Block *block  = new Block({(float)xRight,(float)yUp}, textureName, textureMgr);
@@ -241,27 +267,27 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 
            yUp = MTX_ROWS-1;    // Start at the bottom, and traverse right in this "loop 2"
 
-           std::cout << "\n\n(Loop 2)\n";
+
+
+
+           if(debugLevel > 0) {
+               std::cout << "\n\n(Loop 2)\n";
+           }
+
            xDownRight++;
-           std::cout << "1\n";
+
            xRight = xDownRight;
-           std::cout << "2\n";
+
 
            while(xDownRight < MTX_COLS)
            {
-               std::cout << "3\n";
+
                while(yUp > -1 && xRight < MTX_COLS)
                {
-                   std::cout << "4\n";
-                   std::cout << "(" << yUp << ", " << xRight << ")\n";
-
                    // row = yUp
                    // col = xRight
 
                    textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
-
-                   std::cout << "5\n";
-                   std::cout << "(" << yUp << ", " << xRight << ") \n";
 
                    //Block *block  = new Block({(float)yUp,(float)xRight}, textureName, textureMgr);
                    Block *block  = new Block({(float)xRight,(float)yUp}, textureName, textureMgr);
@@ -274,22 +300,11 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 
                xDownRight++;
 
+    std::ifstream infile;
+    std::string line;
                xRight = xDownRight;
                yUp = MTX_ROWS-1;
-           }
-
-
-
-
-
-
-
-
-
-
-
-
-
+            }
 
 
             /// Put that blocklist into a HurkaMap that we will return
@@ -329,7 +344,7 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 }
 
 // (-+)
-bool FileManager::verifyFile(std::string _filename)
+bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
 {
 
     int debugLevel = 0;
@@ -348,6 +363,8 @@ bool FileManager::verifyFile(std::string _filename)
 
     std::string line;
 
+
+
     int divisor = 4;
     int nrElementsN = 0;
     int nrElementsM = 0;
@@ -361,7 +378,7 @@ bool FileManager::verifyFile(std::string _filename)
     firstLineLength = line.length();
 
     if(firstLineLength%divisor!=0) {  // is it equyally divisable by "4" for instance...?
-        std::cout << "ERROR " << cn << ": Line not divisible by " << divisor << ", missing comma? missing leading zeroes?\n";
+        std::cout << "ERROR " << cn << ": Line not divisible by " << divisor << ", missing comma? missing leading zeroes? every number in the format of 001,002,003?\n";
         infile.close();
         return false;
     }
@@ -398,6 +415,9 @@ bool FileManager::verifyFile(std::string _filename)
         infile.close();
         return false;
     }
+
+    (*rows) = nrElementsM;
+    (*cols) = nrElementsN;
 
     return true;
 }
