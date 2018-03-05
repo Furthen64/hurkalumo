@@ -3,9 +3,9 @@
 
 
 // (-+)
-HurkaMap::HurkaMap(std::string _mapName, TextureManager *_textMgr)
+HurkaMap::HurkaMap(std::string _mapName)
 {
-    textMgr = _textMgr;
+
     mapName = _mapName;
 }
 
@@ -35,7 +35,7 @@ void  HurkaMap::putBlockList(std::list<Block *> _blockList)
 Block *HurkaMap::getBlock()
 {
 
-    Block *blockRef;
+    Block *blockRef = nullptr;
 
     for (std::list<Block *>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
     {

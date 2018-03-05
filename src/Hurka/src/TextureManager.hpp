@@ -18,7 +18,17 @@ class TextureManager
 {
 public:
 
-    TextureManager();
+
+
+    static TextureManager* getInstance() {
+
+        return (!m_instanceSingleton) ?
+            m_instanceSingleton = new TextureManager :
+            m_instanceSingleton;
+    }
+
+
+    void loadTextures();
 
     void pushTexture(std::string _name, Texture _texture);
 
@@ -41,6 +51,18 @@ public:
     }
 
 private:
+
+    TextureManager() { /* put code here if you want */ }
+    ~TextureManager() {}
+
+    // private copy constructor and assignment operator
+    TextureManager(const TextureManager&);
+    TextureManager& operator=(const TextureManager&);
+
+    static TextureManager *m_instanceSingleton;
+
+
+
     std::string cn = "TextureManager.cpp";
 
     std::unordered_map<std::string,Texture> textureMap;

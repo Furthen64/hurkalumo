@@ -19,16 +19,16 @@ using namespace sf;
 class Block
 {
 public:
-    Block(const Vector2f& _pos, std::string _textureName, TextureManager *textureMgr);
-    Block(const Vector2f& _pos, int textureId, TextureManager *textureMgr);
+    Block(const Vector2f& _pos, std::string _textureName);
+    Block(const Vector2f& _pos, int textureId);
 
     void draw( RenderTarget& rt);
 
     int getTextureID();
-    void setTextureByName(std::string _textureName, TextureManager *textureMgr);
+    void setTextureByName(std::string _textureName);
 
 
-    Block *clone(TextureManager *textureMgr);
+    Block *clone();
 
     std::string getTextureName();
 
@@ -107,6 +107,7 @@ private:
     std::string textureName;
     Sprite sprite;
     Vector2f pos;
+    std::string cn = "Block.cpp";
 
 
 };

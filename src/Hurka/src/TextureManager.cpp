@@ -1,5 +1,9 @@
 #include "TextureManager.hpp"
 
+ ///
+ /// SINGLETON
+ ///
+
 
 
 // TODO: Make this automatically assign a name to it?
@@ -8,7 +12,11 @@
 // "H001" which means HOUSE001 , maps it to the first house texture   etc.
 
 // (--)
-TextureManager::TextureManager()
+
+
+
+
+void TextureManager::loadTextures()
 {
 
     Texture txt;
@@ -90,10 +98,6 @@ std::string TextureManager::getTextureNameByIndex(int nr)
 
     return "";
 }
-
-
-
-
 
 
 // (-+)

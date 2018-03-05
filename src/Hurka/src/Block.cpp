@@ -9,14 +9,31 @@
 /// texturename  = "HOUSE001" or other key , see TextureManager
 /// textureMgr   = must be reference to existing TextureManager
 /// (-+)
-Block::Block(const Vector2f& _pos, std::string _textureName, TextureManager *textureMgr)
+Block::Block(const Vector2f& _pos, std::string _textureName)
     :
     pos(_pos)
 {
 
+
+    if(_textureName == "") {
+        std::cout << "ERROR " << cn << " Could not create block with empty texturename=" << _textureName << "\"!\n";
+        return ;
+    }
+
+
     int debugLevel = 0;
 
+
+
+    TextureManager *textureMgr;
+    textureMgr = textureMgr->getInstance();
+
     bool result = textureMgr->applyTexture(_textureName, &texture);
+
+
+
+
+
 
     if(!result) {
             std::cout << "ERROR Block creation, cannot find texture \"" << _textureName << "\".\n";
@@ -43,16 +60,24 @@ Block::Block(const Vector2f& _pos, std::string _textureName, TextureManager *tex
 //
 // (--)
 
-Block::Block(const Vector2f& _pos, int _textureId, TextureManager *textureMgr)
+Block::Block(const Vector2f& _pos, int _textureId)
     :
     pos(_pos)
 {
 
     int debugLevel = 0;
 
+
+    TextureManager *textureMgr;
+    textureMgr = textureMgr->getInstance();
+
+
     textureName = textureMgr->getTextureNameByIndex(_textureId);
 
+
     bool result = textureMgr->applyTexture(textureName, &texture);
+
+
 
     if(!result) {
             std::cout << "ERROR Block creation, cannot find texture id \"" << _textureId << "\".\n";
@@ -106,11 +131,19 @@ std::string Block::getTextureName()
 
 
 // (--)
-void Block::setTextureByName(std::string _textureName, TextureManager *textureMgr)
+void Block::setTextureByName(std::string _textureName)
 {
+
+
+    TextureManager *textureMgr;
+    textureMgr = textureMgr->getInstance();
+
+
     textureName = _textureName;
 
+
     bool result = textureMgr->applyTexture(_textureName, &texture);
+
 
     if(!result) {
         std::cout << "ERROR Block creation, cannot find texture \"" << _textureName << "\".\n";
@@ -130,10 +163,10 @@ void Block::setTextureByName(std::string _textureName, TextureManager *textureMg
 
 // (--)
 // TEST
-Block *Block::clone(TextureManager *textureMgr)
+Block *Block::clone()
 {
 
-    Block *block = new Block({pos.x, pos.y}, textureName, textureMgr);
+    Block *block = new Block({pos.x, pos.y}, textureName);
     return block;
 }
 

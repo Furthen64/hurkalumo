@@ -36,7 +36,7 @@ void dumpMatrix(int** matrix, int rows, int cols)
 }
 
 // (-+)
-void dumpBlockList(std::list<Block *> _blockList, TextureManager *textureMgr)
+void dumpBlockList(std::list<Block *> _blockList)
 {
 
     int n = 0;
@@ -72,11 +72,11 @@ void dumpBlockList(std::list<Block *> _blockList, TextureManager *textureMgr)
 /// Regular file is the matrix as you would see this game from above without isometricness
 /// docs: readRegularFile.png
 // (-+)
-HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *textureMgr)
+HurkaMap FileManager::readRegularFile(std::string _filename)
 {
 
-    HurkaMap emptyMap("empty", textureMgr);
-    HurkaMap resultMap(_filename, textureMgr);
+    HurkaMap emptyMap("empty");
+    HurkaMap resultMap(_filename);
     // The blocklist will be attached to the resultmap if all goes well
     std::list<Block *> blockList;
 
@@ -240,10 +240,17 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 
                    // row = yUp
                    // col = xRight
+
+
+                   TextureManager *textureMgr;
+                   textureMgr = textureMgr->getInstance();
+
+
                    textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
 
-                   //Block *block  = new Block({(float)yUp,(float)xRight}, textureName, textureMgr);
-                   Block *block  = new Block({(float)xRight,(float)yUp}, textureName, textureMgr);
+
+
+                   Block *block  = new Block({(float)xRight,(float)yUp}, textureName);
 
                    blockList.push_back(block);
 
@@ -287,10 +294,13 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
                    // row = yUp
                    // col = xRight
 
-                   textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
 
-                   //Block *block  = new Block({(float)yUp,(float)xRight}, textureName, textureMgr);
-                   Block *block  = new Block({(float)xRight,(float)yUp}, textureName, textureMgr);
+                   TextureManager *textureMgr;
+                   textureMgr = textureMgr->getInstance();
+
+                   textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );    // 001 -> "HOUSE001" for instance
+
+                   Block *block  = new Block({(float)xRight,(float)yUp}, textureName);
 
                    blockList.push_back(block);
 
@@ -300,8 +310,8 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
 
                xDownRight++;
 
-    std::ifstream infile;
-    std::string line;
+               /*std::ifstream infile;
+               std::string line; ta bort*/
                xRight = xDownRight;
                yUp = MTX_ROWS-1;
             }
@@ -315,7 +325,7 @@ HurkaMap FileManager::readRegularFile(std::string _filename, TextureManager *tex
             if(debugLevel > 0) {
 
                 std::cout << "    blocklists complete:\n";
-                dumpBlockList(blockList, textureMgr);
+                dumpBlockList(blockList);
             }
 
 
@@ -416,8 +426,14 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
         return false;
     }
 
-    (*rows) = nrElementsM;
-    (*cols) = nrElementsN;
+    if(rows != nullptr) {
+
+        (*rows) = nrElementsM;
+    }
+
+    if(cols != nullptr) {
+        (*cols) = nrElementsN;
+    }
 
     return true;
 }

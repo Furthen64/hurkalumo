@@ -17,7 +17,7 @@ class HurkaMap
 {
 public:
 
-    HurkaMap(std::string _mapName, TextureManager *_textMgr);
+    HurkaMap(std::string _mapName);
 
     void draw(RenderTarget& rt);
 
@@ -31,7 +31,6 @@ public:
 
 private:
 
-    TextureManager *textMgr;    // Lazy reference, fixme someday with redesign, singleton?
     std::list<Block *> blockList; // All the blocks we render
     std::string cn = "HurkaMap.cpp";
 

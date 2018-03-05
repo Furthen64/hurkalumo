@@ -25,11 +25,16 @@
 // If it doesn't run, just stub out the errors and make it run before pushing to a branch
 
 
+// TODO: texturemanager är hemsk, den slingrar sina tentakler överallt!!
+//       gör om den till singleton först o främst
 // TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
-// TODO: lägga alla i en datastruktur som är lätt att rita upp
 
+
+/// GLOBALS
 
 using namespace sf;
+TextureManager* TextureManager::m_instanceSingleton = nullptr;
+std::string stdMap = "data/aztec.txt";
 
 
 /// WORDS FOR LUMOHURKA
@@ -53,8 +58,8 @@ void waitForInput()
 }
 
 
-// (--)
-bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
+// (++)
+bool testFileManager(int debugLevel=1)
 {
     FileManager fmgr;
     bool result = true;
@@ -67,10 +72,11 @@ bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
 
     if(debugLevel >0) {
 
+
         std::cout << "\n\n*** Verifying file ***\n";
     }
 
-    if(!fmgr.verifyFile("data/aztec.txt", nullptr, nullptr)) {
+    if(!fmgr.verifyFile(stdMap, nullptr, nullptr)) {
         result = false;
     }
 
@@ -79,7 +85,7 @@ bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
     }
 
 
-    HurkaMap hmap = fmgr.readRegularFile("data/aztec.txt", textureMgr);
+    HurkaMap hmap = fmgr.readRegularFile(stdMap);
     if(hmap.mapName== "empty") {
         result = false;
     }
@@ -88,54 +94,109 @@ bool testFileManager(TextureManager *textureMgr, int debugLevel=0)
 }
 
 
-
-
-
-
-// (++)
-void testList(TextureManager *textureMgr)
+// (-+)
+bool testList(int debugLevel=0)
 {
 
-    std::cout << "\n\n*** testList()\n";
+    bool result = true;
+
+    if(debugLevel >0) {
+        std::cout << "\n\n*** testList()\n";
+    }
 
     std::list<Block> blockList;
 
-    Block house001 ({0,1}, "HOUSE001", textureMgr);
+    Block house001 ({0,1}, "HOUSE001");
     blockList.push_back(house001);
-    std::cout << "    Texturename of first block: " << house001.getTextureName() << "\n";
 
-    Block tree001( {0,0}, "TREE001", textureMgr);
+    if(debugLevel >0) {
+        std::cout << "    Texturename of first block: " << house001.getTextureName() << "\n";
+    }
+
+    Block tree001( {0,0}, "TREE001");
     blockList.push_back(tree001);
-    std::cout << "    Texturename of second block: " << tree001.getTextureName() << "\n\n";
 
-
-    std::cout << "Blocklist content: \n{\n";
+    if(debugLevel >0) {
+        std::cout << "    Texturename of second block: " << tree001.getTextureName() << "\n\n";
+        std::cout << "Blocklist content: \n{\n";
+    }
 
     // iterate over all items
     int n = 0;
     for (std::list<Block>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
     {
+        if(n == 0) {
+            if((*itAll).getTextureName() != "HOUSE001") {
+                result = false;
+            }
 
-     std::cout << "    [" << n << "] texturename of current block: " << (*itAll).getTextureName() << "\n";
+        }
 
-     n++;
+        if(n == 1) {
+            if((*itAll).getTextureName() != "TREE001") {
+                result = false;
+            }
+
+        }
+
+        if(debugLevel >0) {
+            std::cout << "    [" << n << "] texturename of current block: " << (*itAll).getTextureName() << "\n";
+        }
+        n++;
     }
-    std::cout << "}\n end of Testlist \n\n";
+
+    if(debugLevel >0) {
+        std::cout << "}\n end of Testlist \n\n";
+    }
+
+    return result;
 
 }
 
 /// ///////////////////////////////////////////////////////////////
 /// Start
 
-int main()
+
+// (--)
+// TODO: weeeeeeeeeeeeelll this is a big skeleton as of now
+//       maybe have modes?
+//      being in the menu?
+//      being in the game, being in settings dialog
+// Complete overhall?
+///PAPER AND PEN
+
+
+
+bool integrityTesting()
 {
 
-    bool integrityTesting = false;
+
+    if(!testFileManager()) {
+        std::cout << "ERROR: testFileManager failed. Something went wrong during integrity test of software!";
+        waitForInput();
+        return false;
+    }
+
+    if(!testList()) {
+        std::cout << "ERROR: testList failed. Something went wrong during integrity test of software!";
+        waitForInput();
+        return false;
+    }
 
 
-    // Should this manager be a singleton perhaps?
-    TextureManager textureMgr;
+    return true;
 
+
+}
+
+
+
+
+
+
+
+int main()
+{
 
     // Setup Window
     // , Style::Fullscreen);
@@ -143,17 +204,6 @@ int main()
 
     window.setFramerateLimit(10);
 
-
-
-
-
-    if(integrityTesting) {
-        if(!testFileManager(&textureMgr)) {
-            std::cout << "ERROR: testFileManager failed. Something went wrong during integrity test of software!";
-            waitForInput();
-            return 0;
-        }
-    }
 
     // Nr of Cells on the grid
     int GAME_WIDTH = 64;
@@ -168,6 +218,11 @@ int main()
     bool drawBlocks = true;
 
     // Setup objects
+    TextureManager *textureMgr;
+    textureMgr = textureMgr->getInstance();
+    textureMgr->loadTextures();
+
+
     GameMatrix gm({GAME_HEIGHT,GAME_WIDTH,1});          /// high level structure of game
     Locomotive loco({10.0f, 10.0f});                    /// sample locomotive
     Toolbar toolbarTop({260.0f, 0.0f});
@@ -179,28 +234,16 @@ int main()
 
 
 
-    /// Testing
-
-    //testList(&textureMgr);
-
-
-
 
 
     /// Read the map
 
-    HurkaMap hmap = fmgr.readRegularFile("data/aztec.txt", &textureMgr);
+    HurkaMap hmap = fmgr.readRegularFile(stdMap);
 
     if(hmap.mapName == "empty") {
         return 0;
     }
 
-
-
-
-
-//                  N M
-//                  X Y
 
 
 
@@ -304,13 +347,10 @@ int main()
         window.clear({0, 0, 0});
 
 
+        // Draw the game board
 
-        // Draw the game bo
-        ard
         if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
-
         if(drawGrid) {  grid.draw(window); }
-
 
         if(drawBlocks) {
 
@@ -325,11 +365,7 @@ int main()
 
         if(drawLoco) {  loco.draw(window); }
 
-
-
-
         if(drawToolbar) {   toolbarTop.draw(window); }
-
 
         window.display();
 
