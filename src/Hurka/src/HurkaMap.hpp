@@ -5,6 +5,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
+#include "Utils.hpp"
 #include "TextureManager.hpp"
 #include "Block.hpp"
 
@@ -17,7 +18,8 @@ class HurkaMap
 {
 public:
 
-    HurkaMap(std::string _mapName);
+    HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols);
+    ~HurkaMap();
 
     void draw(RenderTarget& rt);
 
@@ -29,10 +31,20 @@ public:
 
     std::string mapName;
 
+    int **getRoadMatrix();
+
+
+    // public members
+
+    int getRows() { return matrixRows; }
+    int getCols() { return matrixCols; }
 private:
 
     std::list<Block *> blockList; // All the blocks we render
     std::string cn = "HurkaMap.cpp";
+    int **matrix;
+    int matrixRows;
+    int matrixCols;
 
 };
 

@@ -50,6 +50,8 @@
 		</Linker>
 		<Unit filename="src/Block.cpp" />
 		<Unit filename="src/Block.hpp" />
+		<Unit filename="src/Bus.cpp" />
+		<Unit filename="src/Bus.hpp" />
 		<Unit filename="src/Constants.hpp" />
 		<Unit filename="src/Core.cpp" />
 		<Unit filename="src/FileManager.cpp" />

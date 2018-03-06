@@ -8,6 +8,7 @@
 
 
 // Project includes
+#include "Utils.hpp"
 #include "Grid.hpp"
 #include "TextureManager.hpp"
 #include "Toolbar.hpp"
@@ -16,6 +17,8 @@
 #include "Locomotive.hpp"
 #include "FileManager.hpp"
 #include "HurkaMap.hpp"
+#include "Bus.hpp"
+
 
 #include "Constants.hpp"
 
@@ -23,18 +26,18 @@
 
 // Always push RUNNING code
 // If it doesn't run, just stub out the errors and make it run before pushing to a branch
+// If that is too much to do, make a BRANCH!
 
 
-// TODO: texturemanager är hemsk, den slingrar sina tentakler överallt!!
-//       gör om den till singleton först o främst
-// TODO: kanske ta en titt så alla Width och Height parametrar är i rätt ordning till funktioner
+
+
 
 
 /// GLOBALS
 
 using namespace sf;
 TextureManager* TextureManager::m_instanceSingleton = nullptr;
-std::string stdMap = "data/aztec.txt";
+std::string stdMap = "data/bustest.txt";
 
 
 /// WORDS FOR LUMOHURKA
@@ -71,8 +74,6 @@ bool testFileManager(int debugLevel=1)
 
 
     if(debugLevel >0) {
-
-
         std::cout << "\n\n*** Verifying file ***\n";
     }
 
@@ -85,8 +86,9 @@ bool testFileManager(int debugLevel=1)
     }
 
 
-    HurkaMap hmap = fmgr.readRegularFile(stdMap);
-    if(hmap.mapName== "empty") {
+    HurkaMap *hmap = fmgr.readRegularFile(stdMap);
+
+    if(hmap->mapName== "empty") {
         result = false;
     }
 
@@ -162,7 +164,7 @@ bool testList(int debugLevel=0)
 //       maybe have modes?
 //      being in the menu?
 //      being in the game, being in settings dialog
-// Complete overhall?
+// Complete o?
 ///PAPER AND PEN
 
 
@@ -190,7 +192,98 @@ bool integrityTesting()
 }
 
 
+// For now it just moves them around randomly
+// TODO: needs a matrix of the ROADS so we can figure out the way to move it
 
+// (--)
+void updateBuses(Bus *bus, float dt,  int **matrix )
+{
+
+    if(matrix == nullptr) {
+        std::cout << "ERROR cannot read the road matrix\n";
+        return ;
+    }
+
+
+     int dt_i = (int)dt;
+
+
+     Vector2f np = Vector2f();
+
+     if(dt_i%2==0) {
+         // Change direction
+
+        np.x = 200;
+        np.y = 200;
+
+     } else {
+
+
+        np.x = 20;
+        np.y = 20;
+
+     }
+
+
+
+
+
+
+    // Figure out where the next position is in relation to current position
+
+    bool rightof = false;
+    bool belowof = false;
+    bool topof = false;
+    bool leftof = false;
+
+
+
+    Vector2f dir;
+
+            // Figure out what +-1 to do with the position
+            if(bus->getPos().x < np.x) {
+                rightof = true;
+            }
+            if(bus->getPos().x >= np.x) {
+                leftof = true;
+            }
+            if(bus->getPos().y < np.y) {
+                belowof = true;
+            }
+            if(bus->getPos().y >= np.y) {
+                topof = true;
+            }
+
+            if(rightof) {
+                dir.x += 1.0f;
+            }
+            if(leftof) {
+                dir.x -= 1.0f;
+            }
+            if(belowof) {
+                dir.y += 0.5f;
+            }
+            if(topof) {
+                dir.y -= 0.5f;
+            }
+
+
+
+            // Old way
+            bus->setDirection(dir);
+
+            // My new way
+            bus->setNextPos(np);
+
+
+
+
+
+
+
+    bus->update(dt);
+
+}
 
 
 
@@ -214,7 +307,7 @@ int main()
     bool drawGm = true;
     bool drawLoco = true;
     bool drawToolbar = false;
-    bool drawGrid = false;
+    bool drawGrid = true;
     bool drawBlocks = true;
 
     // Setup objects
@@ -224,7 +317,8 @@ int main()
 
 
     GameMatrix gm({GAME_HEIGHT,GAME_WIDTH,1});          /// high level structure of game
-    Locomotive loco({10.0f, 10.0f});                    /// sample locomotive
+    Bus bus({10.0f, 10.0f});
+    Locomotive loco({10.0f, 10.0f});
     Toolbar toolbarTop({260.0f, 0.0f});
     Grid grid(GAME_HEIGHT, GAME_WIDTH);
 
@@ -235,14 +329,22 @@ int main()
 
 
 
-
     /// Read the map
 
-    HurkaMap hmap = fmgr.readRegularFile(stdMap);
+    HurkaMap *hmap = fmgr.readRegularFile(stdMap);
+    if(hmap->mapName == "empty") { std::cout << "ERROR Could not read the map, exiting!\n"; return 0;  }
 
-    if(hmap.mapName == "empty") {
-        return 0;
-    }
+
+    /// Get the roads
+
+    int **roadMatrix = allocateMatrix(hmap->getRows(), hmap->getCols());
+    if(roadMatrix == nullptr) { std::cout << "ERROR Something horrible has happened, exiting!\n "; return 0; }
+
+    int roadMatrixRows = hmap->getRows();
+    int roadMatrixCols = hmap->getCols();
+
+    roadMatrix = hmap->getRoadMatrix();
+
 
 
 
@@ -337,6 +439,13 @@ int main()
         }
 
         loco.update(dt);
+
+
+        /// Update Busses
+
+        updateBuses(&bus, dt, roadMatrix);
+
+
         //toolbarTop.update(); TODO should I do this?
 
 
@@ -350,26 +459,38 @@ int main()
         // Draw the game board
 
         if(drawGm)   {  gm.draw(window);  } // Draws the ground and water and suchers
-        if(drawGrid) {  grid.draw(window); }
+
+
 
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in renderorder
 
-            hmap.draw(window);
-
-
+            hmap->draw(window);
 
         }
 
 
         if(drawLoco) {  loco.draw(window); }
 
+        bus.draw(window);
+
+
+        if(drawGrid) {  grid.draw(window); }
+
         if(drawToolbar) {   toolbarTop.draw(window); }
 
         window.display();
 
 
+    }
+
+
+    // Delete matrixiseseses
+    if(roadMatrixRows>0) {
+
+        if (roadMatrixRows>0) delete [] roadMatrix[0];
+        delete [] roadMatrix;
     }
 
     return 0;

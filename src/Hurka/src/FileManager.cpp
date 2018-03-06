@@ -17,6 +17,8 @@ FileManager::FileManager()
 }
 
 
+
+
 /// (++)
 void dumpMatrix(int** matrix, int rows, int cols)
 {
@@ -69,15 +71,27 @@ void dumpBlockList(std::list<Block *> _blockList)
 
 
 
-/// Regular file is the matrix as you would see this game from above without isometricness
+/// Reads the file which contains numbers, like 001,005,007
+/// Puts them all into a matrix N x M
+/// Parses the Matrix of integers and creates Blocks
+/// while parsing, puts them in a particular order which enables rendering
+/// in the isometric view
+///
 /// docs: readRegularFile.png
 // (-+)
-HurkaMap FileManager::readRegularFile(std::string _filename)
+HurkaMap *FileManager::readRegularFile(std::string _filename)
 {
 
-    HurkaMap emptyMap("empty");
-    HurkaMap resultMap(_filename);
+    // The possible return objects, one fail and one win
+    HurkaMap *emptyMap = new HurkaMap("empty", nullptr, 0,0 );
+    HurkaMap *resultMap = nullptr;  // Allocated later when we have the matrix of objects (001,007,... etc)
+
+
+
+
+
     // The blocklist will be attached to the resultmap if all goes well
+
     std::list<Block *> blockList;
 
     std::ifstream infile;
@@ -118,10 +132,6 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
     /// Get the Rows and Columns out of the map
 
 
-
-
-
-    // DEBUG FIXME CORRECT oh god plz fix this, read the width and height from file instead
     int MTX_ROWS=mapRows;
     int MTX_COLS=mapCols;
 
@@ -145,11 +155,9 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
             /// Read lines from the file
             /// For every number (001,002,...) , put it in the matrix
 
-
             if(debugLevel > 0) {
                 std::cout << "    read lines from the file\n";
             }
-
 
             unsigned int currRow = 0;
             unsigned int currCol = 0;
@@ -160,7 +168,6 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
             {
 
                 // Parse this line
-
 
                 while( (offset+4) <= line.size()) {
 
@@ -189,6 +196,9 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
 
                 dumpMatrix(matrix, MTX_ROWS, MTX_COLS);
             }
+
+            // Create output object now that we have the matrix
+            resultMap = new HurkaMap(_filename, matrix, MTX_ROWS, MTX_COLS);
 
 
 
@@ -257,8 +267,6 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
                    yUp--;
                    xRight++;
 
-
-
                }
 
                yDown++;
@@ -294,7 +302,6 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
                    // row = yUp
                    // col = xRight
 
-
                    TextureManager *textureMgr;
                    textureMgr = textureMgr->getInstance();
 
@@ -310,15 +317,18 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
 
                xDownRight++;
 
-               /*std::ifstream infile;
-               std::string line; ta bort*/
                xRight = xDownRight;
                yUp = MTX_ROWS-1;
             }
 
 
             /// Put that blocklist into a HurkaMap that we will return
-            resultMap.putBlockList(blockList);
+            if(resultMap == nullptr)  {
+                std::cout << "ERROR " << cn << " resultMap is null inside readRegularFile(), stopping !\n";
+                return emptyMap;
+            }
+
+            resultMap->putBlockList(blockList);
 
             /// Complete!!
 
@@ -333,9 +343,6 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
             // N - Cleanup of work variable Matrix
 
 
-
-            if (rows) delete [] matrix[0];
-            delete [] matrix;
 
 
     } else {
@@ -354,6 +361,9 @@ HurkaMap FileManager::readRegularFile(std::string _filename)
 }
 
 // (-+)
+// Given rows and cols, check that they actually contain those constraints
+// IF they are nullptr that check is not made
+
 bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
 {
 
@@ -454,6 +464,16 @@ void FileManager::printWorkingDir()
 
     std::cout << "The current working directory is \"" << cCurrentPath << "\"\n";
 }
+
+
+
+int **FileManager::parseRoadMatrix()
+{
+    int **roadMatrix;
+
+    return roadMatrix;
+}
+
 
 
 

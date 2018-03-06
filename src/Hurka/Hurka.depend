@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1520264061 source:c:\github\lumo\src\hurka\src\core.cpp
+1520342758 source:c:\github\lumo\src\hurka\src\core.cpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1575,6 +1575,7 @@
 	<math.h>
 	<SFML/Graphics.hpp>
 	<chrono>
+	"Utils.hpp"
 	"Grid.hpp"
 	"TextureManager.hpp"
 	"Toolbar.hpp"
@@ -1583,6 +1584,7 @@
 	"Locomotive.hpp"
 	"FileManager.hpp"
 	"HurkaMap.hpp"
+	"Bus.hpp"
 	"Constants.hpp"
 
 1519297691 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1599,7 +1601,7 @@
 	<SFML/Graphics.hpp>
 	"Constants.hpp"
 
-1520264209 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
+1520332763 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
 	"TextureManager.hpp"
 
 1519298525 source:c:\github\lumo\src\hurka\src\toolbar.cpp
@@ -1634,14 +1636,14 @@
 1519504974 c:\github\lumo\src\hurka\src\locomotive.hpp
 	"SFML/Graphics.hpp"
 
-1520264174 source:c:\github\lumo\src\hurka\src\filemanager.cpp
+1520342378 source:c:\github\lumo\src\hurka\src\filemanager.cpp
 	<iostream>
 	<fstream>
 	<sstream>
 	<string>
 	"FileManager.hpp"
 
-1520261510 c:\github\lumo\src\hurka\src\filemanager.hpp
+1520341779 c:\github\lumo\src\hurka\src\filemanager.hpp
 	<stdio.h>
 	<direct.h>
 	<unistd.h>
@@ -1650,13 +1652,27 @@
 	"HurkaMap.hpp"
 	"Constants.hpp"
 
-1520264001 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
+1520342666 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
 	"HurkaMap.hpp"
 
-1520261778 c:\github\lumo\src\hurka\src\hurkamap.hpp
+1520342799 c:\github\lumo\src\hurka\src\hurkamap.hpp
 	<list>
 	<string>
 	<SFML/Graphics.hpp>
+	"Utils.hpp"
 	"TextureManager.hpp"
 	"Block.hpp"
+
+1520331518 source:c:\github\lumo\src\hurka\src\bus.cpp
+	"Bus.hpp"
+
+1520331927 c:\github\lumo\src\hurka\src\bus.hpp
+	"SFML/Graphics.hpp"
+	"TextureManager.hpp"
+
+1520342786 c:\github\lumo\src\hurka\src\utils.hpp
+	<iostream>
+
+1520342780 source:c:\github\lumo\src\hurka\src\utils.cpp
+	"Utils.hpp"
 

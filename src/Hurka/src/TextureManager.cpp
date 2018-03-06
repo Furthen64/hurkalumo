@@ -53,6 +53,19 @@ void TextureManager::loadTextures()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_003.png");
     pushTexture("ROAD003", txt);
 
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_004.png");
+    pushTexture("ROAD004", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_005.png");
+    pushTexture("ROAD005", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_006.png");
+    pushTexture("ROAD006", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_007.png");
+    pushTexture("ROAD007", txt);
+
+
 
     // Trees
 
@@ -68,30 +81,43 @@ void TextureManager::loadTextures()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_001.png");
     pushTexture("GRASS001", txt);
 
+    // Bus
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\BUS_001.png");
+    pushTexture("BUS001", txt);
+
 }
 
 
 
 // Converts the integer to string version of textures in the library
 
+
+/// TODO: Automatisera detta :x så det inte blir några mer human errors av att man skriver fel
 std::string TextureManager::getTextureNameByIndex(int nr)
 {
 
     switch(nr){
-        case 0: return "GRASS001";
-        case 1: return "HOUSE001";
-        case 2: return "HOUSE002";
-        case 3: return "HOUSE003";
-        case 4: return "HOUSE004";
-        case 5: return "HOUSE005";
-        case 6: return "HOUSE006";
+        case 000: return "GRASS001";
+        case 001: return "HOUSE001";
+        case 002: return "HOUSE002";
+        case 003: return "HOUSE003";
+        case 004: return "HOUSE004";
+        case 005: return "HOUSE005";
+        case 006: return "HOUSE006";
 
-        case 7: return "ROAD001";
-        case 8: return "ROAD002";
-        case 9: return "ROAD003";
+        case 101: return "ROAD001";
+        case 102: return "ROAD002";
+        case 103: return "ROAD003";
+        case 104: return "ROAD004";
+        case 105: return "ROAD005";
+        case 106: return "ROAD006";
+        case 107: return "ROAD007";
 
-        case 10: return "TREE001";
-        case 11: return "TREE002";
+        case 301: return "TREE001";
+        case 302: return "TREE002";
+
+        case 401: return "BUS001";
+
 
         default: return "";
     }
@@ -134,7 +160,9 @@ bool TextureManager::applyTexture(std::string textureName, Texture *texture)
 
 
 
-// (--)
+// (-+)
+/// You supply id=001 and it looks up the texture name "HOUSE001"  and then assigns that to the texture pointer
+
 bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
 {
     bool result = false;

@@ -34,9 +34,11 @@ class FileManager
 public:
 
     FileManager();
-    HurkaMap readRegularFile(std::string _filename);
+    HurkaMap *readRegularFile(std::string _filename);
     bool verifyFile(std::string _filename, int *rows, int *cols);
     void printWorkingDir();
+    int **parseRoadMatrix();
+
 
 
 private:
