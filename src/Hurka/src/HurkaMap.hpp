@@ -31,7 +31,7 @@ public:
 
     std::string mapName;
 
-    int **getRoadMatrix();
+    HurkaMatrix *getRoadMatrix();
 
 
     // public members

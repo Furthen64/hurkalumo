@@ -1,7 +1,5 @@
 #include "HurkaMap.hpp"
 
-
-
 // (-+)
 HurkaMap::HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols)
 {
@@ -54,15 +52,19 @@ Block *HurkaMap::getBlock()
 
 
 
-
-int **HurkaMap::getRoadMatrix()
-{
-
+// (--)
+// TEST
     // Parse the matrix
     // Make a matrix  with only 1s and 0s
 
-    int **newMatrix;
-    newMatrix = allocateMatrix(matrixRows, matrixCols);
+HurkaMatrix *HurkaMap::getRoadMatrix()
+{
+
+
+    std::cout << "getRoadMatrix() with matrixRows= " << matrixRows << ", matrixCols= " << matrixCols << "\n";
+
+
+    HurkaMatrix *newMatrix = new HurkaMatrix(matrixRows, matrixCols);
 
 
     for(int y = 0; y < matrixRows; y++)
@@ -81,19 +83,22 @@ int **HurkaMap::getRoadMatrix()
                matrix[y][x] == 106 ||
                matrix[y][x] == 107 ) {
 
-                   newMatrix[y][x] = 1;
+                   newMatrix->matrix[y][x] = 1;
 
                }
                else
                {
                    // Another regular block
-                   newMatrix[y][x] = 0;
+                   newMatrix->matrix[y][x] = 0;
 
                }
 
         }
 
     }
+
+
+    std::cout << " newMatrix " << newMatrix->rows << ", " << newMatrix->cols << "\n";
 
 
     return newMatrix;

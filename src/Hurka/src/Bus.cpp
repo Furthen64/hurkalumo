@@ -44,8 +44,63 @@ Vector2f Bus::getPos()
     return pos;
 }
 
+void Bus::setPos( Vector2f _p)
+{
+        pos = _p;
+}
 
 void Bus::setNextPos( Vector2f _np)
 {
     nextPos = _np;
+}
+
+Vector2f Bus::randStartingPos(HurkaMatrix *roadMatrix)
+{
+
+
+    if(roadMatrix->rows > 10000 || roadMatrix->cols > 10000) {
+            std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadMatrix->rows << ", " << roadMatrix->cols << "\n";
+        return Vector2f();
+    }
+    bool found = false;
+    int allowedAttempts = 500;
+    int currAttempt = 0;
+
+    Vector2f newPos = Vector2f();
+
+    int r;
+    int c;
+
+    while(found == false && currAttempt < allowedAttempts) {
+
+
+        std::cout << "rows= " << roadMatrix->rows << " cols= " << roadMatrix->cols << "\n";
+
+        r = randBetween(0, roadMatrix->rows);
+        c = randBetween(0, roadMatrix->cols);
+
+        std::cout << "Randomizing bus start (" << r << ", " << c << ")\n";
+
+
+        if(roadMatrix->matrix[r][c] == 1) {
+
+            // FIXME 16 16 ?
+            newPos.y = GameMatrix::getWindowYPos(r, c, 16, 16);
+            newPos.x = GameMatrix::getWindowXPos(r, c, 16, 16);
+            found = true;
+
+        }
+
+        currAttempt++;
+
+
+
+    }
+
+
+
+
+
+
+    return newPos;
 }

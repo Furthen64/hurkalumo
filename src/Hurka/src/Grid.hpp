@@ -1,3 +1,7 @@
+#ifndef GRID_H
+#define GRID_H
+
+
 #include <SFML/Graphics.hpp>
 
 #include "Constants.hpp"
@@ -74,3 +78,6 @@ private:
     int width;
     int height;
 };
+
+
+#endif

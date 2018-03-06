@@ -1,73 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-
 #include "FileManager.hpp"
-
-
-/// FileManager
-
-
-
-FileManager::FileManager()
-{
-
-
-}
-
-
-
-
-/// (++)
-void dumpMatrix(int** matrix, int rows, int cols)
-{
-
-    std::cout << "\n\n Matrix: \n{\n";
-    for(int r = 0; r < rows; r++) {
-        std::cout << "   ";
-        for(int c = 0; c < cols; c++) {
-                std::cout << matrix[r][c] << ", ";
-
-        }
-        std::cout << "\n";
-    }
-    std::cout << "}\n";
-
-
-}
-
-// (-+)
-void dumpBlockList(std::list<Block *> _blockList)
-{
-
-    int n = 0;
-    std::cout << "\n\ndumpBlockList: \n{\n";
-
-    // iterate over all items
-    for (std::list<Block *>::iterator itAll = _blockList.begin(); itAll != _blockList.end(); ++itAll)
-    {
-        std::cout << "    [" << n << "] TextureName of current block: " << (*itAll)->getTextureName() << "\n";
-        n++;
-
-    }
-    std::cout << "}\n";
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -79,6 +10,9 @@ void dumpBlockList(std::list<Block *> _blockList)
 ///
 /// docs: readRegularFile.png
 // (-+)
+
+
+
 HurkaMap *FileManager::readRegularFile(std::string _filename)
 {
 
@@ -335,7 +269,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
             if(debugLevel > 0) {
 
                 std::cout << "    blocklists complete:\n";
-                dumpBlockList(blockList);
+                //dumpBlockList(blockList);
             }
 
 
@@ -359,6 +293,10 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
     infile.close();
     return resultMap;
 }
+
+
+
+
 
 // (-+)
 // Given rows and cols, check that they actually contain those constraints
@@ -454,7 +392,7 @@ void FileManager::printWorkingDir()
 {
      char cCurrentPath[FILENAME_MAX];
 
-     if (!GetCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
+     if (!_getcwd(cCurrentPath, sizeof(cCurrentPath)))
      {
          std::cout << errno << "\n";
         return ;
@@ -467,12 +405,29 @@ void FileManager::printWorkingDir()
 
 
 
-int **FileManager::parseRoadMatrix()
+/*
+// (-+)
+void dumpBlockList(std::list<Block *> _blockList)
 {
-    int **roadMatrix;
 
-    return roadMatrix;
+    int n = 0;
+    std::cout << "\n\ndumpBlockList: \n{\n";
+
+    // iterate over all items
+    for (std::list<Block *>::iterator itAll = _blockList.begin(); itAll != _blockList.end(); ++itAll)
+    {
+        std::cout << "    [" << n << "] TextureName of current block: " << (*itAll)->getTextureName() << "\n";
+        n++;
+
+    }
+    std::cout << "}\n";
+
 }
+
+
+*/
+
+
 
 
 

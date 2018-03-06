@@ -1,9 +1,10 @@
 #ifndef GAMEMATRIX_H
 #define GAMEMATRIX_H
 
-
+#include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include "Grid.hpp"
 #include "Constants.hpp"
 
 /// //////////////////////////////////////////////

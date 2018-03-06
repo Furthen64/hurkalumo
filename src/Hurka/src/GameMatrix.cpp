@@ -1,8 +1,7 @@
-#include <iostream>
+
 #include "GameMatrix.hpp"
 
 
-#include "Grid.hpp"
 
 /// //////////////////////////////////////////////
 /// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?

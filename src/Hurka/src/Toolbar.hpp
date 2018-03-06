@@ -1,3 +1,6 @@
+#ifndef TOOLBAR_H
+#define TOOLBAR_H
+
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -36,3 +39,6 @@ private:
     const int nrButtons = 6;
     const int widthPx = 16;
 };
+
+
+#endif

@@ -2,7 +2,10 @@
 #define BUS_H
 
 #include "SFML/Graphics.hpp"
+#include "Utils.hpp"
+#include "GameMatrix.hpp"
 #include "TextureManager.hpp"
+#include "HurkaMatrix.hpp"
 
 using namespace sf;
 
@@ -18,11 +21,17 @@ public:
 
     void setDirection( Vector2f dir);
 
+    void setPos( Vector2f _p);
+
     void setNextPos( Vector2f _np);
+
 
     void update( float dt);
 
     Vector2f getPos();
+
+
+    Vector2f randStartingPos(HurkaMatrix *roadMatrix);
 
 
 
@@ -40,6 +49,9 @@ private:
 
     Texture texture;
     Sprite sprite;
+
+
+    std::string cn = "Bus.cpp";
 };
 
 #endif

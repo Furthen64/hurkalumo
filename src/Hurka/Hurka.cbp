@@ -62,12 +62,17 @@
 		<Unit filename="src/Grid.hpp" />
 		<Unit filename="src/HurkaMap.cpp" />
 		<Unit filename="src/HurkaMap.hpp" />
+		<Unit filename="src/HurkaMatrix.cpp" />
+		<Unit filename="src/HurkaMatrix.hpp" />
 		<Unit filename="src/Locomotive.cpp" />
 		<Unit filename="src/Locomotive.hpp" />
+		<Unit filename="src/Main.cpp" />
 		<Unit filename="src/TextureManager.cpp" />
 		<Unit filename="src/TextureManager.hpp" />
 		<Unit filename="src/Toolbar.cpp" />
 		<Unit filename="src/Toolbar.hpp" />
+		<Unit filename="src/Utils.cpp" />
+		<Unit filename="src/Utils.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

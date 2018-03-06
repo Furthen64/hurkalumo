@@ -167,6 +167,7 @@ Block *Block::clone()
 {
 
     Block *block = new Block({pos.x, pos.y}, textureName);
+    // FIXME add delete
     return block;
 }
 
