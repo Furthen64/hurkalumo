@@ -52,7 +52,7 @@ void Toolbar::pushButton(int relXPos)
 
 }
 
-void Toolbar::draw( RenderTarget& rt)
+void Toolbar::draw( RenderTarget& rt, Vector2u viewPos)
 {
     // draw all the buttons individually
     for(int i = 0; i < nrButtons; i++){

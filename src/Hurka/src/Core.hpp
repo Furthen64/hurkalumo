@@ -54,13 +54,19 @@ public:
 
 private:
 
-    int debugLevel = 0;
+    int debugLevel = 2;
 
     int SCREEN_WIDTH = 800;
     int SCREEN_HEIGHT = 600;
+    int lockFPS = true;
+    int lockFPS_n = 60;
+
+
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
 
-    /// BUG FIXME  , if you set this low, 32,32 game crashes! why?
+    int mouseSensitivity = 10; // Pan speed in percentage
+
+    Vector2u viewPos = {0,0};
 
 
     TextureManager *textureMgr; // Singleton!
@@ -77,15 +83,12 @@ private:
     bool drawGm = true;
     bool drawLoco = true;
     bool drawBuses = true;
-    bool drawToolbar = true;
-    bool drawGrid = true;
-    bool drawBlocks = true;
+    bool drawToolbar = 1;
+    bool drawGrid = 1;
+    bool drawBlocks = 1;
 
 
     std::string cn = "Core.cpp";
-
-
-
 
 
 };

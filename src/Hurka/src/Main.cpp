@@ -6,6 +6,11 @@
 // If that is too much to do, make a BRANCH!
 
 
+/// Vore det inte najs med en WindowManager som håller
+///         * RenderWindow
+///         * Inputs
+///         * Vector2u viewPos  så man slipper skicka med den till alla .draw() ?
+
 
 /// GLOBALS
 

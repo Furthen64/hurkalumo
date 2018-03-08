@@ -17,7 +17,7 @@ public:
     Grid() {}
     Grid(int _height, int _width);
 
-    void draw( RenderTarget& rt);
+    void draw( RenderTarget& rt, Vector2u viewPos);
 
 
 
@@ -30,7 +30,7 @@ public:
 static int getWindowXPos(int N, int M, int width, int height)
 {
 
-    int initialXOffset = 400;   // Start in the middle
+    int initialXOffset = 0;   // Start in the middle
 
 
     /// N = Width index in the grid

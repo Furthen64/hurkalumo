@@ -15,8 +15,22 @@ Locomotive::Locomotive(const Vector2f& _pos)
     sprite.setTextureRect( {0,0,32,32});
 }
 
-void Locomotive::draw( RenderTarget& rt) const
+
+
+// Does it work?
+// (--)
+void Locomotive::draw( RenderTarget& rt, Vector2u viewPos)
 {
+    Vector2f newPos;
+
+    // Create a new one with adjusted for viewport
+    newPos.x = pos.x;
+    newPos.y = pos.y;
+
+    newPos.x += viewPos.x;
+    newPos.y += viewPos.y;
+
+    sprite.setPosition(newPos);
     rt.draw( sprite );
 }
 void Locomotive::setDirectionConst( const Vector2f& dir)

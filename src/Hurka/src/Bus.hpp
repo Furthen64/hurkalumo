@@ -6,6 +6,7 @@
 #include "GameMatrix.hpp"
 #include "TextureManager.hpp"
 #include "HurkaMatrix.hpp"
+#include "Block.hpp"
 
 using namespace sf;
 
@@ -15,41 +16,42 @@ class Bus
 public:
 
     Bus() {}
-    Bus(const Vector2f& _pos);
+    Bus(const Vector2f& _iso_pos);
 
-    void draw( RenderTarget& rt) const;
+    void draw( RenderTarget& rt, Vector2u viewPos);
 
-    void setDirectionConst( const Vector2f& dir);
-
-    void setDirection( Vector2f dir);
-
-    void setPos( Vector2f _p);
-
-    void setNextPos( Vector2f _np);
+    void update();
 
 
-    void update( float dt);
+    // ISO position
+    Vector2f get_iso_pos();
+    void set_iso_pos( Vector2f _p);
+    void setNext_iso_pos( Vector2f _np);
 
-    Vector2f getPos();
+    // Pixel position
+    Vector2f get_pix_pos();
+    void set_pix_pos( Vector2f _p);
+    void setNext_pix_pos( Vector2f _np);
 
 
-    Vector2f randStartingPos(HurkaMatrix *roadMatrix);
-
+    void setRandStartingPosition(HurkaMatrix *roadMatrix);
+    Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);
 
 
 private:
 
-    Vector2f pos;   // Current position
-
+    Vector2f pix_pos;    // Current position in pixels
+    Vector2f iso_pos;   // Current position in the isometric matrix
+    Vector2f next_iso_pos;
+    Vector2f next_pix_pos;
 
     Vector2f vel = {0.0f, 0.0f};
-
     float speed = 2.0f; // 1 pixel per update?
     Vector2f nextPos;
 
-
-
     Texture texture;
+    IntRect textureSize;
+
     Sprite sprite;
 
 

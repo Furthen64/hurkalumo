@@ -27,20 +27,28 @@ public:
     int getHeight();
 
 
-    void draw( RenderTarget& rt);
+    void draw( RenderTarget& rt,  Vector2u viewPos);
 
+
+
+    static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
+    {
+        Vector2f newPos;
+        newPos.x = pix_pos_x(iso_pos.x, iso_pos.y, width, height);
+        newPos.y = pix_pos_y(iso_pos.x, iso_pos.y, width, height);
+        return newPos;
+    }
 
      // (-+)
     // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
-    // N = along the width axis
-    // M = along the height axis of the gameboard
-    // width = width of the texture
-    // height = height of the texture
-    static int getWindowXPos(int N, int M, int width, int height)
+    /// N = x = along the width axis
+    /// M = y = along the height axis of the gameboard
+    /// width = width of the texture
+    /// height = height of the texture
+    static int pix_pos_x(int N, int M, int width, int height)
     {
 
-        int initialXOffset = 400;   // Start in the middle
-
+        int initialXOffset = 0;   // Start in the middle
 
         /// N = Width index in the grid
         /// M = Height index in the grid
@@ -65,7 +73,7 @@ public:
     // M = along the height axis of the gameboard
     // width = width of the texture
     // height = height of the texture
-    static int getWindowYPos(int N, int M, int width, int height)
+    static int pix_pos_y(int N, int M, int width, int height)
     {
         int initialYOffset = 0;     // Start at the top
 

@@ -16,7 +16,7 @@ Grid::Grid(int _height, int _width)
 }
 
 
-void Grid::draw( RenderTarget& rt)
+void Grid::draw( RenderTarget& rt, Vector2u viewPos)
 {
     // haha this will be hell to figure out
     // I need functions for getting the X,Y of the [N,M]th position in the matrix
@@ -35,6 +35,10 @@ void Grid::draw( RenderTarget& rt)
 
             x = getWindowXPos(N,M, GRID_WIDTH, GRID_HEIGHT);
             y = getWindowYPos(N,M, GRID_WIDTH, GRID_HEIGHT);
+
+            x += viewPos.x;
+            y += viewPos.y;
+
             Vector2f pos = {(float)x,(float)y};
 
             sprite.setPosition(pos);

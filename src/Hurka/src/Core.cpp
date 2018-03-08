@@ -21,12 +21,16 @@ void Core::boot()
     run();
 }
 
+// (--)
 void Core::allocateResources()
 {
 
     std::cout << "\n\n\n---------------allocateResources-------------------\n";
 }
 
+
+
+// (-+)
 void Core::loadResources(std::string mapName)
 {
 
@@ -53,6 +57,9 @@ void Core::loadResources(std::string mapName)
 
 }
 
+
+
+// (-+)
 void Core::setup(int width, int height, std::string title)
 {
 
@@ -72,15 +79,21 @@ void Core::setup(int width, int height, std::string title)
 
 
     /// Place them Buses
-    bus->setPos(bus->randStartingPos(roadMatrix));
+    bus->setRandStartingPosition(roadMatrix);
+
 
 }
 
 
+
+
+// (-+)
 void Core::run()
 {
     RenderWindow window(sf::VideoMode(800, 600), "HurkaLumo editor 0.1-alpha");
-    window.setFramerateLimit(10);
+    if(lockFPS) {
+        window.setFramerateLimit(lockFPS_n);
+    }
 
     std::cout << "\n\n\n---------------run-------------------\n";
 
@@ -88,6 +101,10 @@ void Core::run()
         std::cout << "ERROR " << cn << " sf::window is not open!\n";
         return ;
     }
+
+
+
+    // TODO: Break out to functions , do it in an own branch
     while (window.isOpen())
     {
 
@@ -104,13 +121,104 @@ void Core::run()
 
         /// Update
 
+
+        // Right mouse button pressed - Pan the Map
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        {
+
+            bool rightof = false;
+            bool belowof = false;
+            bool topof = false;
+            bool leftof = false;
+
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
+            unsigned int relativeX = 0;
+            unsigned int relativeY = 0;
+
+
+            // Where in relation to the Center point are we clicking?
+
+            // Above? Below?
+            if(mousePos_i.y < ceil(SCREEN_HEIGHT/2))
+            {
+                topof = true;
+            } else if(mousePos_i.y > ceil(SCREEN_HEIGHT/2))
+            {
+                topof = false;
+                belowof = true;
+            } else {
+                topof = false;
+                belowof = false;
+            }
+
+
+            // Left of? Right of?
+            if(mousePos_i.x < ceil(SCREEN_WIDTH/2)) {
+                leftof = true;
+            } else if(mousePos_i.x > ceil(SCREEN_WIDTH/2)) {
+                leftof = false;
+                rightof = true;
+            } else {
+                leftof = false;
+                rightof = false;
+            }
+
+
+            // the nr of pixels between the click and the center position
+
+            if( ceil(SCREEN_WIDTH/2) > mousePos_i.x) {
+                relativeX = ceil(SCREEN_WIDTH/2) - mousePos_i.x;
+            } else {
+                relativeX = mousePos_i.x - ceil(SCREEN_WIDTH/2);
+            }
+
+
+            if( ceil(SCREEN_HEIGHT/2) > mousePos_i.y) {
+                relativeY = ceil(SCREEN_HEIGHT/2) - mousePos_i.y;
+            } else {
+                relativeY = mousePos_i.y - ceil(SCREEN_HEIGHT/2);
+            }
+
+
+
+            // Adjust speed of panning
+            // TODO FIXME maybe adjust for the ratio of screen width and height you knooow?
+
+            relativeX =   ( (float) relativeX * mouseSensitivity/100 );
+            relativeY =   ( (float) relativeY * mouseSensitivity/100 );
+
+
+
+            /// Add or remove from the x and y offset because of the cliiicking
+
+            if(rightof && topof) {
+                viewPos.x -= relativeX;
+                viewPos.y += relativeY;
+            } else if(rightof && belowof) {
+                viewPos.x -= relativeX;
+                viewPos.y -= relativeY;
+            } else if(leftof && belowof) {
+                viewPos.x += relativeX;
+                viewPos.y -= relativeY;
+            } else if(leftof && topof) {
+                viewPos.x += relativeX;
+                viewPos.y += relativeY;
+            } else {
+
+            }
+
+
+            if(debugLevel > 1)  {
+                std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+            }
+
+
+        }
+
         // Get mouse input
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-
-            ///FIXME TESTA Funkar detta med *window ???
-
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window ); // window is a sf::Window
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
 
             Vector2f mousePos_f = Vector2f();
             mousePos_f.x = mousePos_i.x;
@@ -171,34 +279,34 @@ void Core::run()
 
         //toolbarTop.update(); TODO should I do this?
 
+
+
+
+
         /// Render
 
         window.clear({0, 0, 0});
 
-
         // Draw the game board
 
-        if(drawGm)   {  gm->draw(window);  } // Draws the ground and water and suchers
-
-
+        if(drawGm)   {  gm->draw(window, viewPos);  } // Draws the ground and water and suchers
 
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in renderorder
 
-            hmap->draw(window);
-
+            hmap->draw(window, viewPos);
         }
 
 
-        if(drawLoco) {  loco->draw(window); }
+        if(drawLoco) {  loco->draw(window, viewPos); }
 
-        if(drawBuses) { bus->draw(window); }
+        if(drawBuses) { bus->draw(window, viewPos); }
 
 
-        if(drawGrid) {  grid->draw(window); }
+        if(drawGrid) {  grid->draw(window, viewPos); }
 
-        if(drawToolbar) {   toolbarTop->draw(window); }
+        if(drawToolbar) {   toolbarTop->draw(window, viewPos); }
 
         window.display();
 
@@ -210,6 +318,7 @@ void Core::run()
 }
 
 
+// (--)
 void Core::reset()
 {
     std::cout << "\n\n\n---------------** RESET **-------------------\n";
@@ -244,75 +353,10 @@ void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix )
         return ;
     }
 
+    //Vector2f np = Vector2f();
+    //bus->setNext_iso_pos(np);
 
-     int dt_i = (int)dt;
-
-
-     Vector2f np = Vector2f();
-
-     if(dt_i%2==0) {
-         // Change direction
-
-        np.x = 200;
-        np.y = 200;
-
-     } else {
-
-
-        np.x = 20;
-        np.y = 20;
-
-     }
-
-
-    // Figure out where the next position is in relation to current position
-
-    bool rightof = false;
-    bool belowof = false;
-    bool topof = false;
-    bool leftof = false;
-
-
-
-    Vector2f dir;
-
-    // Figure out what +-1 to do with the position
-    if(bus->getPos().x < np.x) {
-        rightof = true;
-    }
-    if(bus->getPos().x >= np.x) {
-        leftof = true;
-    }
-    if(bus->getPos().y < np.y) {
-        belowof = true;
-    }
-    if(bus->getPos().y >= np.y) {
-        topof = true;
-    }
-
-    if(rightof) {
-        dir.x += 1.0f;
-    }
-    if(leftof) {
-        dir.x -= 1.0f;
-    }
-    if(belowof) {
-        dir.y += 0.5f;
-    }
-    if(topof) {
-        dir.y -= 0.5f;
-    }
-
-
-
-    // Old way
-    bus->setDirection(dir);
-
-    // My new way
-    bus->setNextPos(np);
-
-
-    bus->update(dt);
+    bus->update();
 
 }
 

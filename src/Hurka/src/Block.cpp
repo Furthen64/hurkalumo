@@ -98,13 +98,23 @@ Block::Block(const Vector2f& _pos, int _textureId)
 
 
 // (--)
-void Block::draw( RenderTarget& rt)
+void Block::draw( RenderTarget& rt, Vector2u viewPos)
 {
 
     int x = getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height);
     int y = getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height);
+
+
+    // Viewing offset
+    x += viewPos.x;
+    y += viewPos.y;
+
+
     Vector2f _pos = {(float)x,(float)y};
+
+
     sprite.setPosition(_pos);
+
     rt.draw(sprite);
 
 

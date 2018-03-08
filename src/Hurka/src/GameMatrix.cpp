@@ -41,8 +41,10 @@ int GameMatrix::getHeight()
 
 
 
-// (-+)
-void GameMatrix::draw( RenderTarget& rt)
+/// (--)
+/// Optimize with the ints maybe make it a const?
+
+void GameMatrix::draw( RenderTarget& rt, Vector2u viewPos)
 {
     int x = 0;
     int y = 0;
@@ -55,9 +57,17 @@ void GameMatrix::draw( RenderTarget& rt)
         // because the gamematrix's green background should follow the grid
             x = Grid::getWindowXPos(N,M, GRID_WIDTH, GRID_HEIGHT);
             y = Grid::getWindowYPos(N,M, GRID_WIDTH, GRID_HEIGHT);
+
+
+            // Offset for viewing position
+            x += viewPos.x;
+            y += viewPos.y;
+
             Vector2f pos = {(float)x,(float)y};
 
             sprite.setPosition(pos);
+
+
             rt.draw(sprite);
         }
 

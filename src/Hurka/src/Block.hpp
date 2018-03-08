@@ -22,15 +22,25 @@ public:
     Block(const Vector2f& _pos, std::string _textureName);
     Block(const Vector2f& _pos, int textureId);
 
-    void draw( RenderTarget& rt);
+    void draw( RenderTarget& rt, Vector2u viewPos);
 
     int getTextureID();
-    void setTextureByName(std::string _textureName);
 
+    void setTextureByName(std::string _textureName);
 
     Block *clone();
 
     std::string getTextureName();
+
+
+
+
+
+
+
+
+
+
 
      // (-+)
     // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
@@ -41,7 +51,7 @@ public:
     static int getWindowXPos(int N, int M, int width, int height)
     {
 
-        int initialXOffset = 400;   // Start in the middle
+        int initialXOffset = 0;   // Start in the middle
 
 
         /// N = Width index in the grid
@@ -108,7 +118,6 @@ private:
     Sprite sprite;
     Vector2f pos;
     std::string cn = "Block.cpp";
-
 
 };
 
