@@ -13,6 +13,8 @@ using namespace sf;
 class Bus
 {
 public:
+
+    Bus() {}
     Bus(const Vector2f& _pos);
 
     void draw( RenderTarget& rt) const;
@@ -42,7 +44,7 @@ private:
 
     Vector2f vel = {0.0f, 0.0f};
 
-    float speed = 100.0f; // 1 pixel per update?
+    float speed = 2.0f; // 1 pixel per update?
     Vector2f nextPos;
 
 

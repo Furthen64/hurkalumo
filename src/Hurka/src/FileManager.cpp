@@ -15,6 +15,7 @@
 
 HurkaMap *FileManager::readRegularFile(std::string _filename)
 {
+    int debugLevel = 0;
 
     // The possible return objects, one fail and one win
     HurkaMap *emptyMap = new HurkaMap("empty", nullptr, 0,0 );
@@ -33,7 +34,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
 
     int mapRows = 0;
     int mapCols = 0;
-    int debugLevel = 0;
+
 
 
     if(debugLevel > 0) {
@@ -76,15 +77,9 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
             //
 
             int rows = MTX_ROWS, cols = MTX_COLS;
-            int** matrix = new int*[rows];
-            if (rows)
-            {
-                matrix[0] = new int[rows * cols];
-                for (int i = 1; i < rows; ++i)
-                    matrix[i] = matrix[0] + i * cols;
-            }
 
-
+            //TEST funkar detta?
+            int **matrix = allocateMatrix(rows, cols);
 
             /// Read lines from the file
             /// For every number (001,002,...) , put it in the matrix
@@ -273,12 +268,6 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
             }
 
 
-
-            // N - Cleanup of work variable Matrix
-
-
-
-
     } else {
         std::cout << "ERROR " << cn << ": Could not open file \"" << _filename << "\"!\n";
         infile.close();
@@ -298,9 +287,12 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
 
 
 
-// (-+)
+// (+-)
 // Given rows and cols, check that they actually contain those constraints
 // IF they are nullptr that check is not made
+
+// Wantlist:   Att den kollar vilka 001,002 osv som faktiskt finns i texturlistan
+
 
 bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
 {

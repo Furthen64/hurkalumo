@@ -4,6 +4,8 @@
 /// //////////////////////////////////////////////
 /// Locomotive
 
+
+
 Locomotive::Locomotive(const Vector2f& _pos)
     :
     pos(_pos)

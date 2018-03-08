@@ -19,6 +19,7 @@ class GameMatrix
 {
 public:
 
+    GameMatrix() {}
     GameMatrix(int _height, int _width, int _textureID);
 
     int getWidth();

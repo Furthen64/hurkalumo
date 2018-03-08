@@ -54,6 +54,7 @@
 		<Unit filename="src/Bus.hpp" />
 		<Unit filename="src/Constants.hpp" />
 		<Unit filename="src/Core.cpp" />
+		<Unit filename="src/Core.hpp" />
 		<Unit filename="src/FileManager.cpp" />
 		<Unit filename="src/FileManager.hpp" />
 		<Unit filename="src/GameMatrix.cpp" />

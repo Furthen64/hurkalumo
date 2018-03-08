@@ -59,7 +59,7 @@ Vector2f Bus::randStartingPos(HurkaMatrix *roadMatrix)
 
 
     if(roadMatrix->rows > 10000 || roadMatrix->cols > 10000) {
-            std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadMatrix->rows << ", " << roadMatrix->cols << "\n";
+        std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadMatrix->rows << ", " << roadMatrix->cols << "\n";
         return Vector2f();
     }
     bool found = false;
@@ -76,8 +76,8 @@ Vector2f Bus::randStartingPos(HurkaMatrix *roadMatrix)
 
         std::cout << "rows= " << roadMatrix->rows << " cols= " << roadMatrix->cols << "\n";
 
-        r = randBetween(0, roadMatrix->rows);
-        c = randBetween(0, roadMatrix->cols);
+        r = randBetween(0, roadMatrix->rows-1);
+        c = randBetween(0, roadMatrix->cols-1);
 
         std::cout << "Randomizing bus start (" << r << ", " << c << ")\n";
 
@@ -85,21 +85,14 @@ Vector2f Bus::randStartingPos(HurkaMatrix *roadMatrix)
         if(roadMatrix->matrix[r][c] == 1) {
 
             // FIXME 16 16 ?
-            newPos.y = GameMatrix::getWindowYPos(r, c, 16, 16);
-            newPos.x = GameMatrix::getWindowXPos(r, c, 16, 16);
+            newPos.y = GameMatrix::getWindowYPos(r, c, 32, 32);
+            newPos.x = GameMatrix::getWindowXPos(r, c, 32, 32);
             found = true;
 
         }
 
         currAttempt++;
-
-
-
     }
-
-
-
-
 
 
     return newPos;

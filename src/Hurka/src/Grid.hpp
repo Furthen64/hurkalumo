@@ -13,8 +13,9 @@ using namespace sf;
 class Grid
 {
 public:
-    Grid(int _height, int _width);
 
+    Grid() {}
+    Grid(int _height, int _width);
 
     void draw( RenderTarget& rt);
 

@@ -6,14 +6,17 @@
 
 
 
-// TODO: Make this automatically assign a name to it?
-// WE could doooo it like this? inside the .txt file, it can say
-// "T001" which means TREE001 so it maps the first tree texture to that T001
-// "H001" which means HOUSE001 , maps it to the first house texture   etc.
 
 // (--)
 
 
+/// Wishlist   Make sure it cannot be ran twice,
+
+/// Wishlist   Make it smarter, like:
+        // TODO: Make this automatically assign a name to it?
+        // WE could doooo it like this? inside the .txt file, it can say
+        // "T001" which means TREE001 so it maps the first tree texture to that T001
+        // "H001" which means HOUSE001 , maps it to the first house texture   etc.
 
 
 void TextureManager::loadTextures()
@@ -96,6 +99,7 @@ void TextureManager::loadTextures()
 std::string TextureManager::getTextureNameByIndex(int nr)
 {
 
+std::cout << nr << "\n";
     switch(nr){
         case 000: return "GRASS001";
         case 001: return "HOUSE001";

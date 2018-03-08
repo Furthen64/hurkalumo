@@ -11,6 +11,8 @@ using namespace sf;
 class Toolbar
 {
 public:
+
+    Toolbar() {}
     Toolbar(const Vector2f& _pos);
 
 

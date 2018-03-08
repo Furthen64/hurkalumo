@@ -10,6 +10,8 @@ using namespace sf;
 class Locomotive
 {
 public:
+
+    Locomotive() {}
     Locomotive(const Vector2f& _pos);
 
     void draw( RenderTarget& rt) const;
@@ -23,7 +25,7 @@ public:
     Vector2f getPos();
 
 private:
-    static constexpr float speed = 100.0f;  // move 100 px per second
+    static constexpr float speed = 16.0f;  // move 100 px per second
     Vector2f pos;
     Vector2f vel = {0.0f, 0.0f};
     Texture texture;
