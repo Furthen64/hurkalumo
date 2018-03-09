@@ -51,7 +51,7 @@ public:
     static int getWindowXPos(int N, int M, int width, int height)
     {
 
-        int initialXOffset = 0;   // Start in the middle
+        int initialXOffset = 16 * GRID_HEIGHT;   // Make sure we place everything in the x-positive euclidian space
 
 
         /// N = Width index in the grid

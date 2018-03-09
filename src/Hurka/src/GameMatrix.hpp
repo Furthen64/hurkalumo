@@ -48,7 +48,7 @@ public:
     static int pix_pos_x(int N, int M, int width, int height)
     {
 
-        int initialXOffset = 0;   // Start in the middle
+        int initialXOffset = 16 * GRID_HEIGHT;   // Make sure we place everything in the x-positive euclidian space
 
         /// N = Width index in the grid
         /// M = Height index in the grid
@@ -75,7 +75,7 @@ public:
     // height = height of the texture
     static int pix_pos_y(int N, int M, int width, int height)
     {
-        int initialYOffset = 0;     // Start at the top
+        int initialYOffset = 32*2;     // Start at the top
 
         int yOffset = initialYOffset;
 

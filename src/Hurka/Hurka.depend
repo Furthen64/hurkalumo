@@ -1567,13 +1567,13 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1520528322 source:c:\github\lumo\src\hurka\src\core.cpp
+1520593104 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1520517544 source:c:\github\lumo\src\hurka\src\grid.cpp
 	"Grid.hpp"
 
-1520517472 c:\github\lumo\src\hurka\src\grid.hpp
+1520593360 c:\github\lumo\src\hurka\src\grid.hpp
 	<SFML/Graphics.hpp>
 	"Constants.hpp"
 
@@ -1596,7 +1596,7 @@
 1520517312 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
-1520531085 c:\github\lumo\src\hurka\src\gamematrix.hpp
+1520593325 c:\github\lumo\src\hurka\src\gamematrix.hpp
 	<iostream>
 	<SFML/Graphics.hpp>
 	"Grid.hpp"
@@ -1607,7 +1607,7 @@
 1520517369 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
-1520517522 c:\github\lumo\src\hurka\src\block.hpp
+1520593341 c:\github\lumo\src\hurka\src\block.hpp
 	<SFML/Graphics.hpp>
 	"TextureManager.hpp"
 	"GameMatrix.hpp"
@@ -1646,10 +1646,10 @@
 	"TextureManager.hpp"
 	"Block.hpp"
 
-1520531112 source:c:\github\lumo\src\hurka\src\bus.cpp
+1520592846 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
 
-1520530957 c:\github\lumo\src\hurka\src\bus.hpp
+1520590715 c:\github\lumo\src\hurka\src\bus.hpp
 	"SFML/Graphics.hpp"
 	"Utils.hpp"
 	"GameMatrix.hpp"
@@ -1675,7 +1675,7 @@
 1520516897 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1520526272 c:\github\lumo\src\hurka\src\core.hpp
+1520593079 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>

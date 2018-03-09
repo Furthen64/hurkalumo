@@ -65,22 +65,31 @@ void Core::setup(int width, int height, std::string title)
 
     std::cout << "\n\n\n---------------setup-------------------\n";
 
-    int GAME_WIDTH = 64;    // nr of cells in the game board
-    int GAME_HEIGHT = 64;
 
     initRandomizer();
 
     fmgr = new FileManager();
-    gm = new GameMatrix({GAME_HEIGHT,GAME_WIDTH,1});          /// high level structure of game
+    gm = new GameMatrix({GRID_HEIGHT,GRID_WIDTH,1});          /// high level structure of game
     bus = new Bus({10.0f, 10.0f});
     loco = new Locomotive({10.0f, 10.0f});
     toolbarTop = new Toolbar({260.0f, 0.0f});
-    grid = new Grid(GAME_HEIGHT, GAME_WIDTH);
+    grid = new Grid(GRID_HEIGHT, GRID_WIDTH);
 
 
     /// Place them Buses
     bus->setRandStartingPosition(roadMatrix);
 
+
+    // TEST,
+    //put that bus first square, make it move to the next one
+    Vector2f workPos = {0,0};
+    bus->set_iso_pos(workPos);
+    bus->set_pix_pos( GameMatrix::convert_iso_to_pix(workPos, 32, 32));
+
+
+    Vector2f workPosNext = {0,1};
+    bus->setNext_iso_pos(workPosNext);
+    bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 32, 32));
 
 }
 
@@ -209,9 +218,8 @@ void Core::run()
 
 
             if(debugLevel > 1)  {
-                std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+            //    std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
-
 
         }
 
@@ -265,7 +273,6 @@ void Core::run()
             }
 
             // if we are right of the object
-
             loco->setDirection(dir);
 
         }
@@ -277,7 +284,6 @@ void Core::run()
 
         updateBuses(bus, 1, roadMatrix);
 
-        //toolbarTop.update(); TODO should I do this?
 
 
 
@@ -287,10 +293,7 @@ void Core::run()
 
         window.clear({0, 0, 0});
 
-        // Draw the game board
-
         if(drawGm)   {  gm->draw(window, viewPos);  } // Draws the ground and water and suchers
-
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in renderorder
@@ -300,12 +303,8 @@ void Core::run()
 
 
         if(drawLoco) {  loco->draw(window, viewPos); }
-
         if(drawBuses) { bus->draw(window, viewPos); }
-
-
         if(drawGrid) {  grid->draw(window, viewPos); }
-
         if(drawToolbar) {   toolbarTop->draw(window, viewPos); }
 
         window.display();
@@ -332,9 +331,9 @@ void Core::reset()
 
 void Core::clearResources()
 {
-
-
     std::cout << "JÖRGEN, Skapa clearResources()\n";
+
+
 }
 
 
@@ -356,7 +355,7 @@ void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix )
     //Vector2f np = Vector2f();
     //bus->setNext_iso_pos(np);
 
-    bus->update();
+    bus->update(roadMatrix);
 
 }
 

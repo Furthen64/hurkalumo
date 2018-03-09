@@ -20,7 +20,7 @@ public:
 
     void draw( RenderTarget& rt, Vector2u viewPos);
 
-    void update();
+    void update(HurkaMatrix *roadMatrix);
 
 
     // ISO position
@@ -45,9 +45,12 @@ private:
     Vector2f next_iso_pos;
     Vector2f next_pix_pos;
 
-    Vector2f vel = {0.0f, 0.0f};
-    float speed = 2.0f; // 1 pixel per update?
-    Vector2f nextPos;
+
+    float speed = 10.0f; // Percentage, 100% speed or 150% speed
+
+    int dir = 0;    // 0= UP RIGHT      1= DOWN RIGHT       2= DOWN LEFT       3 = UP LEFT
+
+
 
     Texture texture;
     IntRect textureSize;

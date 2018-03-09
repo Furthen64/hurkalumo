@@ -52,6 +52,9 @@ public:
 
     void updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix );
 
+
+
+
 private:
 
     int debugLevel = 2;
@@ -59,12 +62,14 @@ private:
     int SCREEN_WIDTH = 800;
     int SCREEN_HEIGHT = 600;
     int lockFPS = true;
-    int lockFPS_n = 60;
+    int lockFPS_n = 10;
+
+
 
 
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
 
-    int mouseSensitivity = 10; // Pan speed in percentage
+    int mouseSensitivity = 25; // Pan speed in percentage
 
     Vector2u viewPos = {0,0};
 
@@ -80,10 +85,10 @@ private:
     HurkaMatrix *roadMatrix = nullptr;
     FileManager *fmgr;
 
-    bool drawGm = true;
-    bool drawLoco = true;
-    bool drawBuses = true;
-    bool drawToolbar = 1;
+    bool drawGm = 1;
+    bool drawLoco = 0;
+    bool drawBuses = 1;
+    bool drawToolbar = 0;
     bool drawGrid = 1;
     bool drawBlocks = 1;
 
