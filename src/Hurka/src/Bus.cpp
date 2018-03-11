@@ -154,7 +154,7 @@ void Bus::setNext_pix_pos( Vector2f _np)
 void Bus::update(HurkaMatrix *roadMatrix)
 {
 
-    dump();
+//    dump();
 
 
     int deltaX = 0;
@@ -247,8 +247,8 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
         Vector2f _next_pix_pos;
 
-        _next_pix_pos.x = Grid::getWindowXPos(next_iso_pos.y, next_iso_pos.x, 64, 32);   // Not sure about those 64, 32 things... Not sure what function to use, grid or gamematrix or blocK?
-        _next_pix_pos.y = Grid::getWindowYPos(next_iso_pos.y, next_iso_pos.x, 64, 32);
+//        _next_pix_pos.x = Grid::getWindowXPos(next_iso_pos.y, next_iso_pos.x, 64, 32);   // Not sure about those 64, 32 things... Not sure what function to use, grid or gamematrix or blocK?
+// _next_pix_pos.y = Grid::getWindowYPos(next_iso_pos.y, next_iso_pos.x, 64, 32);
 
 
 
@@ -259,9 +259,6 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
     /// Find out where we are in the grid and update the Bus's iso_pos
     iso_pos = Grid::convert_pix_to_iso(pix_pos, textureSize.width, textureSize.height);
-
-    std::cout << "found pos ";
-    dumpPosition(iso_pos);
 
 
 }

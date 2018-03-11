@@ -16,7 +16,7 @@ void Core::boot()
 {
     std::cout << "\n\n\n---------------booting-------------------\n";
     allocateResources();
-    loadResources("data/bustest2.txt");
+    loadResources("data/blocktest.txt");
     setup(800,600, "Hurkalumo Editor 0.1-alpha");
     run();
 }
@@ -82,15 +82,17 @@ void Core::setup(int width, int height, std::string title)
     //put that bus first square, make it move to the next one
     Vector2f workPos = {0,0};
     bus->set_iso_pos(workPos);
-    bus->set_pix_pos( GameMatrix::convert_iso_to_pix(workPos, 64, 32));
+    bus->set_pix_pos( Grid::convert_iso_to_pix(workPos, 64, 32));
+    //bus->set_pix_pos( GameMatrix::convert_iso_to_pix(workPos, 64, 32));
 
 
 
     Vector2f workPosNext = {0,1};
     bus->setNext_iso_pos(workPosNext);
-    bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 64, 32));
+    bus->setNext_pix_pos(Grid::convert_iso_to_pix(workPosNext, 64, 32));
+    //bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 64, 32));
 
-    bus->dump();
+//    bus->dump();
 
 }
 
@@ -141,14 +143,38 @@ void Core::run()
             bool topof = false;
             bool leftof = false;
 
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
             unsigned int relativeX = 0;
             unsigned int relativeY = 0;
 
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
 
-            // Where in relation to the Center point are we clicking?
 
-            // Above? Below?
+
+
+            /// Do not allow us to click outside the resolution of the window
+
+            if( mousePos_i.x > SCREEN_WIDTH ) {
+                    mousePos_i.x = SCREEN_WIDTH;
+            }
+
+            if( mousePos_i.y > SCREEN_HEIGHT ) {
+                mousePos_i.y = SCREEN_HEIGHT;
+            }
+
+            if(mousePos_i.y < 0) {
+                mousePos_i.y = 0;
+            }
+
+            if(mousePos_i.x < 0) {
+                mousePos_i.x = 0;
+            }
+
+
+
+
+            /// Where in relation to the Center point are we clicking?
+            /// Above? Below?
+
             if(mousePos_i.y < ceil(SCREEN_HEIGHT/2))
             {
                 topof = true;
@@ -216,7 +242,6 @@ void Core::run()
             } else {
 
             }
-
 
             if(debugLevel > 1)  {
                 std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";

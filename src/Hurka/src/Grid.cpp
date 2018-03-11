@@ -39,8 +39,8 @@ void Grid::draw( RenderTarget& rt, Vector2u viewPos)
     for(int M= 0; M<height; M++){
         for(int N= 0; N < width; N++) {
 
-            x = getWindowXPos(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
-            y = getWindowYPos(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+            x = convert_iso_to_pix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
+            y = convert_iso_to_pix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
 
             x += viewPos.x;
             y += viewPos.y;
@@ -58,8 +58,8 @@ void Grid::draw( RenderTarget& rt, Vector2u viewPos)
 
 
     // Draw the visible grid
-    x = getWindowXPos(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
-    y = getWindowYPos(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+    x = convert_iso_to_pix_x(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    y = convert_iso_to_pix_y(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
     x += viewPos.x;
     y += viewPos.y;
@@ -81,8 +81,8 @@ void Grid::setVisible(Vector2f iso_pos)
 
     selected_iso_pos = iso_pos;
 
-    selected_pix_pos.x = getWindowXPos(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
-    selected_pix_pos.y = getWindowYPos(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+    selected_pix_pos.x = convert_iso_to_pix_x(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    selected_pix_pos.y = convert_iso_to_pix_y(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0 );
 
  //   std::cout << "Visible grid position: " << selected_pix_pos.x << " , " << selected_pix_pos.y << "\n";
 }

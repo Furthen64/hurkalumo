@@ -55,8 +55,8 @@ void GameMatrix::draw( RenderTarget& rt, Vector2u viewPos)
 
         // Hey! I'm using the Grid's positioning functions instead of this class's
         // because the gamematrix's green background should follow the grid
-            x = Grid::getWindowXPos(N,M, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
-            y = Grid::getWindowYPos(N,M, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+            x = Grid::convert_iso_to_pix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_pix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
 
             // Offset for viewing position

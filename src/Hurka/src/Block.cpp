@@ -55,6 +55,19 @@ Block::Block(const Vector2f& _pos, std::string _textureName)
 }
 
 
+
+void Block::dump()
+{
+
+
+    std::cout << "-----------------block------------------\n";
+    std::cout << "Name: " << textureName << "\n";
+    std::cout << "ID: " << textureID << "\n";
+    std::cout << "texturesize: " << textureSize.width  << " x " << textureSize.height << "\n";
+    std::cout << "getXPos(" << pos.y << ", " << pos.x << ") = " << Grid::convert_iso_to_pix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2) << "\n";
+    std::cout << "getYPos(" << pos.y << ", " << pos.x << ") = " << Grid::convert_iso_to_pix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2 ) << "\n";
+
+}
 // You can also create a block by supplying texture id as an integer,
 // e.g. 001 => "HOUSE001"
 //
@@ -80,7 +93,7 @@ Block::Block(const Vector2f& _pos, int _textureId)
 
 
     if(!result) {
-            std::cout << "ERROR Block creation, cannot find texture id \"" << _textureId << "\".\n";
+        std::cout << "ERROR Block creation, cannot find texture id \"" << _textureId << "\".\n";
         return ;
     }
 
@@ -100,9 +113,8 @@ Block::Block(const Vector2f& _pos, int _textureId)
 // (--)
 void Block::draw( RenderTarget& rt, Vector2u viewPos)
 {
-
-    int x = getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height);
-    int y = getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height);
+    int x = Grid::convert_iso_to_pix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2);
+    int y = Grid::convert_iso_to_pix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2);
 
 
     // Viewing offset
@@ -117,15 +129,6 @@ void Block::draw( RenderTarget& rt, Vector2u viewPos)
 
     rt.draw(sprite);
 
-
-    /*
-    std::cout << "-----------------block------------------\n";
-    std::cout << "Name: " << textureName << "\n";
-    std::cout << "ID: " << textureID << "\n";
-    std::cout << "texturesize: " << textureSize.width  << " x " << textureSize.height << "\n";
-    std::cout << "getXPos(" << pos.x << ", " << pos.y << ") = " << getWindowXPos(pos.x,pos.y, textureSize.width, textureSize.height) << "\n";
-    std::cout << "getYPos(" << pos.x << ", " << pos.y << ") = " << getWindowYPos(pos.x,pos.y, textureSize.width, textureSize.height) << "\n";
-    */
 }
 
 int Block::getTextureID()
