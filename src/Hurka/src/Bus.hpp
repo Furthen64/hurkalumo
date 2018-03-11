@@ -7,6 +7,7 @@
 #include "TextureManager.hpp"
 #include "HurkaMatrix.hpp"
 #include "Block.hpp"
+#include "Grid.hpp"
 
 using namespace sf;
 
@@ -35,7 +36,11 @@ public:
 
 
     void setRandStartingPosition(HurkaMatrix *roadMatrix);
+
     Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);
+    Vector2f rand_iso_pos();
+
+    void dump();
 
 
 private:
@@ -46,7 +51,7 @@ private:
     Vector2f next_pix_pos;
 
 
-    float speed = 10.0f; // Percentage, 100% speed or 150% speed
+    float speed = 1.0f; // Percentage, 100% speed or 150% speed
 
     int dir = 0;    // 0= UP RIGHT      1= DOWN RIGHT       2= DOWN LEFT       3 = UP LEFT
 

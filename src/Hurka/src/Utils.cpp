@@ -2,6 +2,11 @@
 
 
 
+void dumpPosition(Vector2f iso_pos)
+{
+    std::cout << "pos(" << iso_pos.y << ", " << iso_pos.x << ")\n";
+}
+
 int **allocateMatrix(int rows, int cols)
 {
 

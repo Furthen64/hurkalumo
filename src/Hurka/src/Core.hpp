@@ -73,7 +73,6 @@ private:
 
     Vector2u viewPos = {0,0};
 
-
     TextureManager *textureMgr; // Singleton!
 
     GameMatrix *gm;

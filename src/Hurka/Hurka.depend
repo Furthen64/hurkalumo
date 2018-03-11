@@ -1567,15 +1567,17 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1520593104 source:c:\github\lumo\src\hurka\src\core.cpp
+1520775927 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
-1520517544 source:c:\github\lumo\src\hurka\src\grid.cpp
+1520767903 source:c:\github\lumo\src\hurka\src\grid.cpp
 	"Grid.hpp"
 
-1520593360 c:\github\lumo\src\hurka\src\grid.hpp
+1520774748 c:\github\lumo\src\hurka\src\grid.hpp
 	<SFML/Graphics.hpp>
+	"GameMatrix.hpp"
 	"Constants.hpp"
+	"Utils.hpp"
 
 1520264307 c:\github\lumo\src\hurka\src\texturemanager.hpp
 	<string>
@@ -1593,21 +1595,21 @@
 1520517113 c:\github\lumo\src\hurka\src\toolbar.hpp
 	<SFML/Graphics.hpp>
 
-1520517312 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
+1520767821 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
-1520593325 c:\github\lumo\src\hurka\src\gamematrix.hpp
+1520774737 c:\github\lumo\src\hurka\src\gamematrix.hpp
 	<iostream>
 	<SFML/Graphics.hpp>
 	"Grid.hpp"
 	"Constants.hpp"
 
-1519503854 c:\github\lumo\src\hurka\src\constants.hpp
+1520774313 c:\github\lumo\src\hurka\src\constants.hpp
 
 1520517369 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
-1520593341 c:\github\lumo\src\hurka\src\block.hpp
+1520774708 c:\github\lumo\src\hurka\src\block.hpp
 	<SFML/Graphics.hpp>
 	"TextureManager.hpp"
 	"GameMatrix.hpp"
@@ -1646,24 +1648,26 @@
 	"TextureManager.hpp"
 	"Block.hpp"
 
-1520592846 source:c:\github\lumo\src\hurka\src\bus.cpp
+1520775802 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
 
-1520590715 c:\github\lumo\src\hurka\src\bus.hpp
+1520775685 c:\github\lumo\src\hurka\src\bus.hpp
 	"SFML/Graphics.hpp"
 	"Utils.hpp"
 	"GameMatrix.hpp"
 	"TextureManager.hpp"
 	"HurkaMatrix.hpp"
 	"Block.hpp"
+	"Grid.hpp"
 
-1520365255 c:\github\lumo\src\hurka\src\utils.hpp
+1520765919 c:\github\lumo\src\hurka\src\utils.hpp
 	<iostream>
 	<time.h>
 	<random>
+	<SFML/Graphics.hpp>
 	"HurkaMatrix.hpp"
 
-1520365253 source:c:\github\lumo\src\hurka\src\utils.cpp
+1520775886 source:c:\github\lumo\src\hurka\src\utils.cpp
 	"Utils.hpp"
 
 1520363095 c:\github\lumo\src\hurka\src\hurkamatrix.hpp
@@ -1675,7 +1679,7 @@
 1520516897 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1520593079 c:\github\lumo\src\hurka\src\core.hpp
+1520768816 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>

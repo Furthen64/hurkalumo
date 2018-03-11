@@ -16,7 +16,7 @@ void Core::boot()
 {
     std::cout << "\n\n\n---------------booting-------------------\n";
     allocateResources();
-    loadResources("data/bustest.txt");
+    loadResources("data/bustest2.txt");
     setup(800,600, "Hurkalumo Editor 0.1-alpha");
     run();
 }
@@ -69,27 +69,28 @@ void Core::setup(int width, int height, std::string title)
     initRandomizer();
 
     fmgr = new FileManager();
-    gm = new GameMatrix({GRID_HEIGHT,GRID_WIDTH,1});          /// high level structure of game
+    gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
     bus = new Bus({10.0f, 10.0f});
     loco = new Locomotive({10.0f, 10.0f});
     toolbarTop = new Toolbar({260.0f, 0.0f});
-    grid = new Grid(GRID_HEIGHT, GRID_WIDTH);
+    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
 
 
     /// Place them Buses
-    bus->setRandStartingPosition(roadMatrix);
-
 
     // TEST,
     //put that bus first square, make it move to the next one
     Vector2f workPos = {0,0};
     bus->set_iso_pos(workPos);
-    bus->set_pix_pos( GameMatrix::convert_iso_to_pix(workPos, 32, 32));
+    bus->set_pix_pos( GameMatrix::convert_iso_to_pix(workPos, 64, 32));
+
 
 
     Vector2f workPosNext = {0,1};
     bus->setNext_iso_pos(workPosNext);
-    bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 32, 32));
+    bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 64, 32));
+
+    bus->dump();
 
 }
 
@@ -218,7 +219,7 @@ void Core::run()
 
 
             if(debugLevel > 1)  {
-            //    std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+                std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
 
         }
@@ -282,7 +283,14 @@ void Core::run()
 
         /// Update Busses
 
+
         updateBuses(bus, 1, roadMatrix);
+
+        grid->setVisible(bus->get_iso_pos());
+
+
+        /// Visible grid
+
 
 
 
@@ -331,7 +339,6 @@ void Core::reset()
 
 void Core::clearResources()
 {
-    std::cout << "JÖRGEN, Skapa clearResources()\n";
 
 
 }
@@ -344,16 +351,13 @@ void Core::clearResources()
 // TODO: needs a matrix of the ROADS so we can figure out the way to move it
 
 // (--)
-void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix )
+void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix)
 {
 
     if(roadMatrix->isAllocated() == false) {
         std::cout << "ERROR cannot read the road matrix\n";
         return ;
     }
-
-    //Vector2f np = Vector2f();
-    //bus->setNext_iso_pos(np);
 
     bus->update(roadMatrix);
 
@@ -363,18 +367,3 @@ void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix )
 
 
 
-/// ------------------------------------------------
-
-
-
-
-
-/*
-
-
-
-/// Main Loop
-
-
-delete roadMatrix;
-*/

@@ -12,6 +12,8 @@
 /// Or something. Haven't decided yet.
 ///
 
+
+
 using namespace sf;
 
 
@@ -31,37 +33,43 @@ public:
 
 
 
+
+    // (--)
     static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
     {
         Vector2f newPos;
-        newPos.x = pix_pos_x(iso_pos.x, iso_pos.y, width, height);
-        newPos.y = pix_pos_y(iso_pos.x, iso_pos.y, width, height);
+        newPos.x = pix_pos_x(iso_pos.y, iso_pos.x, width, height);
+        newPos.y = pix_pos_y(iso_pos.y, iso_pos.x, width, height);
         return newPos;
     }
 
      // (-+)
+
+     /// MUST . CLEAN . And merge functionality of this and grid.2018-03
+
+
     // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
     /// N = x = along the width axis
     /// M = y = along the height axis of the gameboard
     /// width = width of the texture
     /// height = height of the texture
-    static int pix_pos_x(int N, int M, int width, int height)
+    static int pix_pos_x(int M, int N, int width, int height)
     {
 
-        int initialXOffset = 16 * GRID_HEIGHT;   // Make sure we place everything in the x-positive euclidian space
+        int initialXOffset = (GRID_TEXTURE_WIDTH/2 * NR_GRIDS_WIDTH)/2;   // Make sure we place everything in the x-positive euclidian space
 
         /// N = Width index in the grid
         /// M = Height index in the grid
 
         /// Calculate the X-offset
         // intialXOffset - where we are in the height=M index TIMES the sprite_width/2
-        int xOffset = initialXOffset - M*(GRID_WIDTH/2);
+        int xOffset = initialXOffset - N*(GRID_TEXTURE_WIDTH/2);
 
 
         // now for every step to the right=N index we have to go right a bit
 
         // TODO: adjust for small width textures! all mine are 64 so... I need more examples
-        int xStep = N*(width/2);
+        int xStep = M*(width/2);
 
 
         return xOffset + xStep;
@@ -73,9 +81,9 @@ public:
     // M = along the height axis of the gameboard
     // width = width of the texture
     // height = height of the texture
-    static int pix_pos_y(int N, int M, int width, int height)
+    static int pix_pos_y(int M, int N, int width, int height)
     {
-        int initialYOffset = 32*2;     // Start at the top
+        int initialYOffset = GRID_TEXTURE_HEIGHT;     // Start at the top
 
         int yOffset = initialYOffset;
 
@@ -83,20 +91,20 @@ public:
 
         int yStep = 0;
 
-        if(height < GRID_HEIGHT) {
+        if(height < GRID_TEXTURE_HEIGHT) {
             // Smaller, IF the sprite height is less than the 64 GRID height we have to move it down
             // the division by 4 is now division by 2
 
-            yStep =  (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
+            yStep =  (N*GRID_TEXTURE_HEIGHT/4) + (M*GRID_TEXTURE_HEIGHT/4);
 
-        } else if(height > GRID_HEIGHT) {
+        } else if(height > GRID_TEXTURE_HEIGHT) {
             // Taller, like high buildings, make sure you start drawing HIGHER (lower y value)
-             yStep = (M*GRID_HEIGHT/4) - (N*GRID_HEIGHT/4);
+             yStep = (N*GRID_TEXTURE_HEIGHT/4) - (M*GRID_TEXTURE_HEIGHT/4);
 
         } else {
             // (++)
             // Equal to the grid size
-            yStep = (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
+            yStep = (N*GRID_TEXTURE_HEIGHT/4) + (M*GRID_TEXTURE_HEIGHT/4);
         }
 
 

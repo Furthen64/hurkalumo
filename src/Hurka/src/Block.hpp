@@ -51,7 +51,7 @@ public:
     static int getWindowXPos(int N, int M, int width, int height)
     {
 
-        int initialXOffset = 16 * GRID_HEIGHT;   // Make sure we place everything in the x-positive euclidian space
+        int initialXOffset = GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_WIDTH;   // Make sure we place everything in the x-positive euclidian space
 
 
         /// N = Width index in the grid
@@ -59,7 +59,7 @@ public:
 
         /// Calculate the X-offset
         // intialXOffset - where we are in the height=M index TIMES the sprite_width/2
-        int xOffset = initialXOffset - M*(GRID_WIDTH/2);
+        int xOffset = initialXOffset - M*(GRID_TEXTURE_WIDTH/2);
 
 
         // now for every step to the right=N index we have to go right a bit
@@ -87,20 +87,20 @@ public:
 
         int yStep = 0;
 
-        if(height < GRID_HEIGHT) {
+        if(height < GRID_TEXTURE_WIDTH) {
             // Smaller, IF the sprite height is less than the 64 GRID height we have to move it down
             // the division by 4 is now division by 2
 
-            yStep =  (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4) + 32;
+            yStep =  (M*GRID_TEXTURE_WIDTH/4) + (N*GRID_TEXTURE_WIDTH/4) + 32;
 
-        } else if(height > GRID_HEIGHT) {
+        } else if(height > GRID_TEXTURE_WIDTH) {
             // Taller, like high buildings, make sure you start drawing HIGHER (lower y value)
-             yStep = (M*GRID_HEIGHT/4) - (N*GRID_HEIGHT/4);
+             yStep = (M*GRID_TEXTURE_WIDTH/4) - (N*GRID_TEXTURE_WIDTH/4);
 
         } else {
             // (++)
             // Equal to the grid size
-            yStep = (M*GRID_HEIGHT/4) + (N*GRID_HEIGHT/4);
+            yStep = (M*GRID_TEXTURE_WIDTH/4) + (N*GRID_TEXTURE_WIDTH/4);
         }
 
 
