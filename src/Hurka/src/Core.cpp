@@ -54,6 +54,12 @@ void Core::loadResources(std::string mapName)
         roadMatrix->dump();
     }
 
+    /// Load font
+    if (!font.loadFromFile("consola.ttf"))
+    {
+        std::cout << "ERROR " << cn << " could not load font.\n";
+    }
+
 
 }
 
@@ -87,7 +93,7 @@ void Core::setup(int width, int height, std::string title)
 
 
 
-    Vector2f workPosNext = {0,1};
+    Vector2f workPosNext = {0,4};
     bus->setNext_iso_pos(workPosNext);
     bus->setNext_pix_pos(Grid::convert_iso_to_pix(workPosNext, 64, 32));
     //bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 64, 32));
@@ -252,11 +258,53 @@ void Core::run()
         // Get mouse input
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
+            std::stringstream sstm;
+
+
+            /// Get mouse position
             sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
 
-            Vector2f mousePos_f = Vector2f();
-            mousePos_f.x = mousePos_i.x;
-            mousePos_f.y = mousePos_i.y;
+            Vector2f mouseWPos = Vector2f();
+            mouseWPos.x = mousePos_i.x;
+            mouseWPos.y = mousePos_i.y;
+            sstm << "WPOS(" << mouseWPos.y << ", " << mouseWPos.x << ")\n";
+
+
+
+
+
+
+
+            /// Redact ViewPosition rectangle from it to get back to GameMatrix positioning
+            Vector2f mouseGPos = Vector2f();
+            mouseGPos.x = mouseWPos.x - viewPos.x;
+            mouseGPos.y = mouseWPos.y - viewPos.y;
+            //mousePos_f.x += viewPos.x;
+            //mousePos_f.y += viewPos.y;
+            //sstm << "WPOS(" << mousePos_f.y << ", " << mousePos_f.x << ")\n";
+
+            Vector2f iso_pos = Vector2f();
+            iso_pos = Grid::convert_pix_to_iso(mouseGPos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+
+
+
+            /// Update the text
+            lastClickedText.setFont(font);
+
+            //lastClickedText.setString(sstm.str());
+            lastClickedText.setString("kladdkaka");
+            lastClickedText.setCharacterSize(12);
+            lastClickedText.setFillColor(sf::Color::White);
+            lastClickedText.setPosition(mouseWPos);
+
+
+
+            grid->setVisible(iso_pos);
+
+            if(debugLevel > 1)  {
+                std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+                dumpPosition(iso_pos);
+            }
 
 
             /// Pushing button on top toolbar
@@ -272,16 +320,16 @@ void Core::run()
             Vector2f dir;
 
             // Figure out what +-1 to do with the position
-            if(loco->getPos().x < mousePos_f.x) {
+            if(loco->getPos().x < mouseWPos.x) {
                 rightof = true;
             }
-            if(loco->getPos().x >= mousePos_f.x) {
+            if(loco->getPos().x >= mouseWPos.x) {
                 leftof = true;
             }
-            if(loco->getPos().y < mousePos_f.y) {
+            if(loco->getPos().y < mouseWPos.y) {
                 belowof = true;
             }
-            if(loco->getPos().y >= mousePos_f.y) {
+            if(loco->getPos().y >= mouseWPos.y) {
                 topof = true;
             }
 
@@ -309,9 +357,10 @@ void Core::run()
         /// Update Busses
 
 
-        updateBuses(bus, 1, roadMatrix);
+        //updateBuses(bus, 1, roadMatrix);
+        bus->update(roadMatrix);
 
-        grid->setVisible(bus->get_iso_pos());
+
 
 
         /// Visible grid
@@ -339,6 +388,10 @@ void Core::run()
         if(drawBuses) { bus->draw(window, viewPos); }
         if(drawGrid) {  grid->draw(window, viewPos); }
         if(drawToolbar) {   toolbarTop->draw(window, viewPos); }
+
+        window.draw(lastClickedText);
+
+        /// Finally push rendered buffer to screen
 
         window.display();
 

@@ -141,7 +141,7 @@ void Bus::setNext_pix_pos( Vector2f _np)
         dir = 4; // Do nothing!
     }
 
-   // std::cout << rightof << " " << belowof << " " << topof << " " << leftof  << "  " << "direction=" << dir << " *** \n\n";
+    std::cout << rightof << " " << belowof << " " << topof << " " << leftof  << "  " << "direction=" << dir << " *** \n\n";
 
 }
 
@@ -156,7 +156,7 @@ void Bus::update(HurkaMatrix *roadMatrix)
     int deltaX = 0;
     int deltaY = 0;
 
-   // std::cout << "BEFORE (" << pix_pos.x << ", " << pix_pos.y << ") ";
+    //std::cout << "BEFORE (" << pix_pos.x << ", " << pix_pos.y << ") ";
 
 
     if(next_pix_pos.x > pix_pos.x) {
@@ -231,6 +231,9 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
 
+
+    // If delta x and deltay is zero, means we have reached our destination, make a new destination
+    /*
     if(deltaX == 0 && deltaY == 0) {
 
         setNext_iso_pos( rand_iso_pos());
@@ -239,22 +242,25 @@ void Bus::update(HurkaMatrix *roadMatrix)
         /// Old code which I really want to use, whereas the bus will get the information from the ROAD to decide where to be
         //setNext_iso_pos(rand_iso_pos(roadMatrix));
         //setNext_pix_pos(GameMatrix::convert_iso_to_pix(next_iso_pos, 64, 32));   // Bugg!
-        // Fungerar denna? hmmmmmmmmmmmmmmmm ska du kanske använda Grid::convert ist?
 
         Vector2f _next_pix_pos;
 
-//        _next_pix_pos.x = Grid::getWindowXPos(next_iso_pos.y, next_iso_pos.x, 64, 32);   // Not sure about those 64, 32 things... Not sure what function to use, grid or gamematrix or blocK?
-// _next_pix_pos.y = Grid::getWindowYPos(next_iso_pos.y, next_iso_pos.x, 64, 32);
+        //        _next_pix_pos.x = Grid::getWindowXPos(next_iso_pos.y, next_iso_pos.x, 64, 32);   // Not sure about those 64, 32 things... Not sure what function to use, grid or gamematrix or blocK?
+        // _next_pix_pos.y = Grid::getWindowYPos(next_iso_pos.y, next_iso_pos.x, 64, 32);
 
 
 
         setNext_pix_pos(_next_pix_pos);
 
     }
+    */
 
 
     /// Find out where we are in the grid and update the Bus's iso_pos
     iso_pos = Grid::convert_pix_to_iso(pix_pos, textureSize.width, textureSize.height);
+
+
+    //std::cout << "  AFTER (" << pix_pos.x << ", " << pix_pos.y << ") \n";
 
 
 }

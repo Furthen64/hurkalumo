@@ -1,6 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
+#include <sstream>
 
 #include <SFML/Graphics.hpp>
 
@@ -187,6 +188,8 @@ static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
 }
 
 // (--)
+/// Är det GAME eller WINDOW position på koordinaterna?? skriv så i namnet, verkar som Game för man gör inget med viewboxen
+
 /// TEsta!! och gör bättre, diamantform
 static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 {
@@ -259,6 +262,15 @@ private:
 
     int width;
     int height;
+
+
+
+    Font font;
+    Text text;
+    Text visibleGridText;
+
+    std::string cn = "Grid.cpp";
+
 };
 
 

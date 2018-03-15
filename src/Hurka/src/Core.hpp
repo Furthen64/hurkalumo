@@ -82,11 +82,16 @@ private:
     FileManager *fmgr;
 
     bool drawGm = 1;
-    bool drawLoco = 0;
+    bool drawLoco = 1;
     bool drawBuses = 1;
     bool drawToolbar = 0;
     bool drawGrid = 1;
     bool drawBlocks = 0;
+
+
+
+    Font font;
+    Text lastClickedText;
 
 
     std::string cn = "Core.cpp";
