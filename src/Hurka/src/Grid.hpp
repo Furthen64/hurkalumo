@@ -191,43 +191,42 @@ static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
 /// Är det GAME eller WINDOW position på koordinaterna?? skriv så i namnet, verkar som Game för man gör inget med viewboxen
 
 /// TEsta!! och gör bättre, diamantform
+/// BUGG hittar bara yttre raderna,m där M=0 eller N=0
 static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 {
 
     std::string cn = "Grid.hpp";
 
-/*    std::cout << "bus pix pos = ";
-    dumpPosition(pix_pos);*/
-
-
     int x = 0;
     int y = 0;
-    Vector2f pos = Vector2f();
+
+    Vector2f work_pos = Vector2f();
     Vector2f iso_pos = Vector2f();
 
     if(width == 0 || height == 0 ) {
         std::cout << "ERROR " << cn << " height or width = 0 in call to convert_pix_to_iso!!\n";
-        return pos;
+        return work_pos;
     }
 
 
     // if we are inside the diamond of that cell return that iso-pos
     for(int M= 0; M< NR_GRIDS_HEIGHT; M++){
+
         for(int N= 0; N < NR_GRIDS_WIDTH; N++) {
 
             x = convert_iso_to_pix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
             y = convert_iso_to_pix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
-            pos.x = x;
-            pos.y = y;
+            work_pos.x = x;
+            work_pos.y = y;
 
-            if( (pix_pos.x > pos.x)  && (pix_pos.x <= (pos.x+GRID_TEXTURE_WIDTH))) {
+            if( (pix_pos.x > work_pos.x)  && (pix_pos.x <= (work_pos.x+GRID_TEXTURE_WIDTH))) {
 
-                if( (pix_pos.y > pos.y) && (pix_pos.y <= (pix_pos.y+GRID_TEXTURE_HEIGHT))) {
+                if( (pix_pos.y > work_pos.y) && (pix_pos.y <= (work_pos.y+GRID_TEXTURE_HEIGHT))) {
 
-                    //std::cout << "found it at pix pos ";
+                    std::cout << "found it at pix pos ";
 
-                    //dumpPosition(pos);
+                    dumpPosition(work_pos);
 
 
 
