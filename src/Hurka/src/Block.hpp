@@ -22,7 +22,7 @@ public:
     Block(const Vector2f& _pos, std::string _textureName);
     Block(const Vector2f& _pos, int textureId);
 
-    void draw( RenderTarget& rt, Vector2u viewPos);
+    void draw( RenderTarget& rt, Vector2i viewPos);
 
     void dump();
 

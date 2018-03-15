@@ -19,13 +19,9 @@ Bus::Bus(const Vector2f& _iso_pos)
 
 // Ska egentligen köras i en update-funktion mestadels här,
 // bara rt.draw ska finnas
-void Bus::draw( RenderTarget& rt, Vector2u viewPos)
+void Bus::draw( RenderTarget& rt, Vector2i viewPos)
 {
 
-/*
-    int x = Block::getWindowXPos(iso_pos.x,iso_pos.y, textureSize.width, textureSize.height);
-    int y = Block::getWindowYPos(iso_pos.x,iso_pos.y, textureSize.width, textureSize.height);
-*/
 
     int x = pix_pos.x;
     int y = pix_pos.y;
@@ -145,7 +141,7 @@ void Bus::setNext_pix_pos( Vector2f _np)
         dir = 4; // Do nothing!
     }
 
-    std::cout << rightof << " " << belowof << " " << topof << " " << leftof  << "  " << "direction=" << dir << " *** \n\n";
+   // std::cout << rightof << " " << belowof << " " << topof << " " << leftof  << "  " << "direction=" << dir << " *** \n\n";
 
 }
 
@@ -278,8 +274,8 @@ Vector2f Bus::rand_iso_pos()
     _iso_pos.y = m;
     _iso_pos.x = n;
 
-    std::cout << "rand iso pos= ";
-    dumpPosition(_iso_pos);
+//    std::cout << "rand iso pos= ";
+    //dumpPosition(_iso_pos);
 
     return _iso_pos;
 }

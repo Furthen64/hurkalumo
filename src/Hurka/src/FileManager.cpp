@@ -292,12 +292,12 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
 // IF they are nullptr that check is not made
 
 // Wantlist:   Att den kollar vilka 001,002 osv som faktiskt finns i texturlistan
-
-
+// Wantlist.    att den kollar att det slutar på ","
+// Wantlist: att den kollar att det är N x N inte N x M
 bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
 {
 
-    int debugLevel = 0;
+    int debugLevel = 1;
     if(debugLevel > 0) {
         std::cout << "\n\n**** VerifyFile\n";
     }
@@ -377,6 +377,9 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
 
     return true;
 }
+
+
+
 
 
 // (++)

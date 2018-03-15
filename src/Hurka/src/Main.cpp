@@ -9,7 +9,7 @@
 /// Vore det inte najs med en WindowManager som håller
 ///         * RenderWindow
 ///         * Inputs
-///         * Vector2u viewPos  så man slipper skicka med den till alla .draw() ?
+///         * Vector2i viewPos  så man slipper skicka med den till alla .draw() ?
 
 
 /// GLOBALS

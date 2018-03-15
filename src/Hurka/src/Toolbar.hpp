@@ -20,7 +20,7 @@ public:
     ~Toolbar();
     void pushButton(int relXPos);
 
-    void draw( RenderTarget& rt, Vector2u viewPos);
+    void draw( RenderTarget& rt, Vector2i viewPos);
 
 
     Vector2f getPos();

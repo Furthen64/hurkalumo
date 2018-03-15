@@ -14,7 +14,7 @@ public:
     Locomotive() {}
     Locomotive(const Vector2f& _pos);
 
-    void draw( RenderTarget& rt, Vector2u viewPos);
+    void draw( RenderTarget& rt, Vector2i viewPos);
 
     void setDirectionConst( const Vector2f& dir);
 

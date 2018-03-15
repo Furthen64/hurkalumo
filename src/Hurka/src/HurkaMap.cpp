@@ -13,7 +13,7 @@ HurkaMap::HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols
 
 // TEST
 // (--)
-void HurkaMap::draw(RenderTarget& rt, Vector2u viewPos)
+void HurkaMap::draw(RenderTarget& rt, Vector2i viewPos)
 {
 
     // iterate over all items

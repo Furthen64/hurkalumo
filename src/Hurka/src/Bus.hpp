@@ -19,7 +19,7 @@ public:
     Bus() {}
     Bus(const Vector2f& _iso_pos);
 
-    void draw( RenderTarget& rt, Vector2u viewPos);
+    void draw( RenderTarget& rt, Vector2i viewPos);
 
     void update(HurkaMatrix *roadMatrix);
 

@@ -44,6 +44,20 @@ void TextureManager::loadTextures()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_006.png");
     pushTexture("HOUSE006", txt);
 
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_007.png");
+    pushTexture("HOUSE007", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_008.png");
+    pushTexture("HOUSE008", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_009.png");
+    pushTexture("HOUSE009", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_010.png");
+    pushTexture("HOUSE010", txt);
+
+
+
 
     // Road
 
@@ -79,6 +93,9 @@ void TextureManager::loadTextures()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_002.png");
     pushTexture("TREE002", txt);
 
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_003.png");
+    pushTexture("TREE003", txt);
+
 
     // Grass
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_001.png");
@@ -101,13 +118,17 @@ std::string TextureManager::getTextureNameByIndex(int nr)
 
 std::cout << nr << "\n";
     switch(nr){
-        case 000: return "GRASS001";
-        case 001: return "HOUSE001";
-        case 002: return "HOUSE002";
-        case 003: return "HOUSE003";
-        case 004: return "HOUSE004";
-        case 005: return "HOUSE005";
-        case 006: return "HOUSE006";
+        case 0: return "GRASS001";
+        case 1: return "HOUSE001";
+        case 2: return "HOUSE002";
+        case 3: return "HOUSE003";
+        case 4: return "HOUSE004";
+        case 5: return "HOUSE005";
+        case 6: return "HOUSE006";
+        case 7: return "HOUSE007";
+        case 8: return "HOUSE008";
+        case 9: return "HOUSE009";
+        case 10: return "HOUSE010";
 
         case 101: return "ROAD001";
         case 102: return "ROAD002";
@@ -119,6 +140,8 @@ std::cout << nr << "\n";
 
         case 301: return "TREE001";
         case 302: return "TREE002";
+        case 303: return "TREE003";
+
 
         case 401: return "BUS001";
 

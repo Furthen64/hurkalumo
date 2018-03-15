@@ -21,7 +21,7 @@ Grid::Grid(int _height, int _width)
 
 
 // (-+)
-void Grid::draw( RenderTarget& rt, Vector2u viewPos)
+void Grid::draw( RenderTarget& rt, Vector2i viewPos)
 {
     // haha this will be hell to figure out
     // I need functions for getting the X,Y of the [N,M]th position in the matrix

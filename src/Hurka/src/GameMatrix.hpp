@@ -28,7 +28,7 @@ public:
 
     int getHeight();
 
-    void draw( RenderTarget& rt,  Vector2u viewPos);
+    void draw( RenderTarget& rt,  Vector2i viewPos);
 
 
 
@@ -38,6 +38,10 @@ private:
     int textureID;
     Sprite sprite;
     Texture texture;
+
+
+    int minX = 7870;
+    int minY = 7870;
 };
 
 #endif

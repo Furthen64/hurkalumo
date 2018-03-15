@@ -64,14 +64,11 @@ private:
     int lockFPS = true;
     int lockFPS_n = 10;
 
-
-
-
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
 
-    int mouseSensitivity = 25; // Pan speed in percentage
+    int mouseSensitivity = 4*ceil(100/lockFPS_n); // Pan speed in percentage
 
-    Vector2u viewPos = {0,0};
+    Vector2i viewPos = {-2178,-331};
 
     TextureManager *textureMgr; // Singleton!
 
@@ -89,7 +86,7 @@ private:
     bool drawBuses = 1;
     bool drawToolbar = 0;
     bool drawGrid = 1;
-    bool drawBlocks = 1;
+    bool drawBlocks = 0;
 
 
     std::string cn = "Core.cpp";

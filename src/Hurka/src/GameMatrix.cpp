@@ -44,10 +44,20 @@ int GameMatrix::getHeight()
 /// (--)
 /// Optimize with the ints maybe make it a const?
 
-void GameMatrix::draw( RenderTarget& rt, Vector2u viewPos)
+
+/// Add Clipping to this!
+// If you are drawing outside the viewing 800x600 px window, you could just NOT draw that sprite, make ac
+// clipping rectangle and compare to it
+
+
+void GameMatrix::draw( RenderTarget& rt, Vector2i viewPos)
 {
+    minX = 9990;
+    minY = 9990;
     int x = 0;
     int y = 0;
+    int actualXMin = 9999;
+    int actualYMin= 9999;
 
     // What a bunny brained idea!
     for(int M= 0; M<height; M++){
@@ -58,12 +68,27 @@ void GameMatrix::draw( RenderTarget& rt, Vector2u viewPos)
             x = Grid::convert_iso_to_pix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
             y = Grid::convert_iso_to_pix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
+            if( x <actualXMin) {
+                actualXMin = x;
+            }
+
+            if( y < actualYMin) {
+                actualYMin = y;
+            }
 
             // Offset for viewing position
             x += viewPos.x;
             y += viewPos.y;
 
             Vector2f pos = {(float)x,(float)y};
+
+            if(x < minX) {
+                minX = x;
+            }
+
+            if(y < minY) {
+                minY = y;
+            }
 
             sprite.setPosition(pos);
 
@@ -72,6 +97,11 @@ void GameMatrix::draw( RenderTarget& rt, Vector2u viewPos)
         }
 
     }
+
+
+
+
+  //  std::cout << "DRAW gamematrix (min y= " << minY << ", minX=" << minX << ")  but actual pix pos (" << actualXMin << "," << actualYMin << ")\n";
 
 }
 

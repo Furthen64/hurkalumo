@@ -16,7 +16,7 @@ void Core::boot()
 {
     std::cout << "\n\n\n---------------booting-------------------\n";
     allocateResources();
-    loadResources("data/blocktest.txt");
+    loadResources("data/houses.txt");
     setup(800,600, "Hurkalumo Editor 0.1-alpha");
     run();
 }

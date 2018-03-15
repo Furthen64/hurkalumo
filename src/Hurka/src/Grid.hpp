@@ -23,7 +23,7 @@ public:
     Grid() {}
     Grid(int _height, int _width);
 
-    void draw( RenderTarget& rt, Vector2u viewPos);
+    void draw( RenderTarget& rt, Vector2i viewPos);
 
     void setVisible(Vector2f iso_pos);
 
@@ -47,6 +47,7 @@ static int convert_iso_to_pix_x(int M, int N, int width, int height, int typeOfE
         return -1;
     }
 
+    int globalXOffset= 1500;
     int initialXOffset = 0;
     int xOffset = 0;
     int xStep = 0;
@@ -55,7 +56,8 @@ static int convert_iso_to_pix_x(int M, int N, int width, int height, int typeOfE
 
 
 
-        initialXOffset = GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_HEIGHT;   // Make sure we place everything in the x-positive euclidian space
+
+        initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_HEIGHT);   // Make sure we place everything in the x-positive euclidian space
 
 
 
@@ -77,7 +79,7 @@ static int convert_iso_to_pix_x(int M, int N, int width, int height, int typeOfE
 
         /// BLOCK
 
-        initialXOffset = GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_WIDTH;   // Make sure we place everything in the x-positive euclidian space
+        initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_WIDTH);   // Make sure we place everything in the x-positive euclidian space
 
 
 
@@ -114,7 +116,7 @@ static int convert_iso_to_pix_y(int M, int N, int width, int height, int typeOfE
         return -1;
     }
 
-
+    int globalYOffset= 500;
     int initialYOffset = 0;
     int yOffset = 0;
     int yStep = 0;
@@ -123,7 +125,7 @@ static int convert_iso_to_pix_y(int M, int N, int width, int height, int typeOfE
     if(typeOfElement == 0 || typeOfElement == 1) {
 
 
-         initialYOffset = GRID_TEXTURE_HEIGHT*2;     // Start at the top
+         initialYOffset = globalYOffset + GRID_TEXTURE_HEIGHT*2;     // Start at the top
 
          yOffset = initialYOffset;
 
@@ -135,7 +137,7 @@ static int convert_iso_to_pix_y(int M, int N, int width, int height, int typeOfE
 
         ///BLOCK
 
-         initialYOffset = 0;     // Start at the top
+         initialYOffset = globalYOffset + 0;     // Start at the top
 
          yOffset = initialYOffset;
 

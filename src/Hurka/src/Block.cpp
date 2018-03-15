@@ -111,7 +111,7 @@ Block::Block(const Vector2f& _pos, int _textureId)
 
 
 // (--)
-void Block::draw( RenderTarget& rt, Vector2u viewPos)
+void Block::draw( RenderTarget& rt, Vector2i viewPos)
 {
     int x = Grid::convert_iso_to_pix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2);
     int y = Grid::convert_iso_to_pix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2);
