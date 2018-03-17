@@ -2,7 +2,7 @@
 
 HurkaMatrix::HurkaMatrix(int _rows, int _cols)
 {
-    std::cout << "allocating matrix with rows=" << _rows << ", cols=" << _cols << "\n";
+    //std::cout << "allocating matrix with rows=" << _rows << ", cols=" << _cols << "\n";
    matrix = allocateMatrix(_rows, _cols);
    rows = _rows;
    cols = _cols;

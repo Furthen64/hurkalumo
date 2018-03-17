@@ -7,6 +7,7 @@
 // The grid follows the static grid size of 64 x 64 px
 
 
+// (--)
 Grid::Grid(int _height, int _width)
 {
     width = _width;
@@ -29,51 +30,44 @@ Grid::Grid(int _height, int _width)
 // (-+)
 void Grid::draw( RenderTarget& rt, Vector2i viewPos)
 {
-    // haha this will be hell to figure out
-    // I need functions for getting the X,Y of the [N,M]th position in the matrix
+    int gx = 0;
+    int gy = 0;
+    int wx = 0;
+    int wy = 0;
 
-
-    // Use a function to figure out what the REAL window X,Y is
-    // given the position inside the Isometric Matrix
-
-
-    int x = 0;
-    int y = 0;
-    Vector2f pos = Vector2f();
+    Vector2f wPos = Vector2f();
     Vector2f firstGPos = Vector2f();        // Game position of the first grid cell
     Vector2f firstWPos = Vector2f();        // Window position of the first grid cell
+
     bool once = false;
 
-    // What a bunny brained idea!
+
     for(int M= 0; M<height; M++){
         for(int N= 0; N < width; N++) {
 
-
-
-
-            x = convert_iso_to_pix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
-            y = convert_iso_to_pix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
+            gx = convert_iso_to_gpix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
+            gy = convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
 
             if(!once)
             {
-                firstGPos.x = x;
-                firstGPos.y = y;
+                firstGPos.x = gx;
+                firstGPos.y = gy;
             }
 
-            x += viewPos.x;
-            y += viewPos.y;
+            wx = gx + viewPos.x;
+            wy = gy + viewPos.y;
 
             if(!once) {
-                firstWPos.x = x;
-                firstWPos.y = y;
+                firstWPos.x = wx;
+                firstWPos.y = wy;
                 once = true;
             }
 
 
-            pos.x = x;
-            pos.y = y;
+            wPos.x = wx;
+            wPos.y = wy;
 
-            sprite.setPosition(pos);
+            sprite.setPosition(wPos);
             rt.draw(sprite);
 
         }
@@ -81,17 +75,17 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
     }
 
 
-    // Draw the visible grid
-    x = convert_iso_to_pix_x(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-    y = convert_iso_to_pix_y(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    // Draw the selected grid that should be more visible
+    gx = convert_iso_to_gpix_x(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    gy = convert_iso_to_gpix_y(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
-    x += viewPos.x;
-    y += viewPos.y;
+    wx = gx+ viewPos.x;
+    wy = gy+ viewPos.y;
 
-    pos.x = x;
-    pos.y = y;
+    wPos.x = wx;
+    wPos.y = wy;
 
-    spriteSelected.setPosition(pos);
+    spriteSelected.setPosition(wPos);
     rt.draw(spriteSelected);
 
 
@@ -126,8 +120,8 @@ void Grid::setVisible(Vector2f iso_pos)
 
     selected_iso_pos = iso_pos;
 
-    selected_pix_pos.x = convert_iso_to_pix_x(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-    selected_pix_pos.y = convert_iso_to_pix_y(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0 );
+    selected_pix_pos.x = convert_iso_to_gpix_x(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    selected_pix_pos.y = convert_iso_to_gpix_y(iso_pos.y, iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0 );
 
 
 

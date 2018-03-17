@@ -57,10 +57,10 @@ public:
 
 private:
 
-    int debugLevel = 2;
+    int debugLevel = 0;
 
-    int SCREEN_WIDTH = 800;
-    int SCREEN_HEIGHT = 600;
+    int SCREEN_WIDTH = 1280;
+    int SCREEN_HEIGHT = 720;
     int lockFPS = true;
     int lockFPS_n = 10;
 
@@ -82,11 +82,11 @@ private:
     FileManager *fmgr;
 
     bool drawGm = 1;
-    bool drawLoco = 1;
+    bool drawLoco = 0;
     bool drawBuses = 1;
     bool drawToolbar = 0;
     bool drawGrid = 1;
-    bool drawBlocks = 0;
+    bool drawBlocks = 1;
 
 
 
@@ -95,7 +95,7 @@ private:
 
 
     std::string cn = "Core.cpp";
-
+    std::string startmapStr = "data/bustest.txt";
 
 };
 

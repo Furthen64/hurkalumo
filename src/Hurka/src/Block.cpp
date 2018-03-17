@@ -64,8 +64,8 @@ void Block::dump()
     std::cout << "Name: " << textureName << "\n";
     std::cout << "ID: " << textureID << "\n";
     std::cout << "texturesize: " << textureSize.width  << " x " << textureSize.height << "\n";
-    std::cout << "getXPos(" << pos.y << ", " << pos.x << ") = " << Grid::convert_iso_to_pix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2) << "\n";
-    std::cout << "getYPos(" << pos.y << ", " << pos.x << ") = " << Grid::convert_iso_to_pix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2 ) << "\n";
+//    std::cout << "getXPos(" << pos.y << ", " << pos.x << ") = " << Grid::convert_iso_to_pix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2) << "\n";
+    //std::cout << "getYPos(" << pos.y << ", " << pos.x << ") = " << Grid::convert_iso_to_pix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2 ) << "\n";
 
 }
 // You can also create a block by supplying texture id as an integer,
@@ -113,8 +113,8 @@ Block::Block(const Vector2f& _pos, int _textureId)
 // (--)
 void Block::draw( RenderTarget& rt, Vector2i viewPos)
 {
-    int x = Grid::convert_iso_to_pix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2);
-    int y = Grid::convert_iso_to_pix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2);
+    int x = Grid::convert_iso_to_gpix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2);
+    int y = Grid::convert_iso_to_gpix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2);
 
 
     // Viewing offset

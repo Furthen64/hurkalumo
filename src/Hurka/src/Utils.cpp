@@ -15,7 +15,7 @@ int **allocateMatrix(int rows, int cols)
         return nullptr;
     }
 
-    std::cout << "allocateMatrix(" << rows << ", " << cols << ")\n";
+    // std::cout << "allocateMatrix(" << rows << ", " << cols << ")\n";
     int** matrix = new int*[rows];
     if (rows)
     {

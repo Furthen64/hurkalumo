@@ -116,7 +116,7 @@ void TextureManager::loadTextures()
 std::string TextureManager::getTextureNameByIndex(int nr)
 {
 
-std::cout << nr << "\n";
+
     switch(nr){
         case 0: return "GRASS001";
         case 1: return "HOUSE001";
@@ -146,8 +146,12 @@ std::cout << nr << "\n";
         case 401: return "BUS001";
 
 
-        default: return "";
+        default:
+            std::cout << cn << " could not find texture nr = " << nr << "\n";
+            return "";
     }
+
+
 
     return "";
 }
@@ -166,7 +170,8 @@ Texture TextureManager::getTexture(std::string _key)
     return textureMap[_key];
 }
 
-//(--)
+/// Given a key and an already loaded texture, put it into the internal datastructure
+//(-+)
 bool TextureManager::applyTexture(std::string textureName, Texture *texture)
 {
     bool result = false;
@@ -187,9 +192,10 @@ bool TextureManager::applyTexture(std::string textureName, Texture *texture)
 
 
 
-// (-+)
-/// You supply id=001 and it looks up the texture name "HOUSE001"  and then assigns that to the texture pointer
 
+/// Update the datastructure with this texture pointer
+/// Example: supply id=001 and it looks up the texture name "HOUSE001"  and then assigns that to the texture pointer
+// (-+)
 bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
 {
     bool result = false;

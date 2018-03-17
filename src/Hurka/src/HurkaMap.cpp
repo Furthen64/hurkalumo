@@ -52,16 +52,16 @@ Block *HurkaMap::getBlock()
 
 
 
-// (--)
-// TEST
-    // Parse the matrix
-    // Make a matrix  with only 1s and 0s
+// (-+)
+/// Can only be used after you have loaded a file!
+/// This function parses the read map for all the roads
+/// and puts a 1 where the road is and 0 where anything else is
 
 HurkaMatrix *HurkaMap::getRoadMatrix()
 {
 
 
-    std::cout << "getRoadMatrix() with matrixRows= " << matrixRows << ", matrixCols= " << matrixCols << "\n";
+    // std::cout << "getRoadMatrix() with matrixRows= " << matrixRows << ", matrixCols= " << matrixCols << "\n";
 
 
     HurkaMatrix *newMatrix = new HurkaMatrix(matrixRows, matrixCols);
@@ -98,7 +98,7 @@ HurkaMatrix *HurkaMap::getRoadMatrix()
     }
 
 
-    std::cout << " newMatrix " << newMatrix->rows << ", " << newMatrix->cols << "\n";
+    // std::cout << " newMatrix " << newMatrix->rows << ", " << newMatrix->cols << "\n";
 
 
     return newMatrix;

@@ -1,18 +1,16 @@
 #include "FileManager.hpp"
 
 
-
-/// Reads the file which contains numbers, like 001,005,007
-/// Puts them all into a matrix N x M
+//readRegularFile()
+/// Reads a textfile which contains numbers on each line: 001,005,007\n
+///                                                       001,001,000\n
+/// Puts them all into a matrix
 /// Parses the Matrix of integers and creates Blocks
-/// while parsing, puts them in a particular order which enables rendering
-/// in the isometric view
+/// while parsing, puts them in a particular order which rendering in the isometric view
 ///
 /// docs: readRegularFile.png
+
 // (-+)
-
-
-
 HurkaMap *FileManager::readRegularFile(std::string _filename)
 {
     int debugLevel = 0;
@@ -287,21 +285,25 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
 
 
 
-// (+-)
+
 // Given rows and cols, check that they actually contain those constraints
 // IF they are nullptr that check is not made
 
-// Wantlist:   Att den kollar vilka 001,002 osv som faktiskt finns i texturlistan
 // Wantlist.    att den kollar att det slutar på ","
 // Wantlist: att den kollar att det är N x N inte N x M
+// (-+)
 bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
 {
 
-    int debugLevel = 1;
+    int debugLevel = 0;
+    std::string ind = "   ";
+
     if(debugLevel > 0) {
         std::cout << "\n\n**** VerifyFile\n";
     }
 
+
+    /// Open the file
     std::ifstream infile(_filename);
 
     if (!infile.is_open()) {
@@ -310,44 +312,45 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
         return false;
     }
 
-
     std::string line;
-
-
-
-    int divisor = 4;
+    int nrCharsPerElement = 4;
     int nrElementsN = 0;
     int nrElementsM = 0;
     unsigned int firstLineLength = 0;
 
 
-    // Get the first line
+
+
+
+
+    /// Get the first line
     std::getline(infile, line);
     nrElementsM++;
-
     firstLineLength = line.length();
 
-    if(firstLineLength%divisor!=0) {  // is it equyally divisable by "4" for instance...?
-        std::cout << "ERROR " << cn << ": Line not divisible by " << divisor << ", missing comma? missing leading zeroes? every number in the format of 001,002,003?\n";
+    if(firstLineLength%nrCharsPerElement!=0) {  // is it equyally divisable by "4" for instance...?
+        std::cout << "ERROR " << cn << ": Line not divisible by " << nrCharsPerElement << ", missing comma? missing leading zeroes? every number in the format of 001,002,003?\n";
         infile.close();
         return false;
     }
 
-    nrElementsN = line.length()/divisor;  // Gets for instance
+    nrElementsN = line.length()/nrCharsPerElement;  // Gets for instance
+
+    if(debugLevel > 0) {
+        std::cout << ind << " nr of elements on this line = " << nrElementsM << "\n";
+    }
 
 
-    // Now check the rest of them, make sure they are aligned against the first line
+
+
+
+    /// Check rest of lines in file to see if they are the same length
 
     while (std::getline(infile, line))
     {
-        if(debugLevel > 0)
-        {
-            std::cout << "\"" << line << "\"  linelength=" << line.length() <<"\n";
-        }
+        if(debugLevel > 0) { std::cout << ind << "\"" << line << "\"  linelength=" << line.length() <<"\n"; }
 
-
-
-        nrElementsM++;
+        nrElementsM++;  // Increase M counter (Y, vertical axis)
 
         if(line.length()!= firstLineLength) {
             std::cout << "ERROR " << cn << ": Line is not same length as the first one !\n";
@@ -355,13 +358,15 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
             return false;
         }
 
-        // process pair (a,b)
     }
 
 
+
+    /// Check that we have equal length on both axises (MxM)
+
     if(nrElementsM != nrElementsN) {
-        std::cout << "ERROR " << cn << ": The file should contain M x M matrix... " <<
-          " The elements on one axis should be same as the other axis. This is an " << nrElementsM << "x" << nrElementsN << "!\n";
+        std::cout << "ERROR " << cn << ": The file should contain an M x M matrix... " <<
+          " The amount of elements on one axis should be same as the other axis. This is an " << nrElementsM << "x" << nrElementsN << "!\n";
         infile.close();
         return false;
     }

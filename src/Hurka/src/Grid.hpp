@@ -39,7 +39,7 @@ public:
 // M = along the left-down axis of the gameboard
 // width = width of the texture
 // height = height of the texture
-static int convert_iso_to_pix_x(int M, int N, int width, int height, int typeOfElement)
+static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOfElement)
 {
 
     std::string cn = "Grid.hpp";
@@ -108,7 +108,7 @@ static int convert_iso_to_pix_x(int M, int N, int width, int height, int typeOfE
 // M = along the left-down axis of the gameboard
 // width = width of the texture
 // height = height of the texture
-static int convert_iso_to_pix_y(int M, int N, int width, int height, int typeOfElement)
+static int convert_iso_to_gpix_y(int M, int N, int width, int height, int typeOfElement)
 {
 
     std::string cn = "Grid.hpp";
@@ -167,7 +167,7 @@ static int convert_iso_to_pix_y(int M, int N, int width, int height, int typeOfE
 }
 
 
-static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
+static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 {
 
     std::string cn = "Grid.hpp";
@@ -180,8 +180,8 @@ static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
         return pix_pos;
     }
 
-    pix_pos.x = convert_iso_to_pix_x(iso_pos.y, iso_pos.x, width, height,0 );
-    pix_pos.y = convert_iso_to_pix_y(iso_pos.y, iso_pos.x, width, height,0);
+    pix_pos.x = convert_iso_to_gpix_x(iso_pos.y, iso_pos.x, width, height,0 );
+    pix_pos.y = convert_iso_to_gpix_y(iso_pos.y, iso_pos.x, width, height,0);
 
     return pix_pos;
 
@@ -189,9 +189,9 @@ static Vector2f convert_iso_to_pix(Vector2f iso_pos, int width, int height)
 
 // (--)
 /// Är det GAME eller WINDOW position på koordinaterna?? skriv så i namnet, verkar som Game för man gör inget med viewboxen
-
 /// TEsta!! och gör bättre, diamantform
-/// BUGG hittar bara yttre raderna,m där M=0 eller N=0
+
+
 static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 {
 
@@ -209,13 +209,15 @@ static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
     }
 
 
-    // if we are inside the diamond of that cell return that iso-pos
+
+    /// todo - if we are inside the diamond of that cell return that iso-pos
+
     for(int M= 0; M< NR_GRIDS_HEIGHT; M++){
 
         for(int N= 0; N < NR_GRIDS_WIDTH; N++) {
 
-            x = convert_iso_to_pix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-            y = convert_iso_to_pix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+            x = convert_iso_to_gpix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+            y = convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
             work_pos.x = x;
             work_pos.y = y;
@@ -223,12 +225,6 @@ static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
             if( (pix_pos.x > work_pos.x)  && (pix_pos.x <= (work_pos.x+GRID_TEXTURE_WIDTH))) {
 
                 if( (pix_pos.y > work_pos.y) && (pix_pos.y <= (work_pos.y+GRID_TEXTURE_HEIGHT))) {
-
-                    std::cout << "found it at pix pos ";
-
-                    dumpPosition(work_pos);
-
-
 
                     // within the square
 

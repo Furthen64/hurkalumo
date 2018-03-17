@@ -13,6 +13,19 @@ Bus::Bus(const Vector2f& _iso_pos)
     sprite = Sprite(texture);
 
     textureSize = sprite.getTextureRect();
+
+
+    // Setup a default route
+
+    Vector2f workPos = {0,0};
+    set_iso_pos(workPos);
+    set_pix_pos( Grid::convert_iso_to_gpix(workPos, 64, 32));
+
+
+    Vector2f workPosNext = {0,4};
+    setNext_iso_pos(workPosNext);
+    setNext_pix_pos(Grid::convert_iso_to_gpix(workPosNext, 64, 32));
+
 }
 
 
@@ -141,7 +154,8 @@ void Bus::setNext_pix_pos( Vector2f _np)
         dir = 4; // Do nothing!
     }
 
-    std::cout << rightof << " " << belowof << " " << topof << " " << leftof  << "  " << "direction=" << dir << " *** \n\n";
+
+    //std::cout << rightof << " " << belowof << " " << topof << " " << leftof  << "  " << "direction=" << dir << " *** \n\n";
 
 }
 
@@ -232,28 +246,18 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
 
-    // If delta x and deltay is zero, means we have reached our destination, make a new destination
-    /*
+    // If delta x and deltay is zero, means we have reached our destination, make a new destination!
+
     if(deltaX == 0 && deltaY == 0) {
 
-        setNext_iso_pos( rand_iso_pos());
+
+        setNext_iso_pos(rand_iso_pos(roadMatrix));
+        setNext_pix_pos(Grid::convert_iso_to_gpix(next_iso_pos, 64, 32));
 
 
-        /// Old code which I really want to use, whereas the bus will get the information from the ROAD to decide where to be
-        //setNext_iso_pos(rand_iso_pos(roadMatrix));
-        //setNext_pix_pos(GameMatrix::convert_iso_to_pix(next_iso_pos, 64, 32));   // Bugg!
-
-        Vector2f _next_pix_pos;
-
-        //        _next_pix_pos.x = Grid::getWindowXPos(next_iso_pos.y, next_iso_pos.x, 64, 32);   // Not sure about those 64, 32 things... Not sure what function to use, grid or gamematrix or blocK?
-        // _next_pix_pos.y = Grid::getWindowYPos(next_iso_pos.y, next_iso_pos.x, 64, 32);
-
-
-
-        setNext_pix_pos(_next_pix_pos);
 
     }
-    */
+
 
 
     /// Find out where we are in the grid and update the Bus's iso_pos
@@ -268,6 +272,8 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
 
+// (-+)
+/// Gives you a random iso position from the gameboard
 Vector2f Bus::rand_iso_pos()
 {
     int maxM = 4;

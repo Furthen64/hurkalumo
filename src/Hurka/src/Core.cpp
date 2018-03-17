@@ -16,7 +16,7 @@ void Core::boot()
 {
     std::cout << "\n\n\n---------------booting-------------------\n";
     allocateResources();
-    loadResources("data/houses.txt");
+    loadResources(startmapStr);
     setup(800,600, "Hurkalumo Editor 0.1-alpha");
     run();
 }
@@ -84,21 +84,16 @@ void Core::setup(int width, int height, std::string title)
 
     /// Place them Buses
 
-    // TEST,
-    //put that bus first square, make it move to the next one
     Vector2f workPos = {0,0};
     bus->set_iso_pos(workPos);
-    bus->set_pix_pos( Grid::convert_iso_to_pix(workPos, 64, 32));
-    //bus->set_pix_pos( GameMatrix::convert_iso_to_pix(workPos, 64, 32));
+    bus->set_pix_pos( Grid::convert_iso_to_gpix(workPos, 64, 32));
 
 
-
-    Vector2f workPosNext = {0,4};
+    Vector2f workPosNext = {25,4};
     bus->setNext_iso_pos(workPosNext);
-    bus->setNext_pix_pos(Grid::convert_iso_to_pix(workPosNext, 64, 32));
-    //bus->setNext_pix_pos( GameMatrix::convert_iso_to_pix(workPosNext, 64, 32));
+    bus->setNext_pix_pos(Grid::convert_iso_to_gpix(workPosNext, 64, 32));
 
-//    bus->dump();
+
 
 }
 
@@ -108,7 +103,7 @@ void Core::setup(int width, int height, std::string title)
 // (-+)
 void Core::run()
 {
-    RenderWindow window(sf::VideoMode(800, 600), "HurkaLumo editor 0.1-alpha");
+    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
     }
@@ -357,8 +352,8 @@ void Core::run()
         /// Update Busses
 
 
-        //updateBuses(bus, 1, roadMatrix);
-        bus->update(roadMatrix);
+        updateBuses(bus, 1, roadMatrix);
+        //bus->update(roadMatrix);
 
 
 
