@@ -33,12 +33,14 @@ public:
 
 
 
-// (--)
+// (-+)
 // DOCS: see "GameMatrix_How_the_x_position_is_calculated.png"
 // N = along the right-down axis
 // M = along the left-down axis of the gameboard
 // width = width of the texture
 // height = height of the texture
+
+/// TODO gör en bättre dokumentation sen när det här fungerar..
 static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOfElement)
 {
 
@@ -56,21 +58,20 @@ static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOf
     if(typeOfElement == 0 || typeOfElement == 1) {
 
 
-
-
         initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_HEIGHT);   // Make sure we place everything in the x-positive euclidian space
 
+        //initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_WIDTH);   // Make sure we place everything in the x-positive euclidian space
 
 
         // Calculate the X-offset
         // intialXOffset - where we are in the height=M index TIMES the sprite_width/2
-        xOffset = initialXOffset - N*(GRID_TEXTURE_WIDTH/2);
+        xOffset = initialXOffset - M*(GRID_TEXTURE_WIDTH/2);
 
 
         // now for every step to the right=N index we have to go right a bit
 
         // TODO: adjust for small width textures! all mine are 64 so... I need more examples
-        xStep = M*(width/2);
+        xStep = N*(width/2);
 
 
 
@@ -101,7 +102,7 @@ static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOf
     return xOffset + xStep;
 }
 
-// (--)
+// (-+)
 // Used for Blocks and other sprites. But not the Grid. Grid is special.
 // DOCS: see "GameMatrix_How_the_y_position_is_calculated.png"
 // N = along the right-down axis
@@ -125,12 +126,15 @@ static int convert_iso_to_gpix_y(int M, int N, int width, int height, int typeOf
 
     if(typeOfElement == 0 || typeOfElement == 1) {
 
+         /// GRID or GAMEMATRIX
 
          initialYOffset = globalYOffset + GRID_TEXTURE_HEIGHT*2;     // Start at the top
 
          yOffset = initialYOffset;
 
          yStep = 0;
+
+         //FIXME PERHAPS - Could be bug here... not using M and N correctly, see the codeblock just below using it in another order.
 
         yStep = (N*GRID_TEXTURE_WIDTH/4) + (M*GRID_TEXTURE_WIDTH/4) - GRID_TEXTURE_WIDTH/2;     // Using WIDTH, because its 64 px not 32 px like the HEIGHT
 
@@ -191,6 +195,8 @@ static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 /// Är det GAME eller WINDOW position på koordinaterna?? skriv så i namnet, verkar som Game för man gör inget med viewboxen
 /// TEsta!! och gör bättre, diamantform
 
+
+// BUGG M och N är confused för någon anledning
 
 static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 {

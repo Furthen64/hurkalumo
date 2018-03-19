@@ -95,7 +95,7 @@ private:
 
 
     std::string cn = "Core.cpp";
-    std::string startmapStr = "data/bustest.txt";
+    std::string startmapStr = "data/twocities.txt";
 
 };
 

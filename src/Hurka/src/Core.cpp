@@ -89,9 +89,10 @@ void Core::setup(int width, int height, std::string title)
     bus->set_pix_pos( Grid::convert_iso_to_gpix(workPos, 64, 32));
 
 
-    Vector2f workPosNext = {25,4};
+    Vector2f workPosNext = {2,2};
     bus->setNext_iso_pos(workPosNext);
     bus->setNext_pix_pos(Grid::convert_iso_to_gpix(workPosNext, 64, 32));
+
 
 
 
@@ -135,7 +136,7 @@ void Core::run()
         /// Update
 
 
-        // Right mouse button pressed - Pan the Map
+        // Right mouse button pressed - Pan the map
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
 
@@ -250,7 +251,7 @@ void Core::run()
 
         }
 
-        // Get mouse input
+        // Left mouse button pressed
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             std::stringstream sstm;
@@ -266,17 +267,11 @@ void Core::run()
 
 
 
-
-
-
-
             /// Redact ViewPosition rectangle from it to get back to GameMatrix positioning
             Vector2f mouseGPos = Vector2f();
             mouseGPos.x = mouseWPos.x - viewPos.x;
             mouseGPos.y = mouseWPos.y - viewPos.y;
-            //mousePos_f.x += viewPos.x;
-            //mousePos_f.y += viewPos.y;
-            //sstm << "WPOS(" << mousePos_f.y << ", " << mousePos_f.x << ")\n";
+            sstm << "GPOS(" << mouseGPos.y << ", " << mouseGPos.x << ")\n";
 
             Vector2f iso_pos = Vector2f();
             iso_pos = Grid::convert_pix_to_iso(mouseGPos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
@@ -286,8 +281,7 @@ void Core::run()
             /// Update the text
             lastClickedText.setFont(font);
 
-            //lastClickedText.setString(sstm.str());
-            lastClickedText.setString("kladdkaka");
+            lastClickedText.setString(sstm.str());
             lastClickedText.setCharacterSize(12);
             lastClickedText.setFillColor(sf::Color::White);
             lastClickedText.setPosition(mouseWPos);
@@ -349,16 +343,9 @@ void Core::run()
         loco->update(1);
 
 
-        /// Update Busses
-
-
+        /// Update Busses against the Road Matrix
         updateBuses(bus, 1, roadMatrix);
-        //bus->update(roadMatrix);
-
-
-
-
-        /// Visible grid
+        grid->setVisible(bus->get_next_iso_pos());
 
 
 
@@ -371,6 +358,7 @@ void Core::run()
         window.clear({0, 0, 0});
 
         if(drawGm)   {  gm->draw(window, viewPos);  } // Draws the ground and water and suchers
+
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in renderorder
@@ -382,6 +370,7 @@ void Core::run()
         if(drawLoco) {  loco->draw(window, viewPos); }
         if(drawBuses) { bus->draw(window, viewPos); }
         if(drawGrid) {  grid->draw(window, viewPos); }
+
         if(drawToolbar) {   toolbarTop->draw(window, viewPos); }
 
         window.draw(lastClickedText);

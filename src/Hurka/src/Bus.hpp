@@ -38,7 +38,9 @@ public:
     void setRandStartingPosition(HurkaMatrix *roadMatrix);
 
     Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);
-    Vector2f rand_iso_pos();
+    Vector2f rand_iso_pos(int maxM, int maxN);
+
+    Vector2f get_next_iso_pos();
 
     void dump();
 
@@ -51,7 +53,7 @@ private:
     Vector2f next_pix_pos;
 
 
-    float speed = 1.0f; // Percentage, 100% speed or 150% speed
+    float speed = 3.0f; // Percentage, 100% speed or 150% speed
 
     int dir = 0;    // 0= UP RIGHT      1= DOWN RIGHT       2= DOWN LEFT       3 = UP LEFT
 

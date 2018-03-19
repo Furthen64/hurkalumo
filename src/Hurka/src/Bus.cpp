@@ -61,8 +61,9 @@ void Bus::setRandStartingPosition(HurkaMatrix *roadMatrix)
 
 
     // Convert it into pix_pos
-    pix_pos = Grid::convert_pix_to_iso(iso_pos, textureSize.width, textureSize.height);
-    //pix_pos = GameMatrix::convert_iso_to_pix(iso_pos, textureSize.width, textureSize.height);
+    //pix_pos = Grid::convert_pix_to_iso(iso_pos, textureSize.width, textureSize.height);
+
+    pix_pos = Grid::convert_iso_to_gpix(iso_pos, textureSize.width, textureSize.height);
 }
 
 
@@ -164,14 +165,8 @@ void Bus::setNext_pix_pos( Vector2f _np)
 void Bus::update(HurkaMatrix *roadMatrix)
 {
 
-//    dump();
-
-
     int deltaX = 0;
     int deltaY = 0;
-
-    //std::cout << "BEFORE (" << pix_pos.x << ", " << pix_pos.y << ") ";
-
 
     if(next_pix_pos.x > pix_pos.x) {
         deltaX = next_pix_pos.x - pix_pos.x;
@@ -194,43 +189,26 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
         case 0: // UP RIGHT
 
-
             // Set current position
             pix_pos.x += ceil ( (float) (deltaX * speed/100) );
             pix_pos.y -= ceil ( (float) (deltaY * speed/100) );
 
-            //std::cout << deltaX << ", " << deltaY << "\n";
             break;
 
         case 1: // DOWN RIGHT
-         //   deltaX = next_pix_pos.x - pix_pos.x;
-         //   deltaY = next_pix_pos.y - pix_pos.y;
 
-            //std::cout << deltaX << ", " << deltaY << "\n";
-
-            // Set current position
             pix_pos.x += ceil((float) (deltaX * speed/100) );
             pix_pos.y += ceil ( (float) (deltaY * speed/100) );
             break;
 
         case 2: // DOWN LEFT
-         //   deltaX = pix_pos.x - next_pix_pos.x;
-         //   deltaY = next_pix_pos.y - pix_pos.y;
 
-            //std::cout << deltaX << ", " << deltaY << "\n";
-
-            // Set current position
             pix_pos.x -= ceil ( (deltaX * speed/100));
             pix_pos.y += ceil ( (deltaY * speed/100));
             break;
 
         case 3: // UP LEFT
-          //  deltaX = pix_pos.x - next_pix_pos.x;
-           // deltaY = pix_pos.y - next_pix_pos.y;
 
-            //std::cout << deltaX << ", " << deltaY << "\n";
-
-            // Set current position
             pix_pos.x -= ceil (  ( deltaX * speed/100));
             pix_pos.y -= ceil ( ( deltaY * speed/100)  );
             break;
@@ -252,19 +230,20 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
         setNext_iso_pos(rand_iso_pos(roadMatrix));
+
+        std::cout << "next bus iso=";
+        dumpPosition(next_iso_pos);
+
+
+
         setNext_pix_pos(Grid::convert_iso_to_gpix(next_iso_pos, 64, 32));
 
 
 
     }
 
-
-
     /// Find out where we are in the grid and update the Bus's iso_pos
     iso_pos = Grid::convert_pix_to_iso(pix_pos, textureSize.width, textureSize.height);
-
-
-    //std::cout << "  AFTER (" << pix_pos.x << ", " << pix_pos.y << ") \n";
 
 
 }
@@ -272,13 +251,11 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
 
-// (-+)
-/// Gives you a random iso position from the gameboard
-Vector2f Bus::rand_iso_pos()
-{
-    int maxM = 4;
-    int maxN = 4;
 
+/// Gives you a random iso position from the gameboard
+// (-+)
+Vector2f Bus::rand_iso_pos(int maxM, int maxN)
+{
     int m = randBetween(0, maxM);
     int n = randBetween(0, maxN);
 
@@ -286,14 +263,11 @@ Vector2f Bus::rand_iso_pos()
     _iso_pos.y = m;
     _iso_pos.x = n;
 
-//    std::cout << "rand iso pos= ";
-    //dumpPosition(_iso_pos);
-
     return _iso_pos;
 }
 
 
-/// Randomize a position in the GameMatrix isometric plane
+/// Randomize an iso position from the roads
 // (-+)
 Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
 {
@@ -303,6 +277,7 @@ Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
         std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadMatrix->rows << ", " << roadMatrix->cols << "\n";
         return Vector2f();
     }
+
     bool found = false;
     int allowedAttempts = 500;
     int currAttempt = 0;
@@ -314,15 +289,11 @@ Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
 
     while(found == false && currAttempt < allowedAttempts) {
 
-
-        //std::cout << "rows= " << roadMatrix->rows << " cols= " << roadMatrix->cols << "\n";
-
         r = randBetween(0, roadMatrix->rows-1);
         c = randBetween(0, roadMatrix->cols-1);
 
         if(roadMatrix->matrix[r][c] == 1) {
 
-            std::cout << " Found random iso_pos(" << r << ", " << c << ")\n";
             newPos.y = r;
             newPos.x = c;
 
@@ -333,6 +304,10 @@ Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
         currAttempt++;
     }
 
+    if(found == false) {
+
+        std::cout << "Could not find random bus position\n";
+    }
 
     return newPos;
 }
@@ -342,4 +317,11 @@ void Bus::dump()
 {
     std::cout << " bus is now at iso_pos(" << iso_pos.y <<", " << iso_pos.x << ") pix_pos(" << pix_pos.y << ", " << pix_pos.x << ")  going to  iso_pos(" << next_iso_pos.y << ", " <<
     next_iso_pos.x << ") pix_pos(" << next_pix_pos.y << ", " << next_pix_pos.x << ")\n";
+}
+
+
+
+Vector2f Bus::get_next_iso_pos()
+{
+    return next_iso_pos;
 }
