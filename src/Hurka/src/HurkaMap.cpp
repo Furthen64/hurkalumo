@@ -1,5 +1,11 @@
 #include "HurkaMap.hpp"
 
+
+// VERSION 2            2018-03-20
+
+
+
+
 // (-+)
 HurkaMap::HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols)
 {

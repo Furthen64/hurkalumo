@@ -3,6 +3,10 @@
 
 #include "Utils.hpp"
 
+// VERSION 2            2018-03-20
+
+
+
 
 class HurkaMatrix
 {

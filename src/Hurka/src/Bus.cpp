@@ -2,6 +2,9 @@
 
 
 
+// TODO: make sure you are working with 20x20px and not 64x32 px ...
+// Need to take a gander at Grid::convert_iso_to_gpix I guess?
+// Bus needs correct placement on the road
 Bus::Bus(const Vector2f& _iso_pos)
     :
     iso_pos(_iso_pos)

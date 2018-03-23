@@ -2,11 +2,17 @@
 
 
 
+
+
+
+
 void dumpPosition(Vector2f iso_pos)
 {
     std::cout << "pos(" << iso_pos.y << ", " << iso_pos.x << ")\n";
 }
 
+// TEST
+// (--)
 int **allocateMatrix(int rows, int cols)
 {
 
@@ -23,6 +29,18 @@ int **allocateMatrix(int rows, int cols)
         for (int i = 1; i < rows; ++i)
             matrix[i] = matrix[0] + i * cols;
     }
+
+
+
+
+    for(int r = 0; r < rows; r++) {
+
+        for(int c = 0; c < cols; c++) {
+                matrix[r][c] = 0;
+
+        }
+    }
+
 
 
 
