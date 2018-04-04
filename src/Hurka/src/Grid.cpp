@@ -91,6 +91,7 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
 
 
     /// Also draw coordinates in text for the top one
+    /*
     text.setFont(font);
 
     std::stringstream sstm;
@@ -106,7 +107,7 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
     // inside the main loop, between window.clear() and window.display()
     text.setPosition(firstWPos);
     rt.draw(text);
-
+*/
 
 
 }

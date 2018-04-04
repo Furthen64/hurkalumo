@@ -18,6 +18,7 @@
 #include "Grid.hpp"
 #include "TextureManager.hpp"
 #include "Toolbar.hpp"
+#include "TrafficManager.hpp"
 #include "GameMatrix.hpp"
 #include "Block.hpp"
 #include "Locomotive.hpp"
@@ -52,12 +53,14 @@ public:
 
     void updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix );
 
+    void updateTraffic();
+
 
 
 
 private:
 
-    int debugLevel = 0;
+    int debugLevel = 1;
 
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
@@ -72,6 +75,7 @@ private:
 
     TextureManager *textureMgr; // Singleton!
 
+    TrafficManager *trafficMgr;
     GameMatrix *gm;
     Bus *bus = nullptr;
     Locomotive *loco = nullptr;
@@ -95,7 +99,7 @@ private:
 
 
     std::string cn = "Core.cpp";
-    std::string startmapStr = "data/twocities.txt";
+    std::string startmapStr = "data/roadnetwork_test.txt";
 
 };
 

@@ -36,6 +36,8 @@ void Core::loadResources(std::string mapName)
 
     std::cout << "\n\n\n---------------loadResources-------------------\n";
 
+
+    std::cout << "Loading map \"" << mapName << "\"\n";
     /// Load the Textures
     textureMgr = textureMgr->getInstance();
     textureMgr->loadTextures();
@@ -75,6 +77,7 @@ void Core::setup(int width, int height, std::string title)
     initRandomizer();
 
     fmgr = new FileManager();
+    trafficMgr = new TrafficManager();
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
     bus = new Bus({10.0f, 10.0f});
     loco = new Locomotive({10.0f, 10.0f});
@@ -118,7 +121,54 @@ void Core::run()
 
 
 
-    // TODO: Break out to functions , do it in an own branch
+
+
+
+
+    /// //////////////////////////////////////////////////////////////////////////////
+    /// Parse the current situation of roads into individual road networks
+    ///
+
+    if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads\n"; }
+
+    trafficMgr->parseCurrentRoads(roadMatrix, 1);
+
+    if(debugLevel >=1) {
+        std::cout << "\n\nDumping the individual road networks found:\n";
+        trafficMgr->dumpRoadNetworks();
+    }
+
+
+
+
+    /*
+
+
+    // High level functions
+    void dumpRoadNetworks();
+
+    void updateAll();           // updates all the buses on all the roadnetworks
+
+    // Individual
+    void addRoadNetwork();
+
+    DijkstraResult *runDijkstraOnBus(int busId);
+
+    void planForBusesOnRoadNetwork(int roadnetId);
+
+    void updateBusesOnRoadNetwork(int busId, int roadnetId);
+
+    */
+
+
+
+
+
+    /// //////////////////////////////////////////////////////////////////////////////
+    /// Main Loop
+    ///
+
+
     while (window.isOpen())
     {
 
@@ -344,8 +394,14 @@ void Core::run()
 
 
         /// Update Busses against the Road Matrix
-        updateBuses(bus, 1, roadMatrix);
-        grid->setVisible(bus->get_next_iso_pos());
+
+            //updateBuses(bus, 1, roadMatrix);
+            //grid->setVisible(bus->get_next_iso_pos());
+
+
+
+
+
 
 
 
@@ -361,7 +417,7 @@ void Core::run()
 
         if(drawBlocks) {
 
-            /// Iterate list of blocklists to draw them in renderorder
+            /// Iterate list of blocklists to draw them in render order
 
             hmap->draw(window, viewPos);
         }
@@ -411,7 +467,7 @@ void Core::clearResources()
 
 // For now it just moves them around randomly
 // TODO: needs a matrix of the ROADS so we can figure out the way to move it
-
+// Waiting for me to code the Trafic Manager
 // (--)
 void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix)
 {

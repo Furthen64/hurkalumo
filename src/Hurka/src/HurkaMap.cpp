@@ -41,10 +41,12 @@ void  HurkaMap::putBlockList(std::list<Block *> _blockList)
 
 
 // (--)
-// felhantering vid tom lista t.ex
+// Complete this,
+// Error handling when empty list for instance
 Block *HurkaMap::getBlock()
 {
 
+std::cout << "getBlock not done (--)\n";
     Block *blockRef = nullptr;
 
     for (std::list<Block *>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
@@ -58,20 +60,14 @@ Block *HurkaMap::getBlock()
 
 
 
-// (-+)
+// (+-)
 /// Can only be used after you have loaded a file!
-/// This function parses the read map for all the roads
-/// and puts a 1 where the road is and 0 where anything else is
-
+///
+/// This function parses the map for all the roads
+/// puts a 1 where the road is and 0 where anything else is
 HurkaMatrix *HurkaMap::getRoadMatrix()
 {
-
-
-    // std::cout << "getRoadMatrix() with matrixRows= " << matrixRows << ", matrixCols= " << matrixCols << "\n";
-
-
     HurkaMatrix *newMatrix = new HurkaMatrix(matrixRows, matrixCols);
-
 
     for(int y = 0; y < matrixRows; y++)
     {
@@ -80,14 +76,8 @@ HurkaMatrix *HurkaMap::getRoadMatrix()
         {
 
 
-            // Is it a road?
-            if(matrix[y][x] == 101 ||
-               matrix[y][x] == 102 ||
-               matrix[y][x] == 103 ||
-               matrix[y][x] == 104 ||
-               matrix[y][x] == 105 ||
-               matrix[y][x] == 106 ||
-               matrix[y][x] == 107 ) {
+            // Is it a road?    (texture id between 100-200 )
+            if( (matrix[y][x] > 99) && (matrix[y][x] < 200) ) {
 
                    newMatrix->matrix[y][x] = 1;
 
@@ -102,9 +92,6 @@ HurkaMatrix *HurkaMap::getRoadMatrix()
         }
 
     }
-
-
-    // std::cout << " newMatrix " << newMatrix->rows << ", " << newMatrix->cols << "\n";
 
 
     return newMatrix;
