@@ -5,6 +5,7 @@
 // TODO: make sure you are working with 20x20px and not 64x32 px ...
 // Need to take a gander at Grid::convert_iso_to_gpix I guess?
 // Bus needs correct placement on the road
+// (-+)
 Bus::Bus(const Vector2f& _iso_pos)
     :
     iso_pos(_iso_pos)
@@ -35,6 +36,7 @@ Bus::Bus(const Vector2f& _iso_pos)
 
 // Ska egentligen köras i en update-funktion mestadels här,
 // bara rt.draw ska finnas
+// (-+)
 void Bus::draw( RenderTarget& rt, Vector2i viewPos)
 {
 
@@ -55,16 +57,12 @@ void Bus::draw( RenderTarget& rt, Vector2i viewPos)
 }
 
 
-// (--)
+// (-+)
 void Bus::setRandStartingPosition(HurkaMatrix *roadMatrix)
 {
 
     // First get a random position on the road for iso_pos
     iso_pos = rand_iso_pos(roadMatrix);
-
-
-    // Convert it into pix_pos
-    //pix_pos = Grid::convert_pix_to_iso(iso_pos, textureSize.width, textureSize.height);
 
     pix_pos = Grid::convert_iso_to_gpix(iso_pos, textureSize.width, textureSize.height);
 }
@@ -103,17 +101,18 @@ void Bus::set_pix_pos( Vector2f _p)
         pix_pos = _p;
 }
 
-// Assumes we are always in positive euclidian space :) no negative .x and .ys!
-
+// Assumes we are always in positive euclidian space. No negative x and y positions.
+// (-+)
 void Bus::setNext_pix_pos( Vector2f _np)
 {
- //   std::cout << "\n\n ** setNext_pix_pos()\n";
+    //std::cout << "\n\n ** setNext_pix_pos()\n";
     //std::cout << "CurrPos (" << pix_pos.x << ", " << pix_pos.y << ")   Nexpos (" << next_pix_pos.x << ", " << next_pix_pos.y << ")\n";
+
     next_pix_pos = _np;
 
     dir = 4; // Do nothing
 
-    // Now figure out what the direction for the bus is
+    // Now figure out the direction for the bus
     bool rightof = false;
     bool belowof = false;
     bool topof = false;
@@ -227,7 +226,7 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
 
-    // If delta x and deltay is zero, means we have reached our destination, make a new destination!
+    /// If delta x and deltay is zero, means we have reached our destination, make a new destination!
 
     if(deltaX == 0 && deltaY == 0) {
 
@@ -315,7 +314,7 @@ Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
     return newPos;
 }
 
-
+// (-+)
 void Bus::dump()
 {
     std::cout << " bus is now at iso_pos(" << iso_pos.y <<", " << iso_pos.x << ") pix_pos(" << pix_pos.y << ", " << pix_pos.x << ")  going to  iso_pos(" << next_iso_pos.y << ", " <<

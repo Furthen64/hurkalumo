@@ -35,6 +35,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add library="sfml-graphics" />
 					<Add library="sfml-window" />
 					<Add library="sfml-system" />
@@ -55,7 +57,6 @@
 		<Unit filename="src/Constants.hpp" />
 		<Unit filename="src/Core.cpp" />
 		<Unit filename="src/Core.hpp" />
-		<Unit filename="src/Dijkstra.cpp" />
 		<Unit filename="src/FileManager.cpp" />
 		<Unit filename="src/FileManager.hpp" />
 		<Unit filename="src/GameMatrix.cpp" />
