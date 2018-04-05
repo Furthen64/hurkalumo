@@ -23,9 +23,9 @@ public:
 
     // High level functions
 
-    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited, int debugLevel);
+    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos, Vector2f *max_iso_pos,  BinarySearchTree *visited, int debugLevel);
 
-    void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited, int debugLevel);
+    void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos,  Vector2f *max_iso_pos, BinarySearchTree *visited, int debugLevel);
 
     void parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
 

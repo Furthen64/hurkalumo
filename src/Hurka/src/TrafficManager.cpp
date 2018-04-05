@@ -7,9 +7,19 @@ TrafficManager::TrafficManager()
 }
 
 
-// Recursive!
+// Recursive
 // Follows connected 1:s in the fullRoadMatrix and puts 1:s in newMatrix
-void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited, int debugLevel)
+//
+// fullRoadMatrix:      Already allocated HurkaMatrix, A matrix with 1:s where the road sprites are, 0:s everywhere else
+// newMatrix:           Already allocated HurkaMatrix, empty on entry. Will be filled when function returns.
+// curr_iso_pos:        The current iso_pos for the algorithm
+// min_iso_pos:         Already existing vector2f object, will be filled on output.
+// visited:             BinarySearchTree already allocated, empty on entry. Will be filled when function returns.
+//
+// Improvements: Make curr_iso_pos a pointer
+
+// (-+)
+void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos,  Vector2f *max_iso_pos,  BinarySearchTree *visited, int debugLevel)
 {
     std::string ind = "      ";
 
@@ -25,6 +35,16 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix,
 
 
 
+    /// Have we been here?
+    int searchId = Node::generateID(curr_iso_pos);
+    if(visited->findVal(searchId,0) != -1 ) {
+        return ;                                                                                 // END RECURSION
+    }
+
+
+
+    /// Setup objects
+
 
     Vector2f up_iso = curr_iso_pos;
     up_iso.y -= 1;
@@ -39,60 +59,80 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix,
     left_iso.x -= 1;
 
 
-    // Have we been here?
-    int searchId = Node::generateID(curr_iso_pos);
-    if(visited->findVal(searchId,0) != -1 ) {
-        return ;                                                                                 // END RECURSION
-    }
 
+    /// Update objects
 
     // Put a "1" where we are at the moment
     newMatrix->matrix[(int)curr_iso_pos.y][(int)curr_iso_pos.x] = 1;
-
-
 
     // Add to visited
     visited->add(searchId,debugLevel);
 
 
+    // Update the limits
+    if(min_iso_pos->y > curr_iso_pos.y) {
+        // new minimum! Top road
+        min_iso_pos->y = curr_iso_pos.y;
+    }
+
+    if(min_iso_pos->x > curr_iso_pos.x) {
+        // new minimum! left road
+        min_iso_pos->x = curr_iso_pos.x;
+
+    }
+
+
+    if(max_iso_pos->x < curr_iso_pos.x) {
+        // new max! right road
+        max_iso_pos->x = curr_iso_pos.x;
+    }
+
+    if(max_iso_pos->y < curr_iso_pos.y) {
+        // new max! down road
+        max_iso_pos->y = curr_iso_pos.y;
+    }
 
 
 
 
 
-    // Check up
+
+
+
+
+    /// Go up
     if(up_iso.y >= 0) { // Not hit the wall yet?
         if(fullRoadMatrix->matrix[(int)up_iso.y][(int)up_iso.x] == 1) { // is it a road?
                 if(debugLevel >= 2) { std::cout << ind << "going up\n"; }
-            follow(fullRoadMatrix, newMatrix, up_iso, visited, debugLevel);                                 // RECURSION CALL
+            follow(fullRoadMatrix, newMatrix, up_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                                 // RECURSION CALL
         }
     }
 
 
-    // Check right
+    /// Go right
     if(right_iso.x <= (fullRoadMatrix->cols-1)) {
         if(fullRoadMatrix->matrix[(int)right_iso.y][(int)right_iso.x] == 1) {
                 if(debugLevel >= 2) { std::cout << ind << "going right\n";}
-            follow(fullRoadMatrix, newMatrix, right_iso, visited, debugLevel);                              // RECURSION CALL
+            follow(fullRoadMatrix, newMatrix, right_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                              // RECURSION CALL
         }
     }
 
 
-    // Check down
+    /// Go down
     if(down_iso.y <= (fullRoadMatrix->rows-1)) {
         if(fullRoadMatrix->matrix[(int)down_iso.y][(int)down_iso.x] == 1) {
             if(debugLevel >= 2) { std::cout << ind  << "going down\n"; }
-            follow(fullRoadMatrix, newMatrix, down_iso, visited, debugLevel);                               // RECURSION CALL
+            follow(fullRoadMatrix, newMatrix, down_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                               // RECURSION CALL
         }
     }
 
 
 
-    // Check left
+    /// Go left
     if(left_iso.x >= 0) {
         if(fullRoadMatrix->matrix[(int)left_iso.y][(int)left_iso.x] == 1) {
             if(debugLevel >= 2) { std::cout << ind  << "going left\n"; }
-            follow(fullRoadMatrix, newMatrix, left_iso, visited, debugLevel);                               // RECURSION CALL
+            follow(fullRoadMatrix, newMatrix, left_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                               // RECURSION CALL
         }
     }
 
@@ -102,7 +142,10 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix,
 
 
 // Calls a recursive function that walks through the matrix, following the 1:s
-RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited, int debugLevel)
+//
+// wishlist: Makeover! Minimilize by using a RoadNetwork *pointer instead of the individual parrts  (newMatrix, min_iso, max_iso...)
+// (-+)
+RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos, Vector2f *max_iso_pos, BinarySearchTree *visited, int debugLevel)
 {
     std::string ind = "   ";
 
@@ -111,23 +154,33 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vect
     }
 
 
-    Vector2f min_iso_pos;
-    min_iso_pos.y = curr_iso_pos.y;
-    min_iso_pos.x = curr_iso_pos.x; // TODO FIXME               There should be code going and looking for the least value in x and y while running "follow()"
 
 
-    //int searchId = Node::generateID(curr_iso_pos) ;
 
+
+
+
+    /// Create a new matrix for the RoadNetwork
 
     HurkaMatrix *hmatrix = new HurkaMatrix(fullRoadMatrix->rows, fullRoadMatrix->cols);
 
 
-    // Follow the roads in the matrix (the 1:s)
-    // When it's done, hmatrix should contain the roadnetwork's matrix
+
+
+
+
+
+    /// Follow the roads in the matrix (the 1:s)
+    /// When it's done, hmatrix should contain the roadnetwork's matrix
+
     if(debugLevel >= 2)  {
         std::cout << ind << "\nfollow():\n" << ind << "{\n";
     }
-    follow(fullRoadMatrix, hmatrix, curr_iso_pos, visited, debugLevel);
+
+    follow(fullRoadMatrix, hmatrix, curr_iso_pos, min_iso_pos, max_iso_pos, visited, debugLevel);
+
+    std::cout << "fungerar max iso:\n";
+    dumpPosition( *max_iso_pos);
 
     if(debugLevel >= 2)  {
         std::cout << ind << "}\n\n";
@@ -135,8 +188,28 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vect
 
 
 
-    // Setup the return object
-    RoadNetwork *roadNetwork = new RoadNetwork(min_iso_pos.y, min_iso_pos.x);
+    /// Setup the return object
+    int newRows = max_iso_pos->y - min_iso_pos->y +1;  // lite osäker, +-1 felet
+    int newCols = max_iso_pos->x - min_iso_pos->x +1;
+
+    /// We only want a matrix with the size containing roads, not the whitespace around it
+
+
+    std::cout << "hmatrix now:\n";
+    hmatrix->dump();
+
+    ///         int **copySubMatrix(int **srcMtx,    int srcRows,   int srcCols,   int startY,      int startX,  int height, int width)
+
+    hmatrix->matrix = copySubMatrix(hmatrix->matrix, hmatrix->rows, hmatrix->cols, min_iso_pos->y, min_iso_pos->x, newRows,   newCols, debugLevel);
+    hmatrix->rows = newRows;
+    hmatrix->cols = newCols;
+
+    std::cout << "New matrix after sub:\n";
+    hmatrix->dump();
+
+
+
+    RoadNetwork *roadNetwork = new RoadNetwork();
     roadNetwork->hMatrix = hmatrix;
 
     if(debugLevel >= 2)  {
@@ -168,6 +241,11 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
     }
 
     BinarySearchTree *bst = new BinarySearchTree();
+    Vector2f min_iso_pos = Vector2f();
+    Vector2f max_iso_pos = Vector2f();
+
+
+
 
 
     int searchId = -1;
@@ -189,6 +267,19 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
 
 
+    /// Start your engines!
+    /// Walk the Matrix
+
+    // Reset the variables for each roadNetwork:
+    min_iso_pos.y = roadMatrix->rows;
+    min_iso_pos.x = roadMatrix->cols;
+
+    max_iso_pos.y = 0;
+    max_iso_pos.x = 0;
+
+
+
+
     if(debugLevel >=1) {std::cout << "\n\nIterating all the cells:\n-------------------\n";}
     for(int y = 0; y < M_LENGTH; y++) {
         for(int x = 0; x < N_LENGTH; x++) {
@@ -207,8 +298,10 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
                 if(bst->findVal(searchId,0) != -1) {
 
+                    /// found it!    Ignore it. We found it so it's already been visited.
+
                     if(debugLevel >=1) {std::cout << "Already in BST\n";}
-                    // found it!    Ignore it. We found it so it's already been visited.
+
 
 
                 } else {
@@ -216,14 +309,30 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
                     if(debugLevel >=1) {std::cout << "Running followAndAddToBst\n";}
 
-                    // Did not find it?
-                    // Start a "Follow and Add" recursion, which returns a roadNetwork
+                    /// Did not find it?
+                    /// Start a "Follow and Add" recursion, which returns a roadNetwork
+
+
+                    RoadNetwork *network = followAndAddToBST(roadMatrix, curr_iso, &min_iso_pos, &max_iso_pos, bst, debugLevel);
+
+                    network->min_isoYOffset = min_iso_pos.y;
+                    network->min_isoXOffset = min_iso_pos.x;
+
+                    network->max_isoYOffset = max_iso_pos.y;
+                    network->max_isoXOffset = max_iso_pos.x;
 
 
 
-                    RoadNetwork *network = followAndAddToBST(roadMatrix, curr_iso, bst, debugLevel);
-
+                    /// Store a completed roadnetwork
                     roadNetworks->push_back(network);
+
+
+                    /// Reset for the next round
+                    min_iso_pos.y = roadMatrix->rows;
+                    min_iso_pos.x = roadMatrix->cols;
+
+                    max_iso_pos.y = 0;
+                    max_iso_pos.x = 0;
 
                 }
 
@@ -255,7 +364,6 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
         RoadNetwork *currNet = (*it);
 
         std::cout << "\n\n" << indent << "Road Network nr " << nr << ":\n";
-
 
         currNet->dump(indent2);
 

@@ -74,24 +74,117 @@ void dumpMatrix(int** matrix, int rows, int cols, std::string indent)
 
 }
 
+
+
+// Takes  a matrix (srcMtx) with its srcRows x srcCols
+// Starts at row startY, column startX and copies height x width block of data from that matrix into a new one, returns new one.
+//
+// TEST MORE
+// Docs: Utils_copySubMatrix.png
+// BUG: startx starty is wrong
+// (-+)
+int **copySubMatrix(int **srcMtx, int srcRows, int srcCols, int startY, int startX, int height, int width, int debugLevel)
+{
+
+    std::string cn = "Utils.cpp";
+
+
+    if(debugLevel >=1) {
+        std::cout << "\n\ncopySubMatrix\n----------------\n";
+        std::cout << "srcRows=" << srcRows << ", srcCols=" << srcCols << ", startY=" << startY << ", startX=" << startX << ", height=" << height << ", width=" << width << "\n";
+    }
+
+    if(srcMtx == nullptr) {
+        std::cout << "ERROR " << cn << " supplied nullptr to copySubMatrix!\n";
+        return nullptr;
+    }
+
+    if(startY > srcRows) {
+        std::cout << "ERROR " << cn << " startY > srcRows in copySubMatrix!\n";
+        return nullptr;
+    }
+
+    if(startX > srcCols) {
+        std::cout << "ERROR " << cn << " startX > srcCols in copySubMatrix!\n";
+        return nullptr;
+    }
+
+
+    if( (startY + height) > srcRows) {
+        std::cout << "ERROR " << cn << " (startY+height) > srcRows in copySubMatrix!\n";
+        return nullptr;
+    }
+
+
+
+    if( (startX + width) > srcCols) {
+        std::cout << "ERROR " << cn << " (startX+width) > srcCols in copySubMatrix!\n";
+        return nullptr;
+    }
+
+
+
+
+
+
+
+
+    if(debugLevel >=2) {
+        std::cout << "dumping srcmtx:\n";
+        dumpMatrix(srcMtx, srcRows, srcCols, "   ");
+
+    }
+
+
+
+    /// Allocate the new matrix
+    int **destMtx = nullptr;
+
+    destMtx = allocateMatrix(height, width);
+
+
+
+    /// Loop over original matrix and do the work
+
+    for(int srcY = startY, destY = 0; srcY < (startY+height); srcY++, destY++)
+    {
+        for(int srcX = startX, destX = 0; srcX < (startX+width); srcX++, destX++)
+        {
+
+            std::cout << "srcMtx[" << srcY << "][" << srcX << "]";
+            std::cout << "destMtx[" << destY << "][" << destX << "]    = " << srcMtx[srcY][srcX] << "\n\n";
+
+            destMtx[destY][destX] = srcMtx[srcY][srcX]; // Copy the value from the original
+
+        }
+    }
+
+
+
+
+
+    /// Done
+
+    return destMtx;
+
+
+
+
+}
+
+
+
+// (++)
 void initRandomizer()
 {
 
     srand(time(0));
 }
 
+
+// (++)
 int randBetween(int lowNr, int highNr)
 {
-
-
-/*
-    std::random_device rd;     // only used once to initialise (seed) engine
-    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-    std::uniform_int_distribution<int> uni(lowNr,highNr); // guaranteed unbiased
-
-    auto random_integer = uni(rng);
-
-    return random_integer;*/
     return rand()%(highNr-lowNr + 1) + lowNr;
 }
 

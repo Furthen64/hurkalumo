@@ -36,10 +36,12 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
     int wy = 0;
 
     Vector2f wPos = Vector2f();
-    Vector2f firstGPos = Vector2f();        // Game position of the first grid cell
+    /*Vector2f firstGPos = Vector2f();        // Game position of the first grid cell
     Vector2f firstWPos = Vector2f();        // Window position of the first grid cell
 
     bool once = false;
+
+    */
 
 
     for(int M= 0; M<height; M++){
@@ -48,21 +50,21 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
             gx = convert_iso_to_gpix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
             gy = convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
 
-            if(!once)
+  /*          if(!once)
             {
                 firstGPos.x = gx;
                 firstGPos.y = gy;
             }
-
+*/
             wx = gx + viewPos.x;
             wy = gy + viewPos.y;
 
-            if(!once) {
+/*            if(!once) {
                 firstWPos.x = wx;
                 firstWPos.y = wy;
                 once = true;
             }
-
+*/
 
             wPos.x = wx;
             wPos.y = wy;

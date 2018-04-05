@@ -17,13 +17,21 @@ class RoadNetwork
 {
 public:
 
-    RoadNetwork(int _isoYOffset, int _isoXOffset);
+    RoadNetwork();
     void dump(std::string indent);
 
     HurkaMatrix *hMatrix;
 
-    int isoYOffset;
-    int isoXOffset;
+
+    //TODO gör en overhaul av alla positioner som är Vector2f eller lösa ints som här:
+    // Gör om dom till Vector2i eller en Position klassinstans (får skapa den isf)
+
+
+    int min_isoYOffset;
+    int min_isoXOffset;
+
+    int max_isoYOffset;
+    int max_isoXOffset;
 
 
 private:

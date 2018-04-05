@@ -1567,10 +1567,10 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1522928763 source:c:\github\lumo\src\hurka\src\core.cpp
+1522958935 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
-1522835674 source:c:\github\lumo\src\hurka\src\grid.cpp
+1522958407 source:c:\github\lumo\src\hurka\src\grid.cpp
 	"Grid.hpp"
 
 1521311530 c:\github\lumo\src\hurka\src\grid.hpp
@@ -1661,17 +1661,17 @@
 	"Block.hpp"
 	"Grid.hpp"
 
-1522916845 c:\github\lumo\src\hurka\src\utils.hpp
+1522963824 c:\github\lumo\src\hurka\src\utils.hpp
 	<iostream>
 	<time.h>
 	<random>
 	<SFML/Graphics.hpp>
 	"HurkaMatrix.hpp"
 
-1522917184 source:c:\github\lumo\src\hurka\src\utils.cpp
+1522963798 source:c:\github\lumo\src\hurka\src\utils.cpp
 	"Utils.hpp"
 
-1522916733 c:\github\lumo\src\hurka\src\hurkamatrix.hpp
+1522959681 c:\github\lumo\src\hurka\src\hurkamatrix.hpp
 	"Utils.hpp"
 
 1522916756 source:c:\github\lumo\src\hurka\src\hurkamatrix.cpp
@@ -1703,13 +1703,13 @@
 
 1521330484 source:c:\github\lumo\src\hurka\src\dijkstra.cpp
 
-1522918964 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
+1522948215 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1522929112 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1522963465 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
-1522918981 c:\github\lumo\src\hurka\src\roadnetwork.hpp
+1522947992 c:\github\lumo\src\hurka\src\roadnetwork.hpp
 	<string>
 	"HurkaMatrix.hpp"
 
@@ -1720,7 +1720,7 @@
 	<string>
 	<iostream>
 
-1522928979 c:\github\lumo\src\hurka\src\trafficmanager.hpp
+1522948397 c:\github\lumo\src\hurka\src\trafficmanager.hpp
 	<list>
 	"Graph.hpp"
 	"RoadNetwork.hpp"
