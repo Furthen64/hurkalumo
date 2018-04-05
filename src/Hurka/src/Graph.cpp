@@ -30,7 +30,7 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
     if(debugLevel >=2) { std::cout << "clockwiseTraverseUpFirst\n-------------------------------\n";
 
         std::cout << "dumping visited nodes:\n";
-        visited->dumpBST();
+        visited->dump();
     }
 
 
@@ -890,13 +890,13 @@ void Graph::printPathFromDijkstra(DijkstraResult *dijkstraResult)
         return ;
     }
 
-    Node *workNode;
+    //Node *workNode;
     std::string str;
 
     // Look at the result
     while( ! (dijkstraResult->shortestPath.empty()) )
     {
-        workNode = dijkstraResult->shortestPath.top();
+        //workNode = dijkstraResult->shortestPath.top();
 
         str = dijkstraResult->shortestPath.top()->getName();
 

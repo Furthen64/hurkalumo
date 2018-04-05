@@ -11,17 +11,17 @@ void dumpPosition(Vector2f iso_pos)
     std::cout << "pos(" << iso_pos.y << ", " << iso_pos.x << ")\n";
 }
 
-// TEST
-// (--)
+// Seems to work for a couple of weeks now (2018-04) havent given thoughts about memory DEALLOCATION though...
+// (-+)
 int **allocateMatrix(int rows, int cols)
 {
+    std::string cn = "Utils.cpp";
 
     if(rows > 10000 || cols > 10000) {
-            std::cout << "ERROR cannot allocate matrix of that size! " << rows << ", " << cols << "\n";
+            std::cout << "ERROR " << cn << " Cannot allocate matrix of that size! " << rows << ", " << cols << "\n";
         return nullptr;
     }
 
-    // std::cout << "allocateMatrix(" << rows << ", " << cols << ")\n";
     int** matrix = new int*[rows];
     if (rows)
     {
@@ -29,8 +29,6 @@ int **allocateMatrix(int rows, int cols)
         for (int i = 1; i < rows; ++i)
             matrix[i] = matrix[0] + i * cols;
     }
-
-
 
 
     for(int r = 0; r < rows; r++) {
@@ -51,26 +49,25 @@ int **allocateMatrix(int rows, int cols)
 
 
 /// (++)
-void dumpMatrix(int** matrix, int rows, int cols)
+void dumpMatrix(int** matrix, int rows, int cols, std::string indent)
 {
 
     std::string cn = "Utils.cpp";
 
     if(rows > 10000 || cols > 10000) {
-        std::cout << "ERROR" << cn << " too big of a roadmatrix! " << rows << ", " << cols << "\n";
+        std::cout << indent << "ERROR" << cn << " too big of a roadmatrix! " << rows << ", " << cols << "\n";
         return ;
     }
 
 
-
-    std::cout << "\n\n Matrix: \n{\n";
+    std::cout << "\n\n" << indent << "Matrix: \n" << indent  << "{\n" << indent;
     for(int r = 0; r < rows; r++) {
         std::cout << "   ";
         for(int c = 0; c < cols; c++) {
                 std::cout << matrix[r][c] << ", ";
 
         }
-        std::cout << "\n";
+        std::cout << "\n" << indent;
     }
     std::cout << "}\n";
 

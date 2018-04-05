@@ -23,14 +23,14 @@ public:
 
     // High level functions
 
-    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited);
+    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited, int debugLevel);
 
-    void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited);
+    void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, BinarySearchTree *visited, int debugLevel);
 
     void parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
 
 
-    void dumpRoadNetworks();
+    void dumpRoadNetworks(std::string indent);
 
     void updateAll();           // updates all the buses on all the roadnetworks
 

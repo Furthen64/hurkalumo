@@ -2,40 +2,59 @@
 BinarySearchTree::BinarySearchTree()
 {
     root = nullptr;
+    nrElements = 0;
 }
 
-void BinarySearchTree::dumpBST()
+void BinarySearchTree::dump()
 {
-    std::cout << "\n\nDumping BinarySearchTree:\n";
-    dump(root);
+    std::cout << "\n\nDumping BinarySearchTree (" << nrElements << " elements)" << ":\n";
+    dumpBST(root, -1);
 }
 
 
-// TEST
+
+// Does it worK???
+//
+// Ugly.
+// See "Wishlist Beta" in Docs/ folder
+// RECURSIVE
 // (--)
-void BinarySearchTree::dump(BSTNode *currNode)
+void BinarySearchTree::dumpBST(BSTNode *currNode, int direction)
 {
+    BSTNode *nextNode = nullptr;
+
     if(currNode == nullptr) {
         std::cout << "trying to dump nullptr\n";
         return ;
     }
+    std::string pre = "";
 
-    std::cout << "             (" << currNode->val << ")\n";
+
+    if(direction == -1) {
+            pre = "";
+    } else if(direction == 0) {
+        pre = "-";
+    } else if(direction == 1) {
+        pre = "+";
+    }
+
+    std::cout << "             " << pre << "(" << currNode->val << ")\n";
 
 
     if(currNode->left != nullptr) {
-        currNode = currNode->left;
-        dump(currNode);
+        nextNode = currNode->left;
+        dumpBST(nextNode, 0);
     }
 
     if(currNode->right != nullptr) {
-        currNode = currNode->right;
-        dump(currNode);
+        nextNode = currNode->right;
+        dumpBST(nextNode, 1);
     }
 }
 
-// Seems to work
-// (-+)
+// Does it work??
+// Dump shows weird things...
+// (--)
 int BinarySearchTree::add(int x, int debugLevel)
 {
 
@@ -53,6 +72,7 @@ int BinarySearchTree::add(int x, int debugLevel)
         root = new BSTNode(x);
 
         if(debugLevel >= 1) { std::cout << "Added root node in BST\n"; }
+        nrElements++;
         return 0;
     }
 
@@ -61,27 +81,37 @@ int BinarySearchTree::add(int x, int debugLevel)
     while(!found) {
 
         if(x == currNode->val) {
-                // Do nothing, we already have this value in the Tree
-                found = true;
+            // Do nothing, we already have this value in the Tree
+            found = true;
+
         } else if(x > currNode->val) {
 
             if(currNode->right != nullptr) {
-                currNode = currNode->right;
                 ind += "+";
+                currNode = currNode->right;
             } else {
-                currNode->right = new BSTNode(x);
                 if(debugLevel >= 1) { std::cout << ind << "Added right node in BST (" << x << ")\n"; }
+
+                currNode->right = new BSTNode(x);
+
+                nrElements++;
 
                 found = true;
             }
+
         } else {
+
             if(currNode->left != nullptr) {
                 ind += "-";
                 currNode = currNode->left;
             } else {
+
                 if(debugLevel >= 1) {std::cout << ind << "Added left node in BST (" << x << ")\n";}
 
                 currNode->left = new BSTNode(x);
+
+                nrElements++;
+
                 found = true;
             }
         }
@@ -109,7 +139,7 @@ int BinarySearchTree::findVal(int x, int debugLevel)
     BSTNode *currNode;
 
     if(root == nullptr) {
-            std::cout << "Warning! searching an empty binary search tree. Root is nullptr\n";
+            if(debugLevel >=1) {std::cout << "Warning! searching an empty binary search tree. Root is nullptr\n";}
             return -1;
     }
 

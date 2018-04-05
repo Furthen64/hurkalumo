@@ -131,12 +131,15 @@ void Core::run()
 
     if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads\n"; }
 
-    trafficMgr->parseCurrentRoads(roadMatrix, 1);
+    trafficMgr->parseCurrentRoads(roadMatrix, debugLevel);
 
     if(debugLevel >=1) {
         std::cout << "\n\nDumping the individual road networks found:\n";
-        trafficMgr->dumpRoadNetworks();
+        trafficMgr->dumpRoadNetworks("   ");
     }
+
+
+    trafficMgr->dumpRoadNetworks("   ");
 
 
 

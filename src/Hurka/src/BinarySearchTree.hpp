@@ -31,13 +31,14 @@ class BinarySearchTree
 {
 public:
     BinarySearchTree();
-    void dump(BSTNode *currNode);
-    void dumpBST();
+    void dump();
+    void dumpBST(BSTNode *currNode, int direction);
     add(int x, int debugLevel);
     findVal(int x, int debugLevel);
 
 private:
     BSTNode *root;
+    int nrElements;
 };
 
 

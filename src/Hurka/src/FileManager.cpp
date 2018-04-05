@@ -121,7 +121,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
 
                 std::cout << "    complete!\n    put into matrix:\n";
 
-                dumpMatrix(matrix, MTX_ROWS, MTX_COLS);
+                dumpMatrix(matrix, MTX_ROWS, MTX_COLS, "    ");
             }
 
             // Create output object now that we have the matrix

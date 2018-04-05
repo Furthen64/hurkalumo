@@ -60,7 +60,7 @@ public:
 
 private:
 
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;

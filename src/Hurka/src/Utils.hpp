@@ -14,7 +14,7 @@ using namespace sf;
 
 void dumpPosition(Vector2f iso_pos);
 int **allocateMatrix(int rows, int cols);
-void dumpMatrix(int** matrix, int rows, int cols);
+void dumpMatrix(int** matrix, int rows, int cols, std::string);
 void initRandomizer();
 int randBetween(int lowNr, int highNr);
 void waitForInput();

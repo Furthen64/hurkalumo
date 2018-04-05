@@ -14,9 +14,14 @@ HurkaMatrix::~HurkaMatrix()
 
 }
 
+void HurkaMatrix::dump(std::string indent)
+{
+   dumpMatrix(matrix, rows, cols, indent);
+}
+
 void HurkaMatrix::dump()
 {
-   dumpMatrix(matrix, rows, cols);
+   dumpMatrix(matrix, rows, cols, "");
 }
 
 
