@@ -1,4 +1,4 @@
-# hurkalumo
+# h̵u̵r̵k̶a̵l̷u̷m̴o̴
 Hurkalumo is a game that will resemble OpenTTD but will be more storydriven, helping out communities, managing the railroad.
 Below you can see some of the progress as of 2018-04:
 
