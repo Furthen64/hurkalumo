@@ -155,11 +155,6 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vect
 
 
 
-
-
-
-
-
     /// Create a new matrix for the RoadNetwork
 
     HurkaMatrix *hmatrix = new HurkaMatrix(fullRoadMatrix->rows, fullRoadMatrix->cols);
@@ -179,8 +174,7 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vect
 
     follow(fullRoadMatrix, hmatrix, curr_iso_pos, min_iso_pos, max_iso_pos, visited, debugLevel);
 
-    std::cout << "fungerar max iso:\n";
-    dumpPosition( *max_iso_pos);
+
 
     if(debugLevel >= 2)  {
         std::cout << ind << "}\n\n";
@@ -195,17 +189,27 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vect
     /// We only want a matrix with the size containing roads, not the whitespace around it
 
 
-    std::cout << "hmatrix now:\n";
-    hmatrix->dump();
+    if(debugLevel >= 2)  {
+        std::cout << "hmatrix now:\n";
+        hmatrix->dump();
+    }
+
 
     ///         int **copySubMatrix(int **srcMtx,    int srcRows,   int srcCols,   int startY,      int startX,  int height, int width)
 
     hmatrix->matrix = copySubMatrix(hmatrix->matrix, hmatrix->rows, hmatrix->cols, min_iso_pos->y, min_iso_pos->x, newRows,   newCols, debugLevel);
+    if(hmatrix->matrix == nullptr) {
+        std::cout << "ERROR " << cn << " Something went wrong while copying a subsection of a matrix to another matrix!\n";
+        return nullptr;
+    }
     hmatrix->rows = newRows;
     hmatrix->cols = newCols;
 
-    std::cout << "New matrix after sub:\n";
-    hmatrix->dump();
+
+    if(debugLevel >= 2)  {
+        std::cout << "New matrix after sub:\n";
+        hmatrix->dump();
+    }
 
 
 
@@ -315,6 +319,12 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
                     RoadNetwork *network = followAndAddToBST(roadMatrix, curr_iso, &min_iso_pos, &max_iso_pos, bst, debugLevel);
 
+                    if(network == nullptr) {
+                        std::cout << "ERROR " << cn << " parseCurrentRoads() failed while executing: followAndAddToBST(), got nullptr.\n";
+                        std::cout << "Given roadmatrix:\n";
+                        roadMatrix->dump();
+                    }
+
                     network->min_isoYOffset = min_iso_pos.y;
                     network->min_isoXOffset = min_iso_pos.x;
 
@@ -349,7 +359,8 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 ///
 /// High level functions
 ///
-
+// Tested, works
+// (-+)
 void TrafficManager::dumpRoadNetworks(std::string indent)
 {
 
@@ -370,20 +381,12 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
         nr++;
     }
 
-
-
-
-
-
-
-
-
-
 }
 
 // updates all the buses on all the roadnetworks
 void TrafficManager::updateAll()
 {
+    std::cout << "NOT CODED YET             Should iterate the buses, iterate the roadnetworks, perform stuff! do next_iso_pos and next_pix_pos on buses\n";
 }
 
 
@@ -396,13 +399,18 @@ void TrafficManager::updateAll()
 ///
 void addRoadNetwork() {}
 
-DijkstraResult *TrafficManager::runDijkstraOnBus(int busId) {
+DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos) {
+    std::cout << "NOT CODED YET             Given a busid , find the bus in the buslist and run dijkstra on A->B, \n";
     return nullptr;
 }
 
-void TrafficManager::planForBusesOnRoadNetwork(int roadnetId){}
+void TrafficManager::planForBusesOnRoadNetwork(int roadnetId){
+    std::cout << "NOT CODED YET             Run dijkstra on all buses, do trafic planning? a route? should have a route class or struct\n";
+}
 
-void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {}
+void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
+     std::cout << "NOT CODED YET            Update all the buses on a given roadnet? not sure I need this... hm..\n";
+}
 
 
 

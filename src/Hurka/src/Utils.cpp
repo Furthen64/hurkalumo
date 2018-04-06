@@ -79,7 +79,7 @@ void dumpMatrix(int** matrix, int rows, int cols, std::string indent)
 // Takes  a matrix (srcMtx) with its srcRows x srcCols
 // Starts at row startY, column startX and copies height x width block of data from that matrix into a new one, returns new one.
 //
-// TEST MORE
+// TESTED a few times, works fine
 // Docs: Utils_copySubMatrix.png
 // BUG: startx starty is wrong
 // (-+)
@@ -87,7 +87,6 @@ int **copySubMatrix(int **srcMtx, int srcRows, int srcCols, int startY, int star
 {
 
     std::string cn = "Utils.cpp";
-
 
     if(debugLevel >=1) {
         std::cout << "\n\ncopySubMatrix\n----------------\n";
@@ -123,12 +122,6 @@ int **copySubMatrix(int **srcMtx, int srcRows, int srcCols, int startY, int star
     }
 
 
-
-
-
-
-
-
     if(debugLevel >=2) {
         std::cout << "dumping srcmtx:\n";
         dumpMatrix(srcMtx, srcRows, srcCols, "   ");
@@ -145,14 +138,19 @@ int **copySubMatrix(int **srcMtx, int srcRows, int srcCols, int startY, int star
 
 
     /// Loop over original matrix and do the work
+    if(debugLevel >=2) {
+        std::cout << " Looping original matrix, copying only the parts we want:\n";
+    }
 
     for(int srcY = startY, destY = 0; srcY < (startY+height); srcY++, destY++)
     {
         for(int srcX = startX, destX = 0; srcX < (startX+width); srcX++, destX++)
         {
 
-            std::cout << "srcMtx[" << srcY << "][" << srcX << "]";
-            std::cout << "destMtx[" << destY << "][" << destX << "]    = " << srcMtx[srcY][srcX] << "\n\n";
+            if(debugLevel >=2) {
+                std::cout << "   srcMtx[" << srcY << "][" << srcX << "]";
+                std::cout << "   destMtx[" << destY << "][" << destX << "]    = " << srcMtx[srcY][srcX] << "\n\n";
+            }
 
             destMtx[destY][destX] = srcMtx[srcY][srcX]; // Copy the value from the original
 
@@ -161,14 +159,7 @@ int **copySubMatrix(int **srcMtx, int srcRows, int srcCols, int startY, int star
 
 
 
-
-
-    /// Done
-
     return destMtx;
-
-
-
 
 }
 

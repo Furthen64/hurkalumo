@@ -30,6 +30,8 @@ public:
     void parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
 
 
+
+
     void dumpRoadNetworks(std::string indent);
 
     void updateAll();           // updates all the buses on all the roadnetworks
@@ -42,7 +44,7 @@ public:
     // Individual
     void addRoadNetwork();
 
-    DijkstraResult *runDijkstraOnBus(int busId);
+    DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
 
     void planForBusesOnRoadNetwork(int roadnetId);
 

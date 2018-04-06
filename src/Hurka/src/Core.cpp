@@ -139,29 +139,7 @@ void Core::run()
     }
 
 
-    trafficMgr->dumpRoadNetworks("   ");
 
-
-
-
-    /*
-
-
-    // High level functions
-    void dumpRoadNetworks();
-
-    void updateAll();           // updates all the buses on all the roadnetworks
-
-    // Individual
-    void addRoadNetwork();
-
-    DijkstraResult *runDijkstraOnBus(int busId);
-
-    void planForBusesOnRoadNetwork(int roadnetId);
-
-    void updateBusesOnRoadNetwork(int busId, int roadnetId);
-
-    */
 
 
 
