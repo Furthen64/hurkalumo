@@ -1,5 +1,5 @@
 #include "Bus.hpp"
-
+#include "RoadNetwork.hpp"
 
 
 // TODO: make sure you are working with 20x20px and not 64x32 px ...
@@ -162,9 +162,15 @@ void Bus::setNext_pix_pos( Vector2f _np)
 
 }
 
+
+
+
+// Takes in the roadnetwork the bus is on,
+// So whenever the bus needs to move to a new road it can use the correct offsets for that particular roadnetwork
+// TEST!
 /// Based on what happened in setNext_pix_pos , we need to move towards that next pixel position
 // (--)
-void Bus::update(HurkaMatrix *roadMatrix)
+void Bus::update(RoadNetwork *roadnet)
 {
 
     int deltaX = 0;
@@ -231,7 +237,11 @@ void Bus::update(HurkaMatrix *roadMatrix)
     if(deltaX == 0 && deltaY == 0) {
 
 
-        setNext_iso_pos(rand_iso_pos(roadMatrix));
+
+
+
+
+        setNext_iso_pos(rand_abs_iso_pos(roadnet));
 
         std::cout << "next bus iso=";
         dumpPosition(next_iso_pos);
@@ -254,7 +264,7 @@ void Bus::update(HurkaMatrix *roadMatrix)
 
 
 
-/// Gives you a random iso position from the gameboard
+/// Gives you a random iso position from the gamematrix
 // (-+)
 Vector2f Bus::rand_iso_pos(int maxM, int maxN)
 {
@@ -266,6 +276,55 @@ Vector2f Bus::rand_iso_pos(int maxM, int maxN)
     _iso_pos.x = n;
 
     return _iso_pos;
+}
+
+
+
+
+
+/// Randomize an iso position on the RoadNetwork, use the Y and X offset to figure out the absolute position on the gamematrix
+// TEST
+// (--)
+Vector2f Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
+{
+    if(roadnet->hMatrix->rows > 10000 || roadnet->hMatrix->cols > 10000) {
+        std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadnet->hMatrix->rows << ", " << roadnet->hMatrix->cols << "\n";
+        return Vector2f();
+    }
+
+    bool found = false;
+    int allowedAttempts = 500;
+    int currAttempt = 0;
+
+    Vector2f newPos = Vector2f();
+
+    int r;
+    int c;
+
+    while(found == false && currAttempt < allowedAttempts) {
+
+        r = randBetween(0, roadnet->hMatrix->rows-1);
+        c = randBetween(0, roadnet->hMatrix->cols-1);
+
+        if(roadnet->hMatrix->matrix[r][c] == 1) {
+
+            newPos.y = r + roadnet->min_isoYOffset;
+            newPos.x = c + roadnet->min_isoXOffset;
+
+            found = true;
+
+        }
+
+        currAttempt++;
+    }
+
+    if(found == false) {
+
+        std::cout << "Could not find random bus position\n";
+    }
+
+    return newPos;
+
 }
 
 

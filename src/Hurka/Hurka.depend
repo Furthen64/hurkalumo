@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1523010927 source:c:\github\lumo\src\hurka\src\core.cpp
+1523059925 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1522958407 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1649,10 +1649,11 @@
 	"TextureManager.hpp"
 	"Block.hpp"
 
-1522830710 source:c:\github\lumo\src\hurka\src\bus.cpp
+1523059890 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
+	"RoadNetwork.hpp"
 
-1521309289 c:\github\lumo\src\hurka\src\bus.hpp
+1523059529 c:\github\lumo\src\hurka\src\bus.hpp
 	"SFML/Graphics.hpp"
 	"Utils.hpp"
 	"GameMatrix.hpp"
@@ -1680,7 +1681,7 @@
 1520797528 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1522929178 c:\github\lumo\src\hurka\src\core.hpp
+1523059957 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1699,18 +1700,19 @@
 	"Block.hpp"
 	"Locomotive.hpp"
 	"FileManager.hpp"
-	"Bus.hpp"
 
 1521330484 source:c:\github\lumo\src\hurka\src\dijkstra.cpp
 
-1522948215 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
+1523057612 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1523010977 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1523059905 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
-1522947992 c:\github\lumo\src\hurka\src\roadnetwork.hpp
+1523057343 c:\github\lumo\src\hurka\src\roadnetwork.hpp
+	<list>
 	<string>
+	"Bus.hpp"
 	"HurkaMatrix.hpp"
 
 1522927845 source:c:\github\lumo\src\hurka\src\binarysearchtree.cpp
@@ -1720,15 +1722,16 @@
 	<string>
 	<iostream>
 
-1523011408 c:\github\lumo\src\hurka\src\trafficmanager.hpp
+1523054429 c:\github\lumo\src\hurka\src\trafficmanager.hpp
 	<list>
 	"Graph.hpp"
 	"RoadNetwork.hpp"
+	"Bus.hpp"
 
-1522838735 source:c:\github\lumo\src\hurka\src\link.cpp
+1523059652 source:c:\github\lumo\src\hurka\src\link.cpp
 	"Link.hpp"
 
-1522838740 c:\github\lumo\src\hurka\src\link.hpp
+1523059591 c:\github\lumo\src\hurka\src\link.hpp
 	<string>
 	<iostream>
 
@@ -1743,7 +1746,7 @@
 	<climits>
 	<sstream>
 
-1522838833 c:\github\lumo\src\hurka\src\graph.hpp
+1523059488 c:\github\lumo\src\hurka\src\graph.hpp
 	<iostream>
 	<string>
 	<stack>

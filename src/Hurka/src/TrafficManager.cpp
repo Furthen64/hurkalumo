@@ -4,6 +4,7 @@
 TrafficManager::TrafficManager()
 {
     roadNetworks = new std::list<RoadNetwork *>();
+    buslist = new std::list<Bus *>();
 }
 
 
@@ -370,6 +371,10 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 
     int nr = 0;
 
+
+
+
+
     for (std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it) {
 
         RoadNetwork *currNet = (*it);
@@ -386,7 +391,32 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 // updates all the buses on all the roadnetworks
 void TrafficManager::updateAll()
 {
-    std::cout << "NOT CODED YET             Should iterate the buses, iterate the roadnetworks, perform stuff! do next_iso_pos and next_pix_pos on buses\n";
+
+
+    RoadNetwork *currRoadnet = nullptr;
+    Bus *currBus = nullptr;
+
+    for(std::list<RoadNetwork *>::iterator roadsIter=roadNetworks->begin(); roadsIter != roadNetworks->end(); ++roadsIter)
+    {
+
+        currRoadnet = (*roadsIter);
+
+        for(std::list<Bus *>::iterator busIter=currRoadnet->buslist->begin(); busIter != currRoadnet->buslist->end(); ++busIter)
+        {
+
+            currBus = (*busIter);
+
+            // Find out which network it is on
+
+            std::cout << "Bus update()\n";
+            currBus->dump();
+
+            currBus->update(currRoadnet);
+
+
+        }
+    }
+
 }
 
 
@@ -412,6 +442,60 @@ void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
      std::cout << "NOT CODED YET            Update all the buses on a given roadnet? not sure I need this... hm..\n";
 }
 
+
+
+
+// Wishlist: better finding of a particular roadnetwork
+// (--) Good enough for alpha
+void TrafficManager::addBus(Bus *_bus, int roadnetId)
+{
+    std::cout << "Adding bus to trafficmanager\n";
+    // iterate over the roadnets and find a roadnet
+    RoadNetwork *currNet = nullptr;
+
+    int nr = 0;
+
+
+    /// Find the RoadNetwork
+    for( std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it)
+    {
+
+        currNet = (*it);
+
+        if(roadnetId == nr) {
+
+            it=roadNetworks->end();
+        }
+
+
+        nr++;
+
+    }
+
+
+    if(currNet == nullptr) {
+        std::cout << "Dump the whole enchilada! We got no roads...\n";
+        return ;
+    }
+
+    /// Add to random road in the roadnet
+
+    Vector2f bus_iso_pos_from = currNet->getRandomRoad_abs_iso_pos(0);
+    Vector2f bus_iso_pos_to   = currNet->getRandomRoad_abs_iso_pos(2);
+
+
+    _bus->setNext_iso_pos(bus_iso_pos_from);
+    _bus->setNext_pix_pos( Grid::convert_iso_to_gpix(bus_iso_pos_from, 64, 32));
+
+
+    _bus->setNext_iso_pos(bus_iso_pos_to);
+    _bus->setNext_pix_pos( Grid::convert_iso_to_gpix(bus_iso_pos_to, 64, 32)); // TODO BUG FIXME I have no idea what kind
+    //    of size it is.. . its a small bus for crying out loud but the grid is 64x32... hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+
+    /// Finally add it to the right roadnet
+    currNet->addBus(_bus);
+}
 
 
 

@@ -1,9 +1,13 @@
 #ifndef ROADNETWORK_H
 #define ROADNETWORK_H
 
+#include <list>
 #include <string>
 
+
+#include "Bus.hpp"
 #include "HurkaMatrix.hpp"
+
 
 /// Used by TrafficManager
 ///
@@ -20,7 +24,15 @@ public:
     RoadNetwork();
     void dump(std::string indent);
 
+    Vector2f getRandomRoad_abs_iso_pos(int findNr);
+
+
+    void addBus(Bus *_bus);
+
     HurkaMatrix *hMatrix;
+
+
+    std::list<Bus *> *buslist;
 
 
     //TODO gör en overhaul av alla positioner som är Vector2f eller lösa ints som här:

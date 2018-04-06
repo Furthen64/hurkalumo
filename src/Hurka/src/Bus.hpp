@@ -2,12 +2,22 @@
 #define BUS_H
 
 #include "SFML/Graphics.hpp"
+
+
+
+//du vill inkludera roadnetwork men då blir det CYCLICAL INCLUSION ERROR,... då inkluderar man allt från TrafficManager , the top Dog
+
+class RoadNetwork;
+
 #include "Utils.hpp"
 #include "GameMatrix.hpp"
 #include "TextureManager.hpp"
 #include "HurkaMatrix.hpp"
 #include "Block.hpp"
 #include "Grid.hpp"
+
+
+
 
 using namespace sf;
 
@@ -21,7 +31,7 @@ public:
 
     void draw( RenderTarget& rt, Vector2i viewPos);
 
-    void update(HurkaMatrix *roadMatrix);
+    void update(RoadNetwork *roadnet);
 
 
     // ISO position
@@ -39,6 +49,7 @@ public:
 
     Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);
     Vector2f rand_iso_pos(int maxM, int maxN);
+    Vector2f rand_abs_iso_pos(RoadNetwork *roadnet);
 
     Vector2f get_next_iso_pos();
 

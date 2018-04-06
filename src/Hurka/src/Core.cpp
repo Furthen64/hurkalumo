@@ -85,18 +85,27 @@ void Core::setup(int width, int height, std::string title)
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
 
 
-    /// Place them Buses
-
-    Vector2f workPos = {0,0};
-    bus->set_iso_pos(workPos);
-    bus->set_pix_pos( Grid::convert_iso_to_gpix(workPos, 64, 32));
 
 
-    Vector2f workPosNext = {2,2};
-    bus->setNext_iso_pos(workPosNext);
-    bus->setNext_pix_pos(Grid::convert_iso_to_gpix(workPosNext, 64, 32));
+
+    /// Parse the current situation of roads into individual road networks
+
+    if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads\n"; }
+
+    trafficMgr->parseCurrentRoads(roadMatrix, 0);
+
+    if(debugLevel >=1) {
+        std::cout << "\n\nDumping the individual road networks found:\n";
+        trafficMgr->dumpRoadNetworks("   ");
+    }
 
 
+
+
+
+
+    /// Place a bus on a roadnetwork
+    trafficMgr->addBus(bus, 0);
 
 
 }
@@ -121,22 +130,6 @@ void Core::run()
 
 
 
-
-
-
-
-    /// //////////////////////////////////////////////////////////////////////////////
-    /// Parse the current situation of roads into individual road networks
-    ///
-
-    if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads\n"; }
-
-    trafficMgr->parseCurrentRoads(roadMatrix, debugLevel);
-
-    if(debugLevel >=1) {
-        std::cout << "\n\nDumping the individual road networks found:\n";
-        trafficMgr->dumpRoadNetworks("   ");
-    }
 
 
 
@@ -371,13 +364,23 @@ void Core::run()
 
         }
 
+
+        /// Trains
         loco->update(1);
 
 
-        /// Update Busses against the Road Matrix
 
-            //updateBuses(bus, 1, roadMatrix);
-            //grid->setVisible(bus->get_next_iso_pos());
+        /// Buses
+        trafficMgr->updateAll();    //updateBuses(bus, 1, roadMatrix);
+        grid->setVisible(bus->get_next_iso_pos());
+
+
+
+
+
+
+
+
 
 
 
@@ -450,15 +453,15 @@ void Core::clearResources()
 // TODO: needs a matrix of the ROADS so we can figure out the way to move it
 // Waiting for me to code the Trafic Manager
 // (--)
-void Core::updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix)
+void Core::updateBuses(Bus *bus, float dt,  RoadNetwork* roadnet)
 {
 
-    if(roadMatrix->isAllocated() == false) {
+    if(roadnet->hMatrix->isAllocated() == false) {
         std::cout << "ERROR cannot read the road matrix\n";
         return ;
     }
 
-    bus->update(roadMatrix);
+    bus->update(roadnet);
 
 }
 

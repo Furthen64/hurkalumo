@@ -4,6 +4,7 @@
 #include <list>
 #include "Graph.hpp"        // Includes Node and Link for NODE_DIR
 #include "RoadNetwork.hpp"
+#include "Bus.hpp"
 
 using namespace sf;
 
@@ -43,6 +44,8 @@ public:
 
     // Individual
     void addRoadNetwork();
+    void addBus(Bus *, int );
+
 
     DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
 
@@ -57,6 +60,8 @@ private:
     std::string cn = "TrafficManager.cpp";
 
     std::list<RoadNetwork *> *roadNetworks;
+
+    std::list<Bus *> *buslist;
 };
 
 #endif

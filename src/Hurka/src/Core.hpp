@@ -18,12 +18,13 @@
 #include "Grid.hpp"
 #include "TextureManager.hpp"
 #include "Toolbar.hpp"
-#include "TrafficManager.hpp"
+#include "TrafficManager.hpp"       // ==> RoadNetwork.hpp
+                                    // ==> Bus.hpp
 #include "GameMatrix.hpp"
 #include "Block.hpp"
 #include "Locomotive.hpp"
 #include "FileManager.hpp"
-#include "Bus.hpp"
+
 
 
 using namespace sf;
@@ -51,7 +52,7 @@ public:
 
     void clearResources();
 
-    void updateBuses(Bus *bus, float dt,  HurkaMatrix *roadMatrix );
+    void updateBuses(Bus *bus, float dt,  RoadNetwork* roadnet);
 
     void updateTraffic();
 
@@ -91,6 +92,7 @@ private:
     bool drawToolbar = 0;
     bool drawGrid = 1;
     bool drawBlocks = 1;
+
 
 
 

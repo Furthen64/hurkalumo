@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-class Node;
+class Node;  // Forward declaration to Node but no include of node.hpp
 
 class Link
 {
