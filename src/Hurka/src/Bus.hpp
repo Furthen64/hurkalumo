@@ -29,9 +29,9 @@ class Bus
 public:
 
     Bus() {}
-    Bus(HPos *_pos);
+    Bus(HPos *);
 
-
+    void gameUpdate(RoadNetwork *roadnet);
     void draw( RenderTarget& rt, Vector2i *viewPos);
     void dump(Vector2i *viewPos);
 
@@ -40,19 +40,14 @@ public:
 
     void update_all_position_vars_on_gpix();
     void update_all_position_vars_on_abs_iso();
-    void gameUpdate(RoadNetwork *roadnet);
-
     void update_all_nextPos_vars_on_abs_iso();
+
 
     void set_pos_on_abs_iso(HPos *abs_iso_pos);
     void set_nextPos_on_abs_iso( HPos *abs_iso_pos);
 
 
-
-
-    void setNext_pix_pos( HPos *_np);   // Please replace all of these with HPos functions instead
-    void setNext_iso_pos( Vector2f _np);
-    void setNext_pix_pos( Vector2f _np);
+    void setNext_pix_pos( HPos *_np); // not useful? delete? (2018-04)
 
     void setRandStartingPosition(HurkaMatrix *roadMatrix);
 
@@ -64,7 +59,7 @@ public:
 
 
     HPos *get_next_pos();
-    Vector2f get_next_iso_pos();
+
 
 
 

@@ -19,8 +19,17 @@ using namespace sf;
 class Block
 {
 public:
-    Block(const Vector2f& _pos, std::string _textureName);
-    Block(const Vector2f& _pos, int textureId);
+    Block(const Vector2f& _pos, std::string _textureName);      // HPOSDELETE
+    Block(const Vector2f& _pos, int textureId);                 // HPOSDELETE
+
+/*
+
+
+    Block(HPos *_abs_iso, std::string _textureName);              // HPOSTEST
+    Block(HPos *_abs_iso, int textureId);                         // HPOSTEST
+*/
+
+
 
     void draw( RenderTarget& rt, Vector2i viewPos);
 

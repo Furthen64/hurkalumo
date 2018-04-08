@@ -1612,7 +1612,7 @@
 1521190200 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
-1520797528 c:\github\lumo\src\hurka\src\block.hpp
+1523223444 c:\github\lumo\src\hurka\src\block.hpp
 	<SFML/Graphics.hpp>
 	"TextureManager.hpp"
 	"GameMatrix.hpp"
@@ -1652,11 +1652,11 @@
 	"TextureManager.hpp"
 	"Block.hpp"
 
-1523221233 source:c:\github\lumo\src\hurka\src\bus.cpp
+1523223276 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
 	"RoadNetwork.hpp"
 
-1523221035 c:\github\lumo\src\hurka\src\bus.hpp
+1523223221 c:\github\lumo\src\hurka\src\bus.hpp
 	"SFML/Graphics.hpp"
 	"Utils.hpp"
 	"GameMatrix.hpp"
