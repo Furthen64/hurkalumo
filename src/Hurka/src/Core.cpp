@@ -12,41 +12,83 @@ Core::~Core()
 }
 
 
-void Core::boot()
+// (--)
+int Core::boot()
 {
+    int result = 0;
+
     std::cout << "\n\n\n---------------booting-------------------\n";
-    allocateResources();
-    loadResources(startmapStr);
-    setup(800,600, "Hurkalumo Editor 0.1-alpha");
+
+
+    result = allocateResources();
+    if(result != 0) {
+        std::cout << "\n\n*** Exiting.\n"; return result;
+    }
+
+
+    result = loadResources(startmapStr);
+    if(result != 0) {
+        std::cout << "\n\n*** Exiting.\n"; return result;
+    }
+
+
+    result = setup(800,600, "Hurkalumo Editor 0.1-alpha");
+    if(result != 0) {
+        std::cout << "\n\n*** Exiting.\n"; return result;
+    }
+
+
+
     run();
+
+    return result;
 }
 
 // (--)
-void Core::allocateResources()
+int Core::allocateResources()
 {
 
     std::cout << "\n\n\n---------------allocateResources-------------------\n";
+
+
+    /// Load the Textures
+    if(debugLevel>=1) { std::cout << "Loading all the textures...\n"; }
+    textureMgr = textureMgr->getInstance();
+    textureMgr->loadTextures();
+    if(debugLevel >=1) { std::cout << " " << textureMgr->nrOfTextures() << " textures loaded!\n"; }
+
+
+    fmgr = new FileManager();
+    trafficMgr = new TrafficManager();
+    gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
+    bus = new Bus(new HPos(0,0));
+    loco = new Locomotive({10.0f, 10.0f});
+    toolbarTop = new Toolbar({260.0f, 0.0f});
+    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
+
+
+    return 0;
 }
 
 
 
-// (-+)
-void Core::loadResources(std::string mapName)
+
+// Returns 0 when ok,
+// Return -1 when something failed
+// (--)
+int Core::loadResources(std::string mapName)
 {
 
     std::cout << "\n\n\n---------------loadResources-------------------\n";
 
 
-    std::cout << "Loading map \"" << mapName << "\"\n";
-    /// Load the Textures
-    textureMgr = textureMgr->getInstance();
-    textureMgr->loadTextures();
 
 
     /// Read the map
+    std::cout << "Loading map \"" << mapName << "\"\n";
 
-    hmap = fmgr->readRegularFile(mapName);
-    if(hmap->mapName == "empty") { std::cout << "ERROR Could not read map " << mapName << ", exiting!\n"; return ;  }
+    hmap = fmgr->readRegularFile(mapName,2);
+    if(hmap->mapName == "empty") { std::cout << "ERROR Could not read map " << mapName << ", exiting!\n"; return -1;  }
 
 
     /// Get the roads
@@ -62,28 +104,18 @@ void Core::loadResources(std::string mapName)
         std::cout << "ERROR " << cn << " could not load font.\n";
     }
 
-
+    return 0;
 }
 
 
 
 // (-+)
-void Core::setup(int width, int height, std::string title)
+int Core::setup(int width, int height, std::string title)
 {
 
     std::cout << "\n\n\n---------------setup-------------------\n";
 
-
     initRandomizer();
-
-    fmgr = new FileManager();
-    trafficMgr = new TrafficManager();
-    gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
-    bus = new Bus({10.0f, 10.0f});
-    loco = new Locomotive({10.0f, 10.0f});
-    toolbarTop = new Toolbar({260.0f, 0.0f});
-    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
-
 
 
 
@@ -103,10 +135,11 @@ void Core::setup(int width, int height, std::string title)
 
 
 
-
     /// Place a bus on a roadnetwork
     trafficMgr->addBus(bus, 0);
 
+
+    return 0;
 
 }
 
@@ -116,7 +149,7 @@ void Core::setup(int width, int height, std::string title)
 // (-+)
 void Core::run()
 {
-    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
+    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.05-alpha");
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
     }
@@ -278,6 +311,9 @@ void Core::run()
         // Left mouse button pressed
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
+
+            /// Dump the Bus position
+            bus->dump(&viewPos);
             std::stringstream sstm;
 
 
@@ -371,8 +407,14 @@ void Core::run()
 
 
         /// Buses
-        trafficMgr->updateAll();    //updateBuses(bus, 1, roadMatrix);
-        grid->setVisible(bus->get_next_iso_pos());
+
+
+        trafficMgr->updateAll(&viewPos);
+
+
+        //grid->setVisible(bus->get_next_iso_pos());
+        grid->setVisible(bus->get_next_pos());
+
 
 
 
@@ -408,7 +450,7 @@ void Core::run()
 
 
         if(drawLoco) {  loco->draw(window, viewPos); }
-        if(drawBuses) { bus->draw(window, viewPos); }
+        if(drawBuses) { bus->draw(window, &viewPos); }
         if(drawGrid) {  grid->draw(window, viewPos); }
 
         if(drawToolbar) {   toolbarTop->draw(window, viewPos); }
@@ -445,25 +487,6 @@ void Core::clearResources()
 
 }
 
-
-
-
-
-// For now it just moves them around randomly
-// TODO: needs a matrix of the ROADS so we can figure out the way to move it
-// Waiting for me to code the Trafic Manager
-// (--)
-void Core::updateBuses(Bus *bus, float dt,  RoadNetwork* roadnet)
-{
-
-    if(roadnet->hMatrix->isAllocated() == false) {
-        std::cout << "ERROR cannot read the road matrix\n";
-        return ;
-    }
-
-    bus->update(roadnet);
-
-}
 
 
 

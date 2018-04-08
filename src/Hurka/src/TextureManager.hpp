@@ -5,7 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-
+#include <exception>
 #include "Constants.hpp"
 
 using namespace sf;
@@ -41,6 +41,8 @@ public:
     std::string getTextureNameByIndex(int nr);  // Only used by Map to get the string name
 
     std::unordered_map<std::string,Texture> getTextureMap();
+
+    int nrOfTextures();
 
     static void validateTextureManager(TextureManager *textureMgr)
     {

@@ -35,7 +35,8 @@ public:
 
     void dumpRoadNetworks(std::string indent);
 
-    void updateAll();           // updates all the buses on all the roadnetworks
+    void updateAll(Vector2i *viewPos);  // updates all the buses on all the roadnetworks
+
 
 
 

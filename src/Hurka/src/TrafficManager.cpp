@@ -388,8 +388,10 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 
 }
 
-// updates all the buses on all the roadnetworks
-void TrafficManager::updateAll()
+// updates all the buses on all the roadnetworks with their gameUpdate() function
+//
+
+void TrafficManager::updateAll(Vector2i *viewPos)
 {
 
 
@@ -407,13 +409,7 @@ void TrafficManager::updateAll()
             currBus = (*busIter);
 
             // Find out which network it is on
-
-            std::cout << "Bus update()\n";
-            currBus->dump();
-
-            currBus->update(currRoadnet);
-
-
+            currBus->gameUpdate(currRoadnet);
         }
     }
 
@@ -456,14 +452,11 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
     int nr = 0;
 
 
-    /// Find the RoadNetwork
+    // Find the RoadNetwork
     for( std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it)
     {
-
         currNet = (*it);
-
         if(roadnetId == nr) {
-
             it=roadNetworks->end();
         }
 
@@ -472,25 +465,51 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
     }
 
-
     if(currNet == nullptr) {
-        std::cout << "Dump the whole enchilada! We got no roads...\n";
+        std::cout << "ERROR " << cn << " We got no roads...\n";
         return ;
     }
 
-    /// Add to random road in the roadnet
-
-    Vector2f bus_iso_pos_from = currNet->getRandomRoad_abs_iso_pos(0);
-    Vector2f bus_iso_pos_to   = currNet->getRandomRoad_abs_iso_pos(2);
 
 
-    _bus->setNext_iso_pos(bus_iso_pos_from);
-    _bus->setNext_pix_pos( Grid::convert_iso_to_gpix(bus_iso_pos_from, 64, 32));
 
 
-    _bus->setNext_iso_pos(bus_iso_pos_to);
-    _bus->setNext_pix_pos( Grid::convert_iso_to_gpix(bus_iso_pos_to, 64, 32)); // TODO BUG FIXME I have no idea what kind
-    //    of size it is.. . its a small bus for crying out loud but the grid is 64x32... hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+    // Add to random road in the roadnet
+
+    Vector2f bus_iso_pos_from = currNet->getRandomRoad_abs_iso_pos(0);      // HPOSDELETE
+
+    Vector2f bus_iso_pos_to   = currNet->getRandomRoad_abs_iso_pos(2);      // HPOSDELETE
+
+
+
+    HPos *fromPos = new HPos(bus_iso_pos_from.y, bus_iso_pos_from.x);   // Create  a HPos for this position
+    _bus->set_pos_on_abs_iso(fromPos);                                   // Place the bus there
+
+
+    HPos *toPos = new HPos(bus_iso_pos_to.y, bus_iso_pos_to.x);
+    _bus->set_nextPos_on_abs_iso(toPos);
+
+/*
+
+
+            // Setup current position
+            HPos *fromPos = new HPos(bus_iso_pos_from.y, bus_iso_pos_from.x);
+
+            _bus->set_pos_on_abs_iso(fromPos);
+
+
+
+            // Setup next position
+
+            HPos *toPos = new HPos(bus_iso_pos_to.y, bus_iso_pos_to.x);
+
+            _bus->set_nextPos_on_abs_iso(toPos);
+
+
+*/
+
+
 
 
     /// Finally add it to the right roadnet

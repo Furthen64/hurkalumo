@@ -56,6 +56,8 @@
 		<Unit filename="src/Block.hpp" />
 		<Unit filename="src/Bus.cpp" />
 		<Unit filename="src/Bus.hpp" />
+		<Unit filename="src/BusRoute.cpp" />
+		<Unit filename="src/BusRoute.hpp" />
 		<Unit filename="src/Constants.hpp" />
 		<Unit filename="src/Core.cpp" />
 		<Unit filename="src/Core.hpp" />
@@ -67,6 +69,8 @@
 		<Unit filename="src/Graph.hpp" />
 		<Unit filename="src/Grid.cpp" />
 		<Unit filename="src/Grid.hpp" />
+		<Unit filename="src/HPos.cpp" />
+		<Unit filename="src/HPos.hpp" />
 		<Unit filename="src/HurkaMap.cpp" />
 		<Unit filename="src/HurkaMap.hpp" />
 		<Unit filename="src/HurkaMatrix.cpp" />

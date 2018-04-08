@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <direct.h>
+#include <exception>
 //#define GetCurrentDir _getcwd
 
 #include <iostream>
@@ -22,14 +23,14 @@ using namespace sf;
 class FileManager
 {
 public:
-
-    bool verifyFile(std::string _filename, int *rows, int *cols);
+    FileManager();
+    bool verifyFile(std::string _filename, int *rows, int *cols, int debugLevel);
 
     void printWorkingDir();
-    HurkaMap *readRegularFile(std::string _filename);
-
+    HurkaMap *readRegularFile(std::string _filename, int debugLevel);
 
 private:
+
     std::string cn = "FileManager.cpp";
 };
 

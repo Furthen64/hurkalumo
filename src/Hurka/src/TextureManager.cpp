@@ -172,6 +172,11 @@ void TextureManager::pushTexture(std::string _name, Texture _texture)
 // FIXME behöver felhantering om vi inte hittar keyn
 Texture TextureManager::getTexture(std::string _key)
 {
+
+    if(textureMap.size() <1) {
+        std::cout << "ERROR " << cn << " The textures have not yet been loaded, and the program wants to find a texture. System failure!\n";
+        throw std::exception();
+    }
     return textureMap[_key];
 }
 
@@ -232,8 +237,17 @@ bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
 
 
 
-
+// (TEST)
 std::unordered_map<std::string,Texture> TextureManager::getTextureMap()
 {
+    std::cout << "getTextureMap() not done! Makes a shallow copy?\n";
     return textureMap;
+}
+
+
+
+// (--)
+int TextureManager::nrOfTextures()
+{
+    return textureMap.size();
 }

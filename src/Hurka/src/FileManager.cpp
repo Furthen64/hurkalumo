@@ -1,6 +1,82 @@
 #include "FileManager.hpp"
 
 
+
+// BUG: I cannot understand this Bug.
+
+// SYMTOM:
+// I do this std::string cn = "blargh"; in class declaration
+//  when I output cn I get segmentation fault
+// std::cout << cn << "\n";
+
+// ONLY when there's a file that cannot be read!
+// IF the file exists, then nothing goes wrong..
+
+
+// Maybe sheds some light on it:
+//https://stackoverflow.com/questions/33234693/strange-stdcout-behaviour-with-const-char/33234729
+
+// Maybe I'm using up the stackspace, and moves outside of what Im allowed?
+// Like this here fella:
+// https://forum.openframeworks.cc/t/super-difficult-c-crashes/1344/4
+// "did some further testing - it seems to be a stack overflow issue after all.
+// if i reduce the amount requested so it’s less than 4096 bytes, there’s no problem any more… "
+// "perhaps this is running inside an MPTask, which according to this Apple-Technical-Q&A have a stack size of 4k…?"
+/*
+jag hade inte allokerat fmgr och började använda funktioner från den
+och fick riktigt jobbiga fel...
+
+
+VARFÖR ser jag inte att fmgr inte blev allokerad???
+
+
+VARFÖR kan jag använda fmgr->köraFunktioner() utan att den är allokerad???
+
+
+gaaaaaaaaaah
+
+Det Måste finnas något skydd mot att köra funktioner på en klass som inte är allokerad
+
+
+Relaterat?:
+https://stackoverflow.com/questions/18686519/accessing-member-function-after-calling-delete-to-an-object?noredirect=1&lq=1
+
+
+De säger man ska använda SMART pointers inte raw pointers
+haha exakt för den här anledningen....
+
+	"Undefined Behaviour"
+*/
+/*
+
+
+bool FileManager::checkYoSelf(void *ptr)
+{
+    if(ptr == nullptr) {
+        return false;
+    }
+    return false;
+}
+
+
+and then in every function (phew....), do this as the first thing you do:
+
+    if(!checkYoSelf( (void *)this)) {
+        return false;
+    }
+
+
+    Not something I'd want to have... So I decided to just fix the problem
+    by allocating things in right order, maybe I'll have some nullptr checks in a verifiction
+    function at Core.
+*/
+
+
+
+FileManager::FileManager()
+{
+}
+
 //readRegularFile()
 /// Reads a textfile which contains numbers on each line: 001,005,007\n
 ///                                                       001,001,000\n
@@ -11,15 +87,12 @@
 /// docs: readRegularFile.png
 
 // (-+)
-HurkaMap *FileManager::readRegularFile(std::string _filename)
+HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 {
-    int debugLevel = 0;
 
     // The possible return objects, one fail and one win
     HurkaMap *emptyMap = new HurkaMap("empty", nullptr, 0,0 );
     HurkaMap *resultMap = nullptr;  // Allocated later when we have the matrix of objects (001,007,... etc)
-
-
 
 
 
@@ -45,7 +118,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
     /// Verify the File
 
 
-    if(!verifyFile(_filename, &mapRows, &mapCols)) {
+    if(!verifyFile(_filename, &mapRows, &mapCols, debugLevel)) {
         std::cout << "ERROR " << cn << " unable to verify the file, exiting!\n";
         return emptyMap;
     }
@@ -74,9 +147,9 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
             /// Create a Matrix of NxM
             //
 
-            int rows = MTX_ROWS, cols = MTX_COLS;
+            int rows = MTX_ROWS;
+            int cols = MTX_COLS;
 
-            //TEST funkar detta?
             int **matrix = allocateMatrix(rows, cols);
 
             /// Read lines from the file
@@ -289,95 +362,100 @@ HurkaMap *FileManager::readRegularFile(std::string _filename)
 // Given rows and cols, check that they actually contain those constraints
 // IF they are nullptr that check is not made
 
-// Wantlist.    att den kollar att det slutar på ","
-// Wantlist: att den kollar att det är N x N inte N x M
+
+// Wishlist: Please check that every line ends with ","
+//
+// Wishlist: Check that the map is an NxN matrix
 // (-+)
-bool FileManager::verifyFile(std::string _filename, int *rows, int *cols)
+bool FileManager::verifyFile(std::string _filename, int *rows, int *cols, int debugLevel)
 {
 
-    int debugLevel = 0;
+
+
+
     std::string ind = "   ";
+    int nrCharsPerElement = 4;
+    int nrElementsN = 0;
+    int nrElementsM = 0;
+    unsigned int firstLineLength = 0;
+    std::string line;
+
 
     if(debugLevel > 0) {
-        std::cout << "\n\n**** VerifyFile\n";
+        std::cout << "\n\n**** VerifyFile!\n";
     }
 
 
     /// Open the file
     std::ifstream infile(_filename);
 
-    if (!infile.is_open()) {
-        std::cout << "ERROR " << cn << ": Could not open file \"" << _filename << "\"!\n";
-        infile.close();
-        return false;
-    }
+    if(infile) {
 
-    std::string line;
-    int nrCharsPerElement = 4;
-    int nrElementsN = 0;
-    int nrElementsM = 0;
-    unsigned int firstLineLength = 0;
+        /// Get the first line
+        std::getline(infile, line);
 
 
+        nrElementsM++;
+        firstLineLength = line.length();
 
-
-
-
-    /// Get the first line
-    std::getline(infile, line);
-    nrElementsM++;
-    firstLineLength = line.length();
-
-    if(firstLineLength%nrCharsPerElement!=0) {  // is it equyally divisable by "4" for instance...?
-        std::cout << "ERROR " << cn << ": Line not divisible by " << nrCharsPerElement << ", missing comma? missing leading zeroes? every number in the format of 001,002,003?\n";
-        infile.close();
-        return false;
-    }
-
-    nrElementsN = line.length()/nrCharsPerElement;  // Gets for instance
-
-    if(debugLevel > 0) {
-        std::cout << ind << " nr of elements on this line = " << nrElementsM << "\n";
-    }
-
-
-
-
-
-    /// Check rest of lines in file to see if they are the same length
-
-    while (std::getline(infile, line))
-    {
-        if(debugLevel > 0) { std::cout << ind << "\"" << line << "\"  linelength=" << line.length() <<"\n"; }
-
-        nrElementsM++;  // Increase M counter (Y, vertical axis)
-
-        if(line.length()!= firstLineLength) {
-            std::cout << "ERROR " << cn << ": Line is not same length as the first one !\n";
+        if(firstLineLength%nrCharsPerElement!=0) {  // is it equyally divisable by "4" for instance...?
+            std::cout << "ERROR " << cn << ": Line not divisible by " << nrCharsPerElement << ", missing comma? missing leading zeroes? every number in the format of 001,002,003?\n";
             infile.close();
             return false;
         }
 
-    }
+        nrElementsN = line.length()/nrCharsPerElement;  // Gets for instance
+
+        if(debugLevel > 0) {
+            std::cout << ind << " nr of elements on this line = " << nrElementsM << "\n";
+        }
 
 
 
-    /// Check that we have equal length on both axises (MxM)
 
-    if(nrElementsM != nrElementsN) {
-        std::cout << "ERROR " << cn << ": The file should contain an M x M matrix... " <<
-          " The amount of elements on one axis should be same as the other axis. This is an " << nrElementsM << "x" << nrElementsN << "!\n";
-        infile.close();
+
+        /// Check rest of lines in file to see if they are the same length
+
+        while (std::getline(infile, line))
+        {
+            if(debugLevel > 0) { std::cout << ind << "\"" << line << "\"  linelength=" << line.length() <<"\n"; }
+
+            nrElementsM++;  // Increase M counter (Y, vertical axis)
+
+            if(line.length()!= firstLineLength) {
+                std::cout << "ERROR " << cn << ": Line is not same length as the first one !\n";
+                infile.close();
+                return false;
+            }
+
+        }
+
+
+
+        /// Check that we have equal length on both axises (MxM)
+
+        if(nrElementsM != nrElementsN) {
+            std::cout << "ERROR " << cn << ": The file should contain an M x M matrix... " <<
+              " The amount of elements on one axis should be same as the other axis. This is an " << nrElementsM << "x" << nrElementsN << "!\n";
+            infile.close();
+            return false;
+        }
+
+        if(rows != nullptr) {
+
+            (*rows) = nrElementsM;
+        }
+
+        if(cols != nullptr) {
+            (*cols) = nrElementsN;
+        }
+
+
+    } else {
+        // Could not open the file
+        std::cout << "ERROR !!!" << cn << ": Could not open file \"" << _filename << "\"!\n";
+
         return false;
-    }
-
-    if(rows != nullptr) {
-
-        (*rows) = nrElementsM;
-    }
-
-    if(cols != nullptr) {
-        (*cols) = nrElementsN;
     }
 
     return true;

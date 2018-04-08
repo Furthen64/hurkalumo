@@ -9,3 +9,8 @@ src/Hurka/obj/Release/src/Bus.o
 src/Hurka/obj/Release/src/Core.o
 src/Hurka/obj/Release/src/RoadNetwork.o
 src/Hurka/obj/Release/src/TrafficManager.o
+src/Hurka/bin/Release/Hurka.exe
+src/Hurka/obj/Release/src/Bus.o
+src/Hurka/obj/Release/src/BusRoute.o
+src/Hurka/obj/Release/src/Bus.o
+src/Hurka/obj/Release/src/Bus.o

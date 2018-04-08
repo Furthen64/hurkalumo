@@ -6,8 +6,10 @@
 #include <SFML/Graphics.hpp>
 
 #include "GameMatrix.hpp"
+#include "HPos.hpp"
 #include "Constants.hpp"
 #include "Utils.hpp"
+
 
 
 
@@ -26,6 +28,7 @@ public:
 
     void draw( RenderTarget& rt, Vector2i viewPos);
 
+    void setVisible(HPos *_pos);
     void setVisible(Vector2f iso_pos);
 
     void hideVisible();
@@ -39,8 +42,9 @@ public:
 // M = along the left-down axis of the gameboard
 // width = width of the texture
 // height = height of the texture
+/// Wishlist: Make a better documentation about this
 
-/// TODO gör en bättre dokumentation sen när det här fungerar..
+
 static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOfElement)
 {
 
@@ -59,8 +63,6 @@ static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOf
 
 
         initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_HEIGHT);   // Make sure we place everything in the x-positive euclidian space
-
-        //initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_WIDTH);   // Make sure we place everything in the x-positive euclidian space
 
 
         // Calculate the X-offset
@@ -82,7 +84,6 @@ static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOf
         /// BLOCK
 
         initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_WIDTH);   // Make sure we place everything in the x-positive euclidian space
-
 
 
         /// Calculate the X-offset
@@ -191,13 +192,14 @@ static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 
 }
 
+
+
+
+
 // (--)
 /// Är det GAME eller WINDOW position på koordinaterna?? skriv så i namnet, verkar som Game för man gör inget med viewboxen
 /// TEsta!! och gör bättre, diamantform
-
-
 // BUGG M och N är confused för någon anledning
-
 static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 {
 

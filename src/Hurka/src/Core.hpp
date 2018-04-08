@@ -38,21 +38,19 @@ public:
     Core();
     ~Core();
 
-    void boot();
+    int boot();
 
-    void allocateResources();
+    int allocateResources();
 
-    void loadResources(std::string _mapName);
+    int loadResources(std::string _mapName);
 
-    void setup(int, int, std::string);
+    int setup(int, int, std::string);
 
     void run();
 
     void reset();
 
     void clearResources();
-
-    void updateBuses(Bus *bus, float dt,  RoadNetwork* roadnet);
 
     void updateTraffic();
 
@@ -61,7 +59,7 @@ public:
 
 private:
 
-    int debugLevel = 0;
+    int debugLevel = 1;
 
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
@@ -69,6 +67,9 @@ private:
     int lockFPS_n = 10;
 
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
+    std::string cn = "Core.cpp";
+    std::string startmapStr = "data/bus_traffic_test.txt";
+
 
     int mouseSensitivity = 4*ceil(100/lockFPS_n); // Pan speed in percentage
 
@@ -89,7 +90,7 @@ private:
     bool drawGm = 1;
     bool drawLoco = 0;
     bool drawBuses = 1;
-    bool drawToolbar = 0;
+    bool drawToolbar = 1;
     bool drawGrid = 1;
     bool drawBlocks = 1;
 
@@ -100,8 +101,7 @@ private:
     Text lastClickedText;
 
 
-    std::string cn = "Core.cpp";
-    std::string startmapStr = "data/roadnetwork_test.txt";
+
 
 };
 
