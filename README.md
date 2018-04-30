@@ -6,5 +6,5 @@ Below you can see some of the progress as of 2018-04:
 
 ![working on editor 0.1-alpha ](https://i.imgur.com/cSrYAr7.png)
 
-# High level wishlist for the future
+# Structural wishlist for the future
 Add some pointer manager, maybe use Boost 
