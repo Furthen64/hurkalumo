@@ -35,6 +35,7 @@ public:
     int rel_iso_x;
     int gpix_y;
     int gpix_x;
+    HPos *clone();
 
 private:
 

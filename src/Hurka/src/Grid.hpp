@@ -42,6 +42,8 @@ public:
 // M = along the left-down axis of the gameboard
 // width = width of the texture
 // height = height of the texture
+// typeOfElement        0,1     =   GRID or GAMEMATRIX
+//                        2     =   BLOCK
 /// Wishlist: Make a better documentation about this
 
 
@@ -59,7 +61,10 @@ static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOf
     int xOffset = 0;
     int xStep = 0;
 
+
+
     if(typeOfElement == 0 || typeOfElement == 1) {
+        /// GRID or GAMEMATRIX
 
 
         initialXOffset = globalXOffset + (GRID_TEXTURE_WIDTH / 4 * NR_GRIDS_HEIGHT);   // Make sure we place everything in the x-positive euclidian space

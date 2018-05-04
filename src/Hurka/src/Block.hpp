@@ -19,17 +19,9 @@ using namespace sf;
 class Block
 {
 public:
-    Block(const Vector2f& _pos, std::string _textureName);      // HPOSDELETE
-    Block(const Vector2f& _pos, int textureId);                 // HPOSDELETE
 
-/*
-
-
-    Block(HPos *_abs_iso, std::string _textureName);              // HPOSTEST
-    Block(HPos *_abs_iso, int textureId);                         // HPOSTEST
-*/
-
-
+    Block(HPos *, std::string );
+    Block(HPos *, int );
 
     void draw( RenderTarget& rt, Vector2i viewPos);
 
@@ -43,6 +35,8 @@ public:
 
     std::string getTextureName();
 
+    void set_pos_by_abs_iso(HPos *_abs_iso);
+
 
 
 private:
@@ -53,6 +47,11 @@ private:
     Sprite sprite;
     Vector2f pos;
     std::string cn = "Block.cpp";
+
+
+    HPos *___pos; // DELETEME?
+    HPos *hpos;
+
 
 };
 

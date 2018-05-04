@@ -260,7 +260,8 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
 
 
-                   Block *block  = new Block({(float)xRight,(float)yUp}, textureName);
+                   //Block *block  = new Block({(float)xRight,(float)yUp}, textureName);        HPOSDELETE
+                   Block *block  = new Block(new HPos(yUp, xRight), textureName);   // här var du 2018-04-08, följde kompiileringsfelen och löste det nya Block-konstruktorn du gjort för HPos-anpassning
 
                    blockList.push_back(block);
 
@@ -299,20 +300,22 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
                while(yUp > -1 && xRight < MTX_COLS)
                {
-                   // row = yUp
-                   // col = xRight
+                    // row = yUp
+                    // col = xRight
 
-                   TextureManager *textureMgr;
-                   textureMgr = textureMgr->getInstance();
+                    TextureManager *textureMgr;
+                    textureMgr = textureMgr->getInstance();
 
-                   textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );    // 001 -> "HOUSE001" for instance
+                    textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );    // 001 -> "HOUSE001" for instance
 
-                   Block *block  = new Block({(float)xRight,(float)yUp}, textureName);
+                    Block *block  = new Block( new HPos(yUp, xRight), textureName);
+                    //Block *block  = new Block({(float)xRight,(float)yUp}, textureName);   HPOSDELETE
 
-                   blockList.push_back(block);
 
-                   yUp--;
-                   xRight++;
+                    blockList.push_back(block);
+
+                    yUp--;
+                    xRight++;
                }
 
                xDownRight++;
