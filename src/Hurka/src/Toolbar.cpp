@@ -4,12 +4,13 @@
 /// and up comes the Toolbar
 
 
-Toolbar::Toolbar(const Vector2f& _pos)
-    :
-    pos(_pos)
+Toolbar::Toolbar(HPos *_hpos)
 {
 
-    toolbarXOffset = pos.x;
+    set_pos_by_gpix(_hpos);
+
+    toolbarXOffset = pos->gpix_x;
+
 
 
     // get the whole texture for all the buttons
@@ -39,11 +40,22 @@ Toolbar::Toolbar(const Vector2f& _pos)
 
 }
 
+
+
 Toolbar::~Toolbar()
 {
     delete sprites;
     delete visibleSpritesTopArr;
 }
+
+
+void Toolbar::set_pos_by_gpix(HPos *_hpos)
+{
+    pos->gpix_y = _hpos->gpix_y;
+    pos->gpix_x = _hpos->gpix_x;
+
+}
+
 
 void Toolbar::pushButton(int relXPos)
 {
@@ -52,7 +64,7 @@ void Toolbar::pushButton(int relXPos)
 
 }
 
-void Toolbar::draw( RenderTarget& rt, Vector2i viewPos)
+void Toolbar::draw( RenderTarget& rt, HPos *viewHPos)
 {
     // draw all the buttons individually
     for(int i = 0; i < nrButtons; i++){
@@ -70,7 +82,7 @@ void Toolbar::draw( RenderTarget& rt, Vector2i viewPos)
 
 
 
-Vector2f Toolbar::getPos()
+HPos *Toolbar::getPos()
 {
     return pos;
 }

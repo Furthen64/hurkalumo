@@ -13,7 +13,7 @@ Bus::Bus(HPos *_abs_iso_pos)
     /// Setup position
     set_pos_on_abs_iso(_abs_iso_pos);
 
-    nextPos = new HPos(0,0);
+    nextPos = new HPos(0,0, USE_ISO);
     set_nextPos_on_abs_iso(nextPos);
 
 

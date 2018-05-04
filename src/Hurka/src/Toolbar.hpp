@@ -2,6 +2,7 @@
 #define TOOLBAR_H
 
 #include <SFML/Graphics.hpp>
+#include "HPos.hpp"
 
 using namespace sf;
 
@@ -12,22 +13,21 @@ class Toolbar
 {
 public:
 
-    Toolbar() {}
-    Toolbar(const Vector2f& _pos);
-
-
-
+    Toolbar(HPos *);
     ~Toolbar();
+
     void pushButton(int relXPos);
 
-    void draw( RenderTarget& rt, Vector2i viewPos);
+    void draw( RenderTarget& rt, HPos *viewHPos);
 
+    HPos *getPos();
 
-    Vector2f getPos();
+    void set_pos_by_gpix(HPos *_hpos);
+
     int *getVisibleSpritesTopArr();
 
 private:
-    Vector2f pos;
+    HPos *pos;
 
     Texture texture;    // we need one texture but
     Sprite *sprites;      // we need 12 sprites for each of the 6 buttons

@@ -483,11 +483,11 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
 
 
-    HPos *fromPos = new HPos(bus_iso_pos_from.y, bus_iso_pos_from.x);   // Create  a HPos for this position
+    HPos *fromPos = new HPos(bus_iso_pos_from.y, bus_iso_pos_from.x, USE_ISO);    // Create an HPos for this position
     _bus->set_pos_on_abs_iso(fromPos);                                   // Place the bus there
 
 
-    HPos *toPos = new HPos(bus_iso_pos_to.y, bus_iso_pos_to.x);
+    HPos *toPos = new HPos(bus_iso_pos_to.y, bus_iso_pos_to.x, USE_ISO);
     _bus->set_nextPos_on_abs_iso(toPos);
 
 /*

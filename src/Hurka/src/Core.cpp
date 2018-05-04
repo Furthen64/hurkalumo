@@ -66,9 +66,11 @@ int Core::allocateResources()
     fmgr = new FileManager();
     trafficMgr = new TrafficManager();
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
-    bus = new Bus(new HPos(0,0));
+    bus = new Bus(new HPos(0,0, USE_GPIX));
     loco = new Locomotive();
-    toolbarTop = new Toolbar({260.0f, 0.0f});
+
+
+    toolbarTop = new Toolbar(new HPos(0, 260, USE_GPIX));
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
 
 
@@ -469,7 +471,7 @@ void Core::run()
         if(drawBuses) { bus->draw(window, &viewPos); }
         if(drawGrid) {  grid->draw(window, viewPos); }
 
-        if(drawToolbar) {   toolbarTop->draw(window, viewPos); }
+        if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
 
         window.draw(lastClickedText);
 

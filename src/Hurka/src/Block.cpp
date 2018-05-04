@@ -110,17 +110,10 @@ Block::Block(HPos *_hpos, int _textureId)
 /// (-+)
 void Block::draw( RenderTarget& rt, HPos *viewHPos)
 {
-
-
-//    int x = Grid::convert_iso_to_gpix_x(pos.y,pos.x, textureSize.width, textureSize.height, 2);       HPOSDELETE
-    //int y = Grid::convert_iso_to_gpix_y(pos.y,pos.x, textureSize.width, textureSize.height, 2);
-
+ ;
     int x = hpos->gpix_x;
     int y = hpos->gpix_y;
 
-
-
-    std::cout << "y=" << viewHPos->gpix_y << ",   x=" << viewHPos->gpix_x << "\n";
 
     // Viewing offset
     x += viewHPos->gpix_x;

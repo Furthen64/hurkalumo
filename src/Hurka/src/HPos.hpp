@@ -24,10 +24,33 @@
 */
 
 
+
+/* Wishlist:
+
+
+        + More constrctors - I wanna be able to create hpos on the fly based on these different set of positions!
+                             By using an ENUM?
+
+                             gpixPos = new HPos(1024,768, USE_GPIX);
+                             iso_pos = new HPos(0,1, USE_GPIX);             < would be a FAULTY use of this, so, you should
+                                                                              be able to spot that youve made an error by
+                                                                              left hand side saying "iso" and right saying "gpix"
+
+                              iso_pos = new HPos(0,1, USE_ISO);
+
+*/
+
+
+
+
+enum PositionTypes { USE_GPIX, USE_ISO };
+
+
 class HPos
 {
+
 public:
-    HPos(int _iso_y, int _iso_x);
+    HPos(int _y, int _x, int positionType);
     HPos();
 
     int abs_iso_y;
@@ -37,6 +60,8 @@ public:
     int gpix_y;
     int gpix_x;
     HPos *clone();
+
+
 
 private:
 
