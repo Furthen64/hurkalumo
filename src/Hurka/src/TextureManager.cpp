@@ -6,10 +6,6 @@
 
 
 
-
-// (--)
-
-
 /// Wishlist   Make sure it cannot be ran twice,
 
 /// Wishlist   Make it smarter, like:
@@ -22,7 +18,7 @@
 void TextureManager::loadTextures()
 {
 
-    Texture txt;
+    sf::Texture txt;
 
     // Houses
 
@@ -162,15 +158,12 @@ std::string TextureManager::getTextureNameByIndex(int nr)
 }
 
 
-// (-+)
-void TextureManager::pushTexture(std::string _name, Texture _texture)
-{
-    textureMap.insert( {_name, _texture});
-}
 
-// (-+)
-// FIXME behöver felhantering om vi inte hittar keyn
-Texture TextureManager::getTexture(std::string _key)
+
+
+/// FIXME! Needs error handling if we can't find the key
+/// (--)
+sf::Texture TextureManager::getTexture(std::string _key)
 {
 
     if(textureMap.size() <1) {
@@ -180,13 +173,23 @@ Texture TextureManager::getTexture(std::string _key)
     return textureMap[_key];
 }
 
-/// Given a key and an already loaded texture, put it into the internal datastructure
-//(-+)
-bool TextureManager::applyTexture(std::string textureName, Texture *texture)
+
+
+/// Add texture object into the internal storage
+/// (-+)
+void TextureManager::pushTexture(std::string _name, sf::Texture _texture)
+{
+    textureMap.insert( {_name, _texture});
+}
+
+
+/// Given a key and an already loaded texture, put it into the internal storage
+///(-+)
+bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture)
 {
     bool result = false;
 
-    std::unordered_map<std::string, Texture>::const_iterator got = textureMap.find(textureName);
+    std::unordered_map<std::string, sf::Texture>::const_iterator got = textureMap.find(textureName);
 
     if(got == textureMap.end()) {
         std::cout << "ERROR " << cn << " applyTextureById could not find the texture: \"" << textureName << "\"!\n";
@@ -205,8 +208,8 @@ bool TextureManager::applyTexture(std::string textureName, Texture *texture)
 
 /// Update the datastructure with this texture pointer
 /// Example: supply id=001 and it looks up the texture name "HOUSE001"  and then assigns that to the texture pointer
-// (-+)
-bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
+/// (-+)
+bool TextureManager::applyTextureById(unsigned int _textureId, sf::Texture *texture)
 {
     bool result = false;
 
@@ -222,7 +225,7 @@ bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
 
 
     // Now find it by searching for the string
-    std::unordered_map<std::string, Texture>::const_iterator got = textureMap.find(_textureName);
+    std::unordered_map<std::string, sf::Texture>::const_iterator got = textureMap.find(_textureName);
 
     if(got == textureMap.end()) {
         std::cout << "ERROR " << cn << " applyTextureById could not find the texture: \"" << _textureName << "\"!\n";
@@ -238,7 +241,7 @@ bool TextureManager::applyTextureById(unsigned int _textureId, Texture *texture)
 
 
 // (TEST)
-std::unordered_map<std::string,Texture> TextureManager::getTextureMap()
+std::unordered_map<std::string,sf::Texture> TextureManager::getTextureMap()
 {
     std::cout << "getTextureMap() not done! Makes a shallow copy?\n";
     return textureMap;

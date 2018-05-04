@@ -8,8 +8,6 @@
 #include <exception>
 #include "Constants.hpp"
 
-using namespace sf;
-
 
 /// Inside the game code you use strings to find textures
 /// The maps themselves use simple numbers for ease of writing maps but don't use them here in the code!
@@ -30,17 +28,17 @@ public:
 
     void loadTextures();
 
-    void pushTexture(std::string _name, Texture _texture);
+    void pushTexture(std::string _name, sf::Texture _texture);
 
-    Texture getTexture(std::string _key);
+    sf::Texture getTexture(std::string _key);
 
-    bool applyTexture(std::string textureName, Texture *texture);
+    bool applyTexture(std::string textureName, sf::Texture *texture);
 
-    bool applyTextureById(unsigned int _textureId, Texture *texture);
+    bool applyTextureById(unsigned int _textureId, sf::Texture *texture);
 
     std::string getTextureNameByIndex(int nr);  // Only used by Map to get the string name
 
-    std::unordered_map<std::string,Texture> getTextureMap();
+    std::unordered_map<std::string,sf::Texture> getTextureMap();
 
     int nrOfTextures();
 
@@ -67,7 +65,7 @@ private:
 
     std::string cn = "TextureManager.cpp";
 
-    std::unordered_map<std::string,Texture> textureMap;
+    std::unordered_map<std::string,sf::Texture> textureMap;
 
 
 };

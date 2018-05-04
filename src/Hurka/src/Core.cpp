@@ -359,7 +359,8 @@ void Core::run()
 
             if(debugLevel > 1)  {
                 std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
-                dumpPosition(iso_pos);
+
+                //dumpPosition(iso_pos);// HPOSADAPT
             }
 
 

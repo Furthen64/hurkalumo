@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1525431157 source:c:\github\lumo\src\hurka\src\core.cpp
+1525443958 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1523202739 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1581,7 +1581,7 @@
 	"Constants.hpp"
 	"Utils.hpp"
 
-1523205312 c:\github\lumo\src\hurka\src\texturemanager.hpp
+1525444630 c:\github\lumo\src\hurka\src\texturemanager.hpp
 	<string>
 	<iostream>
 	<unordered_map>
@@ -1668,14 +1668,13 @@
 	"Grid.hpp"
 	"BusRoute.hpp"
 
-1522963824 c:\github\lumo\src\hurka\src\utils.hpp
+1525443964 c:\github\lumo\src\hurka\src\utils.hpp
 	<iostream>
 	<time.h>
 	<random>
-	<SFML/Graphics.hpp>
 	"HurkaMatrix.hpp"
 
-1523011062 source:c:\github\lumo\src\hurka\src\utils.cpp
+1525443933 source:c:\github\lumo\src\hurka\src\utils.cpp
 	"Utils.hpp"
 
 1522959681 c:\github\lumo\src\hurka\src\hurkamatrix.hpp
@@ -1712,7 +1711,7 @@
 1525432728 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1525436099 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1525443881 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
 1525436052 c:\github\lumo\src\hurka\src\roadnetwork.hpp

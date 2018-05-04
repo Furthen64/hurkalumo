@@ -4,13 +4,6 @@
 
 
 
-
-
-void dumpPosition(Vector2f iso_pos)
-{
-    std::cout << "pos(" << iso_pos.y << ", " << iso_pos.x << ")\n";
-}
-
 // Seems to work for a couple of weeks now (2018-04) havent given thoughts about memory DEALLOCATION though...
 // (-+)
 int **allocateMatrix(int rows, int cols)

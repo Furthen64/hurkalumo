@@ -482,9 +482,9 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 /// Parse the 1:s in the roadmatrix, and group together them into RoadNetworks
 /// After its done, it should have populated the std::list<RoadNetwork *> *roadNetworks;
 ///
-/// (--)         Works! I have only tested simple things though...
+/// (--)
 ///
-/// HPOSTEST:
+/// HPOSTEST: seems to work
 void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 {
 
