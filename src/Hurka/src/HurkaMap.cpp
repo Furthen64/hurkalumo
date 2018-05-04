@@ -19,13 +19,13 @@ HurkaMap::HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols
 
 // TEST
 // (--)
-void HurkaMap::draw(RenderTarget& rt, Vector2i viewPos)
+void HurkaMap::draw(RenderTarget& rt, HPos *viewHPos)
 {
 
     // iterate over all items
      for (std::list<Block *>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
      {
-       (*itAll)->draw(rt, viewPos);
+       (*itAll)->draw(rt, viewHPos);
      }
 
 }

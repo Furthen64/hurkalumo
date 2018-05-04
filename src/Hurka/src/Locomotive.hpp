@@ -2,6 +2,7 @@
 #define LOCOMOTIVE_H
 
 #include "SFML/Graphics.hpp"
+#include "HPos.hpp"
 
 using namespace sf;
 
@@ -11,23 +12,12 @@ class Locomotive
 {
 public:
 
-    Locomotive() {}
-    Locomotive(const Vector2f& _pos);
+    Locomotive();
 
-    void draw( RenderTarget& rt, Vector2i viewPos);
-
-    void setDirectionConst( const Vector2f& dir);
-
-    void setDirection( Vector2f dir);
-
-    void update( float dt);
-
-    Vector2f getPos();
+    void draw( RenderTarget& rt, HPos *viewpos);
 
 private:
-    static constexpr float speed = 16.0f;  // move 100 px per second
-    Vector2f pos;
-    Vector2f vel = {0.0f, 0.0f};
+    float speed = 16.0f;  // move 100 px per second
     Texture texture;
     Sprite sprite;
 };

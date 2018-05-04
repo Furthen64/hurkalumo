@@ -28,6 +28,7 @@ class HPos
 {
 public:
     HPos(int _iso_y, int _iso_x);
+    HPos();
 
     int abs_iso_y;
     int abs_iso_x;

@@ -58,11 +58,16 @@ int Core::allocateResources()
     if(debugLevel >=1) { std::cout << " " << textureMgr->nrOfTextures() << " textures loaded!\n"; }
 
 
+    viewHPos = new HPos();
+    viewHPos->gpix_y = startViewPosY;
+    viewHPos->gpix_x = startViewPosX;
+
+
     fmgr = new FileManager();
     trafficMgr = new TrafficManager();
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
     bus = new Bus(new HPos(0,0));
-    loco = new Locomotive({10.0f, 10.0f});
+    loco = new Locomotive();
     toolbarTop = new Toolbar({260.0f, 0.0f});
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
 
@@ -362,6 +367,18 @@ void Core::run()
             toolbarTop->pushButton(0); // debug test
 
 
+
+            /*
+
+
+
+            // Old Locomotive Code
+            // that made it move around towards the mouse cursor
+
+            // Not sure I still need it ? // 2018-05
+
+
+
             bool rightof = false;
             bool belowof = false;
             bool topof = false;
@@ -396,13 +413,12 @@ void Core::run()
             }
 
             // if we are right of the object
-            loco->setDirection(dir);
+            loco->setDirection(dir);*/
 
         }
 
 
         /// Trains
-        loco->update(1);
 
 
 
@@ -445,11 +461,11 @@ void Core::run()
 
             /// Iterate list of blocklists to draw them in render order
 
-            hmap->draw(window, viewPos);
+            hmap->draw(window, viewHPos);
         }
 
 
-        if(drawLoco) {  loco->draw(window, viewPos); }
+        if(drawLoco) {  loco->draw(window, viewHPos); }
         if(drawBuses) { bus->draw(window, &viewPos); }
         if(drawGrid) {  grid->draw(window, viewPos); }
 

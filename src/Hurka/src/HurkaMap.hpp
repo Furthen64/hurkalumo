@@ -21,7 +21,7 @@ public:
     HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols);
     ~HurkaMap();
 
-    void draw(RenderTarget& rt, Vector2i viewPos);
+    void draw(RenderTarget& rt, HPos *viewHPos);
 
     void testList();
 

@@ -23,7 +23,7 @@ public:
     Block(HPos *, std::string );
     Block(HPos *, int );
 
-    void draw( RenderTarget& rt, Vector2i viewPos);
+    void draw( RenderTarget& rt, HPos *viewHPos);
 
     void dump();
 

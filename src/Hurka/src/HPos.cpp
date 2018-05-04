@@ -6,11 +6,22 @@ HPos::HPos(int _y, int _x)
     abs_iso_x = _x;
     rel_iso_y = _y;
     rel_iso_x = _x;
-    gpix_y = 42;
+    gpix_y = 42;        // WHAT FIXME TODO What?
     gpix_x  = 55;
-
-
 }
+
+HPos::HPos()
+{
+    abs_iso_y = 0;
+    abs_iso_x = 0;
+    rel_iso_y = 0;
+    rel_iso_x = 0;
+    gpix_y = 0;
+    gpix_y = 0;
+}
+
+
+
 
 
 HPos *HPos::clone()

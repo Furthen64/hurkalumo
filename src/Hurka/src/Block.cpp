@@ -108,7 +108,7 @@ Block::Block(HPos *_hpos, int _textureId)
 /// @param viewPos  A rectangle which holds the starting x and starting y for looking at the gameboard
 ///
 /// (-+)
-void Block::draw( RenderTarget& rt, Vector2i viewPos)
+void Block::draw( RenderTarget& rt, HPos *viewHPos)
 {
 
 
@@ -120,9 +120,11 @@ void Block::draw( RenderTarget& rt, Vector2i viewPos)
 
 
 
+    std::cout << "y=" << viewHPos->gpix_y << ",   x=" << viewHPos->gpix_x << "\n";
+
     // Viewing offset
-    x += viewPos.x;
-    y += viewPos.y;
+    x += viewHPos->gpix_x;
+    y += viewHPos->gpix_y;
 
 
     Vector2f _pos = {(float)x,(float)y};
