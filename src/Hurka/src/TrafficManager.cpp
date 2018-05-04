@@ -474,20 +474,13 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
 
 
+    // Figure out from- and to positions
 
-    // Add to random road in the roadnet
-
-    Vector2f bus_iso_pos_from = currNet->getRandomRoad_abs_iso_pos(0);      // HPOSDELETE
-
-    Vector2f bus_iso_pos_to   = currNet->getRandomRoad_abs_iso_pos(2);      // HPOSDELETE
+    HPos *fromPos = currNet->getRandomRoad_abs_iso(0);
+    HPos *toPos   = currNet->getRandomRoad_abs_iso(5);
 
 
-
-    HPos *fromPos = new HPos(bus_iso_pos_from.y, bus_iso_pos_from.x, USE_ISO);    // Create an HPos for this position
-    _bus->set_pos_on_abs_iso(fromPos);                                   // Place the bus there
-
-
-    HPos *toPos = new HPos(bus_iso_pos_to.y, bus_iso_pos_to.x, USE_ISO);
+    _bus->set_pos_on_abs_iso(fromPos);
     _bus->set_nextPos_on_abs_iso(toPos);
 
 /*

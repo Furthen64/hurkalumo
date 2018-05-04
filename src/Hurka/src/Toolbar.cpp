@@ -1,7 +1,8 @@
 #include "Toolbar.hpp"
 
-/// //////////////////////////////////////////////
-/// and up comes the Toolbar
+///
+/// This is the main toolbar that you see in the top of the editor (maybe even in the game later on)
+/// So far it has not much functionality, it just sits there- Some code in Core class for Clicking on Buttons
 
 
 Toolbar::Toolbar(HPos *_hpos)

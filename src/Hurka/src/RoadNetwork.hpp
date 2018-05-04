@@ -24,7 +24,8 @@ public:
     RoadNetwork();
     void dump(std::string indent);
 
-    Vector2f getRandomRoad_abs_iso_pos(int findNr);
+    //Vector2f getRandomRoad_abs_iso_pos(int findNr);//HPOSDELETE
+    HPos *getRandomRoad_abs_iso(int findNr);    //HPOSTEST
 
 
     void addBus(Bus *_bus);

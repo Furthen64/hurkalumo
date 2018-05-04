@@ -1,8 +1,10 @@
 #include "Locomotive.hpp"
 
 
-/// //////////////////////////////////////////////
+///
 /// Locomotive
+///
+/// Has nothing. Needs everything. Very old code! // 2018-02 I think
 
 
 
