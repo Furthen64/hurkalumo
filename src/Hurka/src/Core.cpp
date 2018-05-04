@@ -63,15 +63,24 @@ int Core::allocateResources()
     viewHPos->gpix_x = startViewPosX;
 
 
+
     fmgr = new FileManager();
+
     trafficMgr = new TrafficManager();
+
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
+
     bus = new Bus(new HPos(0,0, USE_GPIX));
+
     loco = new Locomotive();
 
 
+
     toolbarTop = new Toolbar(new HPos(0, 260, USE_GPIX));
+
+
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
+
 
 
     return 0;

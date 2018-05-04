@@ -1,7 +1,41 @@
 #include "Node.hpp"
 #include "Link.hpp"
 
-// (++)
+
+
+
+/// HPOSTEST:
+/// @param _name     (not needed, Unique name, makes debugging easier!)
+/// @param _id       Unique ID, used by higher up functions
+/// @param _iso_pos  Position on the gameboard
+///
+/// (--)
+Node::Node(std::string _name, int _id, HPos *_iso_pos)
+{
+    std::cout << _name << "yes\n";
+    name = _name;
+    id = _id;
+    iso_pos = _iso_pos;
+
+    up = new Link();
+    up->weight = 1;
+    right = new Link();
+    right->weight = 1;
+    down = new Link();
+    down->weight = 1;
+    left = new Link();
+    left->weight = 1;
+
+
+    resetForDijkstra();
+}
+
+
+
+
+
+/*
+HPOSDELETE:
 Node::Node(std::string _name, int _id, Vector2f _iso_pos)
 {
     name = _name;
@@ -21,7 +55,7 @@ Node::Node(std::string _name, int _id, Vector2f _iso_pos)
     resetForDijkstra();
 }
 
-
+*/
 
 
 // if  INT_MAX , return "INF"
@@ -219,6 +253,102 @@ void Node::dump(int indent)
 /// search for the _id and see if it's already in the tree and yeah warn at least?
 ///
 /// Return nullptr on error, otherwise the new node we created
+// (--)
+// HPOSTEST:
+
+Node *Node::attachNewNode(std::string _name, int _id, HPos *_iso_pos, int weight1, int weight2, int debugLevel)
+{
+
+    int result = 0;
+
+    if(_id < 0){
+        std::cout << cn << " Warning!  attachNewNode got id < 0 !\n";
+        return nullptr;
+    }
+
+
+    if(debugLevel >= 1) {
+
+        std::cout << "\n\nattachNewNode()\n";
+        std::cout << "this node before:\n";
+        this->dump(0);
+    }
+
+
+
+
+    Node *newNode = new Node(_name, _id, _iso_pos);
+
+    // Find out relative positioning (up, right, down or left) to the current node
+
+
+    if(debugLevel >= 1) {
+        std::cout << "curr.iso_pos (" << iso_pos->abs_iso_y << ", " << iso_pos->abs_iso_x << ")    newNode.iso_pos ( " << _iso_pos->abs_iso_y << ", " << _iso_pos->abs_iso_x << ")\n";
+    }
+    bool aboveOf = false;
+
+    bool rightOf = false;
+
+    bool downOf = false;
+
+    bool leftOf = false;
+
+    // are we above of current node?
+    if(_iso_pos->abs_iso_y < iso_pos->abs_iso_y) {
+        aboveOf = true;
+    }
+    // are we right of current node?
+    if(_iso_pos->abs_iso_x > iso_pos->abs_iso_x) {
+        rightOf = true;
+    }
+
+    if(_iso_pos->abs_iso_y > iso_pos->abs_iso_y) {
+        downOf = true;
+    }
+
+    if(_iso_pos->abs_iso_x < iso_pos->abs_iso_x) {
+        leftOf = true;
+    }
+
+
+    int relDir = -1;
+
+
+    if(aboveOf) {
+        relDir = dir_up;
+    }
+
+    if(rightOf) {
+        relDir = dir_right;
+    }
+
+    if(downOf) {
+        relDir = dir_down;
+    }
+
+    if(leftOf) {
+        relDir = dir_left;
+    }
+
+    result = connectNodes(this, newNode, relDir, weight1, weight2, debugLevel);
+
+
+    if(result == -1) {
+        std::cout << cn << " ERROR! Could not connect nodes.\n";
+        return nullptr;
+    }
+
+
+
+    if(debugLevel >=1) {
+        std::cout << "                          this node after:\n";
+        this->dump(20);
+    }
+
+    return newNode;
+}
+
+/* HPOSDELETE:
 // (-+)
 Node *Node::attachNewNode(std::string _name, int _id, Vector2f _iso_pos, int weight1, int weight2, int debugLevel)
 {
@@ -310,7 +440,7 @@ Node *Node::attachNewNode(std::string _name, int _id, Vector2f _iso_pos, int wei
 
     return newNode;
 }
-
+*/
 
 
 
@@ -433,6 +563,7 @@ std::string Node::getName()
 //(-+)
 int Node::connectNodes(Node *firstNode, Node *secondNode, int relDir, int weight1, int weight2, int debugLevel)
 {
+
 
     if(secondNode == nullptr) {
         std::cout << cn << " ERROR connectNodes failed because of one of the nodes are nullptr. Programming error!\n";

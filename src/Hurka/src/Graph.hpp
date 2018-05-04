@@ -154,7 +154,8 @@ public:
     void dump(int debugLevel, int dumpNodes);
     void test();
     Node *getFirstNode();
-    void addFirstNode(std::string _name, int _id, Vector2f _iso_pos);
+        //void addFirstNode(std::string _name, int _id, Vector2f _iso_pos);   // HPOSDELETE
+        void addFirstNode(std::string _name, int _id, HPos *_iso_pos);
     Node *findNode(int searchId, int debugLevel);
     DijkstraResult *runDijkstra(Node *startNode, Node *endNode, int debugLevel);
     void printPathFromDijkstra(DijkstraResult *dijkstraResult);

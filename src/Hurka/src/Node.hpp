@@ -25,7 +25,10 @@ enum NODE_DIR {
 class Node
 {
 public:
-    Node(std::string _name, int _id, Vector2f _iso_pos);
+    //Node(std::string _name, int _id, Vector2f _iso_pos);    // HPOSDELETE
+    Node(std::string _name, int _id, HPos *_iso_pos);    // HPOSDELETE
+
+
     void createLink();
     void dump(int indent);
 
@@ -34,9 +37,9 @@ public:
     void attachNodeDown(Node *other);
     void attachNodeLeft(Node *other);
 
+    Node *attachNewNode(std::string , int , HPos *, int , int , int );
 
-
-    Node *attachNewNode(std::string _name, int _id, Vector2f _iso_pos, int weight1, int weight2, int debugLevel);
+    //Node *attachNewNode(std::string _name, int _id, Vector2f _iso_pos, int weight1, int weight2, int debugLevel); HPOSDELETE
 
     int getId();
     std::string getName();
@@ -117,6 +120,7 @@ public:
 private:
     std::string name;
     int id;
-    Vector2f iso_pos;
+    //Vector2f iso_pos; //HPOSDELETE
+    HPos *iso_pos;
     std::string cn = "Node.cpp";
 };

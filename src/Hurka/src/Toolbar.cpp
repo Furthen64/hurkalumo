@@ -7,7 +7,11 @@
 
 Toolbar::Toolbar(HPos *_hpos)
 {
+    // Allocate
+    pos = new HPos();
 
+
+    // Set
     set_pos_by_gpix(_hpos);
 
     toolbarXOffset = pos->gpix_x;
