@@ -1712,7 +1712,7 @@
 1525432728 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1525432666 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1525436099 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
 1525436052 c:\github\lumo\src\hurka\src\roadnetwork.hpp
@@ -1728,7 +1728,7 @@
 	<string>
 	<iostream>
 
-1523107177 c:\github\lumo\src\hurka\src\trafficmanager.hpp
+1525437696 c:\github\lumo\src\hurka\src\trafficmanager.hpp
 	<list>
 	"Graph.hpp"
 	"RoadNetwork.hpp"
@@ -1745,12 +1745,13 @@
 	"Node.hpp"
 	"Link.hpp"
 
-1522846971 c:\github\lumo\src\hurka\src\node.hpp
+1525439622 c:\github\lumo\src\hurka\src\node.hpp
 	<SFML/Graphics.hpp>
 	<string>
 	<iostream>
 	<climits>
 	<sstream>
+	"HPos.hpp"
 
 1523059488 c:\github\lumo\src\hurka\src\graph.hpp
 	<iostream>
@@ -1773,8 +1774,9 @@
 1523140518 source:c:\github\lumo\src\hurka\src\busroute.cpp
 	"BusRoute.hpp"
 
-1525431028 c:\github\lumo\src\hurka\src\hpos.hpp
+1525439455 c:\github\lumo\src\hurka\src\hpos.hpp
+	<iostream>
 
-1525431081 source:c:\github\lumo\src\hurka\src\hpos.cpp
+1525439439 source:c:\github\lumo\src\hurka\src\hpos.cpp
 	"HPos.hpp"
 

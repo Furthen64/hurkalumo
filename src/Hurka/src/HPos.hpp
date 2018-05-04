@@ -1,6 +1,7 @@
 #ifndef HPOS_H
 #define HPOS_H
 
+#include <iostream>
 /*
     - Whoa !
 
@@ -59,7 +60,9 @@ public:
     int rel_iso_x;
     int gpix_y;
     int gpix_x;
+
     HPos *clone();
+    void dump();
 
 
 

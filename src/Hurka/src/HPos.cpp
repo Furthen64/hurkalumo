@@ -47,3 +47,9 @@ HPos *HPos::clone()
 
     return _pos;
 }
+
+
+void HPos::dump()
+{
+    std::cout << "dump() NOT CODED\n";
+}

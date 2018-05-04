@@ -3,7 +3,7 @@
 #include <iostream>
 #include <climits>
 #include <sstream>
-
+#include "HPos.hpp"
 
 using namespace sf;
 
@@ -78,6 +78,23 @@ public:
 
 
     // (-+)
+
+    static int generateID(HPos *_hpos)
+    {
+        if(_hpos->abs_iso_y < 0) {
+            std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
+            return -1;
+        }
+
+        if(_hpos->abs_iso_x < 0) {
+            std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
+            return -1;
+        }
+
+        return _hpos->abs_iso_y * 10000 + _hpos->abs_iso_x;
+    }
+
+    /*
     static int generateID(Vector2f iso_pos)
     {
         if(iso_pos.y < 0) {
@@ -93,7 +110,7 @@ public:
         return iso_pos.y * 10000 + iso_pos.x;
 
     }
-
+    */
 
 
 

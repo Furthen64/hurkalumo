@@ -3,8 +3,9 @@
 
 #include <list>
 #include "Graph.hpp"        // Includes Node and Link for NODE_DIR
-#include "RoadNetwork.hpp"
+#include "RoadNetwork.hpp"  // Includes HPos
 #include "Bus.hpp"
+
 
 using namespace sf;
 
@@ -24,9 +25,36 @@ public:
 
     // High level functions
 
-    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos, Vector2f *max_iso_pos,  BinarySearchTree *visited, int debugLevel);
 
-    void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos,  Vector2f *max_iso_pos, BinarySearchTree *visited, int debugLevel);
+    // HPOSDELETE:
+    /*RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
+                                   Vector2f curr_iso_pos,
+                                   Vector2f *min_iso_pos,
+                                   Vector2f *max_iso_pos,
+                                   BinarySearchTree *visited,
+                                   int debugLevel);
+      */
+    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
+                                   HPos *curr_iso_pos,
+                                   HPos *min_iso_pos,
+                                   HPos *max_iso_pos,
+                                   BinarySearchTree *visited,
+                                   int debugLevel);
+
+
+
+
+
+
+
+    // void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos,  Vector2f *max_iso_pos, BinarySearchTree *visited, int debugLevel); // HPOSDELETE
+    void follow(HurkaMatrix *fullRoadMatrix,
+                HurkaMatrix *newMatrix,
+                HPos *curr_iso_pos,
+                HPos *min_iso_pos,
+                HPos *max_iso_pos,
+                BinarySearchTree *visited,
+                int debugLevel);
 
     void parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
 
