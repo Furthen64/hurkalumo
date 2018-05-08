@@ -244,10 +244,10 @@ void Graph::dump(int debugLevel, int dumpNodes)
 
 
 // HPOSTEST
+// TEST
 void Graph::addFirstNode(std::string _name, int _id, HPos *_iso_pos)
 {
     head =  new Node(_name, _id, _iso_pos);
-    std::cout << "jippi\n";
 }
 
 /*HPOSDELETE:

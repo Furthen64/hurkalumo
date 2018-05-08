@@ -6,8 +6,13 @@
 
 using namespace sf;
 
-/// //////////////////////////////////////////////
+
 /// Locomotive
+///
+/// Hey!
+///
+/// If you need to work on Locomotive again, please take a look at Bus class for its direction and speed and stuffs.
+///
 class Locomotive
 {
 public:

@@ -132,8 +132,10 @@ void Grid::setVisible(HPos *_pos)
     selected_pix_pos.x = _pos->gpix_x;
 }
 
+
+
 // HPOSDELETE
-// (--)
+/*
 void Grid::setVisible(Vector2f iso_pos)
 {
     drawSelectedGrid = true;
@@ -148,6 +150,12 @@ void Grid::setVisible(Vector2f iso_pos)
 
  //   std::cout << "Visible grid position: " << selected_pix_pos.x << " , " << selected_pix_pos.y << "\n";
 }
+
+*/
+
+
+
+
 
 void Grid::hideVisible()
 {

@@ -12,7 +12,7 @@ Core::~Core()
 }
 
 
-// (--)
+// (-+)
 int Core::boot()
 {
     int result = 0;
@@ -344,26 +344,27 @@ void Core::run()
 
 
             /// Redact ViewPosition rectangle from it to get back to GameMatrix positioning
-            Vector2f mouseGPos = Vector2f();
-            mouseGPos.x = mouseWPos.x - viewPos.x;
-            mouseGPos.y = mouseWPos.y - viewPos.y;
-            sstm << "GPOS(" << mouseGPos.y << ", " << mouseGPos.x << ")\n";
 
-            Vector2f iso_pos = Vector2f();
-            iso_pos = Grid::convert_pix_to_iso(mouseGPos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+                //Vector2f mouseGPos = Vector2f();
+            HPos *mouseGPos = new HPos(mouseWPos.y - viewPos.y, mouseWPos.x - viewPos.x, USE_GPIX);
+            sstm << "GPOS(" << mouseGPos->gpix_y << ", " << mouseGPos->gpix_x << ")\n";
+
+
+            HPos *iso_pos = new HPos(0,0, USE_GPIX);
+            iso_pos = Grid::convert_gpix_to_iso(mouseGPos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
 
 
 
             /// Update the text
             lastClickedText.setFont(font);
-
             lastClickedText.setString(sstm.str());
-            lastClickedText.setCharacterSize(12);
+            lastClickedText.setCharacterSize(18);
             lastClickedText.setFillColor(sf::Color::White);
             lastClickedText.setPosition(mouseWPos);
 
 
 
+            /// Light up the current tile
             grid->setVisible(iso_pos);
 
             if(debugLevel > 1)  {
@@ -380,52 +381,6 @@ void Core::run()
 
 
 
-            /*
-
-
-
-            // Old Locomotive Code
-            // that made it move around towards the mouse cursor
-
-            // Not sure I still need it ? // 2018-05
-
-
-
-            bool rightof = false;
-            bool belowof = false;
-            bool topof = false;
-            bool leftof = false;
-            Vector2f dir;
-
-            // Figure out what +-1 to do with the position
-            if(loco->getPos().x < mouseWPos.x) {
-                rightof = true;
-            }
-            if(loco->getPos().x >= mouseWPos.x) {
-                leftof = true;
-            }
-            if(loco->getPos().y < mouseWPos.y) {
-                belowof = true;
-            }
-            if(loco->getPos().y >= mouseWPos.y) {
-                topof = true;
-            }
-
-            if(rightof) {
-                dir.x += 1.0f;
-            }
-            if(leftof) {
-                dir.x -= 1.0f;
-            }
-            if(belowof) {
-                dir.y += 0.5f;
-            }
-            if(topof) {
-                dir.y -= 0.5f;
-            }
-
-            // if we are right of the object
-            loco->setDirection(dir);*/
 
         }
 

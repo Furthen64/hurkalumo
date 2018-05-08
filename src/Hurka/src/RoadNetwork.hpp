@@ -22,22 +22,26 @@ class RoadNetwork
 public:
 
     RoadNetwork();
+
     void dump(std::string indent);
 
-    //Vector2f getRandomRoad_abs_iso_pos(int findNr);//HPOSDELETE
+        //Vector2f getRandomRoad_abs_iso_pos(int findNr);//HPOSDELETE
     HPos *getRandomRoad_abs_iso(int findNr);    //HPOSTEST
-
 
     void addBus(Bus *_bus);
 
+    int nrRows() { return hMatrix->rows; }
+    int nrCols() { return hMatrix->cols; }
+
+
+
+
+// Variables:
+
+
     HurkaMatrix *hMatrix;
 
-
     std::list<Bus *> *buslist;
-
-
-    //TODO gör en overhaul av alla positioner som är Vector2f eller lösa ints som här:
-    // Gör om dom till Vector2i eller en Position klassinstans (får skapa den isf)
 
 
     int min_isoYOffset;

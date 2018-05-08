@@ -28,10 +28,21 @@ public:
 
     void draw( RenderTarget& rt, Vector2i viewPos);
 
+    //void setVisible(Vector2f iso_pos); HPOSDELETE
     void setVisible(HPos *_pos);
-    void setVisible(Vector2f iso_pos);
+
+
 
     void hideVisible();
+
+
+
+
+
+
+
+
+
 
 
 
@@ -177,6 +188,8 @@ static int convert_iso_to_gpix_y(int M, int N, int width, int height, int typeOf
 }
 
 
+
+/*
 static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 {
 
@@ -195,13 +208,86 @@ static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 
     return pix_pos;
 
+}*/
+
+
+
+
+
+
+/// Takes gpix data, looks at the grid and finds the isometric tile position where that gameboard pixel position would be in
+/// @param pix_pos  Already allocated HPos with values set on gpix positions
+/// @param width    The size of the sprite
+/// @param height   The size of the sprite
+/// (--)
+static HPos *convert_gpix_to_iso(HPos *pix_pos, int width, int height)
+{
+    std::string cn = "Grid.hpp";
+
+    int x = 0;
+    int y = 0;
+
+    HPos *work_pos = new HPos(0,0, USE_GPIX);
+    HPos *iso_pos = new HPos(0,0,USE_GPIX);
+
+            //Vector2f work_pos = Vector2f();
+            //Vector2f iso_pos = Vector2f();
+
+    if(width == 0 || height == 0 ) {
+        std::cout << "ERROR " << cn << " height or width = 0 in call to convert_pix_to_iso!!\n";
+        return nullptr;
+    }
+
+
+
+    /// todo - if we are inside the diamond of that cell return that iso-pos
+
+    for(int M= 0; M< NR_GRIDS_HEIGHT; M++){
+
+        for(int N= 0; N < NR_GRIDS_WIDTH; N++) {
+
+            x = convert_iso_to_gpix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+            y = convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+
+
+            work_pos->gpix_y  = y;
+            work_pos->gpix_x = x;
+
+
+
+            if( (pix_pos->gpix_x > work_pos->gpix_x)  && (pix_pos->gpix_x <= (work_pos->gpix_x+GRID_TEXTURE_WIDTH))) {
+
+                if( (pix_pos->gpix_y > work_pos->gpix_y) && (pix_pos->gpix_y <= (work_pos->gpix_y+GRID_TEXTURE_HEIGHT))) {
+
+                    // Within the square!
+
+                    // Store away iso info
+                    iso_pos->abs_iso_y = M;
+                    iso_pos->abs_iso_x = N;
+
+                    // Store away gpix info too
+                    iso_pos->gpix_y = pix_pos->gpix_y;
+                    iso_pos->gpix_x = pix_pos->gpix_x;
+
+                    return iso_pos;
+                }
+            }
+
+        }
+
+    }
+
+
+    std::cout << "Could not find the object inside any of the grid's cell!\n";
+    return iso_pos;
 }
 
 
 
 
 
-// (--)
+/// HPOSDELETE:
+/*
 /// Är det GAME eller WINDOW position på koordinaterna?? skriv så i namnet, verkar som Game för man gör inget med viewboxen
 /// TEsta!! och gör bättre, diamantform
 // BUGG M och N är confused för någon anledning
@@ -257,6 +343,11 @@ static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 
 }
 
+*/
+
+
+
+
 
 private:
     Texture texture;
@@ -270,8 +361,6 @@ private:
 
     int width;
     int height;
-
-
 
     Font font;
     Text text;

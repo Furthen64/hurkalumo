@@ -46,81 +46,50 @@ Bus::Bus(HPos *_abs_iso_pos)
 
 
 
-// updates all the different position variables from the current iso_pos
-//
-// run this after you've set the current position!  e.g.: Bus::gameUpdate() which updates the current position.
-// based on iso_posiotion
-// (-+)
+/// \brief Updates all the different position variables from the current iso_pos
+///
+/// run this after you've set the current position!  e.g.: Bus::gameUpdate() which updates the current position.
+/// (--)
 void Bus::update_all_position_vars_on_abs_iso()
 {
 
     // pos->abs_iso_x  and pos->abs_iso_y  are the ones we know are set, the rest are not
-
     pos->rel_iso_x = pos->abs_iso_x;
     pos->rel_iso_y = pos->abs_iso_y;
 
-    // Now figure out where to draw the thing
-    Vector2f vec_iso_pos = Vector2f();
-    vec_iso_pos.y = pos->abs_iso_y;
-    vec_iso_pos.x = pos->abs_iso_x;
 
-    Vector2f vec_pix_pos = Vector2f();
-    vec_pix_pos = Grid::convert_iso_to_gpix(vec_iso_pos, 64, 32);
+    // Calculate the GPix position
+    pos->gpix_y = Grid::convert_iso_to_gpix_y(pos->abs_iso_y, pos->abs_iso_x, 64, 32, 2); // FIXME Lazy coding (64,32 thingie)
+    pos->gpix_x = Grid::convert_iso_to_gpix_x(pos->abs_iso_y, pos->abs_iso_x, 64, 32, 2);
 
-    pos->gpix_y = vec_pix_pos.y;
-    pos->gpix_x = vec_pix_pos.x;
 }
 
 
 // Tested once, worked
-// (-+)
+// (--)
 void Bus::update_all_nextPos_vars_on_abs_iso()
 {
     // nextPos->abs_iso_x  and nextPos->abs_iso_y  are the ones we know are set, the rest are not
     nextPos->rel_iso_x = nextPos->abs_iso_x;
     nextPos->rel_iso_y = nextPos->abs_iso_y;
 
-    // Now figure out where to draw the thing
-    Vector2f vec_iso_pos = Vector2f();
-    vec_iso_pos.y = nextPos->abs_iso_y;
-    vec_iso_pos.x = nextPos->abs_iso_x;
-
-    Vector2f vec_pix_pos = Vector2f();
-    vec_pix_pos = Grid::convert_iso_to_gpix(vec_iso_pos, 64, 32);
-
-    nextPos->gpix_y = vec_pix_pos.y;
-    nextPos->gpix_x = vec_pix_pos.x;
-
+    // Calculate the GPix position
+    nextPos->gpix_y = Grid::convert_iso_to_gpix_y(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
+    nextPos->gpix_x = Grid::convert_iso_to_gpix_x(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
 }
 
 
 
 // Run this last in gameUpdate()  so all the other variables are in synch with what just happened (the bus moved, the gpix variables changed)
+
 // TEST
 // (--)
 void Bus::update_all_position_vars_on_gpix()
 {
     std::cout << "CODE ME PLZ\n";
-/*
-    // pos->abs_iso_x  and pos->abs_iso_y  are the ones we know are set, the rest are not
-
-    pos->rel_iso_x = pos->abs_iso_x;
-    pos->rel_iso_y = pos->abs_iso_y;
-
-    // Now figure out where to draw the thing
-    Vector2f vec_iso_pos = Vector2f();
-    vec_iso_pos.y = pos->abs_iso_y;
-    vec_iso_pos.x = pos->abs_iso_x;
-
-    Vector2f vec_pix_pos = Vector2f();
-    vec_pix_pos = Grid::convert_iso_to_gpix(vec_iso_pos, 64, 32);
-
-    pos->gpix_y = vec_pix_pos.y;
-    pos->gpix_x = vec_pix_pos.x;
 
 
-
-    dump(nullptr);*/
+    dump(nullptr);
 }
 
 
@@ -350,14 +319,22 @@ void Bus::set_nextPos_on_abs_iso( HPos *abs_iso_pos)
 
 
 
-// (-+)
+// (--)
 void Bus::setRandStartingPosition(HurkaMatrix *roadMatrix)
 {
 
     // First get a random position on the road for iso_pos
+    std::cout << "ERROR CONVERT TO HPOS!\n";
+
+
+
+    /*
+    HPOSDELETE:
+
     iso_pos = rand_iso_pos(roadMatrix);
 
-    pix_pos = Grid::convert_iso_to_gpix(iso_pos, textureSize.width, textureSize.height);
+    pix_pos = Grid::convert_iso_to_gpix(iso_pos, textureSize.width, textureSize.height, 2);
+    */
 }
 
 
@@ -365,86 +342,38 @@ void Bus::setRandStartingPosition(HurkaMatrix *roadMatrix)
 
 
 
-/// Gives you a random iso position from the gamematrix
-// (-+)
-Vector2f Bus::rand_iso_pos(int maxM, int maxN)
+/// @brief Gives you a random iso position from the gamematrix
+/// @param maxM  Maximum in M or Y axis
+/// @param maxN  Maximum in N or X axis
+/// (--)
+HPos *Bus::rand_iso_pos(int maxM, int maxN)
 {
     int m = randBetween(0, maxM);
     int n = randBetween(0, maxN);
 
-    Vector2f _iso_pos;
-    _iso_pos.y = m;
-    _iso_pos.x = n;
-
+    HPos *_iso_pos = new HPos(m,n, USE_ISO);
     return _iso_pos;
 }
 
 
 
-
-
-/// Randomize an iso position on the RoadNetwork, use the Y and X offset to figure out the absolute position on the gamematrix
-//
-// (-+)
-Vector2f Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
+/// \brief Given a roadMatrix (matrix with 1s for roads, 0s else) find a random position where a road is
+/// \param roadMatrix Allocated HurkaMatrix object with set values
+/// \return A random position for a road
+/// (--)
+// HPOSTEST!
+HPos *Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
 {
-    if(roadnet->hMatrix->rows > 10000 || roadnet->hMatrix->cols > 10000) {
-        std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadnet->hMatrix->rows << ", " << roadnet->hMatrix->cols << "\n";
-        return Vector2f();
-    }
-
-    bool found = false;
-    int allowedAttempts = 500;
-    int currAttempt = 0;
-
-    Vector2f newPos = Vector2f();
-
-    int r;
-    int c;
-
-    while(found == false && currAttempt < allowedAttempts) {
-
-        r = randBetween(0, roadnet->hMatrix->rows-1);
-        c = randBetween(0, roadnet->hMatrix->cols-1);
-
-        if(roadnet->hMatrix->matrix[r][c] == 1) {
-
-            newPos.y = r + roadnet->min_isoYOffset;
-            newPos.x = c + roadnet->min_isoXOffset;
-
-            found = true;
-
-        }
-
-        currAttempt++;
-    }
-
-    if(found == false) {
-
-        std::cout << "Could not find random bus position\n";
-    }
-
-    return newPos;
-
-}
-
-
-/// Randomize an iso position from the roads
-// (-+)
-Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
-{
-
-
     if(roadMatrix->rows > 10000 || roadMatrix->cols > 10000) {
         std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadMatrix->rows << ", " << roadMatrix->cols << "\n";
-        return Vector2f();
+        return nullptr;
     }
 
     bool found = false;
     int allowedAttempts = 500;
     int currAttempt = 0;
 
-    Vector2f newPos = Vector2f();
+    HPos *newPos = new HPos(0,0,USE_ISO);
 
     int r;
     int c;
@@ -456,8 +385,8 @@ Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
 
         if(roadMatrix->matrix[r][c] == 1) {
 
-            newPos.y = r;
-            newPos.x = c;
+            newPos->abs_iso_y = r;
+            newPos->abs_iso_x = c;
 
             found = true;
 
@@ -469,10 +398,78 @@ Vector2f Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
     if(found == false) {
 
         std::cout << "Could not find random bus position\n";
+        return nullptr;
     }
 
     return newPos;
 }
+
+
+
+
+
+
+
+
+
+
+
+/// \brief Randomize an iso position on the RoadNetwork, use the Y and X offset to figure out the absolute position on the gamematrix
+/// \param roadnet
+/// (---)
+
+HPos *Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
+{
+    // Error check input
+    if(roadnet->nrRows() > 10000 || roadnet->nrCols() > 10000) {
+        std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadnet->hMatrix->rows << ", " << roadnet->hMatrix->cols << "\n";
+        return nullptr;
+    }
+
+    // Try and find a random position inside the roadnetwork
+
+    bool found = false;
+    int allowedAttempts = 500;
+    int currAttempt = 0;
+
+    HPos *newPos = new HPos(0,0, USE_ISO);
+
+    int r = 0;
+    int c = 0;
+
+    while(found == false && currAttempt < allowedAttempts)
+    {
+
+        r = randBetween(0, roadnet->nrRows()-1);
+        c = randBetween(0, roadnet->nrCols()-1);
+
+        if(roadnet->hMatrix->matrix[r][c] == 1) {
+
+            newPos->abs_iso_y = r + roadnet->min_isoYOffset;
+            newPos->abs_iso_x = c + roadnet->min_isoXOffset;
+
+            found = true;
+
+        }
+
+        currAttempt++;
+
+    }
+
+
+    if(found == false) {
+
+        std::cout << "Warning - Could not find random bus position.\n";
+        return nullptr;
+    }
+
+    return newPos;
+
+}
+
+
+
+
 
 
 // (-+)

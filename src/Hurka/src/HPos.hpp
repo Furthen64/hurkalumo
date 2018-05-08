@@ -27,6 +27,15 @@
 
 
 /* Wishlist:
+        + Maybe redesign completely (again! ;D)
+
+                    Have two position objects per thing, whatever that thing is
+
+                    Block cat = new Block("CAT_TEXTURE");
+
+                    cat.pixelpos = new PixelPos(0,0);
+                    cat.isopos   = new IsoPos(cat.position);
+
 
 
         + More constrctors - I wanna be able to create hpos on the fly based on these different set of positions!
@@ -44,6 +53,7 @@
 
 
 
+
 enum PositionTypes { USE_GPIX, USE_ISO };
 
 
@@ -51,6 +61,7 @@ class HPos
 {
 
 public:
+
     HPos(int _y, int _x, int positionType);
     HPos();
 

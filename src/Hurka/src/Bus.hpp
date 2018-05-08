@@ -46,23 +46,21 @@ public:
     void set_pos_on_abs_iso(HPos *abs_iso_pos);
     void set_nextPos_on_abs_iso( HPos *abs_iso_pos);
 
-
     void setNext_pix_pos( HPos *_np); // not useful? delete? (2018-04)
 
     void setRandStartingPosition(HurkaMatrix *roadMatrix);
 
-    Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);
+
+
+    HPos *rand_iso_pos(HurkaMatrix *roadMatrix);       // HPOSTEST!
+    HPos *rand_iso_pos(int maxM, int maxN); // HPOSTEST!
+    HPos *rand_abs_iso_pos(RoadNetwork *roadnet); // HPOSTEST!
+
+    /*Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);       HPOSDELETE
     Vector2f rand_iso_pos(int maxM, int maxN);
-    Vector2f rand_abs_iso_pos(RoadNetwork *roadnet);
-
-
-
+    Vector2f rand_abs_iso_pos(RoadNetwork *roadnet);*/
 
     HPos *get_next_pos();
-
-
-
-
 
 private:
 
@@ -71,11 +69,13 @@ private:
     HPos *pos;
     HPos *nextPos;
 
-//HPOSDELETE
+
+    /*
+    //HPOSDELETE:
     Vector2f pix_pos;    // Current position in pixels
     Vector2f iso_pos;   // Current position in the isometric matrix
     Vector2f next_iso_pos;
-    Vector2f next_pix_pos;
+    Vector2f next_pix_pos;*/
 
 
     float speed = 0.2f; // Percentage, 100% speed or 150% speed

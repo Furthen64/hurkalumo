@@ -1,5 +1,8 @@
 #include "HPos.hpp"
 
+/// @param _y Vertical positioning, or on the isometric board= M the sloping down and left.
+/// @param _x Horizontal positioning, or on the isometric board= N the sloping down and right
+/// @param positionType USE_ISO or USE_GPIX , choose what values to store away.
 HPos::HPos(int _y, int _x, int positionType)
 {
     if(positionType == USE_ISO) {
@@ -36,7 +39,7 @@ HPos::HPos()
 
 
 
-
+/// @brief Copies all the values from the original to the new one, returns newly allocated HPos
 HPos *HPos::clone()
 {
     HPos *_pos = new HPos(abs_iso_y, abs_iso_x, USE_ISO);
@@ -51,5 +54,9 @@ HPos *HPos::clone()
 
 void HPos::dump()
 {
-    std::cout << "dump() NOT CODED\n";
+    std::cout << "Dumping HPos:\n";
+    std::cout << " abs_iso   y=" << abs_iso_y << ", x=" << abs_iso_x << "\n";
+    std::cout << " rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
+    std::cout << " gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
+
 }
