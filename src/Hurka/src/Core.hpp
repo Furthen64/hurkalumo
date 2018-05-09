@@ -73,8 +73,6 @@ private:
 
     int mouseSensitivity = 4*ceil(100/lockFPS_n); // Pan speed in percentage
 
-    Vector2i viewPos = {-2178,-331};        // HPOSDELETE
-
     HPos *viewHPos;                  //HPOSTEST
     int startViewPosY = -331;
     int startViewPosX = -2178;

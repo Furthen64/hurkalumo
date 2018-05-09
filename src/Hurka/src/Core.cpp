@@ -117,7 +117,8 @@ int Core::loadResources(std::string mapName)
     /// Load font
     if (!font.loadFromFile("consola.ttf"))
     {
-        std::cout << "ERROR " << cn << " could not load font.\n";
+        std::cout << "ERROR " << cn << " could not load font consola.ttf.\n";
+        return -1;
     }
 
     return 0;
@@ -221,27 +222,28 @@ void Core::run()
             unsigned int relativeX = 0;
             unsigned int relativeY = 0;
 
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
 
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window ); // SFML Specific...
+            HPos mousepos = HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
 
 
 
             /// Do not allow us to click outside the resolution of the window
 
-            if( mousePos_i.x > SCREEN_WIDTH ) {
-                    mousePos_i.x = SCREEN_WIDTH;
+            if( mousepos.gpix_x > SCREEN_WIDTH ) {
+                    mousepos.gpix_x = SCREEN_WIDTH;
             }
 
-            if( mousePos_i.y > SCREEN_HEIGHT ) {
-                mousePos_i.y = SCREEN_HEIGHT;
+            if( mousepos.gpix_y > SCREEN_HEIGHT ) {
+                mousepos.gpix_y = SCREEN_HEIGHT;
             }
 
-            if(mousePos_i.y < 0) {
-                mousePos_i.y = 0;
+            if(mousepos.gpix_y < 0) {
+                mousepos.gpix_y = 0;
             }
 
-            if(mousePos_i.x < 0) {
-                mousePos_i.x = 0;
+            if(mousepos.gpix_x < 0) {
+                mousepos.gpix_x = 0;
             }
 
 
@@ -250,10 +252,10 @@ void Core::run()
             /// Where in relation to the Center point are we clicking?
             /// Above? Below?
 
-            if(mousePos_i.y < ceil(SCREEN_HEIGHT/2))
+            if(mousepos.gpix_y < ceil(SCREEN_HEIGHT/2))
             {
                 topof = true;
-            } else if(mousePos_i.y > ceil(SCREEN_HEIGHT/2))
+            } else if(mousepos.gpix_y > ceil(SCREEN_HEIGHT/2))
             {
                 topof = false;
                 belowof = true;
@@ -264,9 +266,9 @@ void Core::run()
 
 
             // Left of? Right of?
-            if(mousePos_i.x < ceil(SCREEN_WIDTH/2)) {
+            if(mousepos.gpix_x < ceil(SCREEN_WIDTH/2)) {
                 leftof = true;
-            } else if(mousePos_i.x > ceil(SCREEN_WIDTH/2)) {
+            } else if(mousepos.gpix_x > ceil(SCREEN_WIDTH/2)) {
                 leftof = false;
                 rightof = true;
             } else {
@@ -275,19 +277,19 @@ void Core::run()
             }
 
 
-            // the nr of pixels between the click and the center position
+            // the nr of pixels between the click and the center position of screen
 
-            if( ceil(SCREEN_WIDTH/2) > mousePos_i.x) {
-                relativeX = ceil(SCREEN_WIDTH/2) - mousePos_i.x;
+            if( ceil(SCREEN_WIDTH/2) > mousepos.gpix_x) {
+                relativeX = ceil(SCREEN_WIDTH/2) - mousepos.gpix_x;
             } else {
-                relativeX = mousePos_i.x - ceil(SCREEN_WIDTH/2);
+                relativeX = mousepos.gpix_x - ceil(SCREEN_WIDTH/2);
             }
 
 
-            if( ceil(SCREEN_HEIGHT/2) > mousePos_i.y) {
-                relativeY = ceil(SCREEN_HEIGHT/2) - mousePos_i.y;
+            if( ceil(SCREEN_HEIGHT/2) > mousepos.gpix_y) {
+                relativeY = ceil(SCREEN_HEIGHT/2) - mousepos.gpix_y;
             } else {
-                relativeY = mousePos_i.y - ceil(SCREEN_HEIGHT/2);
+                relativeY = mousepos.gpix_y - ceil(SCREEN_HEIGHT/2);
             }
 
 
@@ -300,26 +302,26 @@ void Core::run()
 
 
 
-            /// Add or remove from the x and y offset because of the cliiicking
+            /// Add or remove from the x- and y-offset because of the clicking
 
             if(rightof && topof) {
-                viewPos.x -= relativeX;
-                viewPos.y += relativeY;
+                viewHPos->gpix_x -= relativeX;
+                viewHPos->gpix_y += relativeY;
             } else if(rightof && belowof) {
-                viewPos.x -= relativeX;
-                viewPos.y -= relativeY;
+                viewHPos->gpix_x -= relativeX;
+                viewHPos->gpix_y -= relativeY;
             } else if(leftof && belowof) {
-                viewPos.x += relativeX;
-                viewPos.y -= relativeY;
+                viewHPos->gpix_x += relativeX;
+                viewHPos->gpix_y -= relativeY;
             } else if(leftof && topof) {
-                viewPos.x += relativeX;
-                viewPos.y += relativeY;
+                viewHPos->gpix_x += relativeX;
+                viewHPos->gpix_y += relativeY;
             } else {
 
             }
 
             if(debugLevel > 1)  {
-                std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+                std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
 
         }
@@ -329,29 +331,36 @@ void Core::run()
         {
 
             /// Dump the Bus position
-            bus->dump(&viewPos);
+            bus->dump(viewHPos);
             std::stringstream sstm;
 
 
             /// Get mouse position
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window ); // SFML Specific....
+            HPos mousepos = HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
 
-            Vector2f mouseWPos = Vector2f();
-            mouseWPos.x = mousePos_i.x;
+
+
+
+            Vector2f mouseWPos = Vector2f(); // SFML specific...
             mouseWPos.y = mousePos_i.y;
-            sstm << "WPOS(" << mouseWPos.y << ", " << mouseWPos.x << ")\n";
+            mouseWPos.x = mousePos_i.x;
+
+            sstm << "WPOS(" << mousepos.gpix_y<< ", " << mousepos.gpix_x << ")\n";
 
 
 
-            /// Redact ViewPosition rectangle from it to get back to GameMatrix positioning
+            /// Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
 
-                //Vector2f mouseGPos = Vector2f();
-            HPos *mouseGPos = new HPos(mouseWPos.y - viewPos.y, mouseWPos.x - viewPos.x, USE_GPIX);
-            sstm << "GPOS(" << mouseGPos->gpix_y << ", " << mouseGPos->gpix_x << ")\n";
+            mousepos.gpix_y -= viewHPos->gpix_y;
+            mousepos.gpix_x -= viewHPos->gpix_x;
 
 
-            HPos *iso_pos = new HPos(0,0, USE_GPIX);
-            iso_pos = Grid::convert_gpix_to_iso(mouseGPos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+            sstm << "GPOS(" << mousepos.gpix_y << ", " << mousepos.gpix_x << ")\n";
+
+
+
+            HPos *temp_iso_pos = Grid::convert_gpix_to_iso(&mousepos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
 
 
 
@@ -360,15 +369,16 @@ void Core::run()
             lastClickedText.setString(sstm.str());
             lastClickedText.setCharacterSize(18);
             lastClickedText.setFillColor(sf::Color::White);
+
             lastClickedText.setPosition(mouseWPos);
 
 
 
             /// Light up the current tile
-            grid->setVisible(iso_pos);
+            grid->setVisible(temp_iso_pos);
 
             if(debugLevel > 1)  {
-                std::cout << " VIEWPOS x=" << viewPos.x << ", y=" << viewPos.y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+                std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
 
                 //dumpPosition(iso_pos);// HPOSADAPT
             }
@@ -392,7 +402,7 @@ void Core::run()
         /// Buses
 
 
-        trafficMgr->updateAll(&viewPos);
+        trafficMgr->updateAll(viewHPos);
 
 
         //grid->setVisible(bus->get_next_iso_pos());
@@ -422,7 +432,7 @@ void Core::run()
 
         window.clear({0, 0, 0});
 
-        if(drawGm)   {  gm->draw(window, viewPos);  } // Draws the ground and water and suchers
+        if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
 
         if(drawBlocks) {
 
@@ -433,8 +443,8 @@ void Core::run()
 
 
         if(drawLoco) {  loco->draw(window, viewHPos); }
-        if(drawBuses) { bus->draw(window, &viewPos); }
-        if(drawGrid) {  grid->draw(window, viewPos); }
+        if(drawBuses) { bus->draw(window, viewHPos); }
+        if(drawGrid) {  grid->draw(window, viewHPos); }
 
         if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
 

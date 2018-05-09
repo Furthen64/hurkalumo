@@ -764,10 +764,10 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 
 }
 
-// updates all the buses on all the roadnetworks with their gameUpdate() function
-//
+/// \brief updates all the buses on all the roadnetworks with their gameUpdate() function
+/// \param viewHPos Current viewing position
 
-void TrafficManager::updateAll(Vector2i *viewPos)
+void TrafficManager::updateAll(HPos *viewHPos)
 {
 
 

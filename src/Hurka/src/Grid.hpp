@@ -26,7 +26,7 @@ public:
     Grid() {}
     Grid(int _height, int _width);
 
-    void draw( RenderTarget& rt, Vector2i viewPos);
+    void draw( RenderTarget& rt, HPos *viewHPos);
 
     //void setVisible(Vector2f iso_pos); HPOSDELETE
     void setVisible(HPos *_pos);
@@ -219,6 +219,7 @@ static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 /// @param pix_pos  Already allocated HPos with values set on gpix positions
 /// @param width    The size of the sprite
 /// @param height   The size of the sprite
+/// @return returns a newly allocated HPos object with iso values set (and also gpix values if you should need them)
 /// (--)
 static HPos *convert_gpix_to_iso(HPos *pix_pos, int width, int height)
 {

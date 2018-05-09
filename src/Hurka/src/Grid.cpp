@@ -27,15 +27,17 @@ Grid::Grid(int _height, int _width)
 }
 
 
-// (-+)
-void Grid::draw( RenderTarget& rt, Vector2i viewPos)
+// (--)
+void Grid::draw( RenderTarget& rt, HPos *viewHPos)
 {
     int gx = 0;
     int gy = 0;
     int wx = 0;
     int wy = 0;
 
-    Vector2f wPos = Vector2f();
+    Vector2f wPos = Vector2f(); // SFML specific...
+
+
     /*Vector2f firstGPos = Vector2f();        // Game position of the first grid cell
     Vector2f firstWPos = Vector2f();        // Window position of the first grid cell
 
@@ -56,8 +58,8 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
                 firstGPos.y = gy;
             }
 */
-            wx = gx + viewPos.x;
-            wy = gy + viewPos.y;
+            wx = gx + viewHPos->gpix_x;
+            wy = gy + viewHPos->gpix_y;
 
 /*            if(!once) {
                 firstWPos.x = wx;
@@ -81,8 +83,8 @@ void Grid::draw( RenderTarget& rt, Vector2i viewPos)
     gx = convert_iso_to_gpix_x(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
     gy = convert_iso_to_gpix_y(selected_iso_pos.y, selected_iso_pos.x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
-    wx = gx+ viewPos.x;
-    wy = gy+ viewPos.y;
+    wx = gx+ viewHPos->gpix_x;
+    wy = gy+ viewHPos->gpix_y;
 
     wPos.x = wx;
     wPos.y = wy;

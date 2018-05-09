@@ -32,8 +32,8 @@ public:
     Bus(HPos *);
 
     void gameUpdate(RoadNetwork *roadnet);
-    void draw( RenderTarget& rt, Vector2i *viewPos);
-    void dump(Vector2i *viewPos);
+    void draw( RenderTarget& rt, HPos *viewHPos);
+    void dump(HPos *viewHPos);
 
 
     /// Position

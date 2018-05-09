@@ -6,6 +6,7 @@
 
 #include "Grid.hpp"
 #include "Constants.hpp"
+#include "HPos.hpp"
 
 /// //////////////////////////////////////////////
 /// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
@@ -28,7 +29,7 @@ public:
 
     int getHeight();
 
-    void draw( RenderTarget& rt,  Vector2i viewPos);
+    void draw( RenderTarget& rt, HPos *viewHPos);
 
 
 

@@ -41,16 +41,14 @@ int GameMatrix::getHeight()
 
 
 
-/// (--)
+
+/// \brief Draw the gameboard a.k.a gamematrix , the tiles upon which everything happens
 /// Optimize with the ints maybe make it a const?
-
-
-/// Add Clipping to this!
-// If you are drawing outside the viewing 800x600 px window, you could just NOT draw that sprite, make ac
-// clipping rectangle and compare to it
-
-
-void GameMatrix::draw( RenderTarget& rt, Vector2i viewPos)
+/// Wishlist: Add Clipping to this!
+///           If you are drawing outside the viewing 800x600 px window, you could just NOT draw that sprite, make ac
+///           clipping rectangle and compare to it
+/// (-+)
+void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
 {
     minX = 9990;
     minY = 9990;
@@ -59,12 +57,13 @@ void GameMatrix::draw( RenderTarget& rt, Vector2i viewPos)
     int actualXMin = 9999;
     int actualYMin= 9999;
 
-    // What a bunny brained idea!
     for(int M= 0; M<height; M++){
         for(int N= 0; N < width; N++) {
 
-        // Hey! I'm using the Grid's positioning functions instead of this class's
-        // because the gamematrix's green background should follow the grid
+            // Hey! I'm using the Grid's positioning functions instead of this class's
+            // because the gamematrix's green background should follow the grid
+
+
             x = Grid::convert_iso_to_gpix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
             y = Grid::convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
@@ -77,8 +76,9 @@ void GameMatrix::draw( RenderTarget& rt, Vector2i viewPos)
             }
 
             // Offset for viewing position
-            x += viewPos.x;
-            y += viewPos.y;
+            y += viewHPos->gpix_y;
+            x += viewHPos->gpix_x;
+
 
             Vector2f pos = {(float)x,(float)y};
 
@@ -97,11 +97,6 @@ void GameMatrix::draw( RenderTarget& rt, Vector2i viewPos)
         }
 
     }
-
-
-
-
-  //  std::cout << "DRAW gamematrix (min y= " << minY << ", minX=" << minX << ")  but actual pix pos (" << actualXMin << "," << actualYMin << ")\n";
 
 }
 

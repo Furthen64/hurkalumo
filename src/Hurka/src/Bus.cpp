@@ -203,12 +203,10 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 
 // Seems to work
 // (-+)
-void Bus::draw( RenderTarget& rt, Vector2i *viewPos)
+void Bus::draw( RenderTarget& rt, HPos *viewHPos)
 {
-
-
-    int x = pos->gpix_x + viewPos->x;
-    int y = pos->gpix_y + viewPos->y;
+    int x = pos->gpix_x + viewHPos->gpix_x;
+    int y = pos->gpix_y + viewHPos->gpix_y;
 
     Vector2f _pos = {(float)x,(float)y};
 
@@ -473,13 +471,13 @@ HPos *Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
 
 
 // (-+)
-void Bus::dump(Vector2i *viewPos)
+void Bus::dump(HPos *viewHPos)
 {
     int wy = 0;
     int wx = 0;
-    if(viewPos != nullptr) {
-        wy = viewPos->y;
-        wx = viewPos->x;
+    if(viewHPos != nullptr) {
+        wy = viewHPos->gpix_y;
+        wx = viewHPos->gpix_x;;
     }
     std::cout << "\n\nBus:\n";
     std::cout << "       abs_iso_y,abs_iso-x     rel_iso_y,rel_iso_x        gpix_y,gpix_x     wpix_y,wpix_x\n";

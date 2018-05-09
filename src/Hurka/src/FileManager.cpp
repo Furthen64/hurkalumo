@@ -1,75 +1,75 @@
 #include "FileManager.hpp"
 
+// SOLVED:
+
+    // BUG: I cannot understand this Bug.
+
+    // SYMPTOM:
+    // I do this std::string cn = "blargh"; in class declaration
+    //  when I output cn I get segmentation fault
+    // std::cout << cn << "\n";
+
+    // ONLY when there's a file that cannot be read!
+    // IF the file exists, then nothing goes wrong..
 
 
-// BUG: I cannot understand this Bug.
+    // Maybe sheds some light on it:
+    //https://stackoverflow.com/questions/33234693/strange-stdcout-behaviour-with-const-char/33234729
 
-// SYMTOM:
-// I do this std::string cn = "blargh"; in class declaration
-//  when I output cn I get segmentation fault
-// std::cout << cn << "\n";
-
-// ONLY when there's a file that cannot be read!
-// IF the file exists, then nothing goes wrong..
-
-
-// Maybe sheds some light on it:
-//https://stackoverflow.com/questions/33234693/strange-stdcout-behaviour-with-const-char/33234729
-
-// Maybe I'm using up the stackspace, and moves outside of what Im allowed?
-// Like this here fella:
-// https://forum.openframeworks.cc/t/super-difficult-c-crashes/1344/4
-// "did some further testing - it seems to be a stack overflow issue after all.
-// if i reduce the amount requested so it’s less than 4096 bytes, there’s no problem any more… "
-// "perhaps this is running inside an MPTask, which according to this Apple-Technical-Q&A have a stack size of 4k…?"
-/*
-jag hade inte allokerat fmgr och började använda funktioner från den
-och fick riktigt jobbiga fel...
+    // Maybe I'm using up the stackspace, and moves outside of what Im allowed?
+    // Like this here fella:
+    // https://forum.openframeworks.cc/t/super-difficult-c-crashes/1344/4
+    // "did some further testing - it seems to be a stack overflow issue after all.
+    // if i reduce the amount requested so it’s less than 4096 bytes, there’s no problem any more… "
+    // "perhaps this is running inside an MPTask, which according to this Apple-Technical-Q&A have a stack size of 4k…?"
+    /*
+    jag hade inte allokerat fmgr och började använda funktioner från den
+    och fick riktigt jobbiga fel...
 
 
-VARFÖR ser jag inte att fmgr inte blev allokerad???
+    VARFÖR ser jag inte att fmgr inte blev allokerad???
 
 
-VARFÖR kan jag använda fmgr->köraFunktioner() utan att den är allokerad???
+    VARFÖR kan jag använda fmgr->köraFunktioner() utan att den är allokerad???
 
 
-gaaaaaaaaaah
+    gaaaaaaaaaah
 
-Det Måste finnas något skydd mot att köra funktioner på en klass som inte är allokerad
-
-
-Relaterat?:
-https://stackoverflow.com/questions/18686519/accessing-member-function-after-calling-delete-to-an-object?noredirect=1&lq=1
+    Det Måste finnas något skydd mot att köra funktioner på en klass som inte är allokerad
 
 
-De säger man ska använda SMART pointers inte raw pointers
-haha exakt för den här anledningen....
-
-	"Undefined Behaviour"
-*/
-/*
+    Relaterat?:
+    https://stackoverflow.com/questions/18686519/accessing-member-function-after-calling-delete-to-an-object?noredirect=1&lq=1
 
 
-bool FileManager::checkYoSelf(void *ptr)
-{
-    if(ptr == nullptr) {
-        return false;
-    }
-    return false;
-}
+    De säger man ska använda SMART pointers inte raw pointers
+    haha exakt för den här anledningen....
+
+        "Undefined Behaviour"
+    */
+    /*
 
 
-and then in every function (phew....), do this as the first thing you do:
-
-    if(!checkYoSelf( (void *)this)) {
+    bool FileManager::checkYoSelf(void *ptr)
+    {
+        if(ptr == nullptr) {
+            return false;
+        }
         return false;
     }
 
 
-    Not something I'd want to have... So I decided to just fix the problem
-    by allocating things in right order, maybe I'll have some nullptr checks in a verifiction
-    function at Core.
-*/
+    and then in every function (phew....), do this as the first thing you do:
+
+        if(!checkYoSelf( (void *)this)) {
+            return false;
+        }
+
+
+        Not something I'd want to have... So I decided to just fix the problem
+        by allocating things in right order, maybe I'll have some nullptr checks in a verifiction
+        function at Core.
+    */
 
 
 
@@ -407,7 +407,7 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols, int de
             return false;
         }
 
-        nrElementsN = line.length()/nrCharsPerElement;  // Gets for instance
+        nrElementsN = line.length()/nrCharsPerElement;
 
         if(debugLevel > 0) {
             std::cout << ind << " nr of elements on this line = " << nrElementsM << "\n";

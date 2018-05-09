@@ -7,7 +7,7 @@
 
 
 
-// Hey! If you set the new int **matrix object, MAKE SURE you also update the correct rows and cols! A SEGMENTATION FAULT warning.
+// Hey! If you update the int **matrix object, MAKE SURE you also update the correct rows and cols! A SEGMENTATION FAULT warning.
 
 class HurkaMatrix
 {
@@ -25,6 +25,7 @@ public:
 
 private:
     bool allocated;
+    std::string cn = "HurkaMatrix.cpp";
 
 };
 

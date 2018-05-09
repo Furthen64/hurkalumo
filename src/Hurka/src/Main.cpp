@@ -2,14 +2,18 @@
 
 
 // Always push RUNNING code
+//
 // If it doesn't run, just stub out the errors and make it run before pushing to a branch
-// If that is too much to do, make a BRANCH!
+// If that is too much to do, make a git branch!
 
 
-/// Vore det inte najs med en WindowManager som håller
+/// Wishlist, wouldn't it be nice with a WindowManager holding vars like:
 ///         * RenderWindow
-///         * Inputs
-///         * Vector2i viewPos  så man slipper skicka med den till alla .draw() ?
+///         * inputs
+///         * viewPos  so you wouldn't have to pass it along to all draw functions
+
+
+
 
 
 /// GLOBALS
@@ -17,9 +21,6 @@
 TextureManager* TextureManager::m_instanceSingleton = nullptr;
 
 
-
-
-/// TODO To be removed a lot from, use class Core instead!
 int main()
 {
 
