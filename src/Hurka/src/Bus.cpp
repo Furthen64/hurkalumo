@@ -9,6 +9,7 @@
 // (-+)
 Bus::Bus(HPos *_abs_iso_pos)
 {
+    slotPath = nullptr;
 
     /// Setup position
     set_pos_on_abs_iso(_abs_iso_pos);
@@ -23,6 +24,25 @@ Bus::Bus(HPos *_abs_iso_pos)
     texture = t->getTexture("BUS001");
     sprite = Sprite(texture);
     textureSize = sprite.getTextureRect();
+}
+
+void Bus::reset()
+{
+    if(slotPath != nullptr) { delete slotPath; }
+    slotPath = nullptr;
+
+
+    // This position
+    HPos *wrk_iso_pos = new HPos(0,0, USE_ISO);
+    set_pos_on_abs_iso(wrk_iso_pos);
+
+    // Next position
+    wrk_iso_pos = new HPos(0,0, USE_ISO);
+    set_nextPos_on_abs_iso(wrk_iso_pos);
+
+
+    // Ignore texture stuff, probably wont change since construction
+
 }
 
 
@@ -86,10 +106,11 @@ void Bus::update_all_nextPos_vars_on_abs_iso()
 // (--)
 void Bus::update_all_position_vars_on_gpix()
 {
-    std::cout << "CODE ME PLZ\n";
+
+    //std::cout << "CODE ME PLZ\n";
 
 
-    dump(nullptr);
+    //dump(nullptr);
 }
 
 
@@ -101,6 +122,10 @@ void Bus::update_all_position_vars_on_gpix()
 // (--)
 void Bus::gameUpdate(RoadNetwork *roadnet)
 {
+    int debugLevel = 0;
+
+
+
     int deltaX = 0;
     int deltaY = 0;
 
@@ -119,7 +144,7 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
     }
 
 
-    std::cout << "DeltaY=" << deltaY << " , DeltaX=" << deltaX << "\n";
+    if(debugLevel >=1) { std::cout << "DeltaY=" << deltaY << " , DeltaX=" << deltaX << "\n";}
 
 
     /// Do the actual move
@@ -129,29 +154,28 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
         case 0: // UP RIGHT
 
             // Set current position
-            std::cout << "Dir= up right\n";
+            if(debugLevel >=1) { std::cout << "Dir= up right\n"; }
             pos->gpix_x += ceil ( (float) (deltaX * speed/100) );
             pos->gpix_y -= ceil ( (float) (deltaY * speed/100) );
 
             break;
 
         case 1: // DOWN RIGHT
-            std::cout << "Dir= down right\n";
+            if(debugLevel >=1) {std::cout << "Dir= down right\n";}
             pos->gpix_x += ceil ( (float) (deltaX * speed/100) );
             pos->gpix_y += ceil ( (float) (deltaY * speed/100) );
 
             break;
 
         case 2: // DOWN LEFT
-            std::cout << "Dir= down left\n";
+            if(debugLevel >=1) { std::cout << "Dir= down left\n";}
             pos->gpix_x -= ceil ( (float) (deltaX * speed/100) );
             pos->gpix_y += ceil ( (float) (deltaY * speed/100) );
 
             break;
 
         case 3: // UP LEFT
-            std::cout << "Dir= up left\n";
-
+            if(debugLevel >=1) { std::cout << "Dir= up left\n";}
             pos->gpix_x -= ceil ( (float) (deltaX * speed/100) );
             pos->gpix_y -= ceil ( (float) (deltaY * speed/100) );
 
@@ -174,7 +198,7 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
     // If delta x and deltay is zero, means we have reached our destination
 
     if(deltaX == 0 && deltaY == 0) {
-        std::cout << "bus: SHOULD I GO SOMWHERE NOW?\n";
+        if(debugLevel >=1) {std::cout << "bus: SHOULD I GO SOMWHERE NOW?\n";}
     }
 
     // Update all position_variables based on this new gpix position
@@ -203,8 +227,13 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 
 // Seems to work
 // (-+)
-void Bus::draw( RenderTarget& rt, HPos *viewHPos)
+void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
 {
+
+    if(drawSlotPositions) {
+
+    }
+
     int x = pos->gpix_x + viewHPos->gpix_x;
     int y = pos->gpix_y + viewHPos->gpix_y;
 
@@ -466,8 +495,10 @@ HPos *Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
 }
 
 
-
-
+void Bus::setSlotPath(SlotPath *_sp)
+{
+    slotPath = _sp;
+}
 
 
 // (-+)

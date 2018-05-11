@@ -126,7 +126,9 @@ int Core::loadResources(std::string mapName)
 
 
 
-// (-+)
+/// Setup - The idea is to use whatever resources that have been loaded and
+/// transform them, set them up for running the editor/game.
+/// (-+)
 int Core::setup(int width, int height, std::string title)
 {
 
@@ -143,7 +145,7 @@ int Core::setup(int width, int height, std::string title)
 
     trafficMgr->parseCurrentRoads(roadMatrix, 0);
 
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
         std::cout << "\n\nDumping the individual road networks found:\n";
         trafficMgr->dumpRoadNetworks("   ");
     }
@@ -156,17 +158,23 @@ int Core::setup(int width, int height, std::string title)
     trafficMgr->addBus(bus, 0);
 
 
+
+
+    /// Plan a route for a Bus on a roadnetwork
+    trafficMgr->planForBusesOnRoadNetwork(0);
+
+
     return 0;
 
 }
 
 
-
-
+/// Run - The main loop for the editor/game
+/// Wishlist: Add modes: like intro_menu and exiting_menu and main_loop or something
 // (-+)
 void Core::run()
 {
-    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.05-alpha");
+    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.06-alpha");
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
     }
@@ -329,6 +337,7 @@ void Core::run()
         // Left mouse button pressed
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
+            /*
 
             /// Dump the Bus position
             bus->dump(viewHPos);
@@ -360,7 +369,7 @@ void Core::run()
 
 
 
-            HPos *temp_iso_pos = Grid::convert_gpix_to_iso(&mousepos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+            HPos *visibleIsoPos = Grid::convert_gpix_to_iso(&mousepos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
 
 
 
@@ -375,7 +384,7 @@ void Core::run()
 
 
             /// Light up the current tile
-            grid->setVisible(temp_iso_pos);
+            grid->setVisible(visibleIsoPos);
 
             if(debugLevel > 1)  {
                 std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
@@ -388,7 +397,7 @@ void Core::run()
 
             // if (toolbarTop.within(mousePos_i.x, mousepPos_i.y) { pushbutton(x,y));
             toolbarTop->pushButton(0); // debug test
-
+*/
 
 
 
@@ -437,13 +446,18 @@ void Core::run()
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in render order
-
             hmap->draw(window, viewHPos);
         }
 
 
         if(drawLoco) {  loco->draw(window, viewHPos); }
-        if(drawBuses) { bus->draw(window, viewHPos); }
+
+        if(drawBuses) {
+                trafficMgr->drawBuses(window, viewHPos);
+                //bus->draw(window, viewHPos); DELETE
+        }
+
+
         if(drawGrid) {  grid->draw(window, viewHPos); }
 
         if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }

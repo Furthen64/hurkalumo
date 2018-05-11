@@ -4,6 +4,7 @@
 
 
 
+
 // Seems to work for a couple of weeks now (2018-04) havent given thoughts about memory DEALLOCATION though...
 // (-+)
 int **allocateMatrix(int rows, int cols)

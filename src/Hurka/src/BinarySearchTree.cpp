@@ -18,7 +18,7 @@ void BinarySearchTree::dump()
 // Ugly.
 // See "Wishlist Beta" in Docs/ folder
 // RECURSIVE
-// (--)
+// (--) TEST
 void BinarySearchTree::dumpBST(BSTNode *currNode, int direction)
 {
     BSTNode *nextNode = nullptr;

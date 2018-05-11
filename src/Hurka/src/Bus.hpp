@@ -17,6 +17,7 @@ class RoadNetwork;
 #include "Block.hpp"
 #include "Grid.hpp"
 #include "BusRoute.hpp"
+#include "SlotPath.hpp"
 
 
 
@@ -31,8 +32,10 @@ public:
     Bus() {}
     Bus(HPos *);
 
+
+    void reset();
     void gameUpdate(RoadNetwork *roadnet);
-    void draw( RenderTarget& rt, HPos *viewHPos);
+    void draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions);
     void dump(HPos *viewHPos);
 
 
@@ -51,6 +54,17 @@ public:
     void setRandStartingPosition(HurkaMatrix *roadMatrix);
 
 
+    /// SlotPath and SlotPositions
+
+    void setSlotPath(SlotPath *_sp);
+
+
+    void setNeedsPlanning() { needsPlanning = true; }
+    void resetNeedsPlanning() { needsPlanning = false; }
+
+
+
+    /// Random Utilities
 
     HPos *rand_iso_pos(HurkaMatrix *roadMatrix);       // HPOSTEST!
     HPos *rand_iso_pos(int maxM, int maxN); // HPOSTEST!
@@ -69,7 +83,10 @@ private:
     HPos *pos;
     HPos *nextPos;
 
+    SlotPath *slotPath;
 
+
+    bool needsPlanning = false;
     /*
     //HPOSDELETE:
     Vector2f pix_pos;    // Current position in pixels

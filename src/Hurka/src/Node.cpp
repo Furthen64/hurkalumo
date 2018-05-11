@@ -248,7 +248,8 @@ void Node::dump(int indent)
 }
 
 
-
+/// Figures out automatically where it is in relation to the original Node
+///
 /// FIXME: Should be via Graph instead... you should call it from Graph::attachNewNode( and supply a BST *visitedNodes ) so you can
 /// search for the _id and see if it's already in the tree and yeah warn at least?
 ///

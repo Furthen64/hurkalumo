@@ -110,7 +110,6 @@ Block::Block(HPos *_hpos, int _textureId)
 /// (-+)
 void Block::draw( RenderTarget& rt, HPos *viewHPos)
 {
- ;
     int x = hpos->gpix_x;
     int y = hpos->gpix_y;
 
@@ -218,7 +217,7 @@ Block *Block::clone()
     std::cout << "Block.clone(): UNDEFINED BEHAVIOUR !! Needs more testing.\n";
 
 //    Block *block = new Block({pos.x, pos.y}, textureName);
-    Block *block = new Block(___pos->clone(), textureName);
+    Block *block = new Block(hpos->clone(), textureName);
     // FIXME add delete
     return block;
 }

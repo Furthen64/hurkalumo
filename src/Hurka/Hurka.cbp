@@ -84,6 +84,10 @@
 		<Unit filename="src/Node.hpp" />
 		<Unit filename="src/RoadNetwork.cpp" />
 		<Unit filename="src/RoadNetwork.hpp" />
+		<Unit filename="src/SlotPath.cpp" />
+		<Unit filename="src/SlotPath.hpp" />
+		<Unit filename="src/SlotPos.cpp" />
+		<Unit filename="src/SlotPos.hpp" />
 		<Unit filename="src/TextureManager.cpp" />
 		<Unit filename="src/TextureManager.hpp" />
 		<Unit filename="src/Toolbar.cpp" />

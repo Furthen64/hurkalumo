@@ -5,6 +5,7 @@
 #include <string>
 
 
+#include "Graph.hpp"
 #include "Bus.hpp"
 #include "HurkaMatrix.hpp"
 
@@ -23,32 +24,42 @@ public:
 
     RoadNetwork();
 
-    void dump(std::string indent);
+    HPos *getRandomRoad_iso(int findNr);
 
-        //Vector2f getRandomRoad_abs_iso_pos(int findNr);//HPOSDELETE
-    HPos *getRandomRoad_abs_iso(int findNr);    //HPOSTEST
+    SlotPath *createSlotPath(HPos *fromPos, HPos *toPos );
+
+    void createGraphFromHMatrix(HurkaMatrix *roadMatrix,
+                                         Graph *graph,
+                                         Node *currNode,
+                                         Node *prevNode,
+                                         HPos *curr_iso_pos,
+                                         HPos *prev_iso_pos,
+                                         BinarySearchTree *visited,
+                                         int dbgLevel);
 
     void addBus(Bus *_bus);
 
+
     int nrRows() { return hMatrix->rows; }
     int nrCols() { return hMatrix->cols; }
+    void dump(std::string indent);
+
 
 
 
 
 // Variables:
 
-
     HurkaMatrix *hMatrix;
 
     std::list<Bus *> *buslist;
-
 
     int min_isoYOffset;
     int min_isoXOffset;
 
     int max_isoYOffset;
     int max_isoXOffset;
+
 
 
 private:

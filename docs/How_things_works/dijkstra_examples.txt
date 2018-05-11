@@ -1,0 +1,545 @@
+
+// To see how dijkstra algorithm is used, go to main() and read
+// 
+// 2018-05-11 You might want to take a look at how HurkaLumo does and update this txt file,
+//			  Take a look at RoadNetwork.cpp , at SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
+//
+// 2018-03-26 Jörgen Engström (@Fat64 at various social medias?)
+
+
+
+#include <iostream>
+#include <sstream>
+
+#include <queue>
+#include <vector>
+
+
+#include "BinarySearchTree.hpp"
+
+#include "Graph.hpp"
+
+
+
+
+void testPrioQueue()
+{
+    std::priority_queue<Node *, std::vector<Node *>, graphNodeCompare> my_min_heap;
+/*
+    Node *road1 = new Node("A", 1);
+    road1->tempLabel = 6;
+    Node *road2 = new Node("B", 2);
+    road2->tempLabel = 21;
+    Node *road3 = new Node("C", 3);
+    road3->tempLabel = 26;
+    Node *road4 = new Node("C", 4);
+    road4->tempLabel = 1;
+    Node *road5 = new Node("C", 5);
+    road5->tempLabel = 5;
+    Node *road6 = new Node("C", 6);
+    road6->tempLabel = 3;
+    Node *road7 = new Node("C", 7);
+    road7->tempLabel = 7;
+
+    my_min_heap.push(road1);
+    my_min_heap.push(road2);
+    my_min_heap.push(road3);
+    my_min_heap.push(road4);
+    my_min_heap.push(road5);
+    my_min_heap.push(road6);
+    my_min_heap.push(road7);
+
+    for(int n = 0; n < 7; n++) {
+        Node *workNode = nullptr;
+
+        workNode = my_min_heap.top();
+        my_min_heap.pop();
+        std::cout << "id=" << workNode->getId()  << "\n";
+
+
+    }
+
+
+
+*/
+}
+
+// (--)
+std::string iso_to_str(Vector2f iso_pos)
+{
+    std::stringstream sstm;
+
+    sstm << "(" << iso_pos.y << "," << iso_pos.x << ")";
+
+    return sstm.str();
+}
+
+// (-+)
+int generateID(Vector2f iso_pos)
+{
+    if(iso_pos.y < 0) {
+        std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
+        return -1;
+    }
+
+    if(iso_pos.x < 0) {
+        std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
+        return -1;
+    }
+
+    return iso_pos.y * 10000 + iso_pos.x;
+
+}
+
+
+
+std::stack <Vector2f> *reverseStack(std::stack <Vector2f> *stacker)
+{
+
+    std::stack <Vector2f> *newStacker  = new std::stack <Vector2f>();
+
+    while(!stacker->empty()) {
+
+        newStacker->push( stacker->top() );
+
+        stacker->pop();
+    }
+
+    return newStacker;
+
+
+}
+
+
+
+
+
+
+int main(int argc, char *argv[])
+{ 
+
+    int searchId = -1;
+    Vector2f iso_pos ;
+    iso_pos.y = -1;
+    iso_pos.x = -1;
+    Node *workNode = nullptr;
+    Node *workNode2 = nullptr;
+
+    DijkstraResult *dijkstraResult = nullptr; 
+	
+	
+	
+
+    // Todo: bedöma vilken av Right Left Up Down den ska använda baserat på jämföra mellan NOD1 och NOD2 i iso_pos.
+    // en funktion som jämför två iso_pos och kommer fram till en av de fyra 
+
+ 
+    std::cout << "\nTesting the Graph by creating a complex road network \n";
+    std::cout << "and running Dijkstra from A to B \n-------------------------------------------------------\n";
+
+
+
+    Graph *roads = new Graph("road_network_1");
+
+
+    /// 0,1     SPECIAL FIRST
+
+    // create the first road
+    iso_pos = Vector2f();  iso_pos.y = 0; iso_pos.x = 0; searchId = generateID(iso_pos);
+    roads->addFirstNode(iso_to_str(iso_pos), searchId, iso_pos);
+
+
+    // Now add a lot of roads to this road
+    Node *road1 = roads->findNode(searchId,0);
+    if(road1 == nullptr) { std::cout << "error\n";  return -1;  }
+
+
+    // Push lots of positions to a stack
+    std::stack<Vector2f > possies;
+
+
+    // All of the positions in order of attachment!
+    iso_pos.y = 1; iso_pos.x = 0;    possies.push(iso_pos);
+    iso_pos.y = 1; iso_pos.x = 1;    possies.push(iso_pos);
+    iso_pos.y = 1; iso_pos.x = 2;    possies.push(iso_pos);
+    iso_pos.y = 2; iso_pos.x = 2;    possies.push(iso_pos);
+    iso_pos.y = 2; iso_pos.x = 1;    possies.push(iso_pos);
+    iso_pos.y = 2; iso_pos.x = 0;    possies.push(iso_pos);
+    iso_pos.y = 3; iso_pos.x = 0;    possies.push(iso_pos);
+    iso_pos.y = 3; iso_pos.x = 1;    possies.push(iso_pos);
+    iso_pos.y = 3; iso_pos.x = 2;    possies.push(iso_pos);
+
+    iso_pos.y = 4; iso_pos.x = 2;    possies.push(iso_pos);
+
+    iso_pos.y = 5; iso_pos.x = 2;    possies.push(iso_pos);
+    iso_pos.y = 5; iso_pos.x = 3;    possies.push(iso_pos);
+    iso_pos.y = 5; iso_pos.x = 4;    possies.push(iso_pos);
+    iso_pos.y = 6; iso_pos.x = 4;    possies.push(iso_pos);
+    iso_pos.y = 6; iso_pos.x = 3;    possies.push(iso_pos);
+    iso_pos.y = 6; iso_pos.x = 2;    possies.push(iso_pos);
+    iso_pos.y = 7; iso_pos.x = 2;    possies.push(iso_pos);
+    iso_pos.y = 7; iso_pos.x = 3;    possies.push(iso_pos);
+    iso_pos.y = 7; iso_pos.x = 4;    possies.push(iso_pos);
+
+    iso_pos.y = 8; iso_pos.x = 4;    possies.push(iso_pos);
+
+    std::stack<Vector2f> *finalPossies = reverseStack(&possies);
+
+
+
+    /// Pop the stack and bind them all together, like a snake moving through the road network
+
+    workNode = road1;   // start at the first road node
+    while(!finalPossies->empty()) {
+        iso_pos = finalPossies->top();
+        finalPossies->pop();
+        searchId = generateID(iso_pos);
+
+        workNode = workNode->attachNewNode(iso_to_str(iso_pos), searchId, iso_pos, 1,1, 0);
+
+    }
+
+
+    /// Bind the things that weren't connected automatically
+    iso_pos.y = 1; iso_pos.x = 0; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 2; iso_pos.x = 0; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+
+    iso_pos.y = 1; iso_pos.x = 1; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 2; iso_pos.x = 1; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+    iso_pos.y = 2; iso_pos.x = 1; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 3; iso_pos.x = 1; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+    iso_pos.y = 2; iso_pos.x = 2; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 3; iso_pos.x = 2; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+    iso_pos.y = 5; iso_pos.x = 2; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 6; iso_pos.x = 2; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+    iso_pos.y = 5; iso_pos.x = 3; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 6; iso_pos.x = 3; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+    iso_pos.y = 6; iso_pos.x = 3; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 7; iso_pos.x = 3; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+    iso_pos.y = 6; iso_pos.x = 4; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    iso_pos.y = 7; iso_pos.x = 4; searchId = generateID(iso_pos);    workNode2 = roads->findNode(searchId, 0);
+    workNode->attachNodeDown(workNode2);
+
+
+    std::cout << "\n\nGraph created:\n---------------------------------\n";
+
+
+    std::cout << "\n\nRunning Dijkstra 1st time:\n------------------------------\n";
+
+
+    // Setup start and end positions for Dijkstra
+
+    iso_pos.y = 0;
+    iso_pos.x = 0;
+    Node *startNode = roads->findNode( generateID(iso_pos), 0);
+
+
+    iso_pos.y = 8;
+    iso_pos.x = 4;
+    Node *endNode   = roads->findNode ( generateID(iso_pos) , 0);
+
+    if(startNode == nullptr || endNode == nullptr) {
+        std::cout << "ERROR! Could not find the start or end node for Dijkstra\n";
+        return 0;
+    }
+
+    std::cout << "  * startNode.id=" << startNode->getId() << "\n";
+    std::cout << "  * endNode.id= " << endNode->getId() << "\n";
+
+
+    dijkstraResult = roads->runDijkstra(startNode, endNode, 2);
+
+    if(dijkstraResult->shortestPath.empty()) {
+        return 0;
+    }
+
+    std::cout << "\n";
+    std::cout << "The shortest distance is=" << dijkstraResult->resultInt << "\n";
+    std::cout << "The path is: \n    ";
+
+    roads->printPathFromDijkstra(dijkstraResult);
+
+    std::cout << "\n";
+
+
+
+
+
+    std::cout << "\n\nReset all nodes\n-------------------------------\n";
+    roads->dump(0, 1);
+
+    roads->resetAllNodes();
+    std::cout << "\n\n\n ***** Should be reseted ****\n\n\n";
+
+    roads->dump(0, 1 );
+
+
+
+
+
+    std::cout << "\n\nTry Dijkstra again, reverse path\n--------------------------\n";
+
+     // Setup start and end positions for Dijkstra
+
+    iso_pos.y = 8;
+    iso_pos.x = 4;
+    startNode = roads->findNode( generateID(iso_pos), 0);
+
+
+    iso_pos.y = 0;
+    iso_pos.x = 0;
+    endNode   = roads->findNode ( generateID(iso_pos) , 0);
+
+    if(startNode == nullptr || endNode == nullptr) {
+        std::cout << "ERROR! Could not find the start or end node for Dijkstra\n";
+        return 0;
+    }
+
+    std::cout << "  * startNode.id=" << startNode->getId() << "\n";
+    std::cout << "  * endNode.id= " << endNode->getId() << "\n";
+
+
+
+    dijkstraResult = roads->runDijkstra(startNode, endNode, 0);
+
+
+    if(dijkstraResult->shortestPath.empty()) {
+        return 0;
+    }
+
+    std::cout << "\n";
+    std::cout << "The shortest distance is=" << dijkstraResult->resultInt << "\n";
+    std::cout << "The path is: \n    ";
+
+    roads->printPathFromDijkstra(dijkstraResult);
+
+    std::cout << "\n";
+
+
+
+
+
+
+
+
+
+    std::cout << "\n\nReset all nodes\n-------------------------------\n";
+
+    roads->resetAllNodes();
+    std::cout << "\n\n\n ***** Should be reseted ****\n\n\n";
+
+
+
+
+
+
+
+    //
+    std::cout << "\n\n Add HIGH WEIGHT on 3,0->3,1  ***************\n";
+    iso_pos.y = 3; iso_pos.x = 0; searchId = generateID(iso_pos);    workNode = roads->findNode(searchId, 0);
+    workNode->right->weight = 50;
+    workNode->right->to->left->weight = 50;     // Both direction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    std::cout << "\n\nRun Dijkstra 3rd time ***********************\n";
+
+
+     // Setup start and end positions for Dijkstra
+
+    iso_pos.y = 8;
+    iso_pos.x = 4;
+    startNode = roads->findNode( generateID(iso_pos), 0);
+
+
+    iso_pos.y = 0;
+    iso_pos.x = 0;
+    endNode   = roads->findNode ( generateID(iso_pos) , 0);
+
+    if(startNode == nullptr || endNode == nullptr) {
+        std::cout << "ERROR! Could not find the start or end node for Dijkstra\n";
+        return 0;
+    }
+
+    std::cout << "  * startNode.id=" << startNode->getId() << "\n";
+    std::cout << "  * endNode.id= " << endNode->getId() << "\n";
+
+
+
+    dijkstraResult = roads->runDijkstra(startNode, endNode, 0);
+
+
+    if(dijkstraResult->shortestPath.empty()) {
+        return 0;
+    }
+
+    std::cout << "\n";
+    std::cout << "The shortest distance is=" << dijkstraResult->resultInt << "\n";
+    std::cout << "The path is: \n    ";
+
+    roads->printPathFromDijkstra(dijkstraResult);
+
+    std::cout << "\n";
+
+
+
+
+
+
+
+
+
+
+
+
+    return 0;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ROAD SETUP AL BUNDY
+
+
+
+        *  *
+       ******
+        *  *
+        ****
+
+
+
+
+
+    /// 0,1     SPECIAL FIRST
+
+    // create the first road
+    iso_pos = Vector2f();  iso_pos.y = 0; iso_pos.x = 1; searchId = generateID(iso_pos);
+    roads->addFirstNode(iso_to_str(iso_pos), searchId);
+
+
+
+
+
+    // Now add a lot of roads to this road
+    Node *road1 =     roads->findNode(searchId,0);
+
+    if(road1 == nullptr) {
+        std::cout << "error\n";
+        return -1;
+    }
+
+
+    /// 1,1
+    iso_pos = Vector2f(); iso_pos.y = 1; iso_pos.x = 1; searchId = generateID(iso_pos);
+    Node *road2 = road1->attachNewNodeDown(iso_to_str(iso_pos), searchId);
+
+
+    /// 1,0
+    iso_pos = Vector2f(); iso_pos.y = 1; iso_pos.x = 0; searchId = generateID(iso_pos);
+    Node *road3 = road2->attachNewNodeLeft(iso_to_str(iso_pos), searchId);
+
+
+
+    /// 2,1
+    iso_pos = Vector2f();    iso_pos.y = 2;    iso_pos.x = 1;  searchId = generateID(iso_pos);
+    Node *road4 = road2->attachNewNodeDown(iso_to_str(iso_pos), searchId);
+
+
+
+    /// 3,1
+    iso_pos = Vector2f();    iso_pos.y = 3;    iso_pos.x = 1;  searchId = generateID(iso_pos);
+    Node *road5 = road4->attachNewNodeDown(iso_to_str(iso_pos), searchId);
+
+
+    /// 3,2
+    iso_pos = Vector2f();    iso_pos.y = 3;    iso_pos.x = 2;  searchId = generateID(iso_pos);
+    Node *road6 = road5->attachNewNodeRight(iso_to_str(iso_pos), searchId);
+
+    /// 3,3
+    iso_pos = Vector2f();    iso_pos.y = 3;    iso_pos.x = 3;  searchId = generateID(iso_pos);
+    Node *road7 = road6->attachNewNodeRight(iso_to_str(iso_pos), searchId);
+
+    /// 3,4
+    iso_pos = Vector2f();    iso_pos.y = 3;    iso_pos.x = 4;  searchId = generateID(iso_pos);
+    Node *road8 = road7->attachNewNodeRight(iso_to_str(iso_pos), searchId);
+
+    /// 2,4
+    iso_pos = Vector2f();    iso_pos.y = 2;    iso_pos.x = 4;  searchId = generateID(iso_pos);
+    Node *road9 = road8->attachNewNodeUp(iso_to_str(iso_pos), searchId);
+
+
+    /// 1,4
+    iso_pos = Vector2f();    iso_pos.y = 1;    iso_pos.x = 4;  searchId = generateID(iso_pos);
+    Node *road10 = road9->attachNewNodeUp(iso_to_str(iso_pos), searchId);
+
+    /// 1,3
+    iso_pos = Vector2f();    iso_pos.y = 1;    iso_pos.x = 3;  searchId = generateID(iso_pos);
+    Node *road11 = road10->attachNewNodeLeft(iso_to_str(iso_pos), searchId);
+
+    /// 1,2
+    iso_pos = Vector2f();    iso_pos.y = 1;    iso_pos.x = 2;  searchId = generateID(iso_pos);
+    Node *road12 = road11->attachNewNodeLeft(iso_to_str(iso_pos), searchId);
+
+    /// 0,4
+    iso_pos = Vector2f();    iso_pos.y = 0;    iso_pos.x = 4;  searchId = generateID(iso_pos);
+    Node *road13 = road10->attachNewNodeUp(iso_to_str(iso_pos), searchId);
+
+    /// 1,5
+    iso_pos = Vector2f();    iso_pos.y = 1;    iso_pos.x = 5;  searchId = generateID(iso_pos);
+    Node *road14 = road10->attachNewNodeRight(iso_to_str(iso_pos), searchId);
+
+
+    // Bind the gap!
+    road2->attachNodeRight(road12);
+    std::cout << "\n\n ** graph created!\n";
+
+
+    // Setup a high weight on a link
+    road12->right->weight = 5;
+    road11->left->weight = 5;
+
+
+*/

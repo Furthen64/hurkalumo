@@ -137,7 +137,7 @@ with new result
 
 For examples see:
 
-    dijkstra_examples.cpp
+    docs\how things work\dijkstra_examples.txt
 
 
 

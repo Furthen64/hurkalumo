@@ -104,6 +104,13 @@ void TextureManager::loadTextures()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\BUS_001.png");
     pushTexture("BUS001", txt);
 
+
+
+    // Specialz
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\SLOTPOS.png");
+    pushTexture("SLOTPOS", txt);
+
 }
 
 

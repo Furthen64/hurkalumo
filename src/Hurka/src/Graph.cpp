@@ -11,7 +11,7 @@ Graph::Graph(std::string _name)
 /// Walks the entire Graph.
 /// While walking, put 1:s in a matrix wherever the road is, 0:s everything else.
 /// dumpNodes = if true will do a .dump on all Nodes it find
-/// Recursive.
+/// RECURSIVE
 // (-+)
 HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel)
 {
@@ -57,13 +57,13 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
 
         /// Up
         if(curr->up->to != nullptr) {
-            clockwiseTraverseUpFirst(curr->up->to, visited, matrix, dumpNodes, debugLevel);
+            clockwiseTraverseUpFirst(curr->up->to, visited, matrix, dumpNodes, debugLevel);                     // RECURSION
         }
 
         /// Right
         if(curr->right->to != nullptr) {
 
-            clockwiseTraverseUpFirst(curr->right->to, visited, matrix,dumpNodes, debugLevel);
+            clockwiseTraverseUpFirst(curr->right->to, visited, matrix,dumpNodes, debugLevel);                   // RECURSION
 
         }
 
@@ -71,14 +71,14 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
         if(curr->down->to != nullptr) {
 
 
-            clockwiseTraverseUpFirst(curr->down->to, visited, matrix, dumpNodes,debugLevel);
+            clockwiseTraverseUpFirst(curr->down->to, visited, matrix, dumpNodes,debugLevel);                    // RECURSION
 
         }
 
         /// Left
         if(curr->left->to != nullptr) {
 
-            clockwiseTraverseUpFirst(curr->left->to, visited, matrix, dumpNodes,debugLevel);
+            clockwiseTraverseUpFirst(curr->left->to, visited, matrix, dumpNodes,debugLevel);                    // RECURSION
 
         }
 
@@ -266,7 +266,11 @@ Node *Graph::getFirstNode()
 
 
 /// Walks the graph in one thread and return the node, return nullptr if not found
-//
+// wishlist: take a HPos * instead, which runs Node::generate_id on it instead of having to do it outside this function
+// like:
+//                    Node *endNode   = graph->findNode ( Node::generateID(toPos) , 0);
+
+
 // Seems to work with head and most of the nodes I tried
 // (+-)
 Node *Graph::findNode(int searchId, int debugLevel)

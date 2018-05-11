@@ -4,23 +4,72 @@
 TrafficManager::TrafficManager()
 {
     roadNetworks = new std::list<RoadNetwork *>();
-    buslist = new std::list<Bus *>();
 }
 
 
-/// Recursive
+
+
+
+
+// (-+) Works with at least One bus on One roadnet
+//
+void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
+{
+    RoadNetwork *currRoadnet = nullptr;
+
+    for(std::list<RoadNetwork *>::iterator roadsIter=roadNetworks->begin(); roadsIter != roadNetworks->end(); ++roadsIter)
+    {
+
+        currRoadnet = (*roadsIter);
+
+        for(std::list<Bus *>::iterator busIter=currRoadnet->buslist->begin(); busIter != currRoadnet->buslist->end(); ++busIter)
+        {
+            (*busIter)->draw(rt, viewHPos, false);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /// Follows connected 1:s in the fullRoadMatrix and puts 1:s in newMatrix
 ///
 /// @param fullRoadMatrix      Already allocated HurkaMatrix, A matrix with 1:s where the road sprites are, 0:s everywhere else
-/// @param newMatrix           Already allocated HurkaMatrix, empty on entry. Will be filled when function returns.
-/// @param curr_iso_pos        The current iso_pos for the algorithm
+/// @param newMatrix           Already allocated HurkaMatrix, empty on entry, same size as fullRoadMatrix. Populated with values when function returns.
+/// @param curr_iso_pos        The current absolute iso_pos for the algorithm
 /// @param min_iso_pos         Already existing hpos object, will be filled on output.
 /// @param visited             BinarySearchTree already allocated, empty on entry. Will be filled when function returns.
 ///
-/// (--)
-/// HPOSTEST:
-
-
+/// (-+) Worked once
+/// RECURSIVE
 void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
                             HurkaMatrix *newMatrix,
                             HPos *curr_iso_pos,
@@ -52,7 +101,6 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
 
 
     /// Setup objects
-
 
 
     HPos  *up_iso = curr_iso_pos->clone();      // SPEEDUP could probably do without cloning and stuff and allocating all these HPos's
@@ -770,6 +818,8 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 void TrafficManager::updateAll(HPos *viewHPos)
 {
 
+    int dbgLevel = 0;
+
 
     RoadNetwork *currRoadnet = nullptr;
     Bus *currBus = nullptr;
@@ -781,6 +831,7 @@ void TrafficManager::updateAll(HPos *viewHPos)
 
         for(std::list<Bus *>::iterator busIter=currRoadnet->buslist->begin(); busIter != currRoadnet->buslist->end(); ++busIter)
         {
+            if(dbgLevel>=1) { std::cout << "Updating a bus\n";}
 
             currBus = (*busIter);
 
@@ -806,8 +857,66 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
     return nullptr;
 }
 
-void TrafficManager::planForBusesOnRoadNetwork(int roadnetId){
-    std::cout << "NOT CODED YET             Run dijkstra on all buses, do trafic planning? a route? should have a route class or struct\n";
+
+
+/// (--) TEST!
+void TrafficManager::planForBusesOnRoadNetwork(int roadnetId)
+{
+
+    int dbgLevel = 1;
+
+
+
+    // Run dijkstra on all buses, do traffic planning, create SlotPath
+
+
+    std::cout << "\n** planForBusesOnRoadNetwork:\n";
+
+
+    RoadNetwork *roadnet = nullptr;
+    Bus *bus = nullptr;
+    SlotPath *slotpath;
+
+    for(std::list<RoadNetwork *>::iterator itRn = roadNetworks->begin(); itRn != roadNetworks->end(); ++itRn)
+    {
+        roadnet = (*itRn);
+
+        roadnet->dump("   ");
+
+
+        for(std::list<Bus *>::iterator itBus = roadnet->buslist->begin(); itBus != roadnet->buslist->end(); ++itBus)
+        {
+
+
+            bus = (*itBus);
+
+            // Needs something to go on... Like a Bus Station , Start position End Position, but now?
+            // Just take a random position
+
+            HPos *iso_pos_A  = roadnet->getRandomRoad_iso(0);
+            std::cout << "\nfromPos:\n";
+            iso_pos_A->dump();
+
+            HPos *iso_pos_B  = roadnet->getRandomRoad_iso(4);
+            std::cout << "\ntoPos:\n";
+            iso_pos_B->dump();
+
+            slotpath = roadnet->createSlotPath(iso_pos_A, iso_pos_B);
+
+            bus->setSlotPath(slotpath);
+
+        }
+    }
+
+    std::cout << "\n\n planForBusesOnRoadNetwork done ** \n";
+
+
+
+
+
+
+
+
 }
 
 void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
@@ -852,8 +961,8 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
     // Figure out from- and to positions
 
-    HPos *fromPos = currNet->getRandomRoad_abs_iso(0);
-    HPos *toPos   = currNet->getRandomRoad_abs_iso(5);
+    HPos *fromPos = currNet->getRandomRoad_iso(0);
+    HPos *toPos   = currNet->getRandomRoad_iso(5);
 
 
     _bus->set_pos_on_abs_iso(fromPos);
@@ -884,28 +993,3 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
     /// Finally add it to the right roadnet
     currNet->addBus(_bus);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -23,8 +23,17 @@ public:
     TrafficManager();
 
 
-    // High level functions
+    /// High level functions
 
+
+    void drawBuses(sf::RenderWindow &rt, HPos *viewHPos);
+
+    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
+                                   HPos *curr_iso_pos,
+                                   HPos *min_iso_pos,
+                                   HPos *max_iso_pos,
+                                   BinarySearchTree *visited,
+                                   int debugLevel);
 
     // HPOSDELETE:
     /*RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
@@ -34,12 +43,7 @@ public:
                                    BinarySearchTree *visited,
                                    int debugLevel);
       */
-    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
-                                   HPos *curr_iso_pos,
-                                   HPos *min_iso_pos,
-                                   HPos *max_iso_pos,
-                                   BinarySearchTree *visited,
-                                   int debugLevel);
+
 
 
 
@@ -87,10 +91,8 @@ public:
 
 private:
     std::string cn = "TrafficManager.cpp";
-
     std::list<RoadNetwork *> *roadNetworks;
 
-    std::list<Bus *> *buslist;
 };
 
 #endif

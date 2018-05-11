@@ -97,6 +97,18 @@ public:
         return _hpos->abs_iso_y * 10000 + _hpos->abs_iso_x;
     }
 
+
+
+    // (--)
+    static std::string iso_to_str(HPos *hpos)
+    {
+        std::stringstream sstm;
+
+        sstm << "(" << hpos->abs_iso_y << "," << hpos->abs_iso_x << ")";
+
+        return sstm.str();
+    }
+
     /*
     static int generateID(Vector2f iso_pos)
     {

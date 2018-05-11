@@ -49,7 +49,6 @@ private:
     std::string cn = "Block.cpp";
 
 
-    HPos *___pos; // DELETEME?
     HPos *hpos;
 
 
