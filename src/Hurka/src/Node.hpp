@@ -80,8 +80,28 @@ public:
 
 
 
-    // (-+)
 
+
+
+    static int genIDfrom_rel_iso(HPos *_hpos)
+    {
+        if(_hpos->rel_iso_y < 0) {
+            std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
+            return -1;
+        }
+
+        if(_hpos->rel_iso_y < 0) {
+            std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
+            return -1;
+        }
+
+        return _hpos->rel_iso_y * 10000 + _hpos->rel_iso_x;
+    }
+
+
+
+
+    // (-+)
     static int generateID(HPos *_hpos)
     {
         if(_hpos->abs_iso_y < 0) {

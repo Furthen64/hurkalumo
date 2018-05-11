@@ -274,6 +274,7 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 {
 
+    SlotPath *slotpath = new SlotPath();
     int dbgLevel = 1;
 
     std::string ind = "  ";
@@ -297,9 +298,6 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 
     int searchId = -1;
     HPos *start_abs_iso_pos = nullptr;
-
-    Node *workNode = nullptr;
-    Node *workNode2 = nullptr;
 
 
 
@@ -353,8 +351,14 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 
 
 
-    // Plussa på alla positioner min_abs_isoX och Y
+
+
+
+    // Plussa på alla rel_positioner med min_abs_isoX och Y
     // för att få riktiga koordinater sen i globala matrixen
+
+
+    std::cout << "Dont forget to adjkust to the global matrix\n";
 
 
 
@@ -369,11 +373,14 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 
     // Setup start and end positions for Dijkstra
 
+    graph->dump(0,0);
 
-    Node *startNode = graph->findNode( Node::generateID(fromPos), 0);
+    Node *startNode = graph->findNode( Node::genIDfrom_rel_iso(fromPos), 0);
 
+    toPos->dump();
+    Node *endNode   = graph->findNode ( Node::genIDfrom_rel_iso(toPos) , 1);
+    endNode->dump(3);
 
-    Node *endNode   = graph->findNode ( Node::generateID(toPos) , 0);
 
 
 
@@ -408,88 +415,9 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 
 
 
-
-
-
-
-
-
-
-
-
-
-    ///
-    /// Run Dijkstra from "fromPos" to "toPos"
-    ///
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // iterate the matrix
-    // create slotpos with right position
-
-
-
-    SlotPath *slotpath = new SlotPath();
-
-    for(int y = 0; y < hMatrix->rows; y++) {
-
-            for(int x = 0; x < hMatrix->cols; x++) {
-
-                // Create a HPos, create a SlotPos, add it to the slotpath
-                slotpath->add(
-                        new SlotPos(
-                                new HPos(
-                                        y+min_isoYOffset,
-                                        x + min_isoXOffset,
-                                        USE_ISO)
-                                   )
-                        );
-
-            }
-    }
-
     std::cout << ind << "\ncreateSlotPath done ** \n";
 
-
+    return slotpath;
 }
 
 

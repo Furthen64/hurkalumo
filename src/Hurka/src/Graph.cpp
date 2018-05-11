@@ -221,9 +221,11 @@ void clockwiseSearchUpFirst(Node *curr, int searchVal)
 
 }
 
-
-// TEST!
-// (--)
+/// \brief Shows you the Graph by traversing it and dumping all the nodes. You can see what nodes are connected up, right, down and left of it .
+/// \param debugLevel This function is not super stable so.. might need more debugging
+/// \param dumpNodes 1=dumps all the node information, 0=default
+/// TEST!
+/// (--)
 void Graph::dump(int debugLevel, int dumpNodes)
 {
     std::cout << "\n\nDumping all Nodes in Graph:\n";

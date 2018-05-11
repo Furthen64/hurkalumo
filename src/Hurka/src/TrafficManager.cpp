@@ -863,8 +863,6 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 void TrafficManager::planForBusesOnRoadNetwork(int roadnetId)
 {
 
-    int dbgLevel = 1;
-
 
 
     // Run dijkstra on all buses, do traffic planning, create SlotPath

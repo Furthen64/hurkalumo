@@ -1710,10 +1710,10 @@
 
 1521330484 source:c:\github\lumo\src\hurka\src\dijkstra.cpp
 
-1526077938 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
+1526079251 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1526077627 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1526078475 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
 1526077962 c:\github\lumo\src\hurka\src\roadnetwork.hpp
@@ -1747,7 +1747,7 @@
 	"Node.hpp"
 	"Link.hpp"
 
-1526054523 c:\github\lumo\src\hurka\src\node.hpp
+1526079318 c:\github\lumo\src\hurka\src\node.hpp
 	<SFML/Graphics.hpp>
 	<string>
 	<iostream>
@@ -1765,7 +1765,7 @@
 	"Link.hpp"
 	"BinarySearchTree.hpp"
 
-1526070974 source:c:\github\lumo\src\hurka\src\graph.cpp
+1526078761 source:c:\github\lumo\src\hurka\src\graph.cpp
 	"Graph.hpp"
 
 1523096660 c:\github\lumo\src\hurka\src\busroute.hpp
