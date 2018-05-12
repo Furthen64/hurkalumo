@@ -9,6 +9,8 @@ SlotPos::SlotPos(HPos *_hpos)
 {
     int debugLevel = 0;
 
+    hpos = _hpos;
+
     if(textureName == "") {
         std::cout << "ERROR " << cn << " Could not create block with empty texturename=" << textureName << "\"!\n";
         return ;
@@ -58,4 +60,15 @@ void SlotPos::draw( sf::RenderTarget& rt, HPos *viewHPos)
     sprite.setPosition(vpos);
 
     rt.draw(sprite);
+}
+
+
+
+
+
+
+
+void SlotPos::dump(std::string ind)
+{
+    hpos->dump(ind);
 }

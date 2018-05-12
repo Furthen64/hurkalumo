@@ -12,7 +12,8 @@ Graph::Graph(std::string _name)
 /// While walking, put 1:s in a matrix wherever the road is, 0:s everything else.
 /// dumpNodes = if true will do a .dump on all Nodes it find
 /// RECURSIVE
-// (-+)
+/// FIXME: It does not fillup the matrix correctly?
+// (--)
 HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel)
 {
 
@@ -45,11 +46,14 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
 
 
         curr->idTo_iso_pos(curr->getId(), &m, &n);
+
         matrix->matrix[m][n] = 1;
+
         if(dumpNodes==true)
         {
             curr->dump(3);
         }
+
         if(debugLevel >=1 ) { std::cout << "curr id = " << curr->getId() << ", name = \"" << curr->getName() << "\"\n"; }
 
         // add to visited
@@ -68,8 +72,11 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
         }
 
         /// Down
+
         if(curr->down->to != nullptr) {
 
+
+            curr->down->to->dump(3);
 
             clockwiseTraverseUpFirst(curr->down->to, visited, matrix, dumpNodes,debugLevel);                    // RECURSION
 
@@ -224,7 +231,7 @@ void clockwiseSearchUpFirst(Node *curr, int searchVal)
 /// \brief Shows you the Graph by traversing it and dumping all the nodes. You can see what nodes are connected up, right, down and left of it .
 /// \param debugLevel This function is not super stable so.. might need more debugging
 /// \param dumpNodes 1=dumps all the node information, 0=default
-/// TEST!
+/// FIXME: has bugs :( Does not work. Doesnt walk downwards?
 /// (--)
 void Graph::dump(int debugLevel, int dumpNodes)
 {
@@ -232,7 +239,10 @@ void Graph::dump(int debugLevel, int dumpNodes)
 
     BinarySearchTree *visited = new BinarySearchTree();
 
+
+    std::cout << "\n\nwishlist: remove the 16,16 hardcoded matrix size\n";
     HurkaMatrix *matrix = new HurkaMatrix(16,16);
+
 
     matrix = clockwiseTraverseUpFirst(head, visited, matrix, dumpNodes, debugLevel);
 
@@ -252,12 +262,6 @@ void Graph::addFirstNode(std::string _name, int _id, HPos *_iso_pos)
     head =  new Node(_name, _id, _iso_pos);
 }
 
-/*HPOSDELETE:
-void Graph::addFirstNode(std::string _name, int _id, Vector2f _iso_pos)
-{
-    head =  new Node(_name, _id, _iso_pos);
-}
-*/
 
 // (++)
 Node *Graph::getFirstNode()
@@ -267,14 +271,12 @@ Node *Graph::getFirstNode()
 
 
 
-/// Walks the graph in one thread and return the node, return nullptr if not found
-// wishlist: take a HPos * instead, which runs Node::generate_id on it instead of having to do it outside this function
-// like:
-//                    Node *endNode   = graph->findNode ( Node::generateID(toPos) , 0);
-
-
-// Seems to work with head and most of the nodes I tried
-// (+-)
+/// \brief Walks the graph in one thread and return the node, return nullptr if not found
+/// \param searchId
+/// wishlist: take an HPos * instead, which runs Node::generate_id on it instead of having to do it outside this function
+///           instead of this dumb stuff:  Node *endNode   = graph->findNode ( Node::generateID(toPos) , 0);
+///
+/// (-+) Would be nice to do the testing as described in docs / testing / graph.png
 Node *Graph::findNode(int searchId, int debugLevel)
 {
 
@@ -301,15 +303,16 @@ Node *Graph::findNode(int searchId, int debugLevel)
 
     BinarySearchTree *visited = new BinarySearchTree();
 
-    HurkaMatrix *matrix = new HurkaMatrix(16,16);  // For output!
+    HurkaMatrix *matrix = new HurkaMatrix(16, 16);  // For output
 
-    Node *foundNode = clockwiseTraverseUpFirstFindNode(head, visited, matrix, searchId, debugLevel);
+    Node *foundNode = clockwiseTraverseUpFirstFindNode(head, visited, matrix, searchId, debugLevel);    // FIXME Is it you who makes the game crash becausae debugLevel=1 instead of =0 ?
 
     if(foundNode == nullptr) {
         std::cout << cn << " ERROR! Could not find a node with id=" << searchId << " in the graph \n";
     }
 
     if(debugLevel >= 2) {
+        std::cout << "REMEMBER, hardcoded 16x16 matrix!\n";
         matrix->dump();
     }
 
@@ -856,22 +859,33 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     // Push to stack in the result
 
     while(!done) {
-
+        std::cout << "1\n";
         result->shortestPath.push(workNode);
 
-
+        std::cout << "2\n";
         if(workNode == startNode) {
+            std::cout << "3EXIT\n";
             done = true;
             break;
         }
-
+        std::cout << "4\n";
+        if(workNode->fastestPrevNode == nullptr) {
+            std::cout << "ERROR " << cn << " Somewhere something went wrong, nullptr in workNode->fastestPrevNode at the end of an Dijkstra run. \n";
+            return nullptr;
+        }
         workNode = workNode->fastestPrevNode;
+        if(workNode == nullptr) {
+            std::cout << "ERROR " << cn << " Somewhere something went wrong, nullptr in workNode->fastestPrevNode at the end of an Dijkstra run.\n";
+        }
+        std::cout << "5\n";
     }
 
+
+    std::cout << "6\n";
     // Store the total fastest distance from start to end
     result->resultInt = endNode->permanentLabel;
 
-
+    std::cout << "7\n";
     if(debugLevel >=1 ) {
             std::cout << "\n";
     }
@@ -880,13 +894,14 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     if(debugLevel >=2) {
         // Dumping result
         std::cout << "Dumping result:\n";
+        std::cout << ind1 << " Shortest distance= " << result->resultInt << "\n";
         result->dumpShortestPath();
     }
 
 
 
 
-    // OBSERVE, when we return we have changed the state of nodes in the graph ... should it be like that?
+    std::cout << ind1 << "OBSERVE, when we return we have changed the state of nodes in the graph ... should it be like that?\n";
 
     return result;
 
@@ -894,9 +909,13 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
 
 
 /// Prints the path from left (start) to right (end)
-// (-+)
+
+// NEEDS FIXING... Needs to clone the stack and work with a deep copy instead of fudging around with the dijkstraResult
+// (--)
 void Graph::printPathFromDijkstra(DijkstraResult *dijkstraResult)
 {
+
+    std::cout << "CONSUMES DIJKSTRA RESULT!!!\n";
 
     if(dijkstraResult == nullptr) {
         std::cout << cn << " ERROR dijkstraResult has nullptr in printPathFromDijkstra()\n";
@@ -922,5 +941,7 @@ void Graph::printPathFromDijkstra(DijkstraResult *dijkstraResult)
         }
 
     }
+
+
 
 }

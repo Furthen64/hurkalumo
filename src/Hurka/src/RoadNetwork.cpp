@@ -5,14 +5,17 @@ RoadNetwork::RoadNetwork()
     buslist = new std::list<Bus *>();
 }
 
-// (+-)
+// (++)
 void RoadNetwork::dump(std::string indent)
 {
+    std::cout << indent << "roadnet: \n";
+    std::cout << indent << "{\n";
     hMatrix->dump(indent);
     std::cout << indent << "min_iso_y_offset=" << min_isoYOffset <<"\n";
     std::cout << indent << "min_iso_x_offset=" << min_isoXOffset<< "\n";
     std::cout << indent << "max_iso_y_offset=" << max_isoYOffset <<"\n";
     std::cout << indent << "max_iso_x_offset=" << max_isoXOffset << "\n\n";
+    std::cout << indent << "}\n";
 }
 
 
@@ -29,15 +32,14 @@ void RoadNetwork::addBus(Bus *_bus)
 /// \brief Get a random road in this roadnetwork, sets both abs_iso and rel_iso
 /// \param findNr FOR NOW the function takes the 5th road if you give findNr=5 for example
 /// \return Position of the road or (-1,-1) when not found a road
-///
-/// Wishlist: Actually do RANDOM positioning, right now it only takes the first road it finds or after "nr" of finds
 /// (-+)
-HPos *RoadNetwork::getRandomRoad_iso(int findNr)
+HPos *RoadNetwork::getNrRoad_iso(int findNr)
 {
 
     HPos *iso_pos = new HPos(-1,-1, USE_ISO);
 
-    int YMAX = max_isoYOffset - min_isoYOffset;     // Figure out the limits of the road matrix
+    // Figure out the limits of the road matrix
+    int YMAX = max_isoYOffset - min_isoYOffset;
     int XMAX = max_isoXOffset - min_isoXOffset;
 
     int nr = 0;
@@ -68,6 +70,11 @@ HPos *RoadNetwork::getRandomRoad_iso(int findNr)
         }
     }
 
+    if(nr < findNr) {
+        std::cout << "ERROR " << cn << " getNrRoad_iso could not find a road for findNr=" << findNr << " out of = " << nr << "!\n";
+        return nullptr;
+    }
+
     return iso_pos;
 }
 
@@ -85,7 +92,7 @@ HPos *RoadNetwork::getRandomRoad_iso(int findNr)
 /// \param graph The return object, a Graph fully connected where the roads are
 /// \param visited Allocated, empty BinarySearchTree.
 /// Dont forget the "FULL DUPLEX" issue... that you'd have to connect A to B and B to A
-/// (--) TEST!
+/// (--) Tested Once and worked with simple road, needs far more testing
 /// RECURSIVE
 
 void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
@@ -100,13 +107,22 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
     // This is a Copy from TrafficManager's "follow()" function
 
+
+
+
     std::string ind = "      ";
 
-    if(dbgLevel >= 1) { std::cout << ind << "\n\n ** createGraphFromHMatrix():\n";   }
+    if(dbgLevel >= 1) {
+            std::cout << ind << "\n\n ** createGraphFromHMatrix():\n" << ind << "{\n";
+            std::cout << ind << "curr_iso_pos:\n";
+            curr_iso_pos->dump(ind);
+            std::cout << "\n";
+    }
 
     /// Have we been here?
     int searchId = Node::generateID(curr_iso_pos);
     if(visited->findVal(searchId,0) != -1 ) {
+            std::cout << ind << "been here before.\n";
         return ;                                                                                 // END RECURSION
     }
 
@@ -116,7 +132,7 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
     Node *workNode2 = nullptr;
 
 
- /// Setup objects
+    /// Setup objects
 
 
     HPos  *up_iso = curr_iso_pos->clone();
@@ -134,18 +150,11 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
 
 
-/// Update objects
-
-    std::cout << "  connectNewNode() where it should ...\n";
-
+    /// Update objects
 
 
     // Add to visited
     visited->add(searchId,dbgLevel);
-
-
-
-
 
 
     /*
@@ -167,14 +176,8 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
     if(up_iso->abs_iso_y >= 0) { // Not hit the wall yet?
 
-        std::cout << "looking at y= " << up_iso->abs_iso_y << ", x=" << up_iso->abs_iso_x << "\n";
-
-        roadMatrix->dump();
-
-
 
         if(roadMatrix->matrix[(int)up_iso->abs_iso_y][(int)up_iso->abs_iso_x] == 1) { // is it a road?
-            std::cout << "A\n";
 
             if(dbgLevel >= 2) { std::cout << ind << "going up\n"; }
 
@@ -189,7 +192,14 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                                                 1,
                                                 0);
 
-            createGraphFromHMatrix(roadMatrix, graph, workNode2, workNode, up_iso, curr_iso_pos, visited, dbgLevel);                                     // RECURSION CALL
+            createGraphFromHMatrix(roadMatrix,
+                                   graph,
+                                   workNode2,
+                                   workNode,
+                                   up_iso,
+                                   curr_iso_pos,
+                                   visited,
+                                   dbgLevel);                                     // RECURSION CALL
 
         }
     }
@@ -204,7 +214,13 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
             // create a new node, connect it to the right of current node
             searchId = Node::generateID(right_iso);
             workNode = currNode;
-            workNode2 = workNode->attachNewNode(Node::iso_to_str(right_iso), searchId, right_iso, 1, 1, 0);
+
+            workNode2 = workNode->attachNewNode(Node::iso_to_str(right_iso),
+                                                searchId,
+                                                right_iso,
+                                                1,
+                                                1,
+                                                0);
 
 
             createGraphFromHMatrix(roadMatrix,
@@ -227,10 +243,27 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
             if(dbgLevel >= 2) { std::cout << ind  << "going down\n"; }
 
-            workNode = currNode;
-            workNode2 = workNode->attachNewNode(Node::iso_to_str(down_iso), searchId, down_iso, 1, 1, 0);
 
-            createGraphFromHMatrix(roadMatrix, graph, workNode2, workNode, down_iso, curr_iso_pos, visited, dbgLevel);                                  // RECURSION CALL
+            searchId = Node::generateID(down_iso);
+            workNode = currNode;
+
+
+            workNode2 = workNode->attachNewNode(
+                                                Node::iso_to_str(down_iso),
+                                                searchId,
+                                                down_iso,
+                                                1,
+                                                1,
+                                                0);
+
+            createGraphFromHMatrix(roadMatrix,
+                                   graph,
+                                   workNode2,
+                                   workNode,
+                                   down_iso,
+                                   curr_iso_pos,
+                                   visited,
+                                   dbgLevel);                                  // RECURSION CALL
 
         }
     }
@@ -243,10 +276,25 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
             if(dbgLevel >= 2) { std::cout << ind  << "going left\n"; }
 
+            searchId = Node::generateID(left_iso);
             workNode = currNode;
-            workNode2 = workNode->attachNewNode(Node::iso_to_str(left_iso), searchId, left_iso, 1, 1, 0);
 
-            createGraphFromHMatrix(roadMatrix, graph, workNode2, workNode, left_iso, curr_iso_pos, visited, dbgLevel);                                  // RECURSION CALL
+            workNode2 = workNode->attachNewNode(
+                                                Node::iso_to_str(left_iso),
+                                                searchId,
+                                                left_iso,
+                                                1,
+                                                1,
+                                                0);
+
+            createGraphFromHMatrix(roadMatrix,
+                                   graph,
+                                   workNode2,
+                                   workNode,
+                                   left_iso,
+                                   curr_iso_pos,
+                                   visited,
+                                   dbgLevel);                                  // RECURSION CALL
 
         }
     }
@@ -254,6 +302,9 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
 
 
+    if(dbgLevel >=1 ) {
+            std::cout << ind << "}\n";
+    }
 
 
 
@@ -264,33 +315,124 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
 
 
+/// \brief Used by highlevel function createSlotPath()
+/// \param dijkstraResult A result from already executed Dijkstra
+/// \param slotpath Allocated, empty.
+/// TODO: This one consumes the result... can only be run once
+/// (--) TEST
+void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath)
+{
+
+
+    std::cout << "FIXME; CONSUMES THE RESULT\n";
+
+
+
+    int dbgLevel = 1;
+
+    if(dbgLevel >=1) { std::cout << "** createSlotPathFromDijkstraResult:\n"; }
+    if(dijkstraResult == nullptr) {
+        std::cout << cn << " ERROR dijkstraResult has nullptr in printPathFromDijkstra()\n";
+        return ;
+    }
+
+    Node *workNode;
+    HPos *workPos;
+    SlotPos *workSlotpos;
+
+    std::string str;
+
+    // Go over the result, create slotpositions for every node
+
+    while( ! (dijkstraResult->shortestPath.empty()) )
+    {
+
+
+        workNode = dijkstraResult->shortestPath.top();
+
+        // Get the iso_pos
+        workPos = workNode->getCopyOfIsoPos();
+
+        // Store away the old ones as relative positions
+        workPos->rel_iso_y = workPos->abs_iso_y;
+        workPos->rel_iso_x = workPos->abs_iso_x;
+
+        // Now adjust to full gamematrix by using roadnetworks offsets
+        workPos->abs_iso_y += min_isoYOffset;
+        workPos->abs_iso_x += min_isoXOffset;
+
+        workPos->gpix_y = Grid::convert_iso_to_gpix_y(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
+        workPos->gpix_x = Grid::convert_iso_to_gpix_x(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
 
 
 
 
-/// Used by TrafficManager and Bus to create the slot path from A to B for that bus
-///
+        if(dbgLevel >=1) {
+            workPos->dump("   ");
+        }
+
+
+        // Slot Pos
+        workSlotpos = new SlotPos(workPos);
+
+        workPos->transform_gpix_to_slotpos(workSlotpos, workPos);    // Make sure its in the middle of the block for now
+
+        slotpath->add(workSlotpos);
+
+        dijkstraResult->shortestPath.pop();
+
+    }
+
+
+    if(dbgLevel >=1) { std::cout << " createSlotPathFromDijkstraResult DONE ** "; }
+}
+
+
+
+
+
+
+/// \brief Used by TrafficManager and Bus to create the Slotpath from A to B for that bus
+/// \brief Includes the use of Dijkstra algorithm
+/// \param fromPos abs_iso_pos given
+/// \param toPos abs_iso_pos given
 /// (--) TEST!
-SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
+/// BUG: Undefined Behaviour - sometimes it crashes. Behaves weirdly. Something is off.
+///     Happened when start_iso_pos was randomiszed everytime
+/// Check ALL the pointers
+/// Check for nullptr returns
+/// Simplify
+
+SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos, int debugLevel )
 {
 
     SlotPath *slotpath = new SlotPath();
-    int dbgLevel = 1;
-
     std::string ind = "  ";
+
+
+
+    /// Error handling
+
+    if(fromPos == nullptr) {
+        std::cout << "ERROR " << cn << " fromPos is null in createSlotPath\n";
+        return nullptr;
+    }
+
+    if(toPos == nullptr) {
+        std::cout << "ERROR " << cn << " toPos is null in createSlotPath\n";
+        return nullptr;
+    }
+
     std::cout << ind << "\n\n** createSlotPath \n";
 
 
-
-    /// TODO: YOu have to break this up to a Function
-    /// --->  CR8
 
 
 
 
 
     ///
-    /// Make a Graph out of the RoadNetwork
+    /// Make a Graph out of the RoadNetwork     (wishlist: make this as own function)
     ///
 
     Graph *graph = new Graph("road_network_1");
@@ -304,11 +446,10 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 
 
 
-    // create the first road
+    /// Create the first node in the graph (find any road to start with)
 
-    std::cout << ind <<  "Please find the first position of the road! \n";
+    start_abs_iso_pos = fromPos->clone();   // for now use the fromPos
 
-    start_abs_iso_pos = new HPos(0, 0, USE_ISO);
     searchId = Node::generateID(start_abs_iso_pos);
 
     // add the first road to the graph , special!
@@ -328,19 +469,14 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
     // setup some objects...
     BinarySearchTree *visited = new BinarySearchTree();
 
-
-
     // ... so we can recursively walk the roadnetwork to get the coordinates for each road
-    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, start_abs_iso_pos, nullptr, visited, dbgLevel);
+    hMatrix->dump("  ");
+    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, start_abs_iso_pos, nullptr, visited, 2);
 
-
-    if(dbgLevel >=1 ) {
+    if(debugLevel >=1 ) {
         graph->dump(0, 1);
         std::cout << "\n\n";
     }
-
-
-
 
     std::cout << "\n\n" << ind << "NOW that we have a GRAPH do a DIJKSTRA run and see what we end up with \n";
 
@@ -354,116 +490,63 @@ SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
 
 
 
-    // Plussa på alla rel_positioner med min_abs_isoX och Y
-    // för att få riktiga koordinater sen i globala matrixen
-
-
-    std::cout << "Dont forget to adjkust to the global matrix\n";
-
-
-
-
 
     ///
     /// run Dijkstra
     ///
 
-    std::cout << "\n\nRunning Dijkstra 1st time:\n------------------------------\n";
+    std::cout << ind << "\n\nRunning Dijkstra 1st time:\n------------------------------\n";
 
 
     // Setup start and end positions for Dijkstra
 
-    graph->dump(0,0);
-
     Node *startNode = graph->findNode( Node::genIDfrom_rel_iso(fromPos), 0);
+    Node *endNode   = graph->findNode( Node::genIDfrom_rel_iso(toPos), 1);
 
-    toPos->dump();
-    Node *endNode   = graph->findNode ( Node::genIDfrom_rel_iso(toPos) , 1);
+
+    std::cout << "\n";
+    std::cout << ind << "FROM= \n";
+    startNode->dump(3);
+    std::cout << "\n";
+
+    std::cout << ind << "TO= \n";
     endNode->dump(3);
-
-
-
-
 
     if(startNode == nullptr || endNode == nullptr) {
         std::cout << "ERROR! Could not find the start or end node for Dijkstra\n";
         return nullptr;
     }
 
-    std::cout << "  * startNode.id=" << startNode->getId() << "\n";
-    std::cout << "  * endNode.id= " << endNode->getId() << "\n";
+    std::cout << ind << "  * startNode.id=" << startNode->getId() << "\n";
+    std::cout << ind << "  * endNode.id= " << endNode->getId() << "\n";
 
 
+    std::cout << ind << "\n\nrunDijkstra()\n";
+    std::cout << ind << "{\n";
     dijkstraResult = graph->runDijkstra(startNode, endNode, 2);
+    std::cout << ind << "}\n";
+
 
     if(dijkstraResult->shortestPath.empty()) {
         return nullptr;
     }
 
-    std::cout << "\n";
-    std::cout << "The shortest distance is=" << dijkstraResult->resultInt << "\n";
-    std::cout << "The path is: \n    ";
 
-    graph->printPathFromDijkstra(dijkstraResult);
+    std::cout << ind << " Loop the result and put every in a slotpos\n";
+    std::cout << ind << " Put those slotpos in slotpath\n\n";
 
-    std::cout << "\n";
+    createSlotPathFromDijkstraResult(dijkstraResult, slotpath);
 
 
+    std::cout << "\n\n";
 
-
-
-
+    slotpath->dump();
 
 
     std::cout << ind << "\ncreateSlotPath done ** \n";
 
-    return slotpath;
+     return slotpath;
 }
 
 
 
-/* HPOSDELETE
-Vector2f RoadNetwork::getRandomRoad_abs_iso_pos(int findNr)
-{
-
-    std::cout << "getRandomRoad abs iso pos\n------------\n";
-    this->dump("   ");
-
-
-    int YMAX = max_isoYOffset - min_isoYOffset;
-    int XMAX = max_isoXOffset - min_isoXOffset;
-
-    std::cout << "\n\nyMax=" << YMAX << ", xMax=" << XMAX << "\n";
-
-    Vector2f iso_pos = Vector2f();
-    iso_pos.y = -1;
-    iso_pos.x = -1;
-
-
-    int nr = 0;
-
-
-    for(int y = 0; y <= YMAX; y++) {
-        for(int x = 0; x <= XMAX; x++) {
-
-                std::cout << "y=" << y << ", x= " << x << "\n";
-
-            if(hMatrix->matrix[y][x] == 1)
-            {
-                std::cout << "=1\n";
-                iso_pos.y = min_isoYOffset + y;
-                iso_pos.x = min_isoXOffset + x;
-
-                if(nr == findNr) {
-                    return iso_pos;
-                } else {
-                    nr++;
-                }
-            }
-
-        }
-    }
-
-    return iso_pos;
-}
-*/

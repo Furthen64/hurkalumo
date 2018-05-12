@@ -66,7 +66,7 @@ public:
 
     /// Random Utilities
 
-    HPos *rand_iso_pos(HurkaMatrix *roadMatrix);       // HPOSTEST!
+    HPos *getRandomRoad_iso_pos(HurkaMatrix *roadMatrix);
     HPos *rand_iso_pos(int maxM, int maxN); // HPOSTEST!
     HPos *rand_abs_iso_pos(RoadNetwork *roadnet); // HPOSTEST!
 
@@ -75,6 +75,9 @@ public:
     Vector2f rand_abs_iso_pos(RoadNetwork *roadnet);*/
 
     HPos *get_next_pos();
+
+
+
 
 private:
 

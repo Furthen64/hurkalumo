@@ -252,8 +252,13 @@ void Node::dump(int indent)
 ///
 /// FIXME: Should be via Graph instead... you should call it from Graph::attachNewNode( and supply a BST *visitedNodes ) so you can
 /// search for the _id and see if it's already in the tree and yeah warn at least?
-///
-/// Return nullptr on error, otherwise the new node we created
+/// \param _name Just a identifier, not needed.
+/// \param _id The id of the node you're attaching.
+/// \param _iso_pos The HPos of the node in the gamematrix
+/// \param weight1 is for weight from current to new node
+/// \param weight2 is for weight from new node back to current
+/// \param debugLevel selfexplanatory
+/// \return nullptr on error, otherwise the new node we created
 // (--)
 // HPOSTEST:
 
@@ -656,3 +661,7 @@ int Node::connectNodes(Node *firstNode, Node *secondNode, int relDir, int weight
 
 
 
+HPos *Node::getCopyOfIsoPos()
+{
+    return iso_pos->clone();
+}

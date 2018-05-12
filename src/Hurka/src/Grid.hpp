@@ -119,14 +119,15 @@ static int convert_iso_to_gpix_x(int M, int N, int width, int height, int typeOf
     return xOffset + xStep;
 }
 
-// (-+)
-// Used for Blocks and other sprites. But not the Grid. Grid is special.
-// DOCS: see "GameMatrix_How_the_y_position_is_calculated.png"
-// N = along the right-down axis
-// M = along the left-down axis of the gameboard
-// width = width of the texture
-// height = height of the texture
+
+/// \param M = along the left-down axis of the gameboard
+/// \param N = along the right-down axis
+/// \param width = width of the texture
+/// \param height = height of the texture
+/// \param typeOfElement 0=GRID, 1=GAMEMATRIX, 2=BLOCK
+/// DOCS: see "GameMatrix_How_the_y_position_is_calculated.png"
 static int convert_iso_to_gpix_y(int M, int N, int width, int height, int typeOfElement)
+
 {
 
     std::string cn = "Grid.hpp";

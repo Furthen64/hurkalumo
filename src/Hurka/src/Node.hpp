@@ -20,13 +20,14 @@ enum NODE_DIR {
 // A very HEAVY class
 // Its use with the Dijkstra algorithm makes it so that we need to overload the "<" operator
 // in order to put it in a prio queue
-
+//
 // It also has some member labels for the algorithm to work (labels)
+//
+// It also contains HPos for positioning in the gamematrix
 class Node
 {
 public:
-    //Node(std::string _name, int _id, Vector2f _iso_pos);    // HPOSDELETE
-    Node(std::string _name, int _id, HPos *_iso_pos);    // HPOSDELETE
+    Node(std::string _name, int _id, HPos *_iso_pos);
 
 
     void createLink();
@@ -39,12 +40,13 @@ public:
 
     Node *attachNewNode(std::string , int , HPos *, int , int , int );
 
-    //Node *attachNewNode(std::string _name, int _id, Vector2f _iso_pos, int weight1, int weight2, int debugLevel); HPOSDELETE
 
     int getId();
     std::string getName();
     void resetForDijkstra();
     int connectNodes(Node *firstNode, Node *secondNode, int relDir, int weight1, int weight2, int debugLevel);
+
+    HPos *getCopyOfIsoPos();
 
 
 
@@ -66,8 +68,7 @@ public:
 
 
 
-    // Hur ska den hantera tal under 10000 ? såna där M=0
-    // 2018-03-20
+    // How should it handle id:s under 10000? where M=0?        // 2018-03-20
     // (--)
     static void idTo_iso_pos(int _id, int *y, int *x)
     {
@@ -82,7 +83,7 @@ public:
 
 
 
-
+    // (-+)
     static int genIDfrom_rel_iso(HPos *_hpos)
     {
         if(_hpos->rel_iso_y < 0) {
@@ -129,30 +130,13 @@ public:
         return sstm.str();
     }
 
-    /*
-    static int generateID(Vector2f iso_pos)
-    {
-        if(iso_pos.y < 0) {
-            std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
-            return -1;
-        }
 
-        if(iso_pos.x < 0) {
-            std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
-            return -1;
-        }
-
-        return iso_pos.y * 10000 + iso_pos.x;
-
-    }
-    */
 
 
 
 private:
     std::string name;
     int id;
-    //Vector2f iso_pos; //HPOSDELETE
     HPos *iso_pos;
     std::string cn = "Node.cpp";
 };

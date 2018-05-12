@@ -1,0 +1,227 @@
+
+
+
+IN this codeblock below I am trying out the Graph because I need a graph to run dijkstra
+
+Well the test im thinking of is...
+
+
+
+	make the start position, the first road, a random road in the roadnetwork
+
+That way you'll get to do Graph from different points
+Just run getRandomRoad_iso_pos() in a loop and do the graph mulitple times
+and test the graph to see that it looks the same 
+
+:D
+
+And maybe even run Dijkstra on it
+
+
+I KNOW ITS JUST A TEST but goddammit, it's good to test out code that will be used so often
+and built upon later on 
+
+
+
+
+
+
+/// \brief Used by TrafficManager and Bus to create the Slotpath from A to B for that bus
+/// \brief Includes the use of Dijkstra algorithm
+/// \param fromPos abs_iso_pos given
+/// \param toPos abs_iso_pos given
+/// (--) TEST!
+/// BUG: Undefined Behaviour - sometimes it crashes. Behaves weirdly. Something is off.
+
+/// Check ALL the pointers
+/// Check for nullptr returns
+/// Simplify
+
+SlotPath *RoadNetwork::createSlotPath(HPos *fromPos, HPos *toPos )
+{
+
+    // Error handling
+    if(fromPos == nullptr) {
+        std::cout << "ERROR " << cn << " fromPos is null in createSlotPath\n";
+        return nullptr;
+    }
+
+    if(toPos == nullptr) {
+        std::cout << "ERROR " << cn << " toPos is null in createSlotPath\n";
+        return nullptr;
+    }
+
+
+
+
+    SlotPath *slotpath = new SlotPath();
+    int dbgLevel = 1;
+
+    std::string ind = "  ";
+    std::cout << ind << "\n\n** createSlotPath \n";
+
+
+
+    /// Wishlist: break this up to a Function
+    /// --->  CR8
+
+
+
+
+
+    ///
+    /// Make a Graph out of the RoadNetwork
+    ///
+
+    Graph *graph = new Graph("road_network_1");
+    DijkstraResult *dijkstraResult = nullptr;
+
+    int searchId = -1;
+    HPos *start_abs_iso_pos = nullptr;
+
+
+
+
+
+
+    /// Create the first road
+
+    std::cout << ind <<  "Please find the first position of the road! \n";
+
+
+    std::cout << ind << "TESTING IF THIS FUNCTION WORKS, getRandomRoad_iso_pos:\n";
+
+    std::cout << ind << "{\n";
+    start_abs_iso_pos = RoadNetwork::getRandomRoad_iso_pos(hMatrix);
+    start_abs_iso_pos->dump(ind);
+    std::cout << ind << "}\n";
+
+    searchId = Node::generateID(start_abs_iso_pos);
+
+    // add the first road to the graph , special!
+    graph->addFirstNode(Node::iso_to_str(start_abs_iso_pos), searchId, start_abs_iso_pos);
+
+    // find the first road in the graph so we can connect more roads to it
+    Node *currNode = graph->findNode(searchId, 0);
+    if(currNode == nullptr) { std::cout << "ERROR " << cn << " with createSlotPath()\n"; return nullptr; }
+
+
+
+
+
+
+
+
+    // setup some objects...
+    BinarySearchTree *visited = new BinarySearchTree();
+
+    // ... so we can recursively walk the roadnetwork to get the coordinates for each road
+    hMatrix->dump("  ");
+    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, start_abs_iso_pos, nullptr, visited, 2);
+
+    if(dbgLevel >=1 ) {
+        graph->dump(0, 1);
+        std::cout << "\n\n";
+    }
+
+    std::cout << "\n\n" << ind << "NOW that we have a GRAPH do a DIJKSTRA run and see what we end up with \n";
+
+
+
+
+
+
+
+
+
+
+
+
+    ///
+    /// run Dijkstra
+    ///
+
+    std::cout << ind << "\n\nRunning Dijkstra 1st time:\n------------------------------\n";
+
+
+
+    /*
+    GAAH
+    det beter sig random...
+    undefined behaviour
+
+    ibland kraschar det
+    ibland funkar det
+
+    dijkstra gör fel också :<
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Setup start and end positions for Dijkstra
+
+    Node *startNode = graph->findNode( Node::genIDfrom_rel_iso(fromPos), 0);
+    Node *endNode   = graph->findNode( Node::genIDfrom_rel_iso(toPos), 1);
+
+
+    std::cout << "\n";
+    std::cout << ind << "FROM= \n";
+    startNode->dump(3);
+    std::cout << "\n";
+
+    std::cout << ind << "TO= \n";
+    endNode->dump(3);
+
+    if(startNode == nullptr || endNode == nullptr) {
+        std::cout << "ERROR! Could not find the start or end node for Dijkstra\n";
+        return nullptr;
+    }
+
+    std::cout << ind << "  * startNode.id=" << startNode->getId() << "\n";
+    std::cout << ind << "  * endNode.id= " << endNode->getId() << "\n";
+
+
+    std::cout << ind << "\n\nrunDijkstra()\n";
+    std::cout << ind << "{\n";
+    dijkstraResult = graph->runDijkstra(startNode, endNode, 2);
+    std::cout << ind << "}\n";
+
+
+    if(dijkstraResult->shortestPath.empty()) {
+        return nullptr;
+    }
+
+
+    std::cout << ind << " Loop the result and put every in a slotpos\n";
+    std::cout << ind << " Put those slotpos in slotpath\n\n";
+
+    createSlotPathFromDijkstraResult(dijkstraResult, slotpath);
+
+
+    std::cout << "\n\n";
+
+    slotpath->dump();
+
+
+    std::cout << ind << "\ncreateSlotPath done ** \n";
+
+     return slotpath;
+}
+

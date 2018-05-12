@@ -161,7 +161,7 @@ int Core::setup(int width, int height, std::string title)
 
 
     /// Plan a route for a Bus on a roadnetwork
-    trafficMgr->planForBusesOnRoadNetwork(0);
+    trafficMgr->planForBusesOnRoadNetwork();
 
 
     return 0;

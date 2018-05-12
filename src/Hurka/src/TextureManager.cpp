@@ -81,6 +81,12 @@ void TextureManager::loadTextures()
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_008.png");
     pushTexture("ROAD008", txt);
 
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_009.png");
+    pushTexture("ROAD009", txt);
+
+    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_010.png");
+    pushTexture("ROAD010", txt);
+
 
 
     // Trees
@@ -145,6 +151,8 @@ std::string TextureManager::getTextureNameByIndex(int nr)
         case 106: return "ROAD006";
         case 107: return "ROAD007";
         case 108: return "ROAD008";
+        case 109: return "ROAD009";
+        case 110: return "ROAD010";
 
         case 301: return "TREE001";
         case 302: return "TREE002";

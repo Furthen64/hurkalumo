@@ -2,6 +2,9 @@
 #define HPOS_H
 
 #include <iostream>
+
+
+class SlotPos;  // Forward declaration
 /*
     - Whoa !
 
@@ -64,6 +67,8 @@ public:
 
     HPos(int _y, int _x, int positionType);
     HPos();
+    void transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos);
+
 
     int abs_iso_y;
     int abs_iso_x;
@@ -73,7 +78,7 @@ public:
     int gpix_x;
 
     HPos *clone();
-    void dump();
+    void dump(std::string ind);
 
 
 

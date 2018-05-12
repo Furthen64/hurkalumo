@@ -5,12 +5,13 @@
 
 SlotPath::SlotPath()
 {
+    slotPositions = new std::list<SlotPos *>();
 }
 
-
-void SlotPath::drawAllSlots(sf::RenderWindow &rt, HPos *viewHPos)
+// (--) TEST
+void SlotPath::drawAllSlots(sf::RenderTarget &rt, HPos *viewHPos)
 {
-    for(std::list<SlotPos *>::iterator itAll = slotPositions.begin(); itAll != slotPositions.end(); ++itAll)
+    for(std::list<SlotPos *>::iterator itAll = slotPositions->begin(); itAll != slotPositions->end(); ++itAll)
     {
         (*itAll)->draw(rt, viewHPos);
     }
@@ -18,23 +19,80 @@ void SlotPath::drawAllSlots(sf::RenderWindow &rt, HPos *viewHPos)
 }
 
 
-
+// (--) TEST
 void SlotPath::add(SlotPos *slotpos)
 {
-
+    slotPositions->push_back(slotpos);
 }
 
 
-
+// (--) TEST
 void SlotPath::reset()
 {
-    slotPositions.clear();
+    slotPositions->clear();
 }
 
 
-
+// (--) TEST
 void SlotPath::dump()
 {
+    std::cout << "\n\nDumping slotpath:\n{";
+    SlotPos *slotpos;
+    int nr = 0;
+    for(std::list<SlotPos *>::iterator it = slotPositions->begin(); it != slotPositions->end(); ++it)
+    {
+
+        std::cout << "nr=" << nr << "\n";
+        slotpos = (*it);
+
+        slotpos->dump("   ");
+
+        nr++;
+    }
+
+    std::cout << "\n}\n";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

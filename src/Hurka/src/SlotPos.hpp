@@ -15,7 +15,7 @@ public:
     SlotPos(HPos *_hpos);
     HPos *hpos;
     void draw( sf::RenderTarget& rt, HPos *viewHPos);
-
+    void dump(std::string ind);
 
 private:
     int textureID;

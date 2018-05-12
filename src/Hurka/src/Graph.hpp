@@ -15,7 +15,6 @@
 #include "BinarySearchTree.hpp"
 
 
-
 struct graphNodeCompare
  {
    bool operator()(Node* l, Node* r)
@@ -41,7 +40,7 @@ public:
 
     // Seems to work just fine
     // (-+)
-    std::stack<Node *> *getShortestPathStack()
+    std::stack<Node *> *getCopyOfShortestPathStack()
     {
         // Copy the shortestpath to new stack
         std::stack<Node *> *retStack = new std::stack<Node *>();
@@ -83,7 +82,8 @@ public:
 
 
     /// Dumps the shortest path as an array with all the id's of the nodes
-    // (-+)
+    /// TEST
+    /// (--)
     void dumpShortestPath()
     {
         // Copy the shortestpath to shortestpath_memcpy
@@ -129,6 +129,17 @@ Graph now works
 2018-03-26
 
 
+How to use it:
+
+    addFirstNode() for the head of the graph
+    then you just use that head outside graph to add nodes to it like
+
+    graph->head->up->to = this new node ive created
+    graph->head->right->to = this other new node Ive created
+
+    Graph has a very OPEN datastructure in the sense that you can poke around with it from the outside
+
+
 You can put nodes in there and build a network,
 Run the Dijkstra algorithm, get results of the fastest path from A to B
 
@@ -154,8 +165,7 @@ public:
     void dump(int debugLevel, int dumpNodes);
     void test();
     Node *getFirstNode();
-        //void addFirstNode(std::string _name, int _id, Vector2f _iso_pos);   // HPOSDELETE
-        void addFirstNode(std::string _name, int _id, HPos *_iso_pos);
+    void addFirstNode(std::string _name, int _id, HPos *_iso_pos);
     Node *findNode(int searchId, int debugLevel);
     DijkstraResult *runDijkstra(Node *startNode, Node *endNode, int debugLevel);
     void printPathFromDijkstra(DijkstraResult *dijkstraResult);
@@ -172,6 +182,7 @@ private:
 
     std::string name;
     std::string cn = "Graph.cpp";
+
 
 
 };

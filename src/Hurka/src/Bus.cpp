@@ -231,8 +231,9 @@ void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
 {
 
     if(drawSlotPositions) {
-
+        slotPath->drawAllSlots(rt, viewHPos);
     }
+
 
     int x = pos->gpix_x + viewHPos->gpix_x;
     int y = pos->gpix_y + viewHPos->gpix_y;
@@ -351,7 +352,7 @@ void Bus::setRandStartingPosition(HurkaMatrix *roadMatrix)
 {
 
     // First get a random position on the road for iso_pos
-    std::cout << "ERROR CONVERT TO HPOS!\n";
+    std::cout << "ERROR " << cn << " CONVERT TO HPOS!\n";
 
 
 
@@ -380,55 +381,6 @@ HPos *Bus::rand_iso_pos(int maxM, int maxN)
 
     HPos *_iso_pos = new HPos(m,n, USE_ISO);
     return _iso_pos;
-}
-
-
-
-/// \brief Given a roadMatrix (matrix with 1s for roads, 0s else) find a random position where a road is
-/// \param roadMatrix Allocated HurkaMatrix object with set values
-/// \return A random position for a road
-/// (--)
-// HPOSTEST!
-HPos *Bus::rand_iso_pos(HurkaMatrix *roadMatrix)
-{
-    if(roadMatrix->rows > 10000 || roadMatrix->cols > 10000) {
-        std::cout << "ERROR" << cn << " too big of a roadmatrix! " << roadMatrix->rows << ", " << roadMatrix->cols << "\n";
-        return nullptr;
-    }
-
-    bool found = false;
-    int allowedAttempts = 500;
-    int currAttempt = 0;
-
-    HPos *newPos = new HPos(0,0,USE_ISO);
-
-    int r;
-    int c;
-
-    while(found == false && currAttempt < allowedAttempts) {
-
-        r = randBetween(0, roadMatrix->rows-1);
-        c = randBetween(0, roadMatrix->cols-1);
-
-        if(roadMatrix->matrix[r][c] == 1) {
-
-            newPos->abs_iso_y = r;
-            newPos->abs_iso_x = c;
-
-            found = true;
-
-        }
-
-        currAttempt++;
-    }
-
-    if(found == false) {
-
-        std::cout << "Could not find random bus position\n";
-        return nullptr;
-    }
-
-    return newPos;
 }
 
 

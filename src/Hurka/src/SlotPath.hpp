@@ -9,13 +9,13 @@ class SlotPath
 public:
     SlotPath();
 
-    void drawAllSlots(sf::RenderWindow &rt, HPos *viewHPos);
+    void drawAllSlots(sf::RenderTarget &rt, HPos *viewHPos);
     void add(SlotPos *slotpos);
     void reset();
     void dump();
 
 private:
-    std::list<SlotPos *> slotPositions;
+    std::list<SlotPos *> *slotPositions = nullptr;     // Is this really the best datastructure for this...? I need to use it like an Array
 
 
 

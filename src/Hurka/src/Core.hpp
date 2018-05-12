@@ -68,12 +68,18 @@ private:
 
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
     std::string cn = "Core.cpp";
-    std::string startmapStr = "data/bus_traffic_test.txt";
+    //std::string startmapStr = "data/roadnetwork_test.txt";
+    //std::string startmapStr = "data/bus_traffic_test.txt";
+    std::string startmapStr = "data/dijkstra_test.txt";
+    //std::string startmapStr = "data/bus_traffic_test.txt";
+    //std::string startmapStr = "data/bus_traffic_test.txt";
+    //std::string startmapStr = "data/bus_traffic_test.txt";
+
 
 
     int mouseSensitivity = 4*ceil(100/lockFPS_n); // Pan speed in percentage
 
-    HPos *viewHPos;                  //HPOSTEST
+    HPos *viewHPos;
     int startViewPosY = -331;
     int startViewPosX = -2178;
 

@@ -24,7 +24,7 @@ void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
 
         for(std::list<Bus *>::iterator busIter=currRoadnet->buslist->begin(); busIter != currRoadnet->buslist->end(); ++busIter)
         {
-            (*busIter)->draw(rt, viewHPos, false);
+            (*busIter)->draw(rt, viewHPos, true);
         }
     }
 
@@ -82,7 +82,7 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
 
     if(debugLevel >= 2) {
         std::cout << ind << "follow()    currpos=";
-        curr_iso_pos->dump();
+        curr_iso_pos->dump(ind);
     }
 
     if(debugLevel >= 2) {
@@ -850,8 +850,14 @@ void TrafficManager::updateAll(HPos *viewHPos)
 ///
 /// Individual
 ///
-void addRoadNetwork() {}
 
+
+void addRoadNetwork()
+{
+}
+
+
+// (--) Make
 DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos) {
     std::cout << "NOT CODED YET             Given a busid , find the bus in the buslist and run dijkstra on A->B, \n";
     return nullptr;
@@ -859,28 +865,47 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 
 
 
-/// (--) TEST!
-void TrafficManager::planForBusesOnRoadNetwork(int roadnetId)
-{
 
+
+/// \brief Makes plans for how all the buses should move by iterating the roadNetworks datastructures and finding all the buses.
+/// (---) TEST
+void TrafficManager::planForBusesOnRoadNetwork()
+{
 
 
     // Run dijkstra on all buses, do traffic planning, create SlotPath
 
 
     std::cout << "\n** planForBusesOnRoadNetwork:\n";
+    std::string ind = "  ";
 
 
     RoadNetwork *roadnet = nullptr;
     Bus *bus = nullptr;
     SlotPath *slotpath;
+    HPos *iso_pos_A = nullptr;
+    HPos *iso_pos_B = nullptr;
+
+    if(roadNetworks->size() <= 0) {
+        std::cout << "ERROR " << cn << " there are no roadnetworks to work with.\n";
+        return ;
+    }
+
+
+    /// Loop all the RoadNetworks
 
     for(std::list<RoadNetwork *>::iterator itRn = roadNetworks->begin(); itRn != roadNetworks->end(); ++itRn)
     {
         roadnet = (*itRn);
 
-        roadnet->dump("   ");
+        if(roadnet == nullptr) {
+            std::cout << "ERROR " << cn << " roadnet is null in planForBusesOnRoadNetwork when iterating roadNetworks\n";
+            return ;
+        }
 
+
+
+        /// Loop all the RoadNetwork's Buses
 
         for(std::list<Bus *>::iterator itBus = roadnet->buslist->begin(); itBus != roadnet->buslist->end(); ++itBus)
         {
@@ -888,20 +913,44 @@ void TrafficManager::planForBusesOnRoadNetwork(int roadnetId)
 
             bus = (*itBus);
 
-            // Needs something to go on... Like a Bus Station , Start position End Position, but now?
-            // Just take a random position
+            if(bus == nullptr) {
+                std::cout << "ERROR " << cn << " one of the buses in the roadnet's buslist is nullptr.\n";
+                return ;
+            }
 
-            HPos *iso_pos_A  = roadnet->getRandomRoad_iso(0);
-            std::cout << "\nfromPos:\n";
-            iso_pos_A->dump();
 
-            HPos *iso_pos_B  = roadnet->getRandomRoad_iso(4);
-            std::cout << "\ntoPos:\n";
-            iso_pos_B->dump();
 
-            slotpath = roadnet->createSlotPath(iso_pos_A, iso_pos_B);
+
+
+            /// Set A to B positions
+
+            // Wishlist: Needs something sensible to go on for start and end position ...
+            // Like a Bus Station
+
+            std::cout << ind << "note: Hardcoded roadnet->getNrRoad_iso(0) and roadnet->getNrRoad_iso(5) \n";
+
+            iso_pos_A  = roadnet->getNrRoad_iso(0);
+
+            if(iso_pos_A == nullptr) {
+                std::cout << "ERROR " << cn << " could not set start position\n";
+                return ;
+            }
+
+            iso_pos_B  = roadnet->getNrRoad_iso(5);
+
+            if(iso_pos_B == nullptr) {
+                std::cout << "ERROR " << cn << " could not set end position\n";
+                return ;
+            }
+
+
+
+            /// Run Dijkstra to generate the path
+            slotpath = roadnet->createSlotPath(iso_pos_A, iso_pos_B, 2);
 
             bus->setSlotPath(slotpath);
+
+
 
         }
     }
@@ -924,11 +973,16 @@ void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
 
 
 
-// Wishlist: better finding of a particular roadnetwork
-// (--) Good enough for alpha
+
+/// \brief adds a bus to the roadnetwork you search for
+/// \param _bus Allocated bus
+/// \param _roadnetId Find nr "roadnetId" of all the roadnets, good enough for alpha-0.1
+/// Wishlist: better finding of a particular roadnetwork
+/// (--)
 void TrafficManager::addBus(Bus *_bus, int roadnetId)
 {
     std::cout << "Adding bus to trafficmanager\n";
+
     // iterate over the roadnets and find a roadnet
     RoadNetwork *currNet = nullptr;
 
@@ -958,6 +1012,9 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
 
     // Figure out from- and to positions
+/*
+
+This is what dijkstra does, or what TrafficManager:planForBuses do
 
     HPos *fromPos = currNet->getRandomRoad_iso(0);
     HPos *toPos   = currNet->getRandomRoad_iso(5);
@@ -965,7 +1022,7 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
     _bus->set_pos_on_abs_iso(fromPos);
     _bus->set_nextPos_on_abs_iso(toPos);
-
+*/
 /*
 
 

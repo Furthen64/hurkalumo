@@ -1,8 +1,10 @@
 #include "HPos.hpp"
+#include "SlotPos.hpp"  // because of Forward declaration I have to include this hpp in the .cpp file
 
 /// @param _y Vertical positioning, or on the isometric board= M the sloping down and left.
 /// @param _x Horizontal positioning, or on the isometric board= N the sloping down and right
 /// @param positionType USE_ISO or USE_GPIX , choose what values to store away.
+/// (++)
 HPos::HPos(int _y, int _x, int positionType)
 {
     if(positionType == USE_ISO) {
@@ -26,6 +28,7 @@ HPos::HPos(int _y, int _x, int positionType)
 }
 
 
+// (++)
 HPos::HPos()
 {
     abs_iso_y = 0;
@@ -34,6 +37,16 @@ HPos::HPos()
     rel_iso_x = 0;
     gpix_y = 0;
     gpix_y = 0;
+}
+
+
+// Used by roadnetwork.cpp in createSlotPathFromDijkstraResult
+// Makes a slotpos appear in the middle of an isometric tile/block
+// (-+)
+void HPos::transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos)
+{
+    slotpos->hpos->gpix_y += 12;
+    slotpos->hpos->gpix_x += 10;
 }
 
 
@@ -52,11 +65,13 @@ HPos *HPos::clone()
 }
 
 
-void HPos::dump()
+void HPos::dump(std::string ind)
 {
-    std::cout << "Dumping HPos:\n";
-    std::cout << " abs_iso   y=" << abs_iso_y << ", x=" << abs_iso_x << "\n";
-    std::cout << " rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
-    std::cout << " gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
+    std::cout << ind << "Dumping HPos:\n";
+    std::cout << ind << "{\n";
+    std::cout << ind << " abs_iso   y=" << abs_iso_y << ", x=" << abs_iso_x << "\n";
+    std::cout << ind << " rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
+    std::cout << ind << " gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
+    std::cout << ind << "}\n";
 
 }
