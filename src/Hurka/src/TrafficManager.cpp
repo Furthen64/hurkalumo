@@ -1,6 +1,8 @@
 #include "TrafficManager.hpp"
 
 
+
+// (++)
 TrafficManager::TrafficManager()
 {
     roadNetworks = new std::list<RoadNetwork *>();
@@ -12,7 +14,6 @@ TrafficManager::TrafficManager()
 
 
 // (-+) Works with at least One bus on One roadnet
-//
 void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
 {
     RoadNetwork *currRoadnet = nullptr;
@@ -47,19 +48,6 @@ void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /// Follows connected 1:s in the fullRoadMatrix and puts 1:s in newMatrix
 ///
 /// @param fullRoadMatrix      Already allocated HurkaMatrix, A matrix with 1:s where the road sprites are, 0:s everywhere else
@@ -69,6 +57,7 @@ void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
 /// @param visited             BinarySearchTree already allocated, empty on entry. Will be filled when function returns.
 ///
 /// (-+) Worked once
+/// Might be buggy, look at CR5 bug we had... um and look at the function createSlotpath
 /// RECURSIVE
 void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
                             HurkaMatrix *newMatrix,
@@ -198,81 +187,6 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
 }
 
 
-/*
-// HPOSDELETE:
-
-void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos,  Vector2f *max_iso_pos,  BinarySearchTree *visited, int debugLevel)
-{
-    std::string ind = "      ";
-
-    if(debugLevel >= 2) {
-        std::cout << ind << "follow()    currpos=";
-        dumpPosition(curr_iso_pos);
-    }
-
-    if(debugLevel >= 2) {
-        std::cout <<  "\n";
-    }
-
-
-
-
-    /// Have we been here?
-    int searchId = Node::generateID(curr_iso_pos);
-    if(visited->findVal(searchId,0) != -1 ) {
-        return ;                                                                                 // END RECURSION
-    }
-
-
-
-    /// Setup objects
-
-
-    Vector2f up_iso = curr_iso_pos;
-    up_iso.y -= 1;
-
-    Vector2f right_iso = curr_iso_pos;
-    right_iso.x += 1;
-
-    Vector2f down_iso = curr_iso_pos;
-    down_iso.y += 1;
-
-    Vector2f left_iso = curr_iso_pos;
-    left_iso.x -= 1;
-
-
-
-    /// Update objects
-
-    // Put a "1" where we are at the moment
-    newMatrix->matrix[(int)curr_iso_pos.y][(int)curr_iso_pos.x] = 1;
-
-    // Add to visited
-    visited->add(searchId,debugLevel);
-
-
-    // Update the limits
-    if(min_iso_pos->y > curr_iso_pos.y) {
-        // new minimum! Top road
-        min_iso_pos->y = curr_iso_pos.y;
-    }
-
-    if(min_iso_pos->x > curr_iso_pos.x) {
-        // new minimum! left road
-        min_iso_pos->x = curr_iso_pos.x;
-
-    }
-
-
-    if(max_iso_pos->x < curr_iso_pos.x) {
-        // new max! right road
-        max_iso_pos->x = curr_iso_pos.x;
-    }
-
-    if(max_iso_pos->y < curr_iso_pos.y) {
-        // new max! down road
-        max_iso_pos->y = curr_iso_pos.y;
-    }
 
 
 
@@ -282,65 +196,21 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix,
 
 
 
-    /// Go up
-    if(up_iso.y >= 0) { // Not hit the wall yet?
-        if(fullRoadMatrix->matrix[(int)up_iso.y][(int)up_iso.x] == 1) { // is it a road?
-                if(debugLevel >= 2) { std::cout << ind << "going up\n"; }
-            follow(fullRoadMatrix, newMatrix, up_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                                 // RECURSION CALL
-        }
-    }
 
 
-    /// Go right
-    if(right_iso.x <= (fullRoadMatrix->cols-1)) {
-        if(fullRoadMatrix->matrix[(int)right_iso.y][(int)right_iso.x] == 1) {
-                if(debugLevel >= 2) { std::cout << ind << "going right\n";}
-            follow(fullRoadMatrix, newMatrix, right_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                              // RECURSION CALL
-        }
-    }
-
-
-    /// Go down
-    if(down_iso.y <= (fullRoadMatrix->rows-1)) {
-        if(fullRoadMatrix->matrix[(int)down_iso.y][(int)down_iso.x] == 1) {
-            if(debugLevel >= 2) { std::cout << ind  << "going down\n"; }
-            follow(fullRoadMatrix, newMatrix, down_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                               // RECURSION CALL
-        }
-    }
-
-
-
-    /// Go left
-    if(left_iso.x >= 0) {
-        if(fullRoadMatrix->matrix[(int)left_iso.y][(int)left_iso.x] == 1) {
-            if(debugLevel >= 2) { std::cout << ind  << "going left\n"; }
-            follow(fullRoadMatrix, newMatrix, left_iso, min_iso_pos, max_iso_pos, visited, debugLevel);                               // RECURSION CALL
-        }
-    }
-
-
-                                                                                                // END RECURSION
-}
-*/
-
-
-
-
-/// Calls a recursive function that walks through the matrix, following the 1:s
-///
-/// wishlist: Makeover! Minimilize by using a RoadNetwork *pointer instead of the individual parrts  (newMatrix, min_iso, max_iso...)
-///
+// Calls a recursive function that walks through the matrix, following the 1:s
+//
+// wishlist: Makeover! Minimilize by using a RoadNetwork *pointer instead of the individual parts  (newMatrix, min_iso, max_iso...)
+//
 /// @param fullRoadMatrix  A matrix with all the roads as 1:s, anything else as 0:s
 /// @param curr_iso_pos    The position of which to start following the 1:s
 /// @param min_iso_pos     Minimum x and y limits
 /// @param max_iso_pos     Maximum x and y limits
 /// @param visited         used internally, just supply a new() one
 /// @param debuglevel      Obvious
-/// (--)
 
-
-/// HPOSTEST:
-
+// test:    Worked once
+// (-+)
 RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
                                                HPos *curr_iso_pos,
                                                HPos *min_iso_pos,
@@ -648,8 +518,13 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 
 
 /// \brief Makes plans for how all the buses should move by iterating the roadNetworks datastructures and finding all the buses.
-/// (---) TEST
-void TrafficManager::planForBusesOnRoadNetwork()
+
+// Testing:
+//          (2018-05-13) "dijkstra_test_1.txt"                     Works!
+//          (2018-05-13) "dijkstra_test_2.txt"                      Works! alpha-0.6
+//
+// (--+)
+void TrafficManager::planForBusesOnRoadNetwork(int debugLevel)
 {
     std::string ind = "  ";
     RoadNetwork *roadnet = nullptr;
@@ -711,7 +586,8 @@ void TrafficManager::planForBusesOnRoadNetwork()
             // Wishlist: Needs something sensible to go on for start and end position ...
             // Like a Bus Station
 
-            std::cout << ind << "note: Hardcoded roadnet->getNrRoad_iso(0) and roadnet->getNrRoad_iso(5) \n";
+
+            std::cout << ind << "note: Hardcoded A to B \n";
 
             abs_iso_pos_A  = roadnet->getNrRoad_iso(0);
 
@@ -742,7 +618,7 @@ void TrafficManager::planForBusesOnRoadNetwork()
 
             /// Run Dijkstra to generate the path
 
-            slotpath = roadnet->createSlotPath(rel_iso_pos_A, rel_iso_pos_B, 2);
+            slotpath = roadnet->createSlotPath(rel_iso_pos_A, rel_iso_pos_B, debugLevel);
 
             bus->setSlotPath(slotpath);
 

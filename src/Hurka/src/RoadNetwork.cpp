@@ -111,7 +111,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
         return nullptr;
     }
 
-    std::cout << ind << "\n\n** createSlotPath \n";
+    if(debugLevel >=1) { std::cout << ind << "\n\n** createSlotPath \n";}
 
 
 
@@ -156,7 +156,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
     /// Create a Graph
 
-    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, from_rel_iso_pos->clone(), nullptr, visited, 2);
+    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, from_rel_iso_pos->clone(), nullptr, visited, debugLevel);
 
     if(debugLevel >=1 ) {
         graph->dump(0, 1);
@@ -164,7 +164,9 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
     }
 
-    std::cout << "\n\n" << ind << "NOW that we have a GRAPH do a DIJKSTRA run and see what we end up with \n";
+    if(debugLevel >=1) {
+       std::cout << "\n\n" << ind << "-----------\n" << ind << "NOW that we have a GRAPH do a DIJKSTRA run and see what we end up with \n";
+    }
 
 
 
@@ -181,28 +183,31 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     /// run Dijkstra
     ///
 
-    std::cout << ind << "\n\nRunning Dijkstra 1st time:\n------------------------------\n";
+    if(debugLevel >=1) {
+        std::cout << ind << "\n\nRunning Dijkstra 1st time:\n" << ind << "------------------------------\n";
+    }
 
 
-    // Setup start and end positions for Dijkstra
+
+
+
+
+
+    /// Setup start and end positions
 
     Node *startNode = graph->findNode( Node::genIDfrom_rel_iso(from_rel_iso_pos), 0);
     Node *endNode   = graph->findNode( Node::genIDfrom_rel_iso(to_rel_iso_pos), 0);
 
+    if(debugLevel >=1) {
+        std::cout << "\n" << ind << "START= \n";
+        startNode->dump(3);
+        std::cout << ind << "  * startNode.id=" << startNode->getId() << "\n";
 
 
-
-
-
-
-    std::cout << "\n" << ind << "START= \n";
-    startNode->dump(3);
-    std::cout << ind << "  * startNode.id=" << startNode->getId() << "\n";
-
-
-    std::cout << "\n\n" << ind << "END= \n";
-    endNode->dump(3);
-    std::cout << ind << "  * endNode.id= " << endNode->getId() << "\n";
+        std::cout << "\n\n" << ind << "END= \n";
+        endNode->dump(3);
+        std::cout << ind << "  * endNode.id= " << endNode->getId() << "\n";
+    }
 
     if(startNode == nullptr || endNode == nullptr) {
         std::cout << "ERROR! Could not find the start or end node for Dijkstra\n";
@@ -211,31 +216,47 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
 
-    std::cout << ind << "\n\nrunDijkstra()\n";
-    std::cout << ind << "{\n";
-    dijkstraResult = graph->runDijkstra(startNode, endNode, 2);
-    std::cout << ind << "}\n";
 
+
+
+
+
+    /// Do the Dijkstra!
+
+    if(debugLevel >=1 ) {
+        std::cout << ind << "\n\nrunDijkstra()\n";
+        std::cout << ind << "{\n";
+    }
+
+    dijkstraResult = graph->runDijkstra(startNode, endNode, debugLevel);
+
+    if(debugLevel >=1) {
+        std::cout << ind << "}\n";
+    }
+
+
+
+
+    /// Handle the Result
 
     if(dijkstraResult->shortestPath.empty()) {
         return nullptr;
     }
-
-
-    std::cout << ind << " Loop the result and put every in a slotpos\n";
-    std::cout << ind << " Put those slotpos in slotpath\n\n";
+    if(debugLevel >=1) {
+        std::cout << ind << " Loop the result and put every in a slotpos\n";
+        std::cout << ind << " Put those slotpos in slotpath\n\n";
+    }
 
     createSlotPathFromDijkstraResult(dijkstraResult, slotpath);
 
 
-    std::cout << "\n\n";
-
+    if(debugLevel >=1) { std::cout << "\n\n"; }
     if(debugLevel >=2) {
         slotpath->dump();
     }
 
 
-    std::cout << ind << "\ncreateSlotPath done ** \n";
+    if(debugLevel >=1) {std::cout << ind << "\ncreateSlotPath done ** \n"; }
 
     return slotpath;
 }
@@ -260,7 +281,8 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 // BUG 2018-05-13
 // It only runs attachNewNode , so when an old node is found , a new node is created.
 // Like in dijkstra_test_1.txt where the road loops in on itself
-
+//
+// TESTING you could do a looksi loo and see if all the up down left right blocks look the same.. its been heavily modified.
 void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                                          Graph *graph,
                                          Node *currNode,
@@ -271,10 +293,8 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                                          int dbgLevel)
 {
 
-    currNode->get_rel_iso_pos()->dump("  ");
-
     // This is a Copy from TrafficManager's "follow()" function
-    // Maybe that also suffers this bug 2018-05-13?
+    // Maybe that also suffers this bug CR5 2018-05-13?
 
 
 
@@ -360,7 +380,7 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
 
 
-    std::cout << "TEST the following.. not sure it works... please test it with multiple dijkstra_test_#.txt and also with different dijkstra A to B \n";
+    if(dbgLevel >=1) { std::cout << "TEST the following.. not sure it works... please test it with multiple dijkstra_test_#.txt and also with different dijkstra A to B \n";}
 
     /// Go up
 
@@ -380,12 +400,6 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
             if(visited->findVal(searchId,0) != -1 ) {
 
                 // YES - run attachNode
-                std::cout << "searchId=" << searchId << " already exists, doing attachNodeUp()\n";
-
-
-
-                    std::cout << "DONT FORGET, all of the up down left should have this!!\n";
-
 
                 // Find it in the graph:
 
@@ -402,7 +416,6 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
             } else {
 
                 // NO - we have to run attachNewNode
-                std::cout << "searchId=" << searchId << " did NOT exist, doing attachNewNode()\n";
 
                 workNode2 = workNode->attachNewNode(Node::rel_iso_to_str(up_iso),
                                                     searchId,
@@ -611,16 +624,12 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 /// \param dijkstraResult A result from already executed Dijkstra
 /// \param slotpath Allocated, empty.
 /// TODO: This one consumes the result... can only be run once
-/// (--) TEST
+/// (-+)
 void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath)
 {
 
 
-
-
-
-
-    int dbgLevel = 1;
+    int dbgLevel = 0;
 
     if(dbgLevel >=1) { std::cout << "** createSlotPathFromDijkstraResult:\n"; }
 

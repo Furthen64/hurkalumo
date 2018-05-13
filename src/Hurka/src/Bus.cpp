@@ -117,15 +117,11 @@ void Bus::update_all_position_vars_on_gpix()
 
 // Wishlist: Takes in the roadnetwork the bus is on,
 //           So whenever the bus needs to move to a new road it can use the correct offsets for that particular roadnetwork
-
 //    use slotpath
-
 // Based on what happened in setNext_pix_pos , we need to move towards that next pixel position
 // (--)
 void Bus::gameUpdate(RoadNetwork *roadnet)
 {
-    int debugLevel = 0;
-
 
     //make the bus use the slotpath it now has
     SlotPos *workPos;
@@ -407,4 +403,17 @@ void Bus::dump(HPos *viewHPos)
 HPos *Bus::get_next_pos()
 {
     return nextPos;
+}
+
+
+/// \brief returns pointer to HPos that describes where the Bus is right now. Warning: internal pointer!
+// (--)
+HPos *Bus::getNowPos()
+{
+    if(slotPath->nowPos != nullptr) {
+        return slotPath->nowPos->hpos;
+    }
+
+
+    return nullptr;
 }

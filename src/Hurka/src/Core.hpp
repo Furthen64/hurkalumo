@@ -59,19 +59,19 @@ public:
 
 private:
 
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 10;
+    int lockFPS_n = 1;
 
-    std::string windowTitle = "HurkaLumo editor alpha-0.1";
+    std::string windowTitle = "HurkaLumo editor alpha-0.6";
     std::string cn = "Core.cpp";
     //std::string startmapStr = "data/roadnetwork_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
-    std::string startmapStr = "data/dijkstra_test_1.txt";
-    //std::string startmapStr = "data/dijkstra_test_2.txt";
+    //std::string startmapStr = "data/dijkstra_test_1.txt";
+    std::string startmapStr = "data/dijkstra_test_2.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";

@@ -9,6 +9,10 @@
 
 		Make sure the Graph is constructed as you'd like it to be.
 
+		One time it turned out it was the Graph that wasnt created correctly..
+		should be a good time to create a rendered picture of the graph 
+		makes for ease of debugging?
+
 
 3rd		Change the graph around , see if it works sometimes or all the times
 		Maybe its a matter of how the graph is

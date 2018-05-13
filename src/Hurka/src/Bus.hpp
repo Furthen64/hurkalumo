@@ -41,6 +41,8 @@ public:
 
     /// Position
 
+    HPos *getNowPos();
+
     void update_all_position_vars_on_gpix();
     void update_all_position_vars_on_abs_iso();
     void update_all_nextPos_vars_on_abs_iso();

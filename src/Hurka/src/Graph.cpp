@@ -409,10 +409,6 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     std::string ind3 = "           ";
     std::string ind4 = "              ";
 
-
-    startNode->down->to->dump(3);
-
-
     int steps = 0;
     int maxSteps = 800;
     int done = false;
@@ -611,9 +607,6 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
         } else if(debugLevel >=1) {
             std::cout << ind2 << "Look around current node, update temp labels\n";
         }
-
-
-        workNode->dump(3);
 
 
         if(workNode->up->to != nullptr) {

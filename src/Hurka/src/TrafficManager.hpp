@@ -82,7 +82,7 @@ public:
 
     DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
 
-    void planForBusesOnRoadNetwork();
+    void planForBusesOnRoadNetwork(int debugLevel);
 
     void updateBusesOnRoadNetwork(int busId, int roadnetId);
 

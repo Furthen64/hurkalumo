@@ -103,7 +103,7 @@ int Core::loadResources(std::string mapName)
     /// Read the map
     std::cout << "Loading map \"" << mapName << "\"\n";
 
-    hmap = fmgr->readRegularFile(mapName,2);
+    hmap = fmgr->readRegularFile(mapName,debugLevel);
     if(hmap->mapName == "empty") { std::cout << "ERROR Could not read map " << mapName << ", exiting!\n"; return -1;  }
 
 
@@ -161,7 +161,7 @@ int Core::setup(int width, int height, std::string title)
 
 
     /// Plan a route for a Bus on a roadnetwork
-    trafficMgr->planForBusesOnRoadNetwork();
+    trafficMgr->planForBusesOnRoadNetwork(debugLevel);
 
 
     return 0;
@@ -415,7 +415,12 @@ void Core::run()
 
 
         //grid->setVisible(bus->get_next_iso_pos());
-        grid->setVisible(bus->get_next_pos());
+
+        HPos *busNowPos = bus->getNowPos();
+
+        if(busNowPos != nullptr) {
+            grid->setVisible(busNowPos);
+        }
 
 
 
