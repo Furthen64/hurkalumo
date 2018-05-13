@@ -4,18 +4,16 @@
 
 
 
-/// HPOSTEST:
-/// @param _name     (not needed, Unique name, makes debugging easier!)
-/// @param _id       Unique ID, used by higher up functions
-/// @param _iso_pos  Position on the gameboard
-///
+
+/// \param _name     (not needed, Unique name, makes debugging easier!)
+/// \param _id       Unique ID, used by higher up functions
+/// \param _rel_iso_pos  relative position set
 /// (--)
-Node::Node(std::string _name, int _id, HPos *_iso_pos)
+Node::Node(std::string _name, int _id, HPos *_rel_iso_pos)
 {
-    std::cout << _name << "yes\n";
     name = _name;
     id = _id;
-    iso_pos = _iso_pos;
+    rel_iso_pos = _rel_iso_pos;
 
     up = new Link();
     up->weight = 1;
@@ -31,31 +29,14 @@ Node::Node(std::string _name, int _id, HPos *_iso_pos)
 }
 
 
-
-
-
-/*
-HPOSDELETE:
-Node::Node(std::string _name, int _id, Vector2f _iso_pos)
+HPos *Node::get_rel_iso_pos()
 {
-    name = _name;
-    id = _id;
-    iso_pos = _iso_pos;
-
-    up = new Link();
-    up->weight = 1;
-    right = new Link();
-    right->weight = 1;
-    down = new Link();
-    down->weight = 1;
-    left = new Link();
-    left->weight = 1;
-
-
-    resetForDijkstra();
+    return rel_iso_pos;
 }
 
-*/
+
+
+
 
 
 // if  INT_MAX , return "INF"
@@ -254,7 +235,7 @@ void Node::dump(int indent)
 /// search for the _id and see if it's already in the tree and yeah warn at least?
 /// \param _name Just a identifier, not needed.
 /// \param _id The id of the node you're attaching.
-/// \param _iso_pos The HPos of the node in the gamematrix
+/// \param rel_iso_pos The HPos of the node with only relative values
 /// \param weight1 is for weight from current to new node
 /// \param weight2 is for weight from new node back to current
 /// \param debugLevel selfexplanatory
@@ -262,7 +243,7 @@ void Node::dump(int indent)
 // (--)
 // HPOSTEST:
 
-Node *Node::attachNewNode(std::string _name, int _id, HPos *_iso_pos, int weight1, int weight2, int debugLevel)
+Node *Node::attachNewNode(std::string _name, int _id, HPos *_rel_iso_pos, int weight1, int weight2, int debugLevel)
 {
 
     int result = 0;
@@ -283,13 +264,13 @@ Node *Node::attachNewNode(std::string _name, int _id, HPos *_iso_pos, int weight
 
 
 
-    Node *newNode = new Node(_name, _id, _iso_pos);
+    Node *newNode = new Node(_name, _id, _rel_iso_pos);
+
 
     // Find out relative positioning (up, right, down or left) to the current node
 
-
     if(debugLevel >= 1) {
-        std::cout << "curr.iso_pos (" << iso_pos->abs_iso_y << ", " << iso_pos->abs_iso_x << ")    newNode.iso_pos ( " << _iso_pos->abs_iso_y << ", " << _iso_pos->abs_iso_x << ")\n";
+        std::cout << "curr.rel_iso_pos (" << rel_iso_pos->rel_iso_y << ", " << rel_iso_pos->rel_iso_x << ")    newNode.iso_pos ( " << _rel_iso_pos->rel_iso_y << ", " << _rel_iso_pos->rel_iso_x << ")\n";
     }
     bool aboveOf = false;
 
@@ -300,19 +281,19 @@ Node *Node::attachNewNode(std::string _name, int _id, HPos *_iso_pos, int weight
     bool leftOf = false;
 
     // are we above of current node?
-    if(_iso_pos->abs_iso_y < iso_pos->abs_iso_y) {
+    if(_rel_iso_pos->rel_iso_y < rel_iso_pos->rel_iso_y) {
         aboveOf = true;
     }
     // are we right of current node?
-    if(_iso_pos->abs_iso_x > iso_pos->abs_iso_x) {
+    if(_rel_iso_pos->rel_iso_x > rel_iso_pos->rel_iso_x) {
         rightOf = true;
     }
 
-    if(_iso_pos->abs_iso_y > iso_pos->abs_iso_y) {
+    if(_rel_iso_pos->rel_iso_y > rel_iso_pos->rel_iso_y) {
         downOf = true;
     }
 
-    if(_iso_pos->abs_iso_x < iso_pos->abs_iso_x) {
+    if(_rel_iso_pos->rel_iso_x < rel_iso_pos->rel_iso_x) {
         leftOf = true;
     }
 
@@ -354,7 +335,7 @@ Node *Node::attachNewNode(std::string _name, int _id, HPos *_iso_pos, int weight
     return newNode;
 }
 
-/* HPOSDELETE:
+/* HPOSDELETE: 2018-05-11
 // (-+)
 Node *Node::attachNewNode(std::string _name, int _id, Vector2f _iso_pos, int weight1, int weight2, int debugLevel)
 {
@@ -467,17 +448,21 @@ void Node::resetForDijkstra()
 
 
 ///
-/// Simply attach
+/// Simply attach, both directions
 ///
 
 
-//test!
-// (--)
-void Node::attachNodeUp(Node *other)
+
+/// \brief Connects current node to the other, upwards. Does it both directions.
+/// \param other Allocated Node
+/// \return Returns the other node
+///
+// (-+)
+Node *Node::attachNodeUp(Node *other)
 {
     if(other == nullptr) {
-        std::cout << "connecting nullptr!\n";
-        return ;
+        std::cout << "ERROR " << cn << " attachNodeUp() connecting nullptr!\n";
+        return nullptr;
     }
 
     this->up->to = other;
@@ -486,16 +471,19 @@ void Node::attachNodeUp(Node *other)
     other->down->to = this;
     other->down->from = other;
 
+
+    return other;
+
 }
 
 
-//test!
-// (--)
-void Node::attachNodeRight(Node *other)
+
+// (-+)
+Node *Node::attachNodeRight(Node *other)
 {
     if(other == nullptr) {
         std::cout << "connecting nullptr!\n";
-        return ;
+        return nullptr;
     }
 
 
@@ -505,16 +493,19 @@ void Node::attachNodeRight(Node *other)
     other->left->to = this;
     other->left->from = other;
 
+
+    return other;
+
 }
 
 
-//test!
-// (--)
-void Node::attachNodeDown(Node *other)
+
+// (-+)
+Node *Node::attachNodeDown(Node *other)
 {
     if(other == nullptr) {
         std::cout << "connecting nullptr!\n";
-        return ;
+        return nullptr;
     }
     this->down->to = other;
     this->down->from = this;
@@ -522,16 +513,18 @@ void Node::attachNodeDown(Node *other)
     other->up->to = this;
     other->up->from = other;
 
+    return other;
+
 }
 
 
-//test!
-// (--)
-void Node::attachNodeLeft(Node *other)
+
+// (-+)
+Node *Node::attachNodeLeft(Node *other)
 {
     if(other == nullptr) {
         std::cout << "connecting nullptr!\n";
-        return ;
+        return nullptr;
     }
 
     this->left->to = other;
@@ -540,6 +533,7 @@ void Node::attachNodeLeft(Node *other)
     other->right->to = this;
     other->right->from = other;
 
+    return other;
 }
 
 
@@ -655,13 +649,7 @@ int Node::connectNodes(Node *firstNode, Node *secondNode, int relDir, int weight
 
 
 
-
-
-
-
-
-
-HPos *Node::getCopyOfIsoPos()
+HPos *Node::get_copy_rel_iso_pos()
 {
-    return iso_pos->clone();
+    return rel_iso_pos->clone();
 }

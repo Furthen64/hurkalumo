@@ -57,6 +57,33 @@ void SlotPath::dump()
 
 
 
+/// \brief Makes the object take a step in the slotpath, consumes that step in the std::list slotPositions
+///
+// (--)
+SlotPos *SlotPath::stepAndGetPos(int steps)
+{
+    SlotPos *workPos = nullptr;
+
+
+    for(int nr = 0; nr < steps; nr++)
+    {
+        if(slotPositions->empty() ) {
+            break;
+        }
+
+        // Pop the first in the list to use it
+        workPos = slotPositions->front();
+        slotPositions->pop_front(); // Destroy first element
+
+    }
+
+    nowPos = workPos;   // Store away in the slotpath as the current position
+    return workPos;     // Also return it
+
+}
+
+
+
 
 
 

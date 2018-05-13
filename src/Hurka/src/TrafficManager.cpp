@@ -93,7 +93,7 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
 
 
     /// Have we been here?
-    int searchId = Node::generateID(curr_iso_pos);
+    int searchId = Node::genIDfrom_abs_iso(curr_iso_pos);
     if(visited->findVal(searchId,0) != -1 ) {
         return ;                                                                                 // END RECURSION
     }
@@ -433,106 +433,11 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 
 
 
-/*
-
-HPOSDELETE:
-RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
-                                               Vector2f curr_iso_pos,
-                                               Vector2f *min_iso_pos,
-                                               Vector2f *max_iso_pos,
-                                               BinarySearchTree *visited,
-                                               int debugLevel)
-{
-    std::string ind = "   ";
-
-    if(debugLevel >= 2)  {
-        std::cout << ind << "\n\nfollowAndAddToBST():\n";
-    }
-
-
-
-    /// Create a new matrix for the RoadNetwork
-
-    HurkaMatrix *hmatrix = new HurkaMatrix(fullRoadMatrix->rows, fullRoadMatrix->cols);
-
-
-
-
-
-
-
-    /// Follow the roads in the matrix (the 1:s)
-    /// When it's done, hmatrix should contain the roadnetwork's matrix
-
-    if(debugLevel >= 2)  {
-        std::cout << ind << "\nfollow():\n" << ind << "{\n";
-    }
-
-    follow(fullRoadMatrix, hmatrix, curr_iso_pos, min_iso_pos, max_iso_pos, visited, debugLevel);
-
-
-
-    if(debugLevel >= 2)  {
-        std::cout << ind << "}\n\n";
-    }
-
-
-
-    /// Setup the return object
-    int newRows = max_iso_pos->y - min_iso_pos->y +1;  // lite osäker, +-1 felet
-    int newCols = max_iso_pos->x - min_iso_pos->x +1;
-
-    /// We only want a matrix with the size containing roads, not the whitespace around it
-
-
-    if(debugLevel >= 2)  {
-        std::cout << "hmatrix now:\n";
-        hmatrix->dump();
-    }
-
-
-    ///         int **copySubMatrix(int **srcMtx,    int srcRows,   int srcCols,   int startY,      int startX,  int height, int width)
-
-    hmatrix->matrix = copySubMatrix(hmatrix->matrix, hmatrix->rows, hmatrix->cols, min_iso_pos->y, min_iso_pos->x, newRows,   newCols, debugLevel);
-    if(hmatrix->matrix == nullptr) {
-        std::cout << "ERROR " << cn << " Something went wrong while copying a subsection of a matrix to another matrix!\n";
-        return nullptr;
-    }
-    hmatrix->rows = newRows;
-    hmatrix->cols = newCols;
-
-
-    if(debugLevel >= 2)  {
-        std::cout << "New matrix after sub:\n";
-        hmatrix->dump();
-    }
-
-
-
-    RoadNetwork *roadNetwork = new RoadNetwork();
-    roadNetwork->hMatrix = hmatrix;
-
-    if(debugLevel >= 2)  {
-        std::cout << ind << "Completed a roadnetwork:\n";
-        roadNetwork->dump(ind);
-    }
-
-
-
-
-    return roadNetwork;
-}
-
-*/
-
-
 
 /// Parse the 1:s in the roadmatrix, and group together them into RoadNetworks
 /// After its done, it should have populated the std::list<RoadNetwork *> *roadNetworks;
 ///
-/// (--)
-///
-/// HPOSTEST: seems to work
+/// (-+)
 void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 {
 
@@ -543,9 +448,6 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
     BinarySearchTree *bst = new BinarySearchTree();
     HPos *min_iso_pos = new HPos(0,0, USE_ISO);
     HPos *max_iso_pos = new HPos(0,0, USE_ISO);
-
-
-
 
 
     int searchId = -1;
@@ -563,7 +465,6 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
         bst->dump();
     }
 
-    //Vector2f curr_iso;    HPOSDELETE
     HPos *curr_iso = new HPos();
 
 
@@ -589,7 +490,7 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
             curr_iso->abs_iso_y = y;
             curr_iso->abs_iso_x = x;
 
-            searchId = Node::generateID(curr_iso);
+            searchId = Node::genIDfrom_abs_iso(curr_iso);
 
             if(debugLevel >=1) {std::cout << "Pos(" << y << ", " << x << ") id=" << searchId << "\n";}
 
@@ -654,128 +555,6 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
 
 
-/*
-HPOSDELETE:
-void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
-{
-
-    if(debugLevel >= 1) {
-        std::cout << "\n\nparseCurrentRoads()\n----------------------------------\n";
-    }
-
-    BinarySearchTree *bst = new BinarySearchTree();
-    Vector2f min_iso_pos = Vector2f();
-    Vector2f max_iso_pos = Vector2f();
-
-
-
-
-
-    int searchId = -1;
-
-    int M_LENGTH = roadMatrix->rows;
-    int N_LENGTH = roadMatrix->cols;
-
-
-    if(debugLevel >=1) {
-        roadMatrix->dump();
-    }
-
-
-    if(debugLevel >=2) {
-        bst->dump();
-    }
-
-    //Vector2f curr_iso;    HPOSDELETE
-    HPos *curr_iso;
-
-
-
-    /// Start your engines!
-    /// Walk the Matrix
-
-    // Reset the variables for each roadNetwork:
-    min_iso_pos.y = roadMatrix->rows;
-    min_iso_pos.x = roadMatrix->cols;
-
-    max_iso_pos.y = 0;
-    max_iso_pos.x = 0;
-
-
-
-
-    if(debugLevel >=1) {std::cout << "\n\nIterating all the cells:\n-------------------\n";}
-    for(int y = 0; y < M_LENGTH; y++) {
-        for(int x = 0; x < N_LENGTH; x++) {
-
-
-            curr_iso.y = y;
-            curr_iso.x = x;
-
-            searchId = Node::generateID(curr_iso);
-
-            if(debugLevel >=1) {std::cout << "Pos(" << y << ", " << x << ") id=" << searchId << "\n";}
-
-            if(roadMatrix->matrix[y][x] == 1) {
-
-                // Search in bst
-
-                if(bst->findVal(searchId,0) != -1) {
-
-                    /// found it!    Ignore it. We found it so it's already been visited.
-
-                    if(debugLevel >=1) {std::cout << "Already in BST\n";}
-
-
-
-                } else {
-
-
-                    if(debugLevel >=1) {std::cout << "Running followAndAddToBst\n";}
-
-                    /// Did not find it?
-                    /// Start a "Follow and Add" recursion, which returns a roadNetwork
-
-
-                    RoadNetwork *network = followAndAddToBST(roadMatrix, curr_iso, &min_iso_pos, &max_iso_pos, bst, debugLevel);
-
-                    if(network == nullptr) {
-                        std::cout << "ERROR " << cn << " parseCurrentRoads() failed while executing: followAndAddToBST(), got nullptr.\n";
-                        std::cout << "Given roadmatrix:\n";
-                        roadMatrix->dump();
-                    }
-
-                    network->min_isoYOffset = min_iso_pos.y;
-                    network->min_isoXOffset = min_iso_pos.x;
-
-                    network->max_isoYOffset = max_iso_pos.y;
-                    network->max_isoXOffset = max_iso_pos.x;
-
-
-
-                    /// Store a completed roadnetwork
-                    roadNetworks->push_back(network);
-
-
-                    /// Reset for the next round
-                    min_iso_pos.y = roadMatrix->rows;
-                    min_iso_pos.x = roadMatrix->cols;
-
-                    max_iso_pos.y = 0;
-                    max_iso_pos.x = 0;
-
-                }
-
-
-            } // if value == 1 in matrix
-
-
-        }
-    }
-
-}
-*/
-
 
 
 
@@ -814,11 +593,11 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 
 /// \brief updates all the buses on all the roadnetworks with their gameUpdate() function
 /// \param viewHPos Current viewing position
-
+/// (--)
 void TrafficManager::updateAll(HPos *viewHPos)
 {
 
-    int dbgLevel = 0;
+    int dbgLevel = 1;
 
 
     RoadNetwork *currRoadnet = nullptr;
@@ -858,7 +637,8 @@ void addRoadNetwork()
 
 
 // (--) Make
-DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos) {
+DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos)
+{
     std::cout << "NOT CODED YET             Given a busid , find the bus in the buslist and run dijkstra on A->B, \n";
     return nullptr;
 }
@@ -871,25 +651,29 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 /// (---) TEST
 void TrafficManager::planForBusesOnRoadNetwork()
 {
-
-
-    // Run dijkstra on all buses, do traffic planning, create SlotPath
-
-
-    std::cout << "\n** planForBusesOnRoadNetwork:\n";
     std::string ind = "  ";
-
-
     RoadNetwork *roadnet = nullptr;
     Bus *bus = nullptr;
     SlotPath *slotpath;
-    HPos *iso_pos_A = nullptr;
-    HPos *iso_pos_B = nullptr;
+    HPos *abs_iso_pos_A = nullptr;
+    HPos *abs_iso_pos_B  = nullptr;
+
+    HPos *rel_iso_pos_A = nullptr;
+    HPos *rel_iso_pos_B  = nullptr;
+
+    std::cout << "\n** planForBusesOnRoadNetwork:\n";
+
+
+
+
+
+    /// Error check
 
     if(roadNetworks->size() <= 0) {
-        std::cout << "ERROR " << cn << " there are no roadnetworks to work with.\n";
+        std::cout << "note: " << cn << " there are no roadnetworks to work with.\n";
         return ;
     }
+
 
 
     /// Loop all the RoadNetworks
@@ -929,24 +713,36 @@ void TrafficManager::planForBusesOnRoadNetwork()
 
             std::cout << ind << "note: Hardcoded roadnet->getNrRoad_iso(0) and roadnet->getNrRoad_iso(5) \n";
 
-            iso_pos_A  = roadnet->getNrRoad_iso(0);
+            abs_iso_pos_A  = roadnet->getNrRoad_iso(0);
 
-            if(iso_pos_A == nullptr) {
+            if(abs_iso_pos_A == nullptr) {
                 std::cout << "ERROR " << cn << " could not set start position\n";
                 return ;
             }
 
-            iso_pos_B  = roadnet->getNrRoad_iso(5);
+            abs_iso_pos_B  = roadnet->getNrRoad_iso(7);
 
-            if(iso_pos_B == nullptr) {
+            if(abs_iso_pos_B == nullptr) {
                 std::cout << "ERROR " << cn << " could not set end position\n";
                 return ;
             }
 
 
 
+            /// For now, make sure we have no absolute positions when entering createSlotPath()
+
+            rel_iso_pos_A = abs_iso_pos_A->clone();
+            rel_iso_pos_B = abs_iso_pos_B->clone();
+
+            rel_iso_pos_A->abs_iso_x = 0;
+            rel_iso_pos_A->abs_iso_y = 0;
+
+
+
+
             /// Run Dijkstra to generate the path
-            slotpath = roadnet->createSlotPath(iso_pos_A, iso_pos_B, 2);
+
+            slotpath = roadnet->createSlotPath(rel_iso_pos_A, rel_iso_pos_B, 2);
 
             bus->setSlotPath(slotpath);
 
@@ -1009,42 +805,35 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
 
 
-
-
-    // Figure out from- and to positions
-/*
-
-This is what dijkstra does, or what TrafficManager:planForBuses do
-
-    HPos *fromPos = currNet->getRandomRoad_iso(0);
-    HPos *toPos   = currNet->getRandomRoad_iso(5);
-
-
-    _bus->set_pos_on_abs_iso(fromPos);
-    _bus->set_nextPos_on_abs_iso(toPos);
-*/
-/*
-
-
-            // Setup current position
-            HPos *fromPos = new HPos(bus_iso_pos_from.y, bus_iso_pos_from.x);
-
-            _bus->set_pos_on_abs_iso(fromPos);
-
-
-
-            // Setup next position
-
-            HPos *toPos = new HPos(bus_iso_pos_to.y, bus_iso_pos_to.x);
-
-            _bus->set_nextPos_on_abs_iso(toPos);
-
-
-*/
-
-
-
-
     /// Finally add it to the right roadnet
     currNet->addBus(_bus);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

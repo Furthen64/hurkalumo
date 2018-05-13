@@ -27,16 +27,16 @@ enum NODE_DIR {
 class Node
 {
 public:
-    Node(std::string _name, int _id, HPos *_iso_pos);
+    Node(std::string _name, int _id, HPos *_rel_iso_pos);
 
 
     void createLink();
     void dump(int indent);
 
-    void attachNodeUp(Node *other);
-    void attachNodeRight(Node *other);
-    void attachNodeDown(Node *other);
-    void attachNodeLeft(Node *other);
+    Node *attachNodeUp(Node *other);
+    Node *attachNodeRight(Node *other);
+    Node *attachNodeDown(Node *other);
+    Node *attachNodeLeft(Node *other);
 
     Node *attachNewNode(std::string , int , HPos *, int , int , int );
 
@@ -46,8 +46,9 @@ public:
     void resetForDijkstra();
     int connectNodes(Node *firstNode, Node *secondNode, int relDir, int weight1, int weight2, int debugLevel);
 
-    HPos *getCopyOfIsoPos();
 
+    HPos *get_rel_iso_pos();
+    HPos *get_copy_rel_iso_pos();
 
 
 
@@ -70,6 +71,10 @@ public:
 
     // How should it handle id:s under 10000? where M=0?        // 2018-03-20
     // (--)
+    /// \brief Converts the supplied y and x values back to their respective iso positions
+    /// \param _id Searchid, like 10006, will become y=1, x=6
+    /// \param y
+    /// \param x
     static void idTo_iso_pos(int _id, int *y, int *x)
     {
         //if(_id > 10000) {
@@ -103,7 +108,7 @@ public:
 
 
     // (-+)
-    static int generateID(HPos *_hpos)
+    static int genIDfrom_abs_iso(HPos *_hpos)
     {
         if(_hpos->abs_iso_y < 0) {
             std::cout << "ERROR Cannot generateID from negative nrs in iso_pos!\n";
@@ -120,8 +125,21 @@ public:
 
 
 
+
     // (--)
-    static std::string iso_to_str(HPos *hpos)
+    static std::string rel_iso_to_str(HPos *hpos)
+    {
+
+        std::stringstream sstm;
+
+        sstm << "(" << hpos->rel_iso_y << "," << hpos->rel_iso_x << ")";
+
+        return sstm.str();
+    }
+
+
+    // (--)
+    static std::string abs_iso_to_str(HPos *hpos)
     {
         std::stringstream sstm;
 
@@ -137,6 +155,6 @@ public:
 private:
     std::string name;
     int id;
-    HPos *iso_pos;
+    HPos *rel_iso_pos;
     std::string cn = "Node.cpp";
 };

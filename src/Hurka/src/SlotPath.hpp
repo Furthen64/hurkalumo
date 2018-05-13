@@ -11,11 +11,18 @@ public:
 
     void drawAllSlots(sf::RenderTarget &rt, HPos *viewHPos);
     void add(SlotPos *slotpos);
+    SlotPos *stepAndGetPos(int steps);
     void reset();
     void dump();
 
+    SlotPos *nowPos = nullptr;
+
+
 private:
-    std::list<SlotPos *> *slotPositions = nullptr;     // Is this really the best datastructure for this...? I need to use it like an Array
+
+    // slotPositions: Is this really the best datastructure for this...? I need to use it like an Array
+
+    std::list<SlotPos *> *slotPositions = nullptr;
 
 
 

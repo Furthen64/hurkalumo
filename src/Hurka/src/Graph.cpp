@@ -8,11 +8,11 @@ Graph::Graph(std::string _name)
 
 
 
-/// Walks the entire Graph.
-/// While walking, put 1:s in a matrix wherever the road is, 0:s everything else.
-/// dumpNodes = if true will do a .dump on all Nodes it find
+/// \brief Walks the entire Graph populating hurkamatrix with 1:s where there is a node
+/// \param dumpNodes = if true will do a .dump on all Nodes it find
 /// RECURSIVE
 /// FIXME: It does not fillup the matrix correctly?
+/// FIXME: it does duplicate outputs because it ignores visited ? "Been here before, dont output!"
 // (--)
 HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel)
 {
@@ -30,7 +30,7 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
 
     if(debugLevel >=2) { std::cout << "clockwiseTraverseUpFirst\n-------------------------------\n";
 
-        std::cout << "dumping visited nodes:\n";
+        std::cout << "Dumping BST visited nodes:\n";
         visited->dump();
     }
 
@@ -45,6 +45,7 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
         int n = 0;
 
 
+        // Convert searchID to iso positions (y and x values)
         curr->idTo_iso_pos(curr->getId(), &m, &n);
 
         matrix->matrix[m][n] = 1;
@@ -52,6 +53,7 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
         if(dumpNodes==true)
         {
             curr->dump(3);
+            curr->get_rel_iso_pos()->dump("   ");
         }
 
         if(debugLevel >=1 ) { std::cout << "curr id = " << curr->getId() << ", name = \"" << curr->getName() << "\"\n"; }
@@ -76,8 +78,6 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
         if(curr->down->to != nullptr) {
 
 
-            curr->down->to->dump(3);
-
             clockwiseTraverseUpFirst(curr->down->to, visited, matrix, dumpNodes,debugLevel);                    // RECURSION
 
         }
@@ -88,8 +88,6 @@ HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visit
             clockwiseTraverseUpFirst(curr->left->to, visited, matrix, dumpNodes,debugLevel);                    // RECURSION
 
         }
-
-
 
     } else {
 
@@ -224,15 +222,14 @@ Node *Graph::clockwiseTraverseUpFirstFindNode(Node *curr, BinarySearchTree *visi
 // (--)
 void clockwiseSearchUpFirst(Node *curr, int searchVal)
 {
-    std::cout << "\n\nNOT DONE!!! :(\n\n";
+    std::cout << "\n\n\nNOT DONE!\n\n";
 
 }
 
 /// \brief Shows you the Graph by traversing it and dumping all the nodes. You can see what nodes are connected up, right, down and left of it .
 /// \param debugLevel This function is not super stable so.. might need more debugging
 /// \param dumpNodes 1=dumps all the node information, 0=default
-/// FIXME: has bugs :( Does not work. Doesnt walk downwards?
-/// (--)
+/// (-+) Tested several times in a row, seems to NOT modify the graph
 void Graph::dump(int debugLevel, int dumpNodes)
 {
     std::cout << "\n\nDumping all Nodes in Graph:\n";
@@ -257,9 +254,9 @@ void Graph::dump(int debugLevel, int dumpNodes)
 
 // HPOSTEST
 // TEST
-void Graph::addFirstNode(std::string _name, int _id, HPos *_iso_pos)
+void Graph::addFirstNode(std::string _name, int _id, HPos *_rel_iso_pos)
 {
-    head =  new Node(_name, _id, _iso_pos);
+    head =  new Node(_name, _id, _rel_iso_pos);
 }
 
 
@@ -390,12 +387,20 @@ void Graph::resetAllNodes()
 //   (0,1)        Which is a single road directly connected to an intersection      Works!
 //   (1,1)        Which is an intersection                                          Works!
 //
-// Tested also from maany points to points in my road network, and it all seems to work
+// I have tested
+//              dijkstra_test_1.txt         (0,0) to (2,1)                          Works!
+//              dijkstra_test_1.txt         With many different heads on the graph      Nope
 //
+// Tested also from maany points to points in my road network, and it all seems to work
+// But that was when this was a graphProj and used Vector2f... 2018-02 . Now in 2018-05
+// It doesnt work...
 //
 // DO i need to put nodes so many times in the VisitedNodes? Seems like a byproduct of old code?
-
-// (--+)
+//
+// BUG: 2018-05   Somehow the graph gets modified so we have a NULL downwards from (1,0) in dijkstra_test_1.txt . Super weird!
+//                SOLVED Maybe Dijkstra could do a verification of the Graph before it runs, to see if there is complete duplex connection
+//                       because that was the issue.
+// (---)
 DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLevel)
 {
 
@@ -404,8 +409,12 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     std::string ind3 = "           ";
     std::string ind4 = "              ";
 
+
+    startNode->down->to->dump(3);
+
+
     int steps = 0;
-    int maxSteps = 400;
+    int maxSteps = 800;
     int done = false;
     int lastOne = false;
 
@@ -433,9 +442,10 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
         std::cout << ind2 << "startNode.permanent=0\n";
     }
 
+
+
+
     /// Which vertices can we reach from the start?
-
-
 
     if(startNode->up->to != nullptr) {
 
@@ -569,8 +579,8 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
         visitedNodes->add(workNode->getId(),0);
 
         if(debugLevel >=1) {
-            std::cout << ind2 << "workNode.permanent = " << workNode->tempLabel << " (" << workNode->getName() << ", " << workNode->getId() << ")\n";
-            std::cout << ind2 << "workNode.fastestPrevNode = " << workNode->fastestPrevNode->getId() << "\n\n";
+            std::cout << ind2 << "(" << workNode->getName() << ", " << workNode->getId() << ").permanent = " << workNode->permanentLabel << "\n";
+            std::cout << ind2 << "           .fastestPrevNode = " << workNode->fastestPrevNode->getId() << "\n\n";
         }
 
 
@@ -601,6 +611,9 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
         } else if(debugLevel >=1) {
             std::cout << ind2 << "Look around current node, update temp labels\n";
         }
+
+
+        workNode->dump(3);
 
 
         if(workNode->up->to != nullptr) {
@@ -813,19 +826,21 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
 
 
         ///
-        /// Exiting ?
+        /// Exiting ? BUG FIXME? not sure if the exiting terms are correct
         ///
 
         steps++;
 
         if(steps > maxSteps) {
             done = true;
+            if(debugLevel >=1) { std::cout << ind2 << "** Breaking from Loop\n"; }
         }
 
 
 
         // Step 2 in exiting
         if(lastOne && workList.empty() ) {
+            if(debugLevel >=1) { std::cout << ind2 << "** Breaking from Loop\n"; }
             done = true;
         }
 
@@ -859,16 +874,14 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     // Push to stack in the result
 
     while(!done) {
-        std::cout << "1\n";
+
         result->shortestPath.push(workNode);
 
-        std::cout << "2\n";
         if(workNode == startNode) {
-            std::cout << "3EXIT\n";
             done = true;
             break;
         }
-        std::cout << "4\n";
+
         if(workNode->fastestPrevNode == nullptr) {
             std::cout << "ERROR " << cn << " Somewhere something went wrong, nullptr in workNode->fastestPrevNode at the end of an Dijkstra run. \n";
             return nullptr;
@@ -877,15 +890,14 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
         if(workNode == nullptr) {
             std::cout << "ERROR " << cn << " Somewhere something went wrong, nullptr in workNode->fastestPrevNode at the end of an Dijkstra run.\n";
         }
-        std::cout << "5\n";
+
     }
 
 
-    std::cout << "6\n";
+
     // Store the total fastest distance from start to end
     result->resultInt = endNode->permanentLabel;
 
-    std::cout << "7\n";
     if(debugLevel >=1 ) {
             std::cout << "\n";
     }

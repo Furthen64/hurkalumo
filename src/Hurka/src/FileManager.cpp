@@ -486,32 +486,6 @@ void FileManager::printWorkingDir()
 
 
 
-/*
-// (-+)
-void dumpBlockList(std::list<Block *> _blockList)
-{
-
-    int n = 0;
-    std::cout << "\n\ndumpBlockList: \n{\n";
-
-    // iterate over all items
-    for (std::list<Block *>::iterator itAll = _blockList.begin(); itAll != _blockList.end(); ++itAll)
-    {
-        std::cout << "    [" << n << "] TextureName of current block: " << (*itAll)->getTextureName() << "\n";
-        n++;
-
-    }
-    std::cout << "}\n";
-
-}
-
-
-*/
-
-
-
-
-
 
 
 

@@ -70,7 +70,8 @@ private:
     std::string cn = "Core.cpp";
     //std::string startmapStr = "data/roadnetwork_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
-    std::string startmapStr = "data/dijkstra_test.txt";
+    std::string startmapStr = "data/dijkstra_test_1.txt";
+    //std::string startmapStr = "data/dijkstra_test_2.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";

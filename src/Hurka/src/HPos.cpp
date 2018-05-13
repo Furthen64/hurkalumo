@@ -40,6 +40,47 @@ HPos::HPos()
 }
 
 
+
+std::string HPos::absToString()
+{
+    std::string str = "(";
+
+    str += std::to_string(abs_iso_y);
+
+    str += "," ;
+
+    str += std::to_string(abs_iso_x);
+
+    str += ")";
+
+
+
+    return str;
+}
+
+
+
+
+
+
+std::string HPos::relToString()
+{
+    std::string str = "(";
+
+    str += std::to_string(rel_iso_y);
+
+    str += "," ;
+
+    str += std::to_string(rel_iso_x);
+
+    str += ")";
+
+
+
+    return str;
+}
+
+
 // Used by roadnetwork.cpp in createSlotPathFromDijkstraResult
 // Makes a slotpos appear in the middle of an isometric tile/block
 // (-+)
@@ -67,11 +108,10 @@ HPos *HPos::clone()
 
 void HPos::dump(std::string ind)
 {
-    std::cout << ind << "Dumping HPos:\n";
     std::cout << ind << "{\n";
-    std::cout << ind << " abs_iso   y=" << abs_iso_y << ", x=" << abs_iso_x << "\n";
-    std::cout << ind << " rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
-    std::cout << ind << " gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
+    std::cout << ind << "  abs_iso   y=" << abs_iso_y << ", x=" << abs_iso_x << "\n";
+    std::cout << ind << "  rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
+    std::cout << ind << "  gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
     std::cout << ind << "}\n";
 
 }

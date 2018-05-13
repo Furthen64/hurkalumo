@@ -1,0 +1,17 @@
+
+1st		Draw the Graph on a piece of paper
+
+		So you can go over and check distances easily.
+	
+
+
+2nd		Check the Graph
+
+		Make sure the Graph is constructed as you'd like it to be.
+
+
+3rd		Change the graph around , see if it works sometimes or all the times
+		Maybe its a matter of how the graph is
+
+4th		Follow Dijkstra 
+		Step by step on paper... see where it does something awkward

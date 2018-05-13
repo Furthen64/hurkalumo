@@ -117,7 +117,9 @@ void Bus::update_all_position_vars_on_gpix()
 
 // Wishlist: Takes in the roadnetwork the bus is on,
 //           So whenever the bus needs to move to a new road it can use the correct offsets for that particular roadnetwork
-//
+
+//    use slotpath
+
 // Based on what happened in setNext_pix_pos , we need to move towards that next pixel position
 // (--)
 void Bus::gameUpdate(RoadNetwork *roadnet)
@@ -125,94 +127,23 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
     int debugLevel = 0;
 
 
+    //make the bus use the slotpath it now has
+    SlotPos *workPos;
+    workPos = slotPath->stepAndGetPos(1);   // Make 1 step
 
-    int deltaX = 0;
-    int deltaY = 0;
-
-    // Calculate the pixels between where we are now and where we are going
-
-    if(nextPos->gpix_x > pos->gpix_x) {
-        deltaX = nextPos->gpix_x - pos->gpix_x;
-    } else {
-        deltaX = pos->gpix_x - nextPos->gpix_x;
-    }
-
-    if(nextPos->gpix_y > pos->gpix_y) {
-        deltaY = nextPos->gpix_y - pos->gpix_y;
-    } else {
-        deltaY = pos->gpix_y - nextPos->gpix_y;
+    if(workPos == nullptr) {
+        std::cout << "ERROR " << cn << " gameUpdate tried getting a slotPos from slotPath but ended up with a nullptr. \n";
+        return ;
     }
 
 
-    if(debugLevel >=1) { std::cout << "DeltaY=" << deltaY << " , DeltaX=" << deltaX << "\n";}
+    pos = workPos->hpos;
 
-
-    /// Do the actual move
-    switch(dir) {
-
-
-        case 0: // UP RIGHT
-
-            // Set current position
-            if(debugLevel >=1) { std::cout << "Dir= up right\n"; }
-            pos->gpix_x += ceil ( (float) (deltaX * speed/100) );
-            pos->gpix_y -= ceil ( (float) (deltaY * speed/100) );
-
-            break;
-
-        case 1: // DOWN RIGHT
-            if(debugLevel >=1) {std::cout << "Dir= down right\n";}
-            pos->gpix_x += ceil ( (float) (deltaX * speed/100) );
-            pos->gpix_y += ceil ( (float) (deltaY * speed/100) );
-
-            break;
-
-        case 2: // DOWN LEFT
-            if(debugLevel >=1) { std::cout << "Dir= down left\n";}
-            pos->gpix_x -= ceil ( (float) (deltaX * speed/100) );
-            pos->gpix_y += ceil ( (float) (deltaY * speed/100) );
-
-            break;
-
-        case 3: // UP LEFT
-            if(debugLevel >=1) { std::cout << "Dir= up left\n";}
-            pos->gpix_x -= ceil ( (float) (deltaX * speed/100) );
-            pos->gpix_y -= ceil ( (float) (deltaY * speed/100) );
-
-            break;
-
-        case 4:
-            deltaX = 0;
-            deltaY = 0;
-            break;
-
-
-    }
-
-
-
-
-
-
-
-    // If delta x and deltay is zero, means we have reached our destination
-
-    if(deltaX == 0 && deltaY == 0) {
-        if(debugLevel >=1) {std::cout << "bus: SHOULD I GO SOMWHERE NOW?\n";}
-    }
 
     // Update all position_variables based on this new gpix position
     update_all_position_vars_on_gpix();
 
 }
-
-
-
-
-
-
-
-
 
 
 
