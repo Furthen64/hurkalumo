@@ -155,7 +155,17 @@ int Core::setup(int width, int height, std::string title)
 
 
     /// Place a bus on a roadnetwork
+    bus = new Bus(new HPos(0,0, USE_GPIX));
     trafficMgr->addBus(bus, 0);
+
+    bus = new Bus(new HPos(0,0, USE_GPIX));
+    trafficMgr->addBus(bus, 1);
+
+    bus = new Bus(new HPos(0,0, USE_GPIX));
+    trafficMgr->addBus(bus, 2);
+
+    bus = new Bus(new HPos(0,0, USE_GPIX));
+    trafficMgr->addBus(bus, 3);
 
 
 

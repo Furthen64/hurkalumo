@@ -84,12 +84,7 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr)
 /// \brief Includes the use of Dijkstra algorithm
 /// \param from_rel_iso_pos relative iso positions given (will be modified!)
 /// \param to_rel_iso_pos relative iso positions given (will be modified!)
-// (--) TEST!
-// BUG: Undefined Behaviour - sometimes it crashes. Behaves weirdly. Something is off.
-//     Happened when start_iso_pos was randomiszed everytime
-// Check ALL the pointers
-// Check for nullptr returns
-// Simplify
+// (-+)     Tested and works
 
 SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_pos, int debugLevel )
 {

@@ -72,9 +72,7 @@ public:
     HPos *rand_iso_pos(int maxM, int maxN); // HPOSTEST!
     HPos *rand_abs_iso_pos(RoadNetwork *roadnet); // HPOSTEST!
 
-    /*Vector2f rand_iso_pos(HurkaMatrix *roadMatrix);       HPOSDELETE
-    Vector2f rand_iso_pos(int maxM, int maxN);
-    Vector2f rand_abs_iso_pos(RoadNetwork *roadnet);*/
+
 
     HPos *get_next_pos();
 

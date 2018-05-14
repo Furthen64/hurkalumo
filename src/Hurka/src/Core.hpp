@@ -59,7 +59,7 @@ public:
 
 private:
 
-    int debugLevel = 0;
+    int debugLevel = 1;
 
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
@@ -72,7 +72,7 @@ private:
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/dijkstra_test_1.txt";
     //std::string startmapStr = "data/dijkstra_test_2.txt";
-    std::string startmapStr = "data/dijkstra_test_3.txt";
+    std::string startmapStr = "data/dijkstra_test_4.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
 
@@ -86,7 +86,7 @@ private:
 
 
     int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 10;
+    int dijkstraToRoad = 5;
 
 
 

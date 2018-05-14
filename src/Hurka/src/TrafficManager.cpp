@@ -473,6 +473,9 @@ void TrafficManager::updateAll(HPos *viewHPos)
     RoadNetwork *currRoadnet = nullptr;
     Bus *currBus = nullptr;
 
+    int roadnr = 0;
+    int busnr = 0;
+
     for(std::list<RoadNetwork *>::iterator roadsIter=roadNetworks->begin(); roadsIter != roadNetworks->end(); ++roadsIter)
     {
 
@@ -480,13 +483,18 @@ void TrafficManager::updateAll(HPos *viewHPos)
 
         for(std::list<Bus *>::iterator busIter=currRoadnet->buslist->begin(); busIter != currRoadnet->buslist->end(); ++busIter)
         {
-            if(dbgLevel>=1) { std::cout << "Updating a bus\n";}
+            if(dbgLevel>=1) { std::cout << "roadnet=" << roadnr << " is updating bus nr=" << busnr << "\n";  }
 
             currBus = (*busIter);
 
             // Find out which network it is on
             currBus->gameUpdate(currRoadnet);
+
+            busnr++;
         }
+
+        roadnr++;
+        busnr=0;
     }
 
 }
@@ -587,7 +595,7 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
             // Like a Bus Station
 
 
-            std::cout << ind << "note: Hardcoded A to B \n";
+            std::cout << ind << "\n\nWARNING: Hardcoded A to B! \n";
 
             abs_iso_pos_A  = roadnet->getNrRoad_iso(fromRoad);
 
@@ -598,7 +606,7 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
 
             abs_iso_pos_B  = roadnet->getNrRoad_iso(toRoad);
 
-            abs_iso_pos_B = new HPos(4,4,USE_ISO);
+            //abs_iso_pos_B = new HPos(4,4,USE_ISO);
 
             if(abs_iso_pos_B == nullptr) {
                 std::cout << "ERROR " << cn << " could not set end position\n";
@@ -666,9 +674,12 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
     // Find the RoadNetwork
     for( std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it)
     {
+        std::cout << "nr=" << nr << "\n";
         currNet = (*it);
+
         if(roadnetId == nr) {
-            it=roadNetworks->end();
+            std::cout << "adding bus to roadnet=" << nr<<"\n";
+            break;
         }
 
 
