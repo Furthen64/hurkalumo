@@ -64,15 +64,15 @@ private:
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 1;
+    int lockFPS_n = 4;
 
-    std::string windowTitle = "HurkaLumo editor alpha-0.6";
+    std::string windowTitle = "HurkaLumo editor alpha-0.1";
     std::string cn = "Core.cpp";
     //std::string startmapStr = "data/roadnetwork_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/dijkstra_test_1.txt";
-    std::string startmapStr = "data/dijkstra_test_2.txt";
-    //std::string startmapStr = "data/bus_traffic_test.txt";
+    //std::string startmapStr = "data/dijkstra_test_2.txt";
+    std::string startmapStr = "data/dijkstra_test_3.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
     //std::string startmapStr = "data/bus_traffic_test.txt";
 
@@ -83,6 +83,12 @@ private:
     HPos *viewHPos;
     int startViewPosY = -331;
     int startViewPosX = -2178;
+
+
+    int dijkstraFromRoad= 0;
+    int dijkstraToRoad = 10;
+
+
 
 
     TextureManager *textureMgr; // Singleton!

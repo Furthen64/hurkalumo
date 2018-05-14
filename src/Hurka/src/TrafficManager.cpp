@@ -521,10 +521,10 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 
 // Testing:
 //          (2018-05-13) "dijkstra_test_1.txt"                     Works!
-//          (2018-05-13) "dijkstra_test_2.txt"                      Works! alpha-0.6
+//          (2018-05-13) "dijkstra_test_2.txt"                     Works! alpha-0.1
 //
 // (--+)
-void TrafficManager::planForBusesOnRoadNetwork(int debugLevel)
+void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad)
 {
     std::string ind = "  ";
     RoadNetwork *roadnet = nullptr;
@@ -589,14 +589,16 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel)
 
             std::cout << ind << "note: Hardcoded A to B \n";
 
-            abs_iso_pos_A  = roadnet->getNrRoad_iso(0);
+            abs_iso_pos_A  = roadnet->getNrRoad_iso(fromRoad);
 
             if(abs_iso_pos_A == nullptr) {
                 std::cout << "ERROR " << cn << " could not set start position\n";
                 return ;
             }
 
-            abs_iso_pos_B  = roadnet->getNrRoad_iso(7);
+            abs_iso_pos_B  = roadnet->getNrRoad_iso(toRoad);
+
+            abs_iso_pos_B = new HPos(4,4,USE_ISO);
 
             if(abs_iso_pos_B == nullptr) {
                 std::cout << "ERROR " << cn << " could not set end position\n";

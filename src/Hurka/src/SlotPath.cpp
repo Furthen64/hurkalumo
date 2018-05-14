@@ -8,7 +8,41 @@ SlotPath::SlotPath()
     slotPositions = new std::list<SlotPos *>();
 }
 
-// (--) TEST
+
+// (--)
+void SlotPath::setListOfSlotPositions(std::list<SlotPos *> *_slotPositions)
+{
+    if(slotPositions != nullptr) {
+        delete slotPositions;
+        slotPositions = _slotPositions;
+    }
+}
+
+
+// (--)
+void SlotPath::addListOfSlotPositions(std::list<SlotPos *> *_slotPositions)
+{
+    // Concatenate the already existing list
+    if(slotPositions == nullptr) {
+        slotPositions = new std::list<SlotPos *>();
+    }
+
+
+    // Loop over _slotPositions and insert to internal list
+    SlotPos *slotpos;
+
+    for(std::list<SlotPos *>::iterator it = _slotPositions->begin(); it != _slotPositions->end(); ++it)
+    {
+        slotpos = (*it);
+        slotPositions->push_back(slotpos);
+    }
+
+}
+
+
+
+
+// (-+)
 void SlotPath::drawAllSlots(sf::RenderTarget &rt, HPos *viewHPos)
 {
     for(std::list<SlotPos *>::iterator itAll = slotPositions->begin(); itAll != slotPositions->end(); ++itAll)

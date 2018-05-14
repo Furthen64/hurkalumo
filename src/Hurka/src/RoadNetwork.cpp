@@ -120,8 +120,10 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
     ///
-    /// Make a Graph out of the RoadNetwork
+    /// G R A P H
     ///
+
+    // Make a graph out of the roadnetwork
 
     Graph *graph = new Graph("road_network_1");
     DijkstraResult *dijkstraResult = nullptr;
@@ -180,7 +182,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
     ///
-    /// run Dijkstra
+    /// D I J K S T R A
     ///
 
     if(debugLevel >=1) {
@@ -247,7 +249,18 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
         std::cout << ind << " Put those slotpos in slotpath\n\n";
     }
 
+
+    /// Create the SlotPath
+
     createSlotPathFromDijkstraResult(dijkstraResult, slotpath);
+
+
+
+
+
+
+
+
 
 
     if(debugLevel >=1) { std::cout << "\n\n"; }
@@ -624,6 +637,7 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 /// \param dijkstraResult A result from already executed Dijkstra
 /// \param slotpath Allocated, empty.
 /// TODO: This one consumes the result... can only be run once
+/// Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions!
 /// (-+)
 void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath)
 {
@@ -642,8 +656,7 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
 
     Node *workNode;
     HPos *workPos;
-    SlotPos *workSlotpos;
-
+    std::list<SlotPos *> *slotPositions = nullptr;
     std::string str;
 
     // Go over the result, create slotpositions for every node
@@ -661,23 +674,21 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
         workPos->abs_iso_y = workPos->rel_iso_y + min_isoYOffset;
         workPos->abs_iso_x = workPos->rel_iso_x + min_isoXOffset;
 
+
+
         workPos->gpix_y = Grid::convert_iso_to_gpix_y(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
         workPos->gpix_x = Grid::convert_iso_to_gpix_x(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
 
 
 
 
-        if(dbgLevel >=1) {
-            workPos->dump("   ");
-        }
+        // Now we have a gpix point of reference for generating all the tiny steps the bus will take inside a road
+
+        // alpha-0.2:  make this better
+        slotPositions = SlotPath::getSlotPosesOnBlockSituation(workPos, 101, 0);
+        slotpath->addListOfSlotPositions(slotPositions);
 
 
-        // Slot Pos
-        workSlotpos = new SlotPos(workPos);
-
-        workPos->transform_gpix_to_slotpos(workSlotpos, workPos);    // Make sure its in the middle of the block for now
-
-        slotpath->add(workSlotpos);
 
         dijkstraResult->shortestPath.pop();
 
