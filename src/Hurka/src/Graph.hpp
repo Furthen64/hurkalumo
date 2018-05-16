@@ -158,7 +158,7 @@ class Graph
 {
 
 public:
-    Graph(std::string _name);
+    Graph(std::string _name, int _mapMaxRows, int _mapMaxCols);
 
     HurkaMatrix *clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel);
     Node *         clockwiseTraverseUpFirstFindNode(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, int searchId, int debugLevel);
@@ -179,6 +179,9 @@ private:
 
     Node *head;
     int nrNodes = 0;
+
+    int mapMaxRows;
+    int mapMaxCols;
 
     std::string name;
     std::string cn = "Graph.cpp";

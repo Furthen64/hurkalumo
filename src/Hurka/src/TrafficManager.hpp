@@ -60,7 +60,7 @@ public:
                 BinarySearchTree *visited,
                 int debugLevel);
 
-    void parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
+    int parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
 
 
 
@@ -75,14 +75,17 @@ public:
 
 
 
-    // Individual
+    /// Individual
+
+    int nrOfRoadnetworks();
+
     void addRoadNetwork();
     void addBus(Bus *, int );
 
 
     DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
 
-    void planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad);
+    int planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad);
 
     void updateBusesOnRoadNetwork(int busId, int roadnetId);
 

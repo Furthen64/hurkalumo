@@ -304,11 +304,11 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 
 
 
-/// Parse the 1:s in the roadmatrix, and group together them into RoadNetworks
-/// After its done, it should have populated the std::list<RoadNetwork *> *roadNetworks;
-///
+/// \brief Parse the 1:s in the roadmatrix, and group together them into RoadNetworks
+/// \brief After its done, it should have populated the std::list<RoadNetwork *> *roadNetworks;
+/// \return 0 on ok, -1 on failure
 /// (-+)
-void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
+int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 {
 
     if(debugLevel >= 1) {
@@ -391,6 +391,8 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
                         std::cout << "ERROR " << cn << " parseCurrentRoads() failed while executing: followAndAddToBST(), got nullptr.\n";
                         std::cout << "Given roadmatrix:\n";
                         roadMatrix->dump();
+
+                        return -1;
                     }
 
                     network->min_isoYOffset = min_iso_pos->abs_iso_y;
@@ -420,6 +422,8 @@ void TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
         }
     }
+
+    return 0;
 
 }
 
@@ -467,7 +471,7 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 void TrafficManager::updateAll(HPos *viewHPos)
 {
 
-    int dbgLevel = 1;
+    int dbgLevel = 0;
 
 
     RoadNetwork *currRoadnet = nullptr;
@@ -525,15 +529,27 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 
 
 
-/// \brief Makes plans for how all the buses should move by iterating the roadNetworks datastructures and finding all the buses.
-
-// Testing:
+// Testing alpha-0.1:
 //          (2018-05-13) "dijkstra_test_1.txt"                     Works!
-//          (2018-05-13) "dijkstra_test_2.txt"                     Works! alpha-0.1
-//
+//          (2018-05-13) "dijkstra_test_2.txt"                     Works!
+//          (2018-05-15) "dijkstra_test_3.txt"                     Works!
+//          (2018-05-15) "dijkstra_test_4.txt"                     Works!
+//          (2018-05-15) "dijkstra_test_5.txt"                     Works!
+
+
+
+
+
+
+/// \brief Makes plans for how all the buses should move by iterating the roadNetworks datastructures and finding all the buses.
+/// \param debugLevel selfexplanatory
+/// \param fromRoad nr road in the map
+/// \param toRoad  nr road in the map
+/// \return 0 on OK , -1 on failure
 // (--+)
-void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad)
+int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad)
 {
+
     std::string ind = "  ";
     RoadNetwork *roadnet = nullptr;
     Bus *bus = nullptr;
@@ -544,7 +560,7 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
     HPos *rel_iso_pos_A = nullptr;
     HPos *rel_iso_pos_B  = nullptr;
 
-    std::cout << "\n** planForBusesOnRoadNetwork:\n";
+    if(debugLevel >=1) { std::cout << "\n*** planForBusesOnRoadNetwork:\n{"; }
 
 
 
@@ -554,7 +570,7 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
 
     if(roadNetworks->size() <= 0) {
         std::cout << "note: " << cn << " there are no roadnetworks to work with.\n";
-        return ;
+        return 0;
     }
 
 
@@ -567,7 +583,7 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
 
         if(roadnet == nullptr) {
             std::cout << "ERROR " << cn << " roadnet is null in planForBusesOnRoadNetwork when iterating roadNetworks\n";
-            return ;
+            return -1;
         }
 
 
@@ -582,7 +598,7 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
 
             if(bus == nullptr) {
                 std::cout << "ERROR " << cn << " one of the buses in the roadnet's buslist is nullptr.\n";
-                return ;
+                return -1;
             }
 
 
@@ -594,31 +610,29 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
             // Wishlist: Needs something sensible to go on for start and end position ...
             // Like a Bus Station
 
-
-            std::cout << ind << "\n\nWARNING: Hardcoded A to B! \n";
-
             abs_iso_pos_A  = roadnet->getNrRoad_iso(fromRoad);
 
             if(abs_iso_pos_A == nullptr) {
                 std::cout << "ERROR " << cn << " could not set start position\n";
-                return ;
+                return -1;
             }
 
             abs_iso_pos_B  = roadnet->getNrRoad_iso(toRoad);
-
             //abs_iso_pos_B = new HPos(4,4,USE_ISO);
 
             if(abs_iso_pos_B == nullptr) {
                 std::cout << "ERROR " << cn << " could not set end position\n";
-                return ;
+                return -1;
             }
 
 
 
-            /// For now, make sure we have no absolute positions when entering createSlotPath()
 
             rel_iso_pos_A = abs_iso_pos_A->clone();
             rel_iso_pos_B = abs_iso_pos_B->clone();
+
+            /// For now, make sure we have _no_ absolute positions when entering createSlotPath() (2018-05)
+            // remove it later on
 
             rel_iso_pos_A->abs_iso_x = 0;
             rel_iso_pos_A->abs_iso_y = 0;
@@ -627,7 +641,6 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
 
 
             /// Run Dijkstra to generate the path
-
             slotpath = roadnet->createSlotPath(rel_iso_pos_A, rel_iso_pos_B, debugLevel);
 
             bus->setSlotPath(slotpath);
@@ -637,15 +650,12 @@ void TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int
         }
     }
 
-    std::cout << "\n\n planForBusesOnRoadNetwork done ** \n";
+    if(debugLevel >=1) { std::cout << "\n\n} ***\n"; }
 
 
 
 
-
-
-
-
+    return 0;
 }
 
 void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
@@ -654,7 +664,10 @@ void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
 
 
 
-
+int TrafficManager::nrOfRoadnetworks()
+{
+    return roadNetworks->size();
+}
 
 /// \brief adds a bus to the roadnetwork you search for
 /// \param _bus Allocated bus
@@ -663,7 +676,8 @@ void TrafficManager::updateBusesOnRoadNetwork(int busId, int roadnetId) {
 /// (--)
 void TrafficManager::addBus(Bus *_bus, int roadnetId)
 {
-    std::cout << "Adding bus to trafficmanager\n";
+
+    int debugLevel = 0;
 
     // iterate over the roadnets and find a roadnet
     RoadNetwork *currNet = nullptr;
@@ -671,14 +685,16 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
     int nr = 0;
 
 
+    if(debugLevel >=1) { std::cout << "** addBus() {\n"; }
+
     // Find the RoadNetwork
     for( std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it)
     {
-        std::cout << "nr=" << nr << "\n";
+        if(debugLevel >=1) {std::cout << "nr=" << nr << "\n";}
         currNet = (*it);
 
         if(roadnetId == nr) {
-            std::cout << "adding bus to roadnet=" << nr<<"\n";
+            if(debugLevel >=1) {std::cout << "adding bus to roadnet=" << nr<<"\n";}
             break;
         }
 
@@ -696,6 +712,8 @@ void TrafficManager::addBus(Bus *_bus, int roadnetId)
 
     /// Finally add it to the right roadnet
     currNet->addBus(_bus);
+
+    if(debugLevel >=1) {std::cout << "}\n"; }
 }
 
 

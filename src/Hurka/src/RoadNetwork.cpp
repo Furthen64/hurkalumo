@@ -88,7 +88,6 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr)
 
 SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_pos, int debugLevel )
 {
-
     SlotPath *slotpath = new SlotPath();
     std::string ind = "  ";
 
@@ -106,9 +105,16 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
         return nullptr;
     }
 
-    if(debugLevel >=1) { std::cout << ind << "\n\n** createSlotPath \n";}
 
+    if(debugLevel >=1) {         std::cout << "\n**createSlotPath()\n{\n";     }
 
+    if(debugLevel >=2) {
+        std::cout << ind << "roadnetwork-maxY and maxX= (" << max_isoYOffset << ", " << max_isoXOffset<<")\n";
+        std::cout << ind << "parameter from_rel_iso_pos:\n";
+        from_rel_iso_pos->dump(ind);
+        std::cout << ind << "parameter to_rel_iso_pos:\n";
+        to_rel_iso_pos->dump(ind);
+    }
 
 
 
@@ -120,7 +126,9 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
     // Make a graph out of the roadnetwork
 
-    Graph *graph = new Graph("road_network_1");
+
+
+    Graph *graph = new Graph("road_network_1", max_isoYOffset + 1, max_isoXOffset+ 1);
     DijkstraResult *dijkstraResult = nullptr;
 
     int searchId = -1;

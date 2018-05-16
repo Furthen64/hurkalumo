@@ -1,8 +1,10 @@
 #include "Graph.hpp"
 
-Graph::Graph(std::string _name)
+Graph::Graph(std::string _name, int _mapMaxRows, int _mapMaxCols)
 {
     name = _name;
+    mapMaxRows = _mapMaxRows;
+    mapMaxCols = _mapMaxCols;
 }
 
 
@@ -10,10 +12,9 @@ Graph::Graph(std::string _name)
 
 /// \brief Walks the entire Graph populating hurkamatrix with 1:s where there is a node
 /// \param dumpNodes = if true will do a .dump on all Nodes it find
-/// RECURSIVE
-/// FIXME: It does not fillup the matrix correctly?
-/// FIXME: it does duplicate outputs because it ignores visited ? "Been here before, dont output!"
-// (--)
+// RECURSIVE
+// Tested a couple of times, alpha-0.1
+// (-+)
 HurkaMatrix *Graph::clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel)
 {
 
@@ -238,7 +239,7 @@ void Graph::dump(int debugLevel, int dumpNodes)
 
 
     std::cout << "\n\nwishlist: remove the 16,16 hardcoded matrix size\n";
-    HurkaMatrix *matrix = new HurkaMatrix(16,16);
+    HurkaMatrix *matrix = new HurkaMatrix(mapMaxRows, mapMaxCols);
 
 
     matrix = clockwiseTraverseUpFirst(head, visited, matrix, dumpNodes, debugLevel);
@@ -300,16 +301,15 @@ Node *Graph::findNode(int searchId, int debugLevel)
 
     BinarySearchTree *visited = new BinarySearchTree();
 
-    HurkaMatrix *matrix = new HurkaMatrix(16, 16);  // For output
+    HurkaMatrix *matrix = new HurkaMatrix(mapMaxRows, mapMaxCols);  // For output
 
-    Node *foundNode = clockwiseTraverseUpFirstFindNode(head, visited, matrix, searchId, debugLevel);    // FIXME Is it you who makes the game crash becausae debugLevel=1 instead of =0 ?
+    Node *foundNode = clockwiseTraverseUpFirstFindNode(head, visited, matrix, searchId, debugLevel);
 
     if(foundNode == nullptr) {
         std::cout << cn << " ERROR! Could not find a node with id=" << searchId << " in the graph \n";
     }
 
     if(debugLevel >= 2) {
-        std::cout << "REMEMBER, hardcoded 16x16 matrix!\n";
         matrix->dump();
     }
 
@@ -424,7 +424,7 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
 
 
     /// FIXME, TODO: Run resetDijkstra for all Nodes
-    //resetAllNodes();
+    resetAllNodes();
 
 
     /// setup the first node
@@ -818,9 +818,8 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
         }
 
 
-        ///
-        /// Exiting ? BUG FIXME? not sure if the exiting terms are correct
-        ///
+
+        /// Exiting terms
 
         steps++;
 

@@ -14,6 +14,7 @@ public:
     SlotPos *stepAndGetPos(int steps);
     void reset();
     void dump();
+    bool hasValues();
 
     SlotPos *nowPos = nullptr;
     void setListOfSlotPositions(std::list<SlotPos *> *_slotPositions);

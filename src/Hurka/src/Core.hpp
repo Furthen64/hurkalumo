@@ -59,21 +59,47 @@ public:
 
 private:
 
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 4;
+    int lockFPS_n = 30;
 
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
     std::string cn = "Core.cpp";
-    //std::string startmapStr = "data/roadnetwork_test.txt";
-    //std::string startmapStr = "data/bus_traffic_test.txt";
-    //std::string startmapStr = "data/dijkstra_test_1.txt";
-    //std::string startmapStr = "data/dijkstra_test_2.txt";
-    std::string startmapStr = "data/dijkstra_test_4.txt";
-    //std::string startmapStr = "data/bus_traffic_test.txt";
+
+
+
+    ///
+    /// All the Maps
+
+    //std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
+
+    //std::string startmapStr = "data/roadnetwork_test.txt";          // Works!
+
+
+    // bus_traffic_test.txt
+    //std::string startmapStr = "data/bus_traffic_test.txt";          // Works!
+
+
+
+
+    //std::string startmapStr = "data/dijkstra_test_1.txt";             // Works!
+    //std::string startmapStr = "data/dijkstra_test_2.txt";             // Works!
+    std::string startmapStr = "data/dijkstra_test_3.txt";               //
+    //std::string startmapStr = "data/dijkstra_test_4.txt";
+
+
+    //std::string startmapStr = "data/dijkstra_test_5.txt";
+    // dijkstra_test_5
+    // Tested: lot of roadnr to roadnrs! 2018-05                    // Works!
+
+                // 14 = first road on left, 26 = farthest road on the right
+                // 53 = very low very right
+
+
+
     //std::string startmapStr = "data/bus_traffic_test.txt";
 
 
@@ -85,8 +111,8 @@ private:
     int startViewPosX = -2178;
 
 
-    int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 5;
+    int dijkstraFromRoad= 3;
+    int dijkstraToRoad = 15;
 
 
 

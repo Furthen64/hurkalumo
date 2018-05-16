@@ -217,7 +217,10 @@ Block *Block::clone()
     std::cout << "Block.clone(): UNDEFINED BEHAVIOUR !! Needs more testing.\n";
 
 //    Block *block = new Block({pos.x, pos.y}, textureName);
+
     Block *block = new Block(hpos->clone(), textureName);
+
     // FIXME add delete
+
     return block;
 }

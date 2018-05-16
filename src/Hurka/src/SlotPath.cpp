@@ -53,10 +53,19 @@ void SlotPath::drawAllSlots(sf::RenderTarget &rt, HPos *viewHPos)
 }
 
 
-// (--) TEST
+// (-+)
 void SlotPath::add(SlotPos *slotpos)
 {
     slotPositions->push_back(slotpos);
+}
+
+
+
+// (--)
+bool SlotPath::hasValues()
+{
+
+    return (slotPositions->size() >0);
 }
 
 

@@ -22,19 +22,19 @@ int Core::boot()
 
     result = allocateResources();
     if(result != 0) {
-        std::cout << "\n\n*** Exiting.\n"; return result;
+        std::cout << "\n\n*** Exiting with error.\n"; return result;
     }
 
 
     result = loadResources(startmapStr);
     if(result != 0) {
-        std::cout << "\n\n*** Exiting.\n"; return result;
+        std::cout << "\n\n*** Exiting with error.\n"; return result;
     }
 
 
     result = setup(800,600, "Hurkalumo Editor 0.1-alpha");
     if(result != 0) {
-        std::cout << "\n\n*** Exiting.\n"; return result;
+        std::cout << "\n\n*** Exiting with error.\n"; return result;
     }
 
 
@@ -48,7 +48,7 @@ int Core::boot()
 int Core::allocateResources()
 {
 
-    std::cout << "\n\n\n---------------allocateResources-------------------\n";
+    std::cout << "\n\n\n---------------allocateResources---------\n";
 
 
     /// Load the Textures
@@ -76,7 +76,7 @@ int Core::allocateResources()
 
 
 
-    toolbarTop = new Toolbar(new HPos(0, 260, USE_GPIX));
+    toolbarTop = new Toolbar(new HPos(0, 360, USE_GPIX));
 
 
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
@@ -95,7 +95,7 @@ int Core::allocateResources()
 int Core::loadResources(std::string mapName)
 {
 
-    std::cout << "\n\n\n---------------loadResources-------------------\n";
+    std::cout << "\n\n\n---------------loadResources-------------\n";
 
 
 
@@ -131,8 +131,9 @@ int Core::loadResources(std::string mapName)
 /// (-+)
 int Core::setup(int width, int height, std::string title)
 {
+    int status = 0;
 
-    std::cout << "\n\n\n---------------setup-------------------\n";
+    std::cout << "\n\n\n---------------setup--------------------\n";
 
     initRandomizer();
 
@@ -143,36 +144,41 @@ int Core::setup(int width, int height, std::string title)
 
     if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads\n"; }
 
-    trafficMgr->parseCurrentRoads(roadMatrix, 0);
+    status = trafficMgr->parseCurrentRoads(roadMatrix, 0);
 
-    if(debugLevel >=2) {
+    if(debugLevel >=1) {
         std::cout << "\n\nDumping the individual road networks found:\n";
         trafficMgr->dumpRoadNetworks("   ");
     }
 
 
 
+    int maxnr = trafficMgr->nrOfRoadnetworks();
+
+    for(int nr = 0; nr < maxnr; nr++) {
+        /// Place a bus on a roadnetwork
+        bus = new Bus(new HPos(0,0, USE_GPIX));
+        trafficMgr->addBus(bus, nr);
+    }
 
 
-    /// Place a bus on a roadnetwork
-    bus = new Bus(new HPos(0,0, USE_GPIX));
-    trafficMgr->addBus(bus, 0);
 
-    bus = new Bus(new HPos(0,0, USE_GPIX));
-    trafficMgr->addBus(bus, 1);
 
-    bus = new Bus(new HPos(0,0, USE_GPIX));
-    trafficMgr->addBus(bus, 2);
 
-    bus = new Bus(new HPos(0,0, USE_GPIX));
-    trafficMgr->addBus(bus, 3);
+
+
+
 
 
 
 
     /// Plan a route for a Bus on a roadnetwork
-    trafficMgr->planForBusesOnRoadNetwork(debugLevel, dijkstraFromRoad, dijkstraToRoad);
+    status = trafficMgr->planForBusesOnRoadNetwork(debugLevel, dijkstraFromRoad, dijkstraToRoad);
 
+
+    if(status != 0) {
+        return status;
+    }
 
     return 0;
 
@@ -184,12 +190,15 @@ int Core::setup(int width, int height, std::string title)
 // (-+)
 void Core::run()
 {
-    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.06-alpha");
+    bool alreadyButtonPressed = false;
+
+    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
+
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
     }
 
-    std::cout << "\n\n\n---------------run-------------------\n";
+    std::cout << "\n\n\n---------------run--------------------\n";
 
     if(!window.isOpen()) {
         std::cout << "ERROR " << cn << " sf::window is not open!\n";
@@ -211,6 +220,8 @@ void Core::run()
     ///
 
 
+
+
     while (window.isOpen())
     {
 
@@ -224,13 +235,14 @@ void Core::run()
         }
 
 
+        /// Right mouse button pressed - Pan the map
 
-        /// Update
-
-
-        // Right mouse button pressed - Pan the map
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
+
+
+
+            // CR - Break out all this panning stuff
 
             bool rightof = false;
             bool belowof = false;
@@ -344,35 +356,79 @@ void Core::run()
 
         }
 
-        // Left mouse button pressed
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            /*
 
-            /// Dump the Bus position
-            bus->dump(viewHPos);
-            std::stringstream sstm;
+
+
+
+
+
+
+        // Did you let go of LMB?
+        if(!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            alreadyButtonPressed = false;
+        }
+
+
+
+        /// Left mouse button pressed
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
+        {
+
+            alreadyButtonPressed = true;
 
 
             /// Get mouse position
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window ); // SFML Specific....
-            HPos mousepos = HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );             // SFML Specific
+            HPos *mousepos = new HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
 
 
 
+            // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
+            mousepos->gpix_y -= viewHPos->gpix_y;
+            mousepos->gpix_x -= viewHPos->gpix_x;
 
+            mousepos = Grid::convert_gpix_to_iso(mousepos, 64, 32);
+/*
             Vector2f mouseWPos = Vector2f(); // SFML specific...
             mouseWPos.y = mousePos_i.y;
-            mouseWPos.x = mousePos_i.x;
+            mouseWPos.x = mousePos_i.x;*/
 
+
+
+
+            /// Do something
+            int lmbMode = 0;
+
+
+            switch(lmbMode)
+            {
+                case 0: //LMB_CREATE_ROAD:
+
+                    /// Light up the current tile
+                    grid->setVisible(mousepos);
+
+
+                    break;
+
+
+
+
+                    // which road type?
+                    // add block to right blocklist? in right renderorder..... whoopiee, well BST should take care of that now shouldn't it?
+
+
+
+
+            }
+
+
+            std::stringstream sstm;
+
+/*
             sstm << "WPOS(" << mousepos.gpix_y<< ", " << mousepos.gpix_x << ")\n";
 
 
 
-            /// Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
-
-            mousepos.gpix_y -= viewHPos->gpix_y;
-            mousepos.gpix_x -= viewHPos->gpix_x;
 
 
             sstm << "GPOS(" << mousepos.gpix_y << ", " << mousepos.gpix_x << ")\n";
@@ -393,8 +449,6 @@ void Core::run()
 
 
 
-            /// Light up the current tile
-            grid->setVisible(visibleIsoPos);
 
             if(debugLevel > 1)  {
                 std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
@@ -407,9 +461,8 @@ void Core::run()
 
             // if (toolbarTop.within(mousePos_i.x, mousepPos_i.y) { pushbutton(x,y));
             toolbarTop->pushButton(0); // debug test
+
 */
-
-
 
         }
 
@@ -428,9 +481,9 @@ void Core::run()
 
         HPos *busNowPos = bus->getNowPos();
 
-        if(busNowPos != nullptr) {
+        /*if(busNowPos != nullptr) {
             grid->setVisible(busNowPos);
-        }
+        }*/
 
 
 

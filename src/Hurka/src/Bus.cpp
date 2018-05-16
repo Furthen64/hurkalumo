@@ -123,22 +123,25 @@ void Bus::update_all_position_vars_on_gpix()
 void Bus::gameUpdate(RoadNetwork *roadnet)
 {
 
-    //make the bus use the slotpath it now has
-    SlotPos *workPos;
-    workPos = slotPath->stepAndGetPos(1);   // Make 1 step
 
-    if(workPos == nullptr) {
-        std::cout << "ERROR " << cn << " gameUpdate tried getting a slotPos from slotPath but ended up with a nullptr. \n";
-        return ;
+    if(slotPath->hasValues()) {
+
+        //make the bus use the slotpath it now has
+        SlotPos *workPos;
+        workPos = slotPath->stepAndGetPos(1);   // Make 1 step
+
+        if(workPos == nullptr) {
+            std::cout << "ERROR " << cn << " gameUpdate tried getting a slotPos from slotPath but ended up with a nullptr. \n";
+            return ;
+        }
+
+
+        pos = workPos->hpos;
+
+
+        // Update all position_variables based on this new gpix position
+        update_all_position_vars_on_gpix();
     }
-
-
-    pos = workPos->hpos;
-
-
-    // Update all position_variables based on this new gpix position
-    update_all_position_vars_on_gpix();
-
 }
 
 

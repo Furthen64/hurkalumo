@@ -35,7 +35,7 @@ Toolbar::Toolbar(HPos *_hpos)
 
     for(int i = 0; i < nrButtons*2; i++){
         sprites[i] = Sprite(texture);
-        sprites[i].setTextureRect( {i*widthPx, 0, 16, 16} );
+        sprites[i].setTextureRect( {i*widthPx, 0, 16, 16} );        // HARDCODED
 
         x = i*widthPx+ toolbarXOffset;
         y = 0;
@@ -74,9 +74,9 @@ void Toolbar::draw( RenderTarget& rt, HPos *viewHPos)
     // draw all the buttons individually
     for(int i = 0; i < nrButtons; i++){
         if(visibleSpritesTopArr[i] == true) {
-            sprites[i].setTextureRect( {i*widthPx, 0, 16, 16} );    // Show the top one
+            sprites[i].setTextureRect( {i*widthPx, 0, 16, 16} );    // Show the top one         HARDCODED
         } else {
-            sprites[i].setTextureRect( {i*widthPx, 16, 16, 16} );
+            sprites[i].setTextureRect( {i*widthPx, 16, 16, 16} );       // HARDCODED
         }
 
         // Draw it
