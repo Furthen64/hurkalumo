@@ -77,23 +77,33 @@ FileManager::FileManager()
 {
 }
 
-//readRegularFile()
-/// Reads a textfile which contains numbers on each line: 001,005,007\n
-///                                                       001,001,000\n
-/// Puts them all into a matrix
-/// Parses the Matrix of integers and creates Blocks
-/// while parsing, puts them in a particular order which rendering in the isometric view
-///
-/// docs: readRegularFile.png
 
+
+
+// Reads a textfile which contains numbers on each line: 001,005,007\n
+//                                                       001,001,000\n
+// Puts them all into a matrix
+// Parses the Matrix of integers and creates Blocks
+// while parsing, puts them in a particular order which rendering in the isometric view
+/// \return A complete HurkaMap containing the BlockList which has blocks put in the right order for rendering
+//
+// docs: readRegularFile.png
+// docs: C:\github\FAT64_MEDIA_TOO_BIG_FOR_GITHUB\Parsing_Matrix_to_BlockList.mp4
 // (-+)
-HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
+
+
+
+//gå igenom readRegularFile och se hur den kan göra matrix**  lika stor som GameMatrix
+HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, GameMatrix *gameMatrix)
 {
 
-    // The possible return objects, one fail and one win
-    HurkaMap *emptyMap = new HurkaMap("empty", nullptr, 0,0 );
+    // Returnobject HurkaMap
     HurkaMap *resultMap = nullptr;  // Allocated later when we have the matrix of objects (001,007,... etc)
 
+
+    std::string ind1 = "   ";
+    std::string ind2 = "      ";
+    std::string ind3 = "         ";
 
 
     // The blocklist will be attached to the resultmap if all goes well
@@ -115,18 +125,18 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
 
 
-    /// Verify the File
+    /// Verify the File and get mapRows and mapCols
 
 
     if(!verifyFile(_filename, &mapRows, &mapCols, debugLevel)) {
         std::cout << "ERROR " << cn << " unable to verify the file, exiting!\n";
-        return emptyMap;
+        return nullptr;
     }
 
 
 
     if(debugLevel > 0) {
-        std::cout << "The file has ROWS=" << mapRows << ", COLS=" << mapCols << "\n";
+        std::cout << ind1 << "The file has ROWS=" << mapRows << ", COLS=" << mapCols << "\n";
     }
 
 
@@ -144,7 +154,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
     if (infile.is_open()) {
 
             //
-            /// Create a Matrix of NxM
+            /// Create a Matrix
             //
 
             int rows = MTX_ROWS;
@@ -156,7 +166,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
             /// For every number (001,002,...) , put it in the matrix
 
             if(debugLevel > 0) {
-                std::cout << "    read lines from the file\n";
+                std::cout << "\n" << ind1 << "Read file and put content into a Matrix\n";
             }
 
             unsigned int currRow = 0;
@@ -192,15 +202,16 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
             if(debugLevel > 0) {
 
-                std::cout << "    complete!\n    put into matrix:\n";
+                std::cout << "\n\n";
 
-                dumpMatrix(matrix, MTX_ROWS, MTX_COLS, "    ");
+                dumpMatrix(matrix, MTX_ROWS, MTX_COLS, ind2);
             }
 
             // Create output object now that we have the matrix
             resultMap = new HurkaMap(_filename, matrix, MTX_ROWS, MTX_COLS);
 
-
+            currRow = 0;
+            currCol = 0;
 
 
 
@@ -209,12 +220,11 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
             /// Now get it out to blocklists
 
-            currRow = 0;
-            currCol = 0;
 
-             if(debugLevel > 0) {
+            if(debugLevel > 0) {
 
-                std::cout << "    put matrix content into blocklists\n";
+                std::cout << "\n" << ind1 << "Parse Matrix into blocklists\n";
+                std::cout << ind1 <<  "---------------------\n";
 
             }
 
@@ -222,17 +232,21 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
 
 
-            /// Parse the texture matrix in a particular way to get them in the way
-            /// they should be rendered
-            ///
-            /// See docs: matrix_texture_into_blocklist_loop.png
+           /// Parse the texture matrix in a particular way to get them in the way they should be rendered
+
+           /// PLEASE See docs:
+
+           // C:\github\FAT64_MEDIA_TOO_BIG_FOR_GITHUB\Parsing_Matrix_to_BlockList.mp4
 
 
 
-           int yDown = 0;
-           int xDownRight = 0;
+
+
 
            int yUp = 0;
+           int yDown = 0;
+
+           int xDownRight = 0;
            int xRight = 0;
 
            std::string textureName;
@@ -240,35 +254,42 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
            // Loop 1
            if(debugLevel > 0) {
-                std::cout << "\n\n(Loop 1)\n";
+                std::cout << ind2 << "Loop 1:\n" << ind2<< "-----------\n";
+
+
+
+
+               std::cout << ind3 << "yDown, yUp     xRight, xDownRight\n";
+               std::cout << ind3 << "------ ----   -------   ------- \n";
            }
+
 
            while(yDown < MTX_ROWS)
            {
+
                while(yUp > -1 && xRight < MTX_COLS)
                {
 
                    // row = yUp
                    // col = xRight
 
-
                    TextureManager *textureMgr;
                    textureMgr = textureMgr->getInstance();
-
-
                    textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
 
 
-
-                   //Block *block  = new Block({(float)xRight,(float)yUp}, textureName);        HPOSDELETE
-                   Block *block  = new Block(new HPos(yUp, xRight, USE_ISO), textureName);   // här var du 2018-04-08, följde kompiileringsfelen och löste det nya Block-konstruktorn du gjort för HPos-anpassning
+                   Block *block  = new Block(new HPos(yUp, xRight, USE_ISO), textureName);
 
                    blockList.push_back(block);
 
+
+                   if(debugLevel >=1) { std::cout << ind3 <<  yDown << ",     " << yUp << "          " << xRight << ",       " << xDownRight << "\n"; }
+
                    yUp--;
                    xRight++;
-
                }
+
+
 
                yDown++;
 
@@ -287,7 +308,8 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
 
 
            if(debugLevel > 0) {
-               std::cout << "\n\n(Loop 2)\n";
+               std::cout << "\n\n" << ind2 << "Loop 2:\n" << ind2 << "----------\n";
+               std::cout << ind3;
            }
 
            xDownRight++;
@@ -309,14 +331,27 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
                     textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );    // 001 -> "HOUSE001" for instance
 
                     Block *block  = new Block( new HPos(yUp, xRight, USE_ISO), textureName);
-                    //Block *block  = new Block({(float)xRight,(float)yUp}, textureName);   HPOSDELETE
-
 
                     blockList.push_back(block);
 
+                    if(debugLevel >= 1) {
+                       std::cout <<  "(" << yUp << ", " << xRight << ") ";
+                    }
+
                     yUp--;
                     xRight++;
+
+
+
                }
+
+
+
+               if(debugLevel >= 1) {
+                  std::cout << "\n";
+                  std::cout << ind3;
+               }
+
 
                xDownRight++;
 
@@ -328,28 +363,22 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel)
             /// Put that blocklist into a HurkaMap that we will return
             if(resultMap == nullptr)  {
                 std::cout << "ERROR " << cn << " resultMap is null inside readRegularFile(), stopping !\n";
-                return emptyMap;
+                return nullptr;
             }
 
             resultMap->putBlockList(blockList);
 
             /// Complete!!
 
-            if(debugLevel > 0) {
-
-                std::cout << "    blocklists complete:\n";
-                //dumpBlockList(blockList);
-            }
-
-
     } else {
         std::cout << "ERROR " << cn << ": Could not open file \"" << _filename << "\"!\n";
         infile.close();
-        return emptyMap;
+        return nullptr;
     }
 
 
     if(debugLevel > 0) {
+        resultMap->dump("   ");
         std::cout << "\n readRegularFile complete **** \n\n";
     }
 

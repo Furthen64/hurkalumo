@@ -88,6 +88,9 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr)
 
 SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_pos, int debugLevel )
 {
+
+
+
     SlotPath *slotpath = new SlotPath();
     std::string ind = "  ";
 
@@ -283,22 +286,25 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 ///
 /// \brief given a matrix with roads, walk the 1:s inside the matrix and connect everything accordingly in a Graph object
 /// \param roadMatrix A HurkaMatrix object, allocated, has values, any size.
-/// \param graph Graph object, allocated, empty.
+/// \param graph Allocated, empty. graph will be the return object, a Graph fully connected where the roads are
 /// \param currNode First node in graph
 /// \param prevNode Set as nullptr (internal)
 /// \param curr_rel_iso_pos The first position, must be where a road is. Relative positioning. can be modified!
 /// \param prev_rel_iso_pos set as nullptr.
-/// \param graph The return object, a Graph fully connected where the roads are
 /// \param visited Allocated, empty BinarySearchTree.
-// Dont forget the "FULL DUPLEX" issue... that you'd have to connect A to B and B to A
-// (--) Tested Once and worked with simple road, needs far more testing
+/// \return see Graph
+
+
+
+//
+// Bug  2018-05-13  It only runs attachNewNode , so when an old node is found
+//                  a new node is created. Like in dijkstra_test_1.txt where
+//                  the road loops in on itself                                 SOLVED!
+
+// Test 2018-05-16  I followed quite complex graph that
+//                  was created and it all looked fine to me.                   WORKS!
 // RECURSIVE
-//
-// BUG 2018-05-13
-// It only runs attachNewNode , so when an old node is found , a new node is created.
-// Like in dijkstra_test_1.txt where the road loops in on itself
-//
-// TESTING you could do a looksi loo and see if all the up down left right blocks look the same.. its been heavily modified.
+// (-+)
 void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                                          Graph *graph,
                                          Node *currNode,
@@ -394,9 +400,6 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
     */
 
 
-
-
-    if(dbgLevel >=1) { std::cout << "TEST the following.. not sure it works... please test it with multiple dijkstra_test_#.txt and also with different dijkstra A to B \n";}
 
     /// Go up
 

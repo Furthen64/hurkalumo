@@ -41,6 +41,7 @@ HPos::HPos()
 
 
 
+// (+-)
 std::string HPos::absToString()
 {
     std::string str = "(";
@@ -53,8 +54,6 @@ std::string HPos::absToString()
 
     str += ")";
 
-
-
     return str;
 }
 
@@ -62,7 +61,7 @@ std::string HPos::absToString()
 
 
 
-
+// (-+)
 std::string HPos::relToString()
 {
     std::string str = "(";
@@ -75,10 +74,56 @@ std::string HPos::relToString()
 
     str += ")";
 
-
-
     return str;
 }
+
+
+
+/// \brief If "other" is an exact match to "this", we return 0.
+/// \return 0 on exact match, -1 if not.
+// (--) TEST
+int HPos::compare(HPos *other)
+{
+
+    if(other->abs_iso_y == this->abs_iso_y
+       &&
+       other->abs_iso_x == this->abs_iso_x
+       &&
+       other->gpix_y == this->gpix_y
+       &&
+       other->gpix_x == this->gpix_x
+       &&
+       other->rel_iso_y == this->rel_iso_y
+       &&
+       other->rel_iso_x == this->rel_iso_x
+    )
+    {
+        return 0;
+    }
+
+    return -1;
+}
+
+
+
+/// \brief If "Other" has exact match with "this" on absolute_iso positioning, return 0.
+/// \return 0 on match, -1 if not.
+// (+-)
+int HPos::compareAbsIso(HPos *other)
+{
+
+    if(other->abs_iso_y == this->abs_iso_y
+       &&
+       other->abs_iso_x == this->abs_iso_x)
+    {
+        return 0;
+    }
+
+    return -1;
+
+}
+
+
 
 
 // Used by roadnetwork.cpp in createSlotPathFromDijkstraResult
@@ -94,6 +139,7 @@ void HPos::transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos)
 
 
 /// @brief Copies all the values from the original to the new one, returns newly allocated HPos
+// (-+) Seems to work.. // 2018-05-10
 HPos *HPos::clone()
 {
     HPos *_pos = new HPos(abs_iso_y, abs_iso_x, USE_ISO);
@@ -106,6 +152,8 @@ HPos *HPos::clone()
 }
 
 
+
+// (++)
 void HPos::dump(std::string ind)
 {
     std::cout << ind << "{\n";
@@ -113,5 +161,4 @@ void HPos::dump(std::string ind)
     std::cout << ind << "  rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
     std::cout << ind << "  gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
     std::cout << ind << "}\n";
-
 }

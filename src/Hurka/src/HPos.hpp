@@ -70,6 +70,8 @@ public:
     void transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos);
     std::string relToString();
     std::string absToString();
+    int compare(HPos *other);
+    int compareAbsIso(HPos *other);
 
     int abs_iso_y;
     int abs_iso_x;

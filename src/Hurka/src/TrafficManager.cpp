@@ -13,14 +13,13 @@ TrafficManager::TrafficManager()
 
 
 
-// (-+) Works with at least One bus on One roadnet
+// (+-)
 void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
 {
     RoadNetwork *currRoadnet = nullptr;
 
     for(std::list<RoadNetwork *>::iterator roadsIter=roadNetworks->begin(); roadsIter != roadNetworks->end(); ++roadsIter)
     {
-
         currRoadnet = (*roadsIter);
 
         for(std::list<Bus *>::iterator busIter=currRoadnet->buslist->begin(); busIter != currRoadnet->buslist->end(); ++busIter)
@@ -473,7 +472,6 @@ void TrafficManager::updateAll(HPos *viewHPos)
 
     int dbgLevel = 0;
 
-
     RoadNetwork *currRoadnet = nullptr;
     Bus *currBus = nullptr;
 
@@ -500,6 +498,8 @@ void TrafficManager::updateAll(HPos *viewHPos)
         roadnr++;
         busnr=0;
     }
+
+
 
 }
 

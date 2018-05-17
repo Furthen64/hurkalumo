@@ -19,7 +19,7 @@ GameMatrix::GameMatrix(int _height, int _width, int _textureID)
 
 
     // Hardcoded for now
-    texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_1.png");
+    texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_2.png");
     sprite = Sprite(texture);
 
     if( (height%2 != 0) || (width%2 != 0)) {

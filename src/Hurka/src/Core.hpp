@@ -31,6 +31,11 @@ using namespace sf;
 
 
 
+
+
+enum GAMEMODES { GAMEMODE_EDITOR, GAMEMODE_PAUSE };
+
+
 class Core
 {
 
@@ -65,6 +70,7 @@ private:
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
     int lockFPS_n = 30;
+    int gamemode = GAMEMODE_EDITOR;
 
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
     std::string cn = "Core.cpp";
@@ -74,7 +80,12 @@ private:
     ///
     /// All the Maps
 
-    //std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
+
+
+    //std::string startmapStr = "data/simple.txt";
+
+
+    std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
 
     //std::string startmapStr = "data/roadnetwork_test.txt";          // Works!
 
@@ -87,7 +98,7 @@ private:
 
     //std::string startmapStr = "data/dijkstra_test_1.txt";             // Works!
     //std::string startmapStr = "data/dijkstra_test_2.txt";             // Works!
-    std::string startmapStr = "data/dijkstra_test_3.txt";               //
+    //std::string startmapStr = "data/dijkstra_test_3.txt";               //
     //std::string startmapStr = "data/dijkstra_test_4.txt";
 
 
@@ -107,12 +118,12 @@ private:
     int mouseSensitivity = 4*ceil(100/lockFPS_n); // Pan speed in percentage
 
     HPos *viewHPos;
-    int startViewPosY = -331;
-    int startViewPosX = -2178;
+    int startViewPosY = -331;           // -331 works with 64 x 64
+    int startViewPosX = -(NR_GRIDS_WIDTH*15+1000);          // -2178 works with 64 x 64
 
 
-    int dijkstraFromRoad= 3;
-    int dijkstraToRoad = 15;
+    int dijkstraFromRoad= 0;
+    int dijkstraToRoad = 1;
 
 
 

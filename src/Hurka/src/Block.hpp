@@ -37,6 +37,8 @@ public:
 
     void set_pos_by_abs_iso(HPos *_abs_iso);
 
+    HPos *getHPos();
+
 
 
 private:

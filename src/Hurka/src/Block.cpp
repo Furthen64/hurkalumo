@@ -1,10 +1,11 @@
 #include "Block.hpp"
 
-///
-/// A Block is a thing that gets rendered on an isometric tile, like a House, Road or a Tree.
-/// Its texture resolution determines the correct height for positioning on that tile.
-///
-
+//
+// A Block is a thing that gets rendered on an isometric tile, like a House, Road or a Tree.
+// Its texture resolution determines the correct height for positioning on that tile.
+//
+// Stored in a "HurkaMap"
+// Used by Core
 
 
 
@@ -130,18 +131,6 @@ void Block::draw( RenderTarget& rt, HPos *viewHPos)
 
 
 
-int Block::getTextureID()
-{
-    return textureID;
-}
-
-
-std::string Block::getTextureName()
-{
-    return textureName;
-}
-
-
 // (-+)
 void Block::setTextureByName(std::string _textureName)
 {
@@ -223,4 +212,29 @@ Block *Block::clone()
     // FIXME add delete
 
     return block;
+}
+
+
+
+
+/// \return The internal Hpos pointer!
+// (--)
+HPos *Block::getHPos()
+{
+    return hpos;
+}
+
+
+
+
+
+int Block::getTextureID()
+{
+    return textureID;
+}
+
+
+std::string Block::getTextureName()
+{
+    return textureName;
 }

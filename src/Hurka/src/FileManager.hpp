@@ -27,7 +27,7 @@ public:
     bool verifyFile(std::string _filename, int *rows, int *cols, int debugLevel);
 
     void printWorkingDir();
-    HurkaMap *readRegularFile(std::string _filename, int debugLevel);
+    HurkaMap *readRegularFile(std::string _filename, int debugLevel, GameMatrix *);
 
 private:
 

@@ -70,13 +70,13 @@ int Core::allocateResources()
 
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
 
-    bus = new Bus(new HPos(0,0, USE_GPIX));
+    bus = new Bus(new HPos(0,0, USE_GPIX)); // deleteme?
 
     loco = new Locomotive();
 
 
 
-    toolbarTop = new Toolbar(new HPos(0, 360, USE_GPIX));
+    toolbarTop = new Toolbar(new HPos(0, 600, USE_GPIX));
 
 
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
@@ -103,13 +103,13 @@ int Core::loadResources(std::string mapName)
     /// Read the map
     std::cout << "Loading map \"" << mapName << "\"\n";
 
-    hmap = fmgr->readRegularFile(mapName,debugLevel);
+    hmap = fmgr->readRegularFile(mapName,debugLevel, gm);
     if(hmap->mapName == "empty") { std::cout << "ERROR Could not read map " << mapName << ", exiting!\n"; return -1;  }
 
 
     /// Get the roads
 
-    roadMatrix = hmap->getRoadMatrix();
+    roadMatrix = hmap->getRoadHMatrix();
     if(debugLevel > 0) {
         roadMatrix->dump();
     }
@@ -186,11 +186,24 @@ int Core::setup(int width, int height, std::string title)
 
 
 /// Run - The main loop for the editor/game
-/// Wishlist: Add modes: like intro_menu and exiting_menu and main_loop or something
-// (-+)
+
+
+// For now it does the very basics, has some sense of Modes
+// but runs very slow, has a performance issue (2018-05) as soon as I reach a certain nr of Blocks
+// (--+)
 void Core::run()
 {
     bool alreadyButtonPressed = false;
+
+
+
+    int inputCooldown = 0;
+    int inputCooldownCyclesPaused = 256000; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
+    int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
+    bool inputCooldownActive = false;
+
+
+
 
     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
 
@@ -225,6 +238,9 @@ void Core::run()
     while (window.isOpen())
     {
 
+
+
+
         /// Get events
 
         Event event;
@@ -235,7 +251,59 @@ void Core::run()
         }
 
 
-        /// Right mouse button pressed - Pan the map
+
+        /// Spacebar pressed
+
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !inputCooldownActive) {
+
+            if(gamemode == GAMEMODE_EDITOR) {
+                gamemode = GAMEMODE_PAUSE;
+                std::cout << "\n Nr of Blocks rendered=   " << hmap->getNrBlocks() << "\n";
+                std::cout << "\n\n       ****   PAUSED    ***** \n\n\n";
+            } else {
+                gamemode = GAMEMODE_EDITOR;
+                std::cout << "\n\n       ****   RESUMED   ***** \n\n\n";
+            }
+
+
+            inputCooldownActive = true;
+        }
+
+
+
+        if(inputCooldownActive) {
+            inputCooldown++;
+            //std::cout << inputCooldown << "\n";
+        }
+
+
+        if(gamemode == GAMEMODE_EDITOR) {
+            if(inputCooldown >= inputCooldownCyclesEditor) {
+                // RESET
+                inputCooldown = 0;
+                inputCooldownActive = false;
+                //std::cout << "RESET editor\n\n";
+
+            }
+        }
+
+        if(gamemode == GAMEMODE_PAUSE) {
+            if(inputCooldown >= inputCooldownCyclesPaused) {
+                inputCooldown = 0;
+                inputCooldownActive = false;
+                //std::cout << "RESET paused\n";
+            }
+
+        }
+
+
+
+
+
+
+
+        /// Right mouse button pressed - Pan the map                            even in paused mode
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
@@ -358,11 +426,6 @@ void Core::run()
 
 
 
-
-
-
-
-
         // Did you let go of LMB?
         if(!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             alreadyButtonPressed = false;
@@ -370,12 +433,16 @@ void Core::run()
 
 
 
-        /// Left mouse button pressed
+
+
+        /// Left mouse button pressed                                                       even in paused
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
         {
 
-            alreadyButtonPressed = true;
 
+            std::cout << "\n Nr of Blocks rendered=   " << hmap->getNrBlocks() << "\n";
+
+            alreadyButtonPressed = true;
 
             /// Get mouse position
             sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );             // SFML Specific
@@ -388,13 +455,6 @@ void Core::run()
             mousepos->gpix_x -= viewHPos->gpix_x;
 
             mousepos = Grid::convert_gpix_to_iso(mousepos, 64, 32);
-/*
-            Vector2f mouseWPos = Vector2f(); // SFML specific...
-            mouseWPos.y = mousePos_i.y;
-            mouseWPos.x = mousePos_i.x;*/
-
-
-
 
             /// Do something
             int lmbMode = 0;
@@ -404,8 +464,16 @@ void Core::run()
             {
                 case 0: //LMB_CREATE_ROAD:
 
-                    /// Light up the current tile
+                    // Light up the current tile
                     grid->setVisible(mousepos);
+
+
+
+
+                    // Place new road or Change existing
+
+                    hmap->placeNewOrSwapRoad(mousepos, 2);
+
 
 
                     break;
@@ -421,10 +489,10 @@ void Core::run()
 
             }
 
-
+/*
             std::stringstream sstm;
 
-/*
+
             sstm << "WPOS(" << mousepos.gpix_y<< ", " << mousepos.gpix_x << ")\n";
 
 
@@ -467,74 +535,65 @@ void Core::run()
         }
 
 
-        /// Trains
 
 
 
-        /// Buses
+        if(gamemode != GAMEMODE_PAUSE) {
 
 
-        trafficMgr->updateAll(viewHPos);
-
-
-        //grid->setVisible(bus->get_next_iso_pos());
-
-        HPos *busNowPos = bus->getNowPos();
-
-        /*if(busNowPos != nullptr) {
-            grid->setVisible(busNowPos);
-        }*/
+            /// Trains
 
 
 
+            /// Buses
 
 
 
+            trafficMgr->updateAll(viewHPos);
 
 
+            /// Render
+
+
+            window.clear({0, 0, 0});
 
 
 
 
 
 
+            if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
+
+            if(drawBlocks) {
+
+                /// Iterate list of blocklists to draw them in render order
+                hmap->draw(window, viewHPos);
+            }
+
+
+            if(drawLoco) {  loco->draw(window, viewHPos); }
+
+            if(drawBuses) {
+                    trafficMgr->drawBuses(window, viewHPos);
+                    //bus->draw(window, viewHPos); DELETE
+            }
+
+
+            if(drawGrid) {  grid->draw(window, viewHPos); }
+
+            if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
+
+            window.draw(lastClickedText);
+
+
+            // Finally push rendered buffer to screen
+
+
+            window.display();       // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
 
 
 
-
-
-
-
-        /// Render
-
-        window.clear({0, 0, 0});
-
-        if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
-
-        if(drawBlocks) {
-
-            /// Iterate list of blocklists to draw them in render order
-            hmap->draw(window, viewHPos);
-        }
-
-
-        if(drawLoco) {  loco->draw(window, viewHPos); }
-
-        if(drawBuses) {
-                trafficMgr->drawBuses(window, viewHPos);
-                //bus->draw(window, viewHPos); DELETE
-        }
-
-
-        if(drawGrid) {  grid->draw(window, viewHPos); }
-
-        if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
-
-        window.draw(lastClickedText);
-
-        /// Finally push rendered buffer to screen
-
-        window.display();
+        } // gamemode != PAUSE
 
 
 
