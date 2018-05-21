@@ -475,7 +475,7 @@ void Core::run()
 
                     // Place new road or Change existing
 
-                    hmap->placeNewOrSwapRoad(mousepos, 2);
+                    hmap->placeNewOrSwapRoad(mousepos, debugLevel);
 
 
 

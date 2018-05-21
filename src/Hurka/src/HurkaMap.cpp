@@ -321,11 +321,6 @@ void HurkaMap::draw(RenderTarget& rt, HPos *viewHPos)
 int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
 {
 
-
-// DELETEME
-debugLevel = 1;
-
-
     std::string ind = "  ";
 
     if(debugLevel >=1 ) {
