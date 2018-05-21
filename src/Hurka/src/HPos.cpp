@@ -108,7 +108,7 @@ int HPos::compare(HPos *other)
 
 /// \brief If "Other" has exact match with "this" on absolute_iso positioning, return 0.
 /// \return 0 on match, -1 if not.
-// (+-)
+// (--)
 int HPos::compareAbsIso(HPos *other)
 {
 
@@ -161,4 +161,66 @@ void HPos::dump(std::string ind)
     std::cout << ind << "  rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
     std::cout << ind << "  gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
     std::cout << ind << "}\n";
+}
+
+
+
+
+
+
+
+/// TEST FUNCTIONS
+
+
+// private function
+void HPos::testFunctions()
+{
+
+
+    HPos *A = new HPos(0,0,USE_ISO);
+    HPos *B = new HPos(0,1,USE_ISO);
+    HPos *C = new HPos(2,2,USE_ISO);
+
+    HPos *D = new HPos(320,240,USE_GPIX);
+    HPos *E = new HPos(480,240,USE_GPIX);
+    HPos *F = new HPos(240,480,USE_GPIX);
+
+
+    HPos *AA = new HPos(0,0,USE_ISO);
+    HPos *BB = new HPos(0,1,USE_ISO);
+    HPos *CC = new HPos(2,2,USE_ISO);
+
+    HPos *DD = new HPos(320,240,USE_GPIX);
+    HPos *EE = new HPos(480,240,USE_GPIX);
+    HPos *FF = new HPos(240,480,USE_GPIX);
+
+
+
+
+    // Comparing ISO values
+    assert(HPos::compareTwoAbsIso(A,AA) == 0);
+    assert(HPos::compareTwoAbsIso(B,BB) == 0);
+    assert(HPos::compareTwoAbsIso(C,CC) == 0);
+
+
+
+    // Comparing GPIX values
+    assert(HPos::compareTwoGpix(D,DD) == 0);
+    assert(HPos::compareTwoGpix(E,EE) == 0);
+    assert(HPos::compareTwoGpix(F,FF) == 0);
+
+
+    std::cout << "These SHOULD fail: \n";
+
+    //assert(HPos::compareTwoAbsIso(A,BB) == 0);
+    //assert(HPos::compareTwoAbsIso(B,AA) == 0);
+    //assert(HPos::compareTwoAbsIso(C,AA) == 0);
+
+    //assert(HPos::compareTwoGpix(D,EE) == 0);
+    //assert(HPos::compareTwoGpix(E,FF) == 0);
+    //assert(HPos::compareTwoGpix(F,EE) == 0);
+
+
+
+
 }

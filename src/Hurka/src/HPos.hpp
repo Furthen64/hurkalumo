@@ -2,6 +2,7 @@
 #define HPOS_H
 
 #include <iostream>
+#include <assert.h>
 
 
 class SlotPos;  // Forward declaration
@@ -85,8 +86,53 @@ public:
 
 
 
+    static bool ArightOfB(HPos *A, HPos *B)
+    {
+
+        if(A->abs_iso_x > B->abs_iso_x) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    // (-+)
+    static int compareTwoAbsIso(HPos *first, HPos *other)
+    {
+
+        if(first->abs_iso_y == other->abs_iso_y
+           &&
+           first->abs_iso_x == other->abs_iso_x)
+        {
+            return 0;
+        }
+
+        return -1;
+    }
+
+
+
+    // (-+)
+    static int compareTwoGpix(HPos *first, HPos *other)
+    {
+        if(first->gpix_y == other->gpix_y
+           &&
+           first->gpix_x == other->gpix_x)
+        {
+            return 0;
+        }
+
+        return -1;
+    }
+
+
+
 private:
 
+
+    void testFunctions();
 
 
 

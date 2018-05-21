@@ -185,6 +185,10 @@ int Core::setup(int width, int height, std::string title)
 }
 
 
+
+
+
+
 /// Run - The main loop for the editor/game
 
 
@@ -193,6 +197,8 @@ int Core::setup(int width, int height, std::string title)
 // (--+)
 void Core::run()
 {
+
+
     bool alreadyButtonPressed = false;
 
 
@@ -439,9 +445,6 @@ void Core::run()
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
         {
 
-
-            std::cout << "\n Nr of Blocks rendered=   " << hmap->getNrBlocks() << "\n";
-
             alreadyButtonPressed = true;
 
             /// Get mouse position
@@ -477,19 +480,18 @@ void Core::run()
 
 
                     break;
-
-
-
-
-                    // which road type?
-                    // add block to right blocklist? in right renderorder..... whoopiee, well BST should take care of that now shouldn't it?
-
-
-
-
             }
 
 /*
+
+
+    "CR Would you like to kNow more"
+    would fit nicely here,
+    output info on whatever you click on it
+
+    look in hmap to find whatever item lies in there. if there is something in the blokclist that matches your mousepos iso
+
+
             std::stringstream sstm;
 
 

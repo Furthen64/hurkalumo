@@ -111,16 +111,20 @@ int HurkaMap::indexInBlockList(HPos *blockpos)
 //   ...
 //
 // Thats what this function does, it finds out on what layer a particular HPos would be.
+//
+// Wishlist: Please synch this with the readRegularFile .... needs to copy this documentation to that one
+
 /// \brief Finds out on what layer to render a particular block, given its HPos position
 /// \param searchPos Allocated with values, abs_iso
-
-// Please synch this with the readRegularFile .... needs to copy this documentation  to that one
-
-// (--)
+/// \return returns the layernr when found, -1 otherwise.
+// (-+)     Seems to work fine!
 int HurkaMap::layerNrInBlockList(HPos *searchPos)
 {
 
-    int debugLevel = 1;
+    int debugLevel = 0;
+
+
+
     // we know the  Y max in this shiiiit
     // make loop1 and loop2 like in "readRegularFile"
 
@@ -146,10 +150,7 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
 
 
     // Loop 2:
-
     int xDownRight = 0;
-
-
 
     if(debugLevel >=1) {
 
@@ -163,9 +164,10 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
 
 
 
-    if(debugLevel >=1) { std::cout << ind1 << "Loop1:\n" << ind1 << "----------\n"; }
-
-    std::cout << ind1 << "layerNr=" << layerNr << "\n";
+    if(debugLevel >=1) {
+        std::cout << ind1 << "Loop1:\n" << ind1 << "----------\n";
+        std::cout << ind1 << "layerNr=" << layerNr << "\n";
+    }
 
     while(yDown < matrixRows)
     {
@@ -178,11 +180,11 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
 
             workPos = new HPos( yUp, xRight, USE_ISO);
 
-            std::cout << ind1 << "At= " << workPos->absToString() << " vs Search=" << searchPosStr << " \n";
+            if(debugLevel >= 2) { std::cout << ind1 << "At= " << workPos->absToString() << " vs Search=" << searchPosStr << " \n"; }
 
 
             if(workPos->compareAbsIso(searchPos) == 0) {
-                std::cout << ind1 << "   Match found!\n";
+                if(debugLevel >=1) { std::cout << ind1 << "   Match found!\n"; }
                 return layerNr;
             }
 
@@ -194,7 +196,7 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
 
 
         layerNr++;
-        std::cout << ind1 << "layerNr=" << layerNr << "\n";
+        if(debugLevel >=1) { std::cout << ind1 << "layerNr=" << layerNr << "\n"; }
 
 
         // Go down the matrix in the Y axis
@@ -208,11 +210,11 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
     }
 
 
+    if(debugLevel >=1) {
 
-    std::cout << ind1 << "\n\nLoop2:\n" << ind1 << "-------------\n";
-
-
-    std::cout << ind1 << "layerNr=" << layerNr << "\n";
+        std::cout << ind1 << "\n\nLoop2:\n" << ind1 << "-------------\n";
+        std::cout << ind1 << "layerNr=" << layerNr << "\n";
+    }
 
 
     yUp = matrixRows-1; // Start at the Bottom Left
@@ -227,10 +229,12 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
         {
             workPos = new HPos(yUp, xRight, USE_ISO);
 
-            std::cout << ind1 << "At= " << workPos->absToString() << " vs Search=" << searchPosStr << " \n";
+            if(debugLevel >=2) {std::cout << ind1 << "At= " << workPos->absToString() << " vs Search=" << searchPosStr << " \n";}
 
             if(workPos->compareAbsIso(searchPos) == 0) {
-                std::cout << ind1 << "   Match found!\n";
+
+                if(debugLevel >=1) { std::cout << ind1 << "   Match found!\n"; }
+
                 return layerNr;
             }
 
@@ -240,7 +244,7 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
         }
 
         layerNr++;
-        std::cout << ind1 << "layerNr=" << layerNr << "\n";
+        if(debugLevel >=1) { std::cout << ind1 << "layerNr=" << layerNr << "\n";}
 
         xDownRight++;
 
@@ -250,19 +254,12 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
 
 
 
-    if(debugLevel >=1) {
-        std::cout << "\n}\n\n";
-    }
-
-
-    return 0;
+    if(debugLevel >=1) { std::cout << "\n}\n\n"; }
 
 
 
-
-
-
-
+    // We did not find anything
+    return -1;
 }
 
 
@@ -274,30 +271,23 @@ int HurkaMap::layerNrInBlockList(HPos *searchPos)
 //                                 /  \ ____________
 //                                 \  /
 //                                  \/     Loop 2
-// (--) TEST
+// (--)  test more plz
 void HurkaMap::dump(std::string ind)
 {
-    std::cout << ind << "** Dumping Hurkamap: \n{\n";
-
-
-    int nr = 0;
-    int div = 0;
-    std::string indent = "                                     ";
-    bool loop1 = true;
-    int nrLoop1 = 0;
-
     Block *workBlock = nullptr;
 
+
+    std::cout << ind << "{\n";
+    std::cout << ind << "  ";
     for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
     {
         workBlock = (*it);
         std::cout << workBlock->getHPos()->absToString() << " ";
-
-
     }
+    std::cout << "\n" << ind << "}\n";
 
 
-    std::cout << ind << "\n} ** \n";
+
 }
 
 
@@ -320,132 +310,272 @@ void HurkaMap::draw(RenderTarget& rt, HPos *viewHPos)
 
 
 /// \brief Places a Road in the gamematrix at given position, or if one already exists, Swaps its current road to another road
-
+/// \param roadPos Allocated, values set, position of the new road you want to place
+/// \return -1 on failure, 0 on OK
 // BUG 2018-05  It generates a tonne of blocks when I just add one. It doubles the amount of blocks being rendered.             Solved.
 //              SOLVED by ending a loop that just kept on going.
+//
+// (--+)            Placement works, renders OK
+//                  Changing road type works
 
-// (--)
-
-// TEST
 int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
 {
 
 
+// DELETEME
+debugLevel = 1;
+
+
+    std::string ind = "  ";
+
     if(debugLevel >=1 ) {
-        std::cout << "** placeNewOrSwapRoad()\n{\n";
-        std::cout << "   param roadPos:   " << roadPos->absToString() << "\n";
+        std::cout << "placeNewOrSwapRoad()\n{\n";
+        std::cout << ind << " - roadPos:   " << roadPos->absToString() << "\n";
     }
 
 
 
+    std::string textureStr = "          ";
     Block *workBlock = nullptr;
-
-    int nr = indexInBlockList(roadPos);
-
-
-    int layerNr = layerNrInBlockList(roadPos);
-
-    std::cout << "layerNrInBlockList(roadpos) gave us= " << layerNr << "\n\n";
-
-    std::cout << "indexinblocklist(roadPos) gave us= " << nr << "\n\n";
-
-
-    int searchId1 = -1;
-    int searchId2 = -1;
-
-
+    int nr = 0;
+    int searchPosID = -1;
+    int currPosID = -1;
     bool createdNewBlock = false;
+    std::list<Block *>::iterator itContinue;
 
 
-    searchId1 = Node::genIDfrom_abs_iso(roadPos);
 
+
+
+    searchPosID = Node::genIDfrom_abs_iso(roadPos);
+
+
+
+    /// Try and find position in the Blocklist
+
+    nr = indexInBlockList(roadPos);
 
     // If already exist
     if(nr != -1) {
 
+        for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
+        {
 
-            // Wishlist: Replace the existing or swap or rotate a Road like in OpenTTD
+            // Current Block on position
+            workBlock = (*it);
 
-            // For now, just set a road there
-
-            for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
-            {
-
-                // Current Block on position
-                workBlock = (*it);
-
-                searchId2 = Node::genIDfrom_abs_iso(workBlock->getHPos());
-
-                if(searchId1 == searchId2) {
-
-                    std::cout << "textureName=" << workBlock->getTextureName() << "\n";
-                    std::cout << "textureId=" << workBlock->getTextureName() << "\n";
-
-                    //  (*it) = new Block(roadPos, "ROAD001");     // BUG FIXME something crashes if you try wrong textuername
-                    (*it) = new Block(roadPos, "HOUSE001");     // BUG FIXME something crashes if you try wrong textuername
+            currPosID = Node::genIDfrom_abs_iso(workBlock->getHPos());
 
 
-                    break;
+
+            if(searchPosID == currPosID) {
 
 
+                textureStr = workBlock->getTextureName();
+
+                if(debugLevel >=2) {
+                    std::cout << ind << " Found match! " << searchPosID << " vs " << currPosID << "\n";
+
+                    std::cout << ind << " TextureName = \"" << textureStr << "\", TextureID=" << workBlock->getTextureID() << "\n";
                 }
 
 
+
+                // Already a Road, rotate among the different kinds
+
+                if(textureStr == "ROAD001") {
+                    textureStr = "ROAD002";
+                } else if(textureStr == "ROAD002") {
+                    textureStr = "ROAD003";
+                } else if(textureStr == "ROAD003") {
+                    textureStr = "ROAD004";
+                } else if(textureStr == "ROAD004") {
+                    textureStr = "ROAD005";
+                } else if(textureStr == "ROAD005") {
+                    textureStr = "ROAD006";
+                } else if(textureStr == "ROAD006") {
+                    textureStr = "ROAD007";
+                } else if(textureStr == "ROAD007") {
+                    textureStr = "ROAD008";
+                } else if(textureStr == "ROAD008") {
+                    textureStr = "ROAD001";                     // And Around we go!
+                }
+
+
+
+                (*it) = new Block(roadPos, textureStr);     // BUG FIXME something crashes if you try wrong textuername
+
+                if(debugLevel >=1) {
+                    std::cout << ind << " - UPDATED!\n";
+                    std::cout << "\n}\n\n";
+                }
+
+                return 0;
             }
 
+        }
     }
 
 
 
 
 
-    // If it does not exist
+    /// If it does not exist
 
-    if(nr == -1) {
+    bool sameLayer = false;
+    int searchPosLayer = 0;
+    int currLayer = 0;
 
-            for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
-            {
-                workBlock = (*it);
-
-                searchId2 = Node::genIDfrom_abs_iso(workBlock->getHPos());
-
-                if(searchId2 > searchId1) {
-                    // We are there! lets insert a new object into the list
-
-                    blockList.insert(it, new Block(roadPos, "HOUSE001"));                           // FIXME Im not sure... how this should be done. also see below
-
-                    createdNewBlock = true;
-
-                    break;
-                }
-            }
-
-            if(!createdNewBlock) {
-
-                // Oh? well then we must be placing one last in the blocklist
-                //blockList.push_back(new Block(roadPos, "ROAD001"));
-                blockList.push_back(new Block(roadPos, "HOUSE001"));                            // FIXME Not sure this is right... Renderorder lol?
-
-            }
+    searchPosLayer = layerNrInBlockList(roadPos);
+    if(debugLevel >=2) {
+        std::cout << ind << " - parameter \"roadpos\"'s searchPosLayer= " << searchPosLayer << "\n\n";
     }
-
-
-
 
 
     if(debugLevel >=2) {
-        std::cout << "\n blocklist contents:\n";
-        dump("   ");
+        std::cout << ind << "Searching for blocks already existing on that layernr\n" << ind << "---------------------\n";
+    }
+
+    if(nr == -1) {
+
+        /// Find the right layer for it
+
+        for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
+        {
+            workBlock = (*it);
+
+
+            // First find a block on the same layer
+
+            if(!sameLayer) {
+                currLayer = layerNrInBlockList(workBlock->getHPos());
+
+
+                if(currLayer == searchPosLayer) {
+
+                   if(debugLevel >=2) {
+                        std::cout << ind << "This workblock is at same layer:\n";
+                        workBlock->getHPos()->dump("   ");
+                        std::cout << "\n";
+                   }
+
+                   sameLayer = true;
+                }
+            }
+
+
+            if(sameLayer) {
+
+                // Now find the right position in the blocklist here at this layer
+
+                if(HPos::ArightOfB(workBlock->getHPos(), roadPos) ) {
+
+                    if(debugLevel >=2) {
+                        std::cout << ind << "Comparing with ArightOFB(workblock, roadpos):\n";
+                        workBlock->getHPos()->dump("  ");
+                        roadPos->dump("  ");
+                    }
+
+                    if(debugLevel >=2) {
+                        std::cout << " - Found a block that matches layernr, and is RIGHT of our searched \"roadpos\".\n";
+                    }
+
+
+                    blockList.insert(it, new Block(roadPos, "ROAD001"));
+                    if(debugLevel >=1) {
+                        std::cout << ind << "- INSERTED!\n";
+                        std::cout << "\n}\n\n";
+                    }
+
+                    return 0;
+                }
+
+                // Reset flag
+
+                sameLayer = false;
+            }
+        }
+
+
+        if(!createdNewBlock)
+        {
+
+            // Could NOT find a block at our search layer, find out if there is a Block further down
+
+            if(debugLevel >=2) {
+                std::cout << "\n" << ind << "  - Nothing found.";
+
+                std::cout << "\n\n" << ind << "Could NOT find a block at our search layer, find out if there is a Block further down\n";
+                std::cout << ind << "---------------------------------------------------------------\n";
+
+            }
+
+
+
+            for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
+            {
+
+                workBlock = (*it);
+
+                currLayer = layerNrInBlockList(workBlock->getHPos());
+
+                if(currLayer > searchPosLayer) {
+
+                    // We are there, now insert our block just before this one
+                    if(debugLevel >=2) { std::cout << "Found a right place for this Block!\n"; }
+
+                    blockList.insert(it, new Block(roadPos, "ROAD001"));       // Inserts BEFORE the current iterator
+
+
+                    createdNewBlock = true;
+
+
+                    if(debugLevel >=1) {  std::cout << ind << " - INSERTED! \n}\n\n"; }
+
+                    return 0;
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+        if(!createdNewBlock) {
+
+            if(debugLevel >=2 ) {
+                std::cout << "\n";
+                std::cout << ind << " - Nothing found.\n\n";
+
+                std::cout << ind << "Could NOT find a block beneath us, so lets just go ahead and create at the back of the blocklist!\n";
+                std::cout << ind << "-------------------------------------------------------------------------------------------------------\n";
+            }
+            blockList.push_back(new Block(roadPos, "ROAD001"));
+            createdNewBlock = true;
+
+            if(debugLevel >=1) {
+                std::cout << ind << " - INSERTED.\n\n";
+                std::cout << "\n}\n\n";
+            }
+
+
+            return 0;
+
+        }
+
     }
 
 
-
-    if(debugLevel >=1) {     std::cout << "\n} **\n"; }
-
+    std::cout << ind << " Sorry, could not help you out. Bug?\n";
 
 
-
-    return 0;
+    return -1;
 }
 
 

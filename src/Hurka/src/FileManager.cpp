@@ -93,6 +93,10 @@ FileManager::FileManager()
 
 
 
+// Wishlist: Having a BlockList for every Layer :3 would be easier to FIND where to insert and manipulate BLOCKs
+
+
+
 //gå igenom readRegularFile och se hur den kan göra matrix**  lika stor som GameMatrix
 HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, GameMatrix *gameMatrix)
 {
@@ -133,6 +137,16 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
         return nullptr;
     }
 
+    if(mapRows > gameMatrix->getHeight()) {
+        std::cout << "ERROR " << cn << " file loaded is larger in height than the gamematrix allows for!\n";
+        return nullptr;
+    }
+
+    if(mapCols > gameMatrix->getWidth()) {
+        std::cout << "ERROR " << cn << " file loaded is larger in width than the gamematrix allows for!\n";
+        return nullptr;
+    }
+
 
 
     if(debugLevel > 0) {
@@ -147,20 +161,10 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
     /// Get the Rows and Columns out of the map
 
+    if (infile.is_open())
+    {
 
-    int MTX_ROWS=mapRows;
-    int MTX_COLS=mapCols;
-
-    if (infile.is_open()) {
-
-            //
-            /// Create a Matrix
-            //
-
-            int rows = MTX_ROWS;
-            int cols = MTX_COLS;
-
-            int **matrix = allocateMatrix(rows, cols);
+            int **matrix = allocateMatrix(gameMatrix->getHeight(), gameMatrix->getWidth());
 
             /// Read lines from the file
             /// For every number (001,002,...) , put it in the matrix
@@ -179,7 +183,8 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
                 // Parse this line
 
-                while( (offset+4) <= line.size()) {
+                while( (offset+4) <= line.size())
+                {
 
                     w = stoi(line.substr(offset,3));
                     offset += 4;
@@ -204,11 +209,11 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
                 std::cout << "\n\n";
 
-                dumpMatrix(matrix, MTX_ROWS, MTX_COLS, ind2);
+                dumpMatrix(matrix, gameMatrix->getHeight(), gameMatrix->getWidth(), ind2);
             }
 
             // Create output object now that we have the matrix
-            resultMap = new HurkaMap(_filename, matrix, MTX_ROWS, MTX_COLS);
+            resultMap = new HurkaMap(_filename, matrix, gameMatrix->getHeight(), gameMatrix->getWidth());
 
             currRow = 0;
             currCol = 0;
@@ -219,7 +224,6 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
 
             /// Now get it out to blocklists
-
 
             if(debugLevel > 0) {
 
@@ -264,23 +268,28 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
            }
 
 
-           while(yDown < MTX_ROWS)
+           while(yDown < resultMap->getRows())
            {
 
-               while(yUp > -1 && xRight < MTX_COLS)
+               while(yUp > -1 && xRight < resultMap->getCols())
                {
 
                    // row = yUp
                    // col = xRight
 
-                   TextureManager *textureMgr;
-                   textureMgr = textureMgr->getInstance();
-                   textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
+
+                   if(matrix[yUp][xRight] != 0) {
+
+                       TextureManager *textureMgr;
+                       textureMgr = textureMgr->getInstance();
+                       textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );
 
 
-                   Block *block  = new Block(new HPos(yUp, xRight, USE_ISO), textureName);
+                       Block *block  = new Block(new HPos(yUp, xRight, USE_ISO), textureName);
 
-                   blockList.push_back(block);
+                       blockList.push_back(block);
+
+                   }
 
 
                    if(debugLevel >=1) { std::cout << ind3 <<  yDown << ",     " << yUp << "          " << xRight << ",       " << xDownRight << "\n"; }
@@ -302,7 +311,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
            // Loop 2
 
-           yUp = MTX_ROWS-1;    // Start at the bottom, and traverse right in this "loop 2"
+           yUp = resultMap->getRows()-1;    // Start at the bottom, and traverse right in this "loop 2"
 
 
 
@@ -317,26 +326,29 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
            xRight = xDownRight;
 
 
-           while(xDownRight < MTX_COLS)
+           while(xDownRight < resultMap->getCols())
            {
 
-               while(yUp > -1 && xRight < MTX_COLS)
+               while(yUp > -1 && xRight < resultMap->getCols())
                {
                     // row = yUp
                     // col = xRight
 
-                    TextureManager *textureMgr;
-                    textureMgr = textureMgr->getInstance();
+                    if(matrix[yUp][xRight] != 0) {
 
-                    textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );    // 001 -> "HOUSE001" for instance
+                        TextureManager *textureMgr;
+                        textureMgr = textureMgr->getInstance();
 
-                    Block *block  = new Block( new HPos(yUp, xRight, USE_ISO), textureName);
+                        textureName = textureMgr->getTextureNameByIndex( matrix[yUp][xRight] );    // 001 -> "HOUSE001" for instance
 
-                    blockList.push_back(block);
+                        Block *block  = new Block( new HPos(yUp, xRight, USE_ISO), textureName);
 
-                    if(debugLevel >= 1) {
-                       std::cout <<  "(" << yUp << ", " << xRight << ") ";
+                        blockList.push_back(block);
+
+
                     }
+
+                    if(debugLevel >= 1) { std::cout <<  "(" << yUp << ", " << xRight << ") ";}
 
                     yUp--;
                     xRight++;
@@ -356,7 +368,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
                xDownRight++;
 
                xRight = xDownRight;
-               yUp = MTX_ROWS-1;
+               yUp = resultMap->getRows()-1;
             }
 
 

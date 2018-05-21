@@ -2,6 +2,7 @@
 #define CORE_H
 
 
+
 #include <stdlib.h>
 #include <iostream>
 #include <unordered_map>
@@ -82,10 +83,10 @@ private:
 
 
 
-    //std::string startmapStr = "data/simple.txt";
+    std::string startmapStr = "data/simple.txt";
 
 
-    std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
+    //std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
 
     //std::string startmapStr = "data/roadnetwork_test.txt";          // Works!
 

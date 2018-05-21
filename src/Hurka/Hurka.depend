@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1526596864 source:c:\github\lumo\src\hurka\src\core.cpp
+1526766744 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1525815589 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1627,7 +1627,7 @@
 	"SFML/Graphics.hpp"
 	"HPos.hpp"
 
-1526596956 source:c:\github\lumo\src\hurka\src\filemanager.cpp
+1526602688 source:c:\github\lumo\src\hurka\src\filemanager.cpp
 	"FileManager.hpp"
 
 1526596891 c:\github\lumo\src\hurka\src\filemanager.hpp
@@ -1644,7 +1644,7 @@
 	"Constants.hpp"
 	"Utils.hpp"
 
-1526594905 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
+1526923542 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
 	"HurkaMap.hpp"
 	"Node.hpp"
 
@@ -1689,7 +1689,7 @@
 1525869654 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1526601225 c:\github\lumo\src\hurka\src\core.hpp
+1526766476 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1777,10 +1777,11 @@
 1523140518 source:c:\github\lumo\src\hurka\src\busroute.cpp
 	"BusRoute.hpp"
 
-1526593270 c:\github\lumo\src\hurka\src\hpos.hpp
+1526766472 c:\github\lumo\src\hurka\src\hpos.hpp
 	<iostream>
+	<assert.h>
 
-1526593509 source:c:\github\lumo\src\hurka\src\hpos.cpp
+1526766465 source:c:\github\lumo\src\hurka\src\hpos.cpp
 	"HPos.hpp"
 	"SlotPos.hpp"
 
