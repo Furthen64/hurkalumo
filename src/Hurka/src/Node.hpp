@@ -1,14 +1,19 @@
+#ifndef NODE_H
+#define NODE_H
+
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
 #include <climits>
 #include <sstream>
+
+
 #include "HPos.hpp"
 
 using namespace sf;
 
 class Link; // Forward declaration
-
 
 enum NODE_DIR {
     dir_up,
@@ -168,3 +173,6 @@ private:
     HPos *rel_iso_pos;
     std::string cn = "Node.cpp";
 };
+
+
+#endif

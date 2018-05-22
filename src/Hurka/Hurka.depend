@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1526924699 source:c:\github\lumo\src\hurka\src\core.cpp
+1526982777 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1525815589 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1589,7 +1589,7 @@
 	<exception>
 	"Constants.hpp"
 
-1526137767 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
+1526976736 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
 	"TextureManager.hpp"
 
 1526459716 source:c:\github\lumo\src\hurka\src\toolbar.cpp
@@ -1611,7 +1611,7 @@
 
 1526601242 c:\github\lumo\src\hurka\src\constants.hpp
 
-1526482470 source:c:\github\lumo\src\hurka\src\block.cpp
+1526981841 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
 1526482393 c:\github\lumo\src\hurka\src\block.hpp
@@ -1644,17 +1644,15 @@
 	"Constants.hpp"
 	"Utils.hpp"
 
-1526923542 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
+1526982364 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
 	"HurkaMap.hpp"
 	"Node.hpp"
 
-1526594628 c:\github\lumo\src\hurka\src\hurkamap.hpp
+1526982444 c:\github\lumo\src\hurka\src\hurkamap.hpp
 	<list>
 	<string>
 	<SFML/Graphics.hpp>
-	"Utils.hpp"
-	"TextureManager.hpp"
-	"Block.hpp"
+	"TrafficManager.hpp"
 
 1526403444 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
@@ -1689,7 +1687,7 @@
 1525869654 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1526766476 c:\github\lumo\src\hurka\src\core.hpp
+1526984092 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1711,10 +1709,10 @@
 
 1521330484 source:c:\github\lumo\src\hurka\src\dijkstra.cpp
 
-1526487738 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
+1526982871 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1526494317 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1526982922 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
 1526164643 c:\github\lumo\src\hurka\src\roadnetwork.hpp
@@ -1731,7 +1729,7 @@
 	<string>
 	<iostream>
 
-1526408032 c:\github\lumo\src\hurka\src\trafficmanager.hpp
+1526982605 c:\github\lumo\src\hurka\src\trafficmanager.hpp
 	<list>
 	"Graph.hpp"
 	"RoadNetwork.hpp"
@@ -1748,7 +1746,7 @@
 	"Node.hpp"
 	"Link.hpp"
 
-1526328153 c:\github\lumo\src\hurka\src\node.hpp
+1526982412 c:\github\lumo\src\hurka\src\node.hpp
 	<SFML/Graphics.hpp>
 	<string>
 	<iostream>
@@ -1756,7 +1754,7 @@
 	<sstream>
 	"HPos.hpp"
 
-1526408785 c:\github\lumo\src\hurka\src\graph.hpp
+1526942303 c:\github\lumo\src\hurka\src\graph.hpp
 	<iostream>
 	<string>
 	<stack>
@@ -1766,7 +1764,7 @@
 	"Link.hpp"
 	"BinarySearchTree.hpp"
 
-1526459774 source:c:\github\lumo\src\hurka\src\graph.cpp
+1526942247 source:c:\github\lumo\src\hurka\src\graph.cpp
 	"Graph.hpp"
 
 1523096660 c:\github\lumo\src\hurka\src\busroute.hpp

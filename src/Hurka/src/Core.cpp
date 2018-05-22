@@ -44,7 +44,7 @@ int Core::boot()
     return result;
 }
 
-// (--)
+// (-+)
 int Core::allocateResources()
 {
 
@@ -91,7 +91,7 @@ int Core::allocateResources()
 
 // Returns 0 when ok,
 // Return -1 when something failed
-// (--)
+// (-+)
 int Core::loadResources(std::string mapName)
 {
 
@@ -116,10 +116,7 @@ int Core::loadResources(std::string mapName)
 
     /// Load font
     if (!font.loadFromFile("consola.ttf"))
-    {
-        std::cout << "ERROR " << cn << " could not load font consola.ttf.\n";
-        return -1;
-    }
+    { std::cout << "ERROR " << cn << " could not load font consola.ttf.\n"; return -1; }
 
     return 0;
 }
@@ -128,7 +125,7 @@ int Core::loadResources(std::string mapName)
 
 /// Setup - The idea is to use whatever resources that have been loaded and
 /// transform them, set them up for running the editor/game.
-/// (-+)
+// (-+)
 int Core::setup(int width, int height, std::string title)
 {
     int status = 0;
@@ -142,13 +139,15 @@ int Core::setup(int width, int height, std::string title)
 
     /// Parse the current situation of roads into individual road networks
 
-    if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads\n"; }
+    if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads....\n"; }
 
     status = trafficMgr->parseCurrentRoads(roadMatrix, 0);
 
+    if(debugLevel >=1) {        std::cout << "                          complete!\n"; }
+
     if(debugLevel >=1) {
         std::cout << "\n\nDumping the individual road networks found:\n";
-        trafficMgr->dumpRoadNetworks("   ");
+        trafficMgr->dumpRoadNetworks("   ", false);
     }
 
 
@@ -165,23 +164,13 @@ int Core::setup(int width, int height, std::string title)
 
 
 
-
-
-
-
-
-
-
     /// Plan a route for a Bus on a roadnetwork
     status = trafficMgr->planForBusesOnRoadNetwork(debugLevel, dijkstraFromRoad, dijkstraToRoad);
+    if(status != 0) { return status; }
 
 
-    if(status != 0) {
-        return status;
-    }
 
     return 0;
-
 }
 
 
@@ -190,26 +179,24 @@ int Core::setup(int width, int height, std::string title)
 
 
 /// Run - The main loop for the editor/game
-
-
 // For now it does the very basics, has some sense of Modes
-// but runs very slow, has a performance issue (2018-05) as soon as I reach a certain nr of Blocks
 // (--+)
 void Core::run()
 {
 
+    std::string ind1 = "   ";
+    std::string ind2 = "      ";
+    std::string ind3 = "         ";
+    std::string ind4 = "            ";
 
+
+
+    // Input Control (should be own class)
     bool alreadyButtonPressed = false;
-
-
-
     int inputCooldown = 0;
     int inputCooldownCyclesPaused = 256000; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
-
-
-
 
     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
 
@@ -265,7 +252,6 @@ void Core::run()
 
             if(gamemode == GAMEMODE_EDITOR) {
                 gamemode = GAMEMODE_PAUSE;
-                std::cout << "\n Nr of Blocks rendered=   " << hmap->getNrBlocks() << "\n";
                 std::cout << "\n\n       ****   PAUSED    ***** \n\n\n";
             } else {
                 gamemode = GAMEMODE_EDITOR;
@@ -280,7 +266,6 @@ void Core::run()
 
         if(inputCooldownActive) {
             inputCooldown++;
-            //std::cout << inputCooldown << "\n";
         }
 
 
@@ -289,8 +274,6 @@ void Core::run()
                 // RESET
                 inputCooldown = 0;
                 inputCooldownActive = false;
-                //std::cout << "RESET editor\n\n";
-
             }
         }
 
@@ -298,7 +281,6 @@ void Core::run()
             if(inputCooldown >= inputCooldownCyclesPaused) {
                 inputCooldown = 0;
                 inputCooldownActive = false;
-                //std::cout << "RESET paused\n";
             }
 
         }
@@ -327,7 +309,7 @@ void Core::run()
             unsigned int relativeY = 0;
 
 
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window ); // SFML Specific...
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );     // SFML Specific...
             HPos mousepos = HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
 
 
@@ -399,10 +381,10 @@ void Core::run()
 
 
             // Adjust speed of panning
-            // TODO FIXME maybe adjust for the ratio of screen width and height you knooow?
+            // that 120, 80 is adjustment for the ratio of screen width and height
 
-            relativeX =   ( (float) relativeX * mouseSensitivity/100 );
-            relativeY =   ( (float) relativeY * mouseSensitivity/100 );
+            relativeX =   ( (float) relativeX * mouseSensitivity/120 );
+            relativeY =   ( (float) relativeY * mouseSensitivity/80 );
 
 
 
@@ -425,7 +407,7 @@ void Core::run()
             }
 
             if(debugLevel > 1)  {
-                std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+                std::cout << ind1 << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
 
         }
@@ -439,6 +421,9 @@ void Core::run()
 
 
 
+        ///
+        ///     LMB
+        ///
 
 
         /// Left mouse button pressed                                                       even in paused
@@ -460,54 +445,58 @@ void Core::run()
             mousepos = Grid::convert_gpix_to_iso(mousepos, 64, 32);
 
             /// Do something
-            int lmbMode = 0;
 
 
-            switch(lmbMode)
+            switch(lmbmode)
             {
-                case 0: //LMB_CREATE_ROAD:
+                case LMB_CLICK_CREATE_OR_SWAP:
 
-                    // Light up the current tile
-                    grid->setVisible(mousepos);
+                    grid->setVisible(mousepos);     // Light up the current tile
 
-
-
-
-                    // Place new road or Change existing
-
-                    hmap->placeNewOrSwapRoad(mousepos, debugLevel);
-
-
+                    hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
 
                     break;
+
+                case LMB_CLICK_CREATE:
+
+                    grid->setVisible(mousepos);
+
+                    hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
+
+                    break;
+
+                case LMB_ENQUIRE:
+                    grid->setVisible(mousepos);
+
+                    // Find out what's under the cursor
+                    hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
+
+                    break;
+
+                case LMB_PANNING:
+                    break;
+
+
+
             }
 
+
+
+
 /*
+            if (toolbarTop->within(mousePos_i.x, mousepPos_i.y) {
+                toolbarTop->pushButton(0); // debug test
+            }
 
-
-    "CR Would you like to kNow more"
-    would fit nicely here,
-    output info on whatever you click on it
-
-    look in hmap to find whatever item lies in there. if there is something in the blokclist that matches your mousepos iso
 
 
             std::stringstream sstm;
 
 
             sstm << "WPOS(" << mousepos.gpix_y<< ", " << mousepos.gpix_x << ")\n";
-
-
-
-
-
             sstm << "GPOS(" << mousepos.gpix_y << ", " << mousepos.gpix_x << ")\n";
 
-
-
             HPos *visibleIsoPos = Grid::convert_gpix_to_iso(&mousepos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
-
-
 
             /// Update the text
             lastClickedText.setFont(font);
@@ -516,9 +505,6 @@ void Core::run()
             lastClickedText.setFillColor(sf::Color::White);
 
             lastClickedText.setPosition(mouseWPos);
-
-
-
 
             if(debugLevel > 1)  {
                 std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";

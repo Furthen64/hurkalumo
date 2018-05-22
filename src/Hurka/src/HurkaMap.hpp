@@ -5,13 +5,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-#include "Utils.hpp"
-#include "TextureManager.hpp"
-#include "Block.hpp"
-
-
-
-
+#include "TrafficManager.hpp"           // <= utils.hpp,   <= texturemanager.hpp ,  <= block.hpp
 
 // HurkaMap
 // is a container for the std::list<Block *> blockList which we will use to render all the blocks on the board
@@ -40,6 +34,8 @@ public:
 
     int placeNewOrSwapRoad(HPos *roadPos, int debugLevel);
 
+    int placeNewRoad(HPos *roadPos, int debugLevel );
+
     int indexInBlockList(HPos *);
 
 
@@ -47,14 +43,17 @@ public:
 
     void putBlockList(std::list<Block *> _blockList);
 
-    Block *getBlock();
-
     std::string mapName;
 
     HurkaMatrix *getRoadHMatrix();
 
 
     int getNrBlocks();
+
+
+    // Debug utils
+
+    void dumpEverythingAtPos(HPos *, TrafficManager *, std::string );
 
     void dump(std::string);
 

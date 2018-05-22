@@ -1,18 +1,19 @@
 #include "TextureManager.hpp"
 
- ///
- /// SINGLETON
- ///
+///
+/// SINGLETON
+///
 
 
 
-/// Wishlist   Make sure it cannot be ran twice,
 
-/// Wishlist   Make it smarter, like:
-        // TODO: Make this automatically assign a name to it?
-        // WE could doooo it like this? inside the .txt file, it can say
-        // "T001" which means TREE001 so it maps the first tree texture to that T001
-        // "H001" which means HOUSE001 , maps it to the first house texture   etc.
+// Wishlist:
+// automatically assign a name to a texture by its filename?
+
+// Wishlist:
+// WE could doooo it like this? inside the garden.txt file, it can say
+// "T001" which means TREE001 so it maps the first tree texture to that T001
+// "H001" which means HOUSE001 , maps it to the first house texture   etc.
 
 
 void TextureManager::loadTextures()
@@ -91,7 +92,6 @@ void TextureManager::loadTextures()
 
     // Trees
 
-
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_001.png");
     pushTexture("TREE001", txt);
 
@@ -103,16 +103,18 @@ void TextureManager::loadTextures()
 
 
     // Grass
+
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_001.png");
     pushTexture("GRASS001", txt);
 
     // Bus
+
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\BUS_001.png");
     pushTexture("BUS001", txt);
 
 
 
-    // Specialz
+    // Special
 
     txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\SLOTPOS.png");
     pushTexture("SLOTPOS", txt);
@@ -127,8 +129,6 @@ void TextureManager::loadTextures()
 /// TODO: Automatisera detta :x så det inte blir några mer human errors av att man skriver fel
 std::string TextureManager::getTextureNameByIndex(int nr)
 {
-
-
     switch(nr){
         case 0: return "GRASS001";
 

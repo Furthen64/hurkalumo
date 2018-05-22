@@ -438,12 +438,12 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 ///
 // Tested, works
 // (-+)
-void TrafficManager::dumpRoadNetworks(std::string indent)
+void TrafficManager::dumpRoadNetworks(std::string indent, bool header)
 {
 
-    std::string indent2 = indent + "   ";
-
-    std::cout << indent << "\n\nTrafficManager's current Road Networks:\n------------------------------------\n";
+    if(header) {
+        std::cout << indent << "\n\nTrafficManager's current Road Networks:\n------------------------------------\n";
+    }
 
     int nr = 0;
 
@@ -457,7 +457,7 @@ void TrafficManager::dumpRoadNetworks(std::string indent)
 
         std::cout << "\n\n" << indent << "Road Network nr " << nr << ":\n";
 
-        currNet->dump(indent2);
+        currNet->dump(indent);
 
         nr++;
     }
@@ -549,6 +549,12 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 // (--+)
 int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad)
 {
+
+
+
+
+
+
 
     std::string ind = "  ";
     RoadNetwork *roadnet = nullptr;

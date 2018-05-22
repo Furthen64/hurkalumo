@@ -28,14 +28,29 @@ struct graphNodeCompare
  };
 
 
+
+
+
+
+
 class DijkstraResult
 {
 public:
 
     int resultInt;
     std::string resultStr;
-    std::stack<Node *> shortestPath;
-    std::stack<Node *> shortestPath_memcpy;
+
+
+    void push(Node *_node)
+    {
+        shortestPath.push(_node);
+    }
+
+
+    bool isEmpty()
+    {
+        return shortestPath.empty();
+    }
 
 
     // Seems to work just fine
@@ -44,9 +59,6 @@ public:
     {
         // Copy the shortestpath to new stack
         std::stack<Node *> *retStack = new std::stack<Node *>();
-
-
-
 
         // First, push the stack to another stack so we get it reversed in the end ( a bit fumbly )
         int i = 0;
@@ -117,6 +129,9 @@ public:
 
 
 private:
+    std::stack<Node *> shortestPath;
+    std::stack<Node *> shortestPath_memcpy;
+
 
 };
 
@@ -125,8 +140,11 @@ private:
 
 /*
 
-Graph now works
-2018-03-26
+
+2018-05-01          Graph can now be output to console with dump() !
+2018-03-26          Graph now works!
+
+
 
 
 How to use it:
@@ -160,20 +178,18 @@ class Graph
 public:
     Graph(std::string _name, int _mapMaxRows, int _mapMaxCols);
 
-    HurkaMatrix *clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel);
-    Node *         clockwiseTraverseUpFirstFindNode(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, int searchId, int debugLevel);
-    void dump(int debugLevel, int dumpNodes);
-    void test();
     Node *getFirstNode();
     void addFirstNode(std::string _name, int _id, HPos *_iso_pos);
     Node *findNode(int searchId, int debugLevel);
+    void dump(int debugLevel, int dumpNodes);
+
+    HurkaMatrix *clockwiseTraverseUpFirst(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, bool dumpNodes, int debugLevel);
+    Node *clockwiseTraverseUpFirstFindNode(Node *curr, BinarySearchTree *visited, HurkaMatrix *matrix, int searchId, int debugLevel);
+    void test();
     DijkstraResult *runDijkstra(Node *startNode, Node *endNode, int debugLevel);
     void printPathFromDijkstra(DijkstraResult *dijkstraResult);
     void traverseAndReset(Node *curr, BinarySearchTree *visited);
     void resetAllNodes();
-
-
-
 
 private:
 
@@ -185,8 +201,6 @@ private:
 
     std::string name;
     std::string cn = "Graph.cpp";
-
-
 
 };
 

@@ -867,7 +867,7 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
 
     while(!done) {
 
-        result->shortestPath.push(workNode);
+        result->push(workNode);
 
         if(workNode == startNode) {
             done = true;
@@ -929,16 +929,25 @@ void Graph::printPathFromDijkstra(DijkstraResult *dijkstraResult)
     //Node *workNode;
     std::string str;
 
+    // Get a copy of stack
+    std::stack<Node *> *stacker = dijkstraResult->getCopyOfShortestPathStack();
+
+
+
+
+
+
+
     // Look at the result
-    while( ! (dijkstraResult->shortestPath.empty()) )
+    while( ! (stacker->empty()) )
     {
         //workNode = dijkstraResult->shortestPath.top();
 
-        str = dijkstraResult->shortestPath.top()->getName();
+        str = stacker->top()->getName();
 
-        dijkstraResult->shortestPath.pop();
+        stacker->pop();
 
-        if(! (dijkstraResult->shortestPath.empty())) {
+        if(! (stacker->empty())) {
             std::cout << str << " ==> ";
         } else {
             std::cout << str << "\n";

@@ -65,7 +65,7 @@ public:
 
 
 
-    void dumpRoadNetworks(std::string indent);
+    void dumpRoadNetworks(std::string , bool);
 
     void updateAll(HPos *viewHPos);
 

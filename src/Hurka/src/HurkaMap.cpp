@@ -2,11 +2,6 @@
 #include "Node.hpp"
 
 
-// VERSION 3            2018-05-16
-// VERSION 2            2018-03-20
-
-
-
 
 // (-+)
 HurkaMap::HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols)
@@ -285,6 +280,38 @@ void HurkaMap::dump(std::string ind)
         std::cout << workBlock->getHPos()->absToString() << " ";
     }
     std::cout << "\n" << ind << "}\n";
+}
+
+
+
+
+// (--)  test  plz
+void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::string ind)
+{
+
+    Block *workBlock = nullptr;
+
+
+
+    // roadNetwork
+
+
+
+    // Blocks
+    for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
+    {
+
+        workBlock = (*it);
+
+        if(workBlock->getHPos()->compareAbsIso(searchPos) == 0) {
+
+            workBlock->dump();
+
+
+        }
+
+    }
+
 
 
 
@@ -393,6 +420,10 @@ int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
                 } else if(textureStr == "ROAD007") {
                     textureStr = "ROAD008";
                 } else if(textureStr == "ROAD008") {
+                    textureStr = "ROAD009";
+                } else if(textureStr == "ROAD009") {
+                    textureStr = "ROAD010";
+                } else if(textureStr == "ROAD010") {
                     textureStr = "ROAD001";                     // And Around we go!
                 }
 
@@ -578,6 +609,21 @@ int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
 
 
 
+
+
+// (--)
+int HurkaMap::placeNewRoad(HPos *roadPos, int debugLevel )
+{
+
+    std::cout << "NOT IMPLEMEENTED!\n";
+    return 0;
+}
+
+
+
+
+
+
 // (++)
 void  HurkaMap::putBlockList(std::list<Block *> _blockList)
 {
@@ -588,23 +634,6 @@ void  HurkaMap::putBlockList(std::list<Block *> _blockList)
 }
 
 
-// (--)
-// Complete this,
-// Error handling when empty list for instance
-Block *HurkaMap::getBlock()
-{
-
-std::cout << "getBlock not done (--)\n";
-    Block *blockRef = nullptr;
-
-    for (std::list<Block *>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
-    {
-
-        blockRef = (*itAll);
-    }
-
-    return blockRef;
-}
 
 
 

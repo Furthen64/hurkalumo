@@ -8,13 +8,14 @@ RoadNetwork::RoadNetwork()
 // (++)
 void RoadNetwork::dump(std::string indent)
 {
-    std::cout << indent << "roadnet: \n";
+    std::string indent2 = indent + "   ";
+
     std::cout << indent << "{\n";
-    hMatrix->dump(indent);
-    std::cout << indent << "min_iso_y_offset=" << min_isoYOffset <<"\n";
-    std::cout << indent << "min_iso_x_offset=" << min_isoXOffset<< "\n";
-    std::cout << indent << "max_iso_y_offset=" << max_isoYOffset <<"\n";
-    std::cout << indent << "max_iso_x_offset=" << max_isoXOffset << "\n\n";
+    hMatrix->dump(indent2);
+    std::cout << indent2 << "min_iso_y_offset=" << min_isoYOffset <<"\n";
+    std::cout << indent2 << "min_iso_x_offset=" << min_isoXOffset<< "\n";
+    std::cout << indent2 << "max_iso_y_offset=" << max_isoYOffset <<"\n";
+    std::cout << indent2 << "max_iso_x_offset=" << max_isoXOffset << "\n\n";
     std::cout << indent << "}\n";
 }
 
@@ -247,7 +248,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
     /// Handle the Result
 
-    if(dijkstraResult->shortestPath.empty()) {
+    if(dijkstraResult->isEmpty()) {
         return nullptr;
     }
     if(debugLevel >=1) {
@@ -643,7 +644,7 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 /// \param dijkstraResult A result from already executed Dijkstra
 /// \param slotpath Allocated, empty.
 /// TODO: This one consumes the result... can only be run once
-/// Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions!
+/// Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions
 /// (-+)
 void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath)
 {
@@ -667,10 +668,20 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
 
     // Go over the result, create slotpositions for every node
 
-    while( ! (dijkstraResult->shortestPath.empty()) )
+
+    std::stack<Node *> *stacker = dijkstraResult->getCopyOfShortestPathStack();
+
+
+
+
+
+
+
+
+    while( !stacker->empty())
     {
 
-        workNode = dijkstraResult->shortestPath.top();
+        workNode = stacker->top();
 
         // Get the iso_pos
         workPos = workNode->get_copy_rel_iso_pos();
@@ -696,7 +707,8 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
 
 
 
-        dijkstraResult->shortestPath.pop();
+
+        stacker->pop();
 
     }
 

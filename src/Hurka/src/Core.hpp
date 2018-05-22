@@ -35,6 +35,7 @@ using namespace sf;
 
 
 enum GAMEMODES { GAMEMODE_EDITOR, GAMEMODE_PAUSE };
+enum LMBMODES  { LMB_CLICK_CREATE_OR_SWAP, LMB_CLICK_CREATE, LMB_PANNING, LMB_ENQUIRE };
 
 
 class Core
@@ -71,7 +72,16 @@ private:
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
     int lockFPS_n = 30;
+
+
+
+    // Modes
     int gamemode = GAMEMODE_EDITOR;
+    int lmbmode = LMB_ENQUIRE;
+
+
+
+
 
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
     std::string cn = "Core.cpp";
@@ -83,7 +93,10 @@ private:
 
 
 
-    std::string startmapStr = "data/simple.txt";
+    //std::string startmapStr = "data/simple.txt";
+
+
+    //std::string startmapStr = "data/garden.txt";
 
 
     //std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
@@ -99,9 +112,10 @@ private:
 
     //std::string startmapStr = "data/dijkstra_test_1.txt";             // Works!
     //std::string startmapStr = "data/dijkstra_test_2.txt";             // Works!
-    //std::string startmapStr = "data/dijkstra_test_3.txt";               //
-    //std::string startmapStr = "data/dijkstra_test_4.txt";
-
+    //std::string startmapStr = "data/dijkstra_test_3.txt";               // Works!
+   // std::string startmapStr = "data/dijkstra_test_4.txt";       // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
+                                                                // This started when I attempted to fix the CONSUME error of the stack from dijkstraresult, 2018-05-21
+                                                                // //planForBusesOnRoadNetwork go there, set debuglevel=1 and watch
 
     //std::string startmapStr = "data/dijkstra_test_5.txt";
     // dijkstra_test_5
@@ -112,19 +126,19 @@ private:
 
 
 
-    //std::string startmapStr = "data/bus_traffic_test.txt";
+    std::string startmapStr = "data/bus_traffic_test.txt";
 
 
 
-    int mouseSensitivity = 4*ceil(100/lockFPS_n); // Pan speed in percentage
+    int mouseSensitivity = 3*ceil(100/lockFPS_n); // Pan speed in percentage
 
     HPos *viewHPos;
-    int startViewPosY = -331;           // -331 works with 64 x 64
+    int startViewPosY = -331;                               // -331 works with 64 x 64
     int startViewPosX = -(NR_GRIDS_WIDTH*15+1000);          // -2178 works with 64 x 64
 
 
     int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 1;
+    int dijkstraToRoad = 6;
 
 
 
