@@ -22,7 +22,7 @@
     // "did some further testing - it seems to be a stack overflow issue after all.
     // if i reduce the amount requested so it’s less than 4096 bytes, there’s no problem any more… "
     // "perhaps this is running inside an MPTask, which according to this Apple-Technical-Q&A have a stack size of 4k…?"
-    /*
+    /*t
     jag hade inte allokerat fmgr och började använda funktioner från den
     och fick riktigt jobbiga fel...
 
@@ -225,7 +225,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
             /// Now get it out to blocklists
 
-            if(debugLevel > 0) {
+            if(debugLevel >= 2) {
 
                 std::cout << "\n" << ind1 << "Parse Matrix into blocklists\n";
                 std::cout << ind1 <<  "---------------------\n";
@@ -257,7 +257,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
 
            // Loop 1
-           if(debugLevel > 0) {
+           if(debugLevel >= 2) {
                 std::cout << ind2 << "Loop 1:\n" << ind2<< "-----------\n";
 
 
@@ -292,7 +292,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
                    }
 
 
-                   if(debugLevel >=1) { std::cout << ind3 <<  yDown << ",     " << yUp << "          " << xRight << ",       " << xDownRight << "\n"; }
+                   if(debugLevel >=2) { std::cout << ind3 <<  yDown << ",     " << yUp << "          " << xRight << ",       " << xDownRight << "\n"; }
 
                    yUp--;
                    xRight++;
@@ -316,7 +316,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
 
 
-           if(debugLevel > 0) {
+           if(debugLevel >= 2) {
                std::cout << "\n\n" << ind2 << "Loop 2:\n" << ind2 << "----------\n";
                std::cout << ind3;
            }
@@ -348,7 +348,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
                     }
 
-                    if(debugLevel >= 1) { std::cout <<  "(" << yUp << ", " << xRight << ") ";}
+                    if(debugLevel >= 2) { std::cout <<  "(" << yUp << ", " << xRight << ") ";}
 
                     yUp--;
                     xRight++;
@@ -359,7 +359,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
 
 
-               if(debugLevel >= 1) {
+               if(debugLevel >= 2) {
                   std::cout << "\n";
                   std::cout << ind3;
                }
@@ -389,7 +389,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
     }
 
 
-    if(debugLevel > 0) {
+    if(debugLevel > 1) {
         resultMap->dump("   ");
         std::cout << "\n readRegularFile complete **** \n\n";
     }

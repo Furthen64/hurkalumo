@@ -169,16 +169,16 @@ void Block::set_pos_by_abs_iso(HPos *_abs_iso)
 
 
 // (++)
-void Block::dump()
+void Block::dump(std::string ind)
 {
-    std::cout << "\n\n----------------- block " << hpos->absToString() << " ------------------\n";
-    std::cout << "position:\n";
-    std::cout << "  absolute iso position = " << hpos->abs_iso_y << ", " << hpos->abs_iso_x << "\n";
-    std::cout << "  relative iso position = " << hpos->rel_iso_y << ", " << hpos->rel_iso_x << "\n";
-    std::cout << "  gameworld pixel position = " << hpos->gpix_y << ", " << hpos->gpix_x << "\n";
-    std::cout << "Texture: " << textureName << "\n";
-    std::cout << "ID: " << textureID << "\n";
-    std::cout << "texturesize: " << textureSize.height  << " x " << textureSize.width << "\n";
+    std::cout << "\n\n" << ind << "----------------- block " << hpos->absToString() << " ------------------\n";
+    std::cout << ind << "position:\n";
+    std::cout << ind << "  absolute iso position = " << hpos->abs_iso_y << ", " << hpos->abs_iso_x << "\n";
+    std::cout << ind << "  relative iso position = " << hpos->rel_iso_y << ", " << hpos->rel_iso_x << "\n";
+    std::cout << ind << "  gameworld pixel position = " << hpos->gpix_y << ", " << hpos->gpix_x << "\n";
+    std::cout << ind << "Texture: " << textureName << "\n";
+    std::cout << ind << "ID: " << textureID << "\n";
+    std::cout << ind << "texturesize: " << textureSize.height  << " x " << textureSize.width << "\n";
 }
 
 

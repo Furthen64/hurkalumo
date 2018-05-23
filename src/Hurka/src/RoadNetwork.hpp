@@ -24,7 +24,10 @@ public:
 
     RoadNetwork();
 
-    HPos *getNrRoad_iso(int findNr);
+    HPos *getNrRoad_iso(int findNr, int);
+
+
+    Bus *busAtPos(HPos *searchPos);
 
     SlotPath *createSlotPath(HPos *fromPos, HPos *toPos, int debugLevel);
 
@@ -52,9 +55,9 @@ public:
 
 // Variables:
 
-    HurkaMatrix *hMatrix;
+    HurkaMatrix *hMatrix;           // The roadnetwork datastructure
 
-    std::list<Bus *> *buslist;
+    std::list<Bus *> *buslist;      // Buses on the roadnetwork
 
     int min_isoYOffset;
     int min_isoXOffset;
@@ -119,7 +122,7 @@ public:
 private:
 
     // Internal function
-    void createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath);
+    void createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath, int debugLevel);
 
     std::string cn = "RoadNetwork.cpp";
 };

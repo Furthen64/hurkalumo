@@ -431,6 +431,62 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
 
 
+/// \brief Go over all roadnets and all their positions to see if any of them match the HPos searchpos
+// Speed: O(N^2) at worst
+// (--) TEST
+RoadNetwork *TrafficManager::roadNetworkAtPos(HPos *searchpos)
+{
+    int debugLevel = 0;
+    bool foundRoad = false;
+
+
+
+
+    HPos *relpos = new HPos(searchpos->abs_iso_y, searchpos->abs_iso_x, USE_ISO);
+
+
+
+
+    for (std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it) {
+
+        RoadNetwork *currNet = (*it);
+
+        // Transform the absolute values from the searchpos into relative position for current roadnetwork
+
+        relpos->rel_iso_y = relpos->abs_iso_y - currNet->min_isoYOffset;
+        relpos->rel_iso_x = relpos->abs_iso_x - currNet->min_isoXOffset;
+
+        if(relpos->rel_iso_y < 0 || relpos->rel_iso_x < 0) {
+            std::cout << "Invalid searchposition\n";
+            continue;
+        }
+
+        if(currNet->hMatrix == nullptr) {
+            std::cout << "This roadnetwork has no hmatrix\n";
+            continue;
+        }
+
+        foundRoad = currNet->hMatrix->roadAtRelPos(relpos, debugLevel-1);
+
+
+        if(foundRoad) {
+            if(debugLevel >=1) {
+                std::cout << "Found the roadnetwork for position " << searchpos->absToString() << "!\n";
+            }
+            return currNet;
+        }
+
+
+
+    }
+
+    return nullptr;
+
+
+}
+
+
+
 
 
 ///
@@ -454,8 +510,6 @@ void TrafficManager::dumpRoadNetworks(std::string indent, bool header)
     for (std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it) {
 
         RoadNetwork *currNet = (*it);
-
-        std::cout << "\n\n" << indent << "Road Network nr " << nr << ":\n";
 
         currNet->dump(indent);
 
@@ -547,13 +601,8 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 /// \param toRoad  nr road in the map
 /// \return 0 on OK , -1 on failure
 // (--+)
-int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad)
+int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad, bool dijkstraAutoEndpointsAdjust)
 {
-
-
-
-
-
 
 
     std::string ind = "  ";
@@ -566,7 +615,11 @@ int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int 
     HPos *rel_iso_pos_A = nullptr;
     HPos *rel_iso_pos_B  = nullptr;
 
-    if(debugLevel >=1) { std::cout << "\n*** planForBusesOnRoadNetwork:\n{"; }
+    int autoboundNr = 0;
+    int autoboundAllowed = 400;
+    int attemptRoadNr = 9999;
+
+    if(debugLevel >=1) { std::cout << "planForBusesOnRoadNetwork....\n"; }
 
 
 
@@ -616,20 +669,57 @@ int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int 
             // Wishlist: Needs something sensible to go on for start and end position ...
             // Like a Bus Station
 
-            abs_iso_pos_A  = roadnet->getNrRoad_iso(fromRoad);
+            abs_iso_pos_A  = roadnet->getNrRoad_iso(fromRoad, debugLevel-1);
 
             if(abs_iso_pos_A == nullptr) {
                 std::cout << "ERROR " << cn << " could not set start position\n";
                 return -1;
             }
 
-            abs_iso_pos_B  = roadnet->getNrRoad_iso(toRoad);
-            //abs_iso_pos_B = new HPos(4,4,USE_ISO);
 
-            if(abs_iso_pos_B == nullptr) {
-                std::cout << "ERROR " << cn << " could not set end position\n";
-                return -1;
+
+
+
+
+
+            // For now we have the flag "dijkstraAutoEndpointsAdjust"!
+            autoboundNr = 0;    // vs autoboundAllowed
+
+
+            attemptRoadNr = toRoad;
+
+            if(dijkstraAutoEndpointsAdjust) {
+
+                // Try the "toRoad" nr and if that dont work, step back once and try again, until we find a road
+
+                while(autoboundNr < autoboundAllowed)
+                {
+
+
+                    abs_iso_pos_B  = roadnet->getNrRoad_iso(attemptRoadNr, debugLevel -1);
+
+                    if(abs_iso_pos_B != nullptr) {
+                        break;
+                    }
+
+
+
+                    autoboundNr++;
+                    attemptRoadNr--;        // Pull back and see if that helps
+
+                }
+            } else {
+
+
+                // Just use whatever "toRoad" is set to
+                abs_iso_pos_B  = roadnet->getNrRoad_iso(toRoad, debugLevel);
+
+                if(abs_iso_pos_B == nullptr) {
+                    std::cout << "ERROR " << cn << " could not set end position\n";
+                    return -1;
+                }
             }
+
 
 
 
@@ -656,7 +746,7 @@ int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int 
         }
     }
 
-    if(debugLevel >=1) { std::cout << "\n\n} ***\n"; }
+    if(debugLevel >=1) { std::cout << "                                complete.\n"; }
 
 
 

@@ -284,20 +284,23 @@ void HurkaMap::dump(std::string ind)
 
 
 
-
-// (--)  test  plz
+/// \brief I want to know more about things on the gameboard so here goes... use this!
+// (-+) test moar plz
 void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::string ind)
 {
 
     Block *workBlock = nullptr;
+    std::string ind2 = ind;
+    ind2 += "   ";
+
+    std::cout << ind << "dumpEverythingAtPos " << searchPos->absToString() << ":\n";
+    std::cout << ind << "{\n";
 
 
 
-    // roadNetwork
+    // Blocks?
 
 
-
-    // Blocks
     for(std::list<Block *>::iterator it = blockList.begin(); it != blockList.end(); ++it)
     {
 
@@ -305,8 +308,7 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
 
         if(workBlock->getHPos()->compareAbsIso(searchPos) == 0) {
 
-            workBlock->dump();
-
+            workBlock->dump(ind2);
 
         }
 
@@ -314,7 +316,32 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
 
 
 
+    // roadNetwork?
+    RoadNetwork *roadnet = tm->roadNetworkAtPos(searchPos);
 
+    if(roadnet != nullptr) {
+
+        roadnet->dump(ind2);
+    }
+
+
+
+
+
+
+    // clicked on a bus on that roadnetwork?
+    if(roadnet != nullptr) {
+
+        Bus *bus = roadnet->busAtPos(searchPos);        // alpha-0.2: What if there are several buses at the same iso tile?
+
+        if(bus != nullptr) {
+
+            bus->dump(ind2);
+        }
+
+    }
+
+    std::cout << ind << "}\n";
 }
 
 

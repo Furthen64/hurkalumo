@@ -5,17 +5,11 @@
 
 
 
-// Seems to work a little bit (2018-04)
+// Seems to work
 // (-+)
-Bus::Bus(HPos *_abs_iso_pos)
+Bus::Bus()
 {
     slotPath = nullptr;
-
-    /// Setup position
-    set_pos_on_abs_iso(_abs_iso_pos);
-
-    nextPos = new HPos(0,0, USE_ISO);
-    set_nextPos_on_abs_iso(nextPos);
 
 
     /// Setup texture and sprite
@@ -26,19 +20,15 @@ Bus::Bus(HPos *_abs_iso_pos)
     textureSize = sprite.getTextureRect();
 }
 
+
+
+
 void Bus::reset()
 {
     if(slotPath != nullptr) { delete slotPath; }
     slotPath = nullptr;
 
 
-    // This position
-    HPos *wrk_iso_pos = new HPos(0,0, USE_ISO);
-    set_pos_on_abs_iso(wrk_iso_pos);
-
-    // Next position
-    wrk_iso_pos = new HPos(0,0, USE_ISO);
-    set_nextPos_on_abs_iso(wrk_iso_pos);
 
 
     // Ignore texture stuff, probably wont change since construction
@@ -70,6 +60,14 @@ void Bus::reset()
 ///
 /// run this after you've set the current position!  e.g.: Bus::gameUpdate() which updates the current position.
 /// (--)
+
+
+
+        // needed?
+/*
+
+DELETEME
+
 void Bus::update_all_position_vars_on_abs_iso()
 {
 
@@ -83,10 +81,10 @@ void Bus::update_all_position_vars_on_abs_iso()
     pos->gpix_x = Grid::convert_iso_to_gpix_x(pos->abs_iso_y, pos->abs_iso_x, 64, 32, 2);
 
 }
+*/
 
 
-// Tested once, worked
-// (--)
+/*
 void Bus::update_all_nextPos_vars_on_abs_iso()
 {
     // nextPos->abs_iso_x  and nextPos->abs_iso_y  are the ones we know are set, the rest are not
@@ -97,36 +95,19 @@ void Bus::update_all_nextPos_vars_on_abs_iso()
     nextPos->gpix_y = Grid::convert_iso_to_gpix_y(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
     nextPos->gpix_x = Grid::convert_iso_to_gpix_x(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
 }
+*/
 
 
-
-// Run this last in gameUpdate()  so all the other variables are in synch with what just happened (the bus moved, the gpix variables changed)
-
-// TEST
-// (--)
-void Bus::update_all_position_vars_on_gpix()
-{
-
-    //std::cout << "CODE ME PLZ\n";
-
-
-    //dump(nullptr);
-}
-
-
-
-// Wishlist: Takes in the roadnetwork the bus is on,
-//           So whenever the bus needs to move to a new road it can use the correct offsets for that particular roadnetwork
-//    use slotpath
-// Based on what happened in setNext_pix_pos , we need to move towards that next pixel position
-// (--)
+/// \brief Takes roadnetwork the bus is on as argument,
+///  So whenever the bus needs to move to a new road it can use the correct iso offsets for that particular roadnetwork
+// (--) test more... remove unecessary stuff
 void Bus::gameUpdate(RoadNetwork *roadnet)
 {
 
 
     if(slotPath->hasValues()) {
 
-        //make the bus use the slotpath it now has
+        // make the bus use the slotpath it now has
         SlotPos *workPos;
         workPos = slotPath->stepAndGetPos(1);   // Make 1 step
 
@@ -136,11 +117,8 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
         }
 
 
-        pos = workPos->hpos;
+        this->pos = workPos->hpos;      // FIXME is this even used anymore? arent we using slotpath->getNow() ?
 
-
-        // Update all position_variables based on this new gpix position
-        update_all_position_vars_on_gpix();
     }
 }
 
@@ -155,7 +133,6 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 
 
 
-// Seems to work
 // (-+)
 void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
 {
@@ -177,93 +154,6 @@ void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
 
 
 
-// Set the position of the bus based on abs_iso
-// (-+)
-void Bus::set_pos_on_abs_iso(HPos *abs_iso_pos)
-{
-    pos = abs_iso_pos;
-
-    // update all the other variables
-    update_all_position_vars_on_abs_iso();  // Design: this function should go to the HPos class
-}
-
-
-
-
-
-
-
-// HPOSTEST
-// Sets next position based on abs_iso
-// Also updates the direction of travel
-// (--)
-void Bus::set_nextPos_on_abs_iso( HPos *abs_iso_pos)
-{
-
-    nextPos = abs_iso_pos;
-
-    update_all_nextPos_vars_on_abs_iso(); // update all the other variables so we can use gpix data below
-
-    /// Find out direction of travel to that next position
-    dir = 4; // Do nothing
-
-    // Now figure out the direction for the bus
-    bool rightof = false;
-    bool belowof = false;
-    bool topof = false;
-    bool leftof = false;
-
-
-    // top or below?
-    if(nextPos->gpix_y < pos->gpix_y)
-    {
-        topof = true;
-    } else if(nextPos->gpix_y > pos->gpix_y)
-    {
-        topof= false;
-        belowof = true;
-    } else {
-        topof = false;
-        belowof = false;
-    }
-
-
-    // left or right?
-    if(nextPos->gpix_x < pos->gpix_x)
-    {
-        leftof = true;
-    } else if(nextPos->gpix_x > pos->gpix_x) {
-        leftof = false;
-        rightof = true;
-    } else {
-        leftof = false;
-        rightof = false;
-    }
-
-
-
-    if(topof && rightof) {
-        dir = 0;
-    } else if (belowof && rightof) {
-        dir = 1;
-    } else if (belowof && leftof) {
-        dir = 2;
-    } else if (topof && leftof ) {
-        dir = 3;
-    } else {
-        dir = 4; // Do nothing!
-    }
-}
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -276,24 +166,6 @@ void Bus::set_nextPos_on_abs_iso( HPos *abs_iso_pos)
 /// RANDOM FUNCTIONS
 
 
-
-// (--)
-void Bus::setRandStartingPosition(HurkaMatrix *roadMatrix)
-{
-
-    // First get a random position on the road for iso_pos
-    std::cout << "ERROR " << cn << " CONVERT TO HPOS!\n";
-
-
-
-    /*
-    HPOSDELETE:
-
-    iso_pos = rand_iso_pos(roadMatrix);
-
-    pix_pos = Grid::convert_iso_to_gpix(iso_pos, textureSize.width, textureSize.height, 2);
-    */
-}
 
 
 
@@ -377,10 +249,32 @@ HPos *Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
 }
 
 
+
+// (-+)
 void Bus::setSlotPath(SlotPath *_sp)
 {
+    if(_sp == nullptr) {
+        std::cout << "ERROR " << cn << "trying to set a null slotpath for a bus! bus at= " << pos->absToString() << "\n";
+    }
     slotPath = _sp;
 }
+
+
+
+
+
+// (--)
+void Bus::dump(std::string ind)
+{
+
+    std::cout << " --- bus " << pos->absToString() << " ------\n";
+    std::cout << ind << "         abs_iso_y,abs_iso-x     rel_iso_y,rel_iso_x        gpix_y,gpix_x  \n";
+    std::cout << ind << "   pos           " << pos->abs_iso_y << "," << pos->abs_iso_x << "                    "  << pos->rel_iso_y << ", " << pos->rel_iso_x << "                      " << pos->gpix_y << "," << pos->gpix_x << "\n";
+    std::cout << ind << "slotpath:\n";
+    slotPath->dump();
+    std::cout << "\n";
+}
+
 
 
 // (-+)
@@ -409,14 +303,64 @@ HPos *Bus::get_next_pos()
 }
 
 
+
+
+
 /// \brief returns pointer to HPos that describes where the Bus is right now. Warning: internal pointer!
-// (--)
+// (-+)
 HPos *Bus::getNowPos()
 {
     if(slotPath->nowPos != nullptr) {
         return slotPath->nowPos->hpos;
     }
 
-
     return nullptr;
 }
+
+
+
+// (--) test
+bool Bus::atPos(HPos *searchpos)
+{
+    HPos *now = getNowPos();
+
+    if(now != nullptr) {
+        if(now->compareAbsIso(searchpos) == 0) {
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

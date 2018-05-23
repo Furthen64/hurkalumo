@@ -891,7 +891,7 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     result->resultInt = endNode->permanentLabel;
 
     if(debugLevel >=1 ) {
-            std::cout << "\n";
+        std::cout << "\n";
     }
 
 
@@ -904,8 +904,9 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
 
 
 
-
-    std::cout << ind1 << "OBSERVE, when we return we have changed the state of nodes in the graph ... should it be like that?\n";
+    if(debugLevel >=2) {
+        std::cout << ind1 << "OBSERVE, when we return we have changed the state of nodes in the graph ... should it be like that?\n";
+    }
 
     return result;
 
@@ -913,14 +914,9 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
 
 
 /// Prints the path from left (start) to right (end)
-
-// NEEDS FIXING... Needs to clone the stack and work with a deep copy instead of fudging around with the dijkstraResult
-// (--)
+// (--) test
 void Graph::printPathFromDijkstra(DijkstraResult *dijkstraResult)
 {
-
-    std::cout << "CONSUMES DIJKSTRA RESULT!!!\n";
-
     if(dijkstraResult == nullptr) {
         std::cout << cn << " ERROR dijkstraResult has nullptr in printPathFromDijkstra()\n";
         return ;

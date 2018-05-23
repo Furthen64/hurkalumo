@@ -220,20 +220,21 @@ static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 /// @param pix_pos  Already allocated HPos with values set on gpix positions
 /// @param width    The size of the sprite
 /// @param height   The size of the sprite
-/// @return returns a newly allocated HPos object with iso values set (and also gpix values if you should need them)
-/// (--)
+/// @return returns If pix_pos is inside the gameboard, return HPos with correct iso values otherwise return -1,-1 iso values
+// wishlist: Make it work with the isometric tile shape
+// (-+)
 static HPos *convert_gpix_to_iso(HPos *pix_pos, int width, int height)
 {
+    int debugLevel = 0;
+
+
     std::string cn = "Grid.hpp";
 
     int x = 0;
     int y = 0;
 
     HPos *work_pos = new HPos(0,0, USE_GPIX);
-    HPos *iso_pos = new HPos(0,0,USE_GPIX);
-
-            //Vector2f work_pos = Vector2f();
-            //Vector2f iso_pos = Vector2f();
+    HPos *iso_pos = new HPos(-1,-1,USE_GPIX);       // Default is a -1,-1 which is the position to return if we endup with an error, like not finding it
 
     if(width == 0 || height == 0 ) {
         std::cout << "ERROR " << cn << " height or width = 0 in call to convert_pix_to_iso!!\n";
@@ -242,7 +243,8 @@ static HPos *convert_gpix_to_iso(HPos *pix_pos, int width, int height)
 
 
 
-    /// todo - if we are inside the diamond of that cell return that iso-pos
+    /// alpha-0.2: if we are inside the diamond of that cell return that iso-pos
+    /// also, please change all M to Y? all N to X?
 
     for(int M= 0; M< NR_GRIDS_HEIGHT; M++){
 
@@ -252,7 +254,7 @@ static HPos *convert_gpix_to_iso(HPos *pix_pos, int width, int height)
             y = convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
 
-            work_pos->gpix_y  = y;
+            work_pos->gpix_y = y;
             work_pos->gpix_x = x;
 
 
@@ -280,7 +282,15 @@ static HPos *convert_gpix_to_iso(HPos *pix_pos, int width, int height)
     }
 
 
-    std::cout << "Could not find the object inside any of the grid's cell!\n";
+    // Setup for failure!
+
+    iso_pos->abs_iso_y = -1;
+    iso_pos->abs_iso_x = -1;
+    iso_pos->rel_iso_y = -1;
+    iso_pos->rel_iso_x = -1;
+
+
+    if(debugLevel >=2) { std::cout << "Could not find the object inside any of the grid's cell!\n"; }
     return iso_pos;
 }
 

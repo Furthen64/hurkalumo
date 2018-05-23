@@ -1,6 +1,7 @@
 #ifndef HURKAMATRIX_H
 #define HURKAMATRIX_H
 
+#include "HPos.hpp"
 #include "Utils.hpp"
 
 // VERSION 2            2018-03-20
@@ -17,6 +18,7 @@ public:
     HurkaMatrix(int _rows, int _cols);
     ~HurkaMatrix();
     bool isAllocated() { return allocated; }
+    bool roadAtRelPos(HPos *searchpos, int debugLevel);
     void dump(std::string indent);
     void dump();
     int **matrix;

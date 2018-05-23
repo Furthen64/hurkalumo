@@ -66,8 +66,7 @@ public:
 
 private:
 
-    int debugLevel = 0;
-
+    int debugLevel = 1;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
@@ -81,11 +80,8 @@ private:
 
 
 
-
-
     std::string windowTitle = "HurkaLumo editor alpha-0.1";
     std::string cn = "Core.cpp";
-
 
 
     ///
@@ -95,17 +91,18 @@ private:
 
     //std::string startmapStr = "data/simple.txt";
 
+    //std::string startmapStr = "data/two_roads.txt";
+
 
     //std::string startmapStr = "data/garden.txt";
 
 
-    //std::string startmapStr = "data/aztec.txt";                   // BUG with drawing the tall house.
+    //std::string startmapStr = "data/aztec.txt";                   // Works 2018-05    but BUG with drawing the tall house.
 
-    //std::string startmapStr = "data/roadnetwork_test.txt";          // Works!
+    std::string startmapStr = "data/roadnetwork_test.txt";        // Works 2018-05
 
 
-    // bus_traffic_test.txt
-    //std::string startmapStr = "data/bus_traffic_test.txt";          // Works!
+    //std::string startmapStr = "data/bus_traffic_test.txt";          // Works 2018-05
 
 
 
@@ -126,7 +123,7 @@ private:
 
 
 
-    std::string startmapStr = "data/bus_traffic_test.txt";
+    //std::string startmapStr = "data/bus_traffic_test.txt";              // Bugs... somehow! not sure yet. 2018-05
 
 
 
@@ -137,8 +134,10 @@ private:
     int startViewPosX = -(NR_GRIDS_WIDTH*15+1000);          // -2178 works with 64 x 64
 
 
+    // Testing for a while, remove when dijkstra is super stable
+    bool dijkstraAutoEndpointsAdjust = true;            // If true, the fromRoad and toRoad will bee adjusted if out of bounds
     int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 6;
+    int dijkstraToRoad = 23;
 
 
 

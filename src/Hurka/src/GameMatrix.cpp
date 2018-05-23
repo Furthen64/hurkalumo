@@ -41,6 +41,24 @@ int GameMatrix::getHeight()
 
 
 
+/// \brief Given a searchpos with abs iso values set, checks if thats within the gamematrix
+/// \param searchpos Iso abs values set
+/// \return returns true if inside, false if not
+// (-+)
+bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
+{
+    searchpos = Grid::convert_gpix_to_iso(searchpos, 64, 32);   // fixme some dayyyy
+
+    if(searchpos->abs_iso_y > -1
+       &&
+       searchpos->abs_iso_x > -1)  {
+
+       return true;
+    }
+
+    return false;
+}
+
 
 /// \brief Draw the gameboard a.k.a gamematrix , the tiles upon which everything happens
 /// Optimize with the ints maybe make it a const?

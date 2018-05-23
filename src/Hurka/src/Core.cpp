@@ -70,7 +70,7 @@ int Core::allocateResources()
 
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
 
-    bus = new Bus(new HPos(0,0, USE_GPIX)); // deleteme?
+    //bus = new Bus(new HPos(0,0, USE_GPIX)); // deleteme?
 
     loco = new Locomotive();
 
@@ -154,18 +154,18 @@ int Core::setup(int width, int height, std::string title)
 
     int maxnr = trafficMgr->nrOfRoadnetworks();
 
+    Bus *bus;
+
     for(int nr = 0; nr < maxnr; nr++) {
         /// Place a bus on a roadnetwork
-        bus = new Bus(new HPos(0,0, USE_GPIX));
+        bus = new Bus();
         trafficMgr->addBus(bus, nr);
     }
 
 
 
-
-
     /// Plan a route for a Bus on a roadnetwork
-    status = trafficMgr->planForBusesOnRoadNetwork(debugLevel, dijkstraFromRoad, dijkstraToRoad);
+    status = trafficMgr->planForBusesOnRoadNetwork(debugLevel, dijkstraFromRoad, dijkstraToRoad, dijkstraAutoEndpointsAdjust);
     if(status != 0) { return status; }
 
 
@@ -287,6 +287,15 @@ void Core::run()
 
 
 
+
+
+
+
+
+
+        ///
+        /// RMB
+        ///
 
 
 
@@ -426,62 +435,80 @@ void Core::run()
         ///
 
 
+
+
         /// Left mouse button pressed                                                       even in paused
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
         {
 
             alreadyButtonPressed = true;
 
+
+
             /// Get mouse position
             sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );             // SFML Specific
             HPos *mousepos = new HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
-
 
 
             // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
             mousepos->gpix_y -= viewHPos->gpix_y;
             mousepos->gpix_x -= viewHPos->gpix_x;
 
-            mousepos = Grid::convert_gpix_to_iso(mousepos, 64, 32);
-
-            /// Do something
 
 
-            switch(lmbmode)
-            {
-                case LMB_CLICK_CREATE_OR_SWAP:
+            // Is it inside the gamematrix?
+            if( gm->isPosInsideGameMatrix(mousepos) == false) {
+                // Do nothing?
 
-                    grid->setVisible(mousepos);     // Light up the current tile
 
-                    hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
+            } else {
 
-                    break;
-
-                case LMB_CLICK_CREATE:
-
-                    grid->setVisible(mousepos);
-
-                    hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
-
-                    break;
-
-                case LMB_ENQUIRE:
-                    grid->setVisible(mousepos);
-
-                    // Find out what's under the cursor
-                    hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
-
-                    break;
-
-                case LMB_PANNING:
-                    break;
+                // Find out what iso tile you clicked on
+                mousepos = Grid::convert_gpix_to_iso(mousepos, 64, 32);
 
 
 
-            }
+
+                /// LMB Action!
+
+                // When you click on the left mousebutton many things can happen throughout different modes,
+                // alpha-0.2: Might need to have more consideration to MODES.
+
+                switch(lmbmode)
+                {
+                    case LMB_CLICK_CREATE_OR_SWAP:
+
+                        grid->setVisible(mousepos);     // Light up the current tile
+
+                        hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
+
+                        break;
+
+                    case LMB_CLICK_CREATE:
+
+                        grid->setVisible(mousepos);
+
+                        hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
+
+                        break;
+
+                    case LMB_ENQUIRE:
+                        grid->setVisible(mousepos);
+
+                        // Find out what's under the cursor
+                        hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
+
+                        break;
+
+                    case LMB_PANNING:
+                        break;
 
 
 
+                }
+
+
+            } // if inside the gamematrix when clicking LMB
 
 /*
             if (toolbarTop->within(mousePos_i.x, mousepPos_i.y) {
@@ -542,46 +569,47 @@ void Core::run()
 
             /// Render
 
-
-            window.clear({0, 0, 0});
-
+        }
 
 
 
-
-
-            if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
-
-            if(drawBlocks) {
-
-                /// Iterate list of blocklists to draw them in render order
-                hmap->draw(window, viewHPos);
-            }
-
-
-            if(drawLoco) {  loco->draw(window, viewHPos); }
-
-            if(drawBuses) {
-                    trafficMgr->drawBuses(window, viewHPos);
-                    //bus->draw(window, viewHPos); DELETE
-            }
-
-
-            if(drawGrid) {  grid->draw(window, viewHPos); }
-
-            if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
-
-            window.draw(lastClickedText);
-
-
-            // Finally push rendered buffer to screen
-
-
-            window.display();       // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
+        window.clear({0, 0, 0});
 
 
 
-        } // gamemode != PAUSE
+
+
+
+        if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
+
+        if(drawBlocks) {
+
+            /// Iterate list of blocklists to draw them in render order
+            hmap->draw(window, viewHPos);
+        }
+
+
+        if(drawLoco) {  loco->draw(window, viewHPos); }
+
+        if(drawBuses) {
+                trafficMgr->drawBuses(window, viewHPos);
+                //bus->draw(window, viewHPos); DELETE
+        }
+
+
+        if(drawGrid) {  grid->draw(window, viewHPos); }
+
+        if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
+
+        window.draw(lastClickedText);
+
+
+        // Finally push rendered buffer to screen
+
+
+        window.display();       // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
+
+
 
 
 

@@ -5,18 +5,24 @@ RoadNetwork::RoadNetwork()
     buslist = new std::list<Bus *>();
 }
 
-// (++)
+// (-+)
 void RoadNetwork::dump(std::string indent)
 {
-    std::string indent2 = indent + "   ";
 
-    std::cout << indent << "{\n";
+    std::cout << "\n\n" << indent << "----------------- roadnetwork (" << min_isoYOffset << ", " << min_isoXOffset << " ------------------\n";
+
+    std::cout << indent << "absolute iso position = " << min_isoYOffset<< ", " << min_isoXOffset<< "\n";
+    std::cout << indent << "height = " << max_isoYOffset << "\n";
+    std::cout << indent << "width = " << max_isoXOffset << "\n";
+    std::cout << indent << "nr of buses = " << buslist->size() << "\n";
+    std::cout << indent << "matrix:\n";
+
+    std::string indent2 = indent;
+    indent2 += "   ";
     hMatrix->dump(indent2);
-    std::cout << indent2 << "min_iso_y_offset=" << min_isoYOffset <<"\n";
-    std::cout << indent2 << "min_iso_x_offset=" << min_isoXOffset<< "\n";
-    std::cout << indent2 << "max_iso_y_offset=" << max_isoYOffset <<"\n";
-    std::cout << indent2 << "max_iso_x_offset=" << max_isoXOffset << "\n\n";
-    std::cout << indent << "}\n";
+    std::cout << "\n";
+
+
 }
 
 
@@ -30,11 +36,43 @@ void RoadNetwork::addBus(Bus *_bus)
 
 
 
+
+
+
+
+/// \brief Searches for a Bus in this roadnetwork at the given position
+// (--) test
+Bus *RoadNetwork::busAtPos(HPos *searchPos)
+{
+
+
+    Bus *workbus;
+    for(std::list<Bus *>::iterator it = buslist->begin(); it != buslist->end(); ++it)
+    {
+
+        workbus = (*it);
+
+        if( workbus->atPos(searchPos) ) {
+            return workbus;
+        }
+
+    }
+
+    return nullptr;
+
+}
+
+
+
+
+
+
+
 /// \brief Get a random road in this roadnetwork, sets both abs_iso and rel_iso
 /// \param findNr FOR NOW the function takes the 5th road if you give findNr=5 for example
 /// \return Position of the road or (-1,-1) when not found a road
 /// (-+)
-HPos *RoadNetwork::getNrRoad_iso(int findNr)
+HPos *RoadNetwork::getNrRoad_iso(int findNr, int debugLevel)
 {
 
     HPos *iso_pos = new HPos(-1,-1, USE_ISO);
@@ -72,7 +110,9 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr)
     }
 
     if(nr < findNr) {
-        std::cout << "ERROR " << cn << " getNrRoad_iso could not find a road for findNr=" << findNr << " out of = " << nr << "!\n";
+        if(debugLevel >=1) {
+            std::cout << "ERROR " << cn << " getNrRoad_iso could not find a road for findNr=" << findNr << " out of = " << nr << "!\n";
+        }
         return nullptr;
     }
 
@@ -110,7 +150,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     }
 
 
-    if(debugLevel >=1) {         std::cout << "\n**createSlotPath()\n{\n";     }
+    if(debugLevel >=2) {         std::cout << "\n**createSlotPath()\n{\n";     }
 
     if(debugLevel >=2) {
         std::cout << ind << "roadnetwork-maxY and maxX= (" << max_isoYOffset << ", " << max_isoXOffset<<")\n";
@@ -158,22 +198,22 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     BinarySearchTree *visited = new BinarySearchTree();
 
     // ... so we can recursively walk the roadnetwork to get the coordinates for each road
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
         hMatrix->dump("  ");
     }
 
 
     /// Create a Graph
 
-    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, from_rel_iso_pos->clone(), nullptr, visited, debugLevel);
+    createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, from_rel_iso_pos->clone(), nullptr, visited, debugLevel - 1 );
 
-    if(debugLevel >=1 ) {
+    if(debugLevel >=2 ) {
         graph->dump(0, 1);
         std::cout << "\n\n";
 
     }
 
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
        std::cout << "\n\n" << ind << "-----------\n" << ind << "NOW that we have a GRAPH do a DIJKSTRA run and see what we end up with \n";
     }
 
@@ -192,7 +232,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     /// D I J K S T R A
     ///
 
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
         std::cout << ind << "\n\nRunning Dijkstra 1st time:\n" << ind << "------------------------------\n";
     }
 
@@ -207,7 +247,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     Node *startNode = graph->findNode( Node::genIDfrom_rel_iso(from_rel_iso_pos), 0);
     Node *endNode   = graph->findNode( Node::genIDfrom_rel_iso(to_rel_iso_pos), 0);
 
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
         std::cout << "\n" << ind << "START= \n";
         startNode->dump(3);
         std::cout << ind << "  * startNode.id=" << startNode->getId() << "\n";
@@ -232,14 +272,14 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
     /// Do the Dijkstra!
 
-    if(debugLevel >=1 ) {
+    if(debugLevel >=2 ) {
         std::cout << ind << "\n\nrunDijkstra()\n";
         std::cout << ind << "{\n";
     }
 
-    dijkstraResult = graph->runDijkstra(startNode, endNode, debugLevel);
+    dijkstraResult = graph->runDijkstra(startNode, endNode, debugLevel - 1);
 
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
         std::cout << ind << "}\n";
     }
 
@@ -251,15 +291,14 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     if(dijkstraResult->isEmpty()) {
         return nullptr;
     }
-    if(debugLevel >=1) {
+    if(debugLevel >=2) {
         std::cout << ind << " Loop the result and put every in a slotpos\n";
         std::cout << ind << " Put those slotpos in slotpath\n\n";
     }
 
 
     /// Create the SlotPath
-
-    createSlotPathFromDijkstraResult(dijkstraResult, slotpath);
+    createSlotPathFromDijkstraResult(dijkstraResult, slotpath, debugLevel--);
 
 
 
@@ -646,15 +685,14 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 /// TODO: This one consumes the result... can only be run once
 /// Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions
 /// (-+)
-void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath)
+void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath, int debugLevel)
 {
 
+    if(debugLevel > 0) {
+        debugLevel--;
+    }
 
-    int dbgLevel = 0;
-
-    if(dbgLevel >=1) { std::cout << "** createSlotPathFromDijkstraResult:\n"; }
-
-    std::cout << "\n\n      -- FIXME; CONSUMES THE RESULT -- \n\n";
+    if(debugLevel >=1) { std::cout << "createSlotPathFromDijkstraResult()\n{"; }
 
     if(dijkstraResult == nullptr) {
         std::cout << cn << " ERROR dijkstraResult has nullptr in printPathFromDijkstra()\n";
@@ -667,15 +705,7 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
     std::string str;
 
     // Go over the result, create slotpositions for every node
-
-
     std::stack<Node *> *stacker = dijkstraResult->getCopyOfShortestPathStack();
-
-
-
-
-
-
 
 
     while( !stacker->empty())
@@ -691,11 +721,8 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
         workPos->abs_iso_y = workPos->rel_iso_y + min_isoYOffset;
         workPos->abs_iso_x = workPos->rel_iso_x + min_isoXOffset;
 
-
-
         workPos->gpix_y = Grid::convert_iso_to_gpix_y(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
         workPos->gpix_x = Grid::convert_iso_to_gpix_x(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
-
 
 
 
@@ -706,14 +733,12 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
         slotpath->addListOfSlotPositions(slotPositions);
 
 
-
-
         stacker->pop();
 
     }
 
 
-    if(dbgLevel >=1) { std::cout << " createSlotPathFromDijkstraResult DONE ** "; }
+    if(debugLevel >=1) { std::cout << "\n}\n"; }
 }
 
 

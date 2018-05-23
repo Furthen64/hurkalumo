@@ -25,7 +25,7 @@ public:
 
     void draw( RenderTarget& rt, HPos *viewHPos);
 
-    void dump();
+    void dump(std::string);
 
     int getTextureID();
 

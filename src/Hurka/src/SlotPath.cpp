@@ -101,7 +101,6 @@ void SlotPath::dump()
 
 
 /// \brief Makes the object take a step in the slotpath, consumes that step in the std::list slotPositions
-///
 // (--)
 SlotPos *SlotPath::stepAndGetPos(int steps)
 {

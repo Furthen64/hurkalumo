@@ -26,8 +26,9 @@ public:
     GameMatrix(int _height, int _width, int _textureID);
 
     int getWidth();
-
     int getHeight();
+
+    bool isPosInsideGameMatrix(HPos *);
 
     void draw( RenderTarget& rt, HPos *viewHPos);
 

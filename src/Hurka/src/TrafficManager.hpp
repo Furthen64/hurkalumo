@@ -28,6 +28,15 @@ public:
 
     void drawBuses(sf::RenderWindow &rt, HPos *viewHPos);
 
+
+    DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
+
+    int planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad, bool);
+
+    void updateBusesOnRoadNetwork(int busId, int roadnetId);
+
+
+
     RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
                                    HPos *curr_iso_pos,
                                    HPos *min_iso_pos,
@@ -35,23 +44,7 @@ public:
                                    BinarySearchTree *visited,
                                    int debugLevel);
 
-    // HPOSDELETE:
-    /*RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
-                                   Vector2f curr_iso_pos,
-                                   Vector2f *min_iso_pos,
-                                   Vector2f *max_iso_pos,
-                                   BinarySearchTree *visited,
-                                   int debugLevel);
-      */
 
-
-
-
-
-
-
-
-    // void follow(HurkaMatrix *fullRoadMatrix, HurkaMatrix *newMatrix, Vector2f curr_iso_pos, Vector2f *min_iso_pos,  Vector2f *max_iso_pos, BinarySearchTree *visited, int debugLevel); // HPOSDELETE
     void follow(HurkaMatrix *fullRoadMatrix,
                 HurkaMatrix *newMatrix,
                 HPos *curr_iso_pos,
@@ -63,7 +56,7 @@ public:
     int parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
 
 
-
+    RoadNetwork *roadNetworkAtPos(HPos *);
 
     void dumpRoadNetworks(std::string , bool);
 
@@ -83,11 +76,6 @@ public:
     void addBus(Bus *, int );
 
 
-    DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
-
-    int planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad);
-
-    void updateBusesOnRoadNetwork(int busId, int roadnetId);
 
 
 
