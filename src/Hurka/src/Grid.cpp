@@ -163,3 +163,73 @@ void Grid::hideVisible()
 {
     drawSelectedGrid = false;
 }
+
+
+
+
+
+// (--) Test
+HPos *Grid::findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos)
+{
+	int debugLevel = 2;
+	
+	
+	if(debugLevel >=1) {
+	std::cout << "findGrid() Not tested!\n";
+
+	std::cout << "Input hmatrix:\n";
+	hmatrix->dump("  ");
+	
+	std::cout << "Input relrect:\n";
+	relRect->dump("  ");
+	
+	std::cout << "Input searchPos:\n";
+	searchPos->dump("  ");
+	}
+	int nrTiles = subMtxRows * subMtxCOls;
+	
+	
+	if(nrTiles < 16) {
+		return bruteForceFindGrid( mY, mX, subMtxRows, subMtxCols, hmatrix);
+	}
+	
+	
+	// Now we approach it the smart way
+	
+	// Divide the submatrix into four squares
+	
+	HRect *sq0, *sq1, *sq2, *sq3;
+	
+	// Where is the first cell ?
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+		HRect(int _absStartY, 
+			int _absStartX, 
+			int _rows, 
+			int _cols, 
+			int _relStartY, 
+			int _relStartX, 
+			int _height,
+			int _width);
+
+	*/
+	
+	
+	
+	
+
+	if(
+}

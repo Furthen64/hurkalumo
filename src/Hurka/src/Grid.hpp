@@ -35,8 +35,7 @@ public:
 
     void hideVisible();
 
-
-
+	HPos *findGrid(int mY, int mX, int subMtxRows, int subMtxCols, HMatrix *hmatrix);
 
 
 
