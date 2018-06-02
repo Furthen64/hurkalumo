@@ -1,20 +1,253 @@
 #include "HRect.hpp"
 
 
-HRect::HRect(int _absStartY, 
-		int _absStartX, 
-		int _rows, 
-		int _cols, 
-		int _relStartY, 
-		int _relStartX, 
-		int _height,
-		int _width)
+// (--)
+HRect::HRect(int _absStartY,
+		int _absStartX,
+		int _rows,
+		int _cols,
+		int _heightPx,
+		int _widthPx)
 {
-	
-	
-	
-	
-	
+
+
+    // setup the position and sizes
+
+	absStart = new HPos(_absStartY, _absStartX, USE_ISO);
+	rows = _rows;
+	cols = _cols;
+	relStart = new HPos(0,0, USE_ISO);      // the relative starts at 0,0  aaaaaalways
+
+	heightPx = _heightPx;   // Pixel height of texture (w/ mask)
+	widthPx = _widthPx;     // Pixel width of texture (w/ mask)
+
+
+
+	if(drawable) {
+
+        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_2.png");
+        sprite = Sprite(texture);
+	}
+}
+
+
+
+// (--)
+HRect::HRect(HPos *_absStartPos,
+        int _rows,
+        int _cols,
+        int _heightPx,
+        int _widthPx)
+{
+    absStart = _absStartPos;
+    rows = _rows;
+    cols = _cols;
+    heightPx = _heightPx;
+    widthPx = _widthPx;
+
+}
+
+
+int HRect::nrTiles()
+{
+    return rows * cols;
+}
+
+
+
+// Please note: +-1 error possible, should it go to <= or to < when matching bounds? should we have a function insideXPixlesOrOnBounds which uses >= and <= ?
+// (--) Test
+bool HRect::insideXPixles(HPos *pxPos)
+{
+
+    int thisLeft = this->absStart->gpix_x;
+    int thisRight = this->widthPx;
+
+
+    int searchX = pxPos->gpix_x;
+
+    if(thisLeft < searchX && searchX < thisRight) {
+        return true;
+    }
+
+
+
+    return false;
+}
+
+
+
+bool HRect::insideYPixles(HPos *pxPos)
+{
+
+    int thisTop   = this->absStart->gpix_y;
+    int thisBottom = this->heightPx;
+
+    int searchY = pxPos->gpix_y;
+
+    if(thisTop < searchY && searchY < thisBottom) {
+        return true;
+    }
+
+
+
+    return false;
+}
+
+
+
+
+
+// (--) test
+HRect *HRect::clone()
+{
+
+    HRect *other = new HRect(this->absStart->clone(), this->rows, this->cols, this->heightPx, this->widthPx);
+
+    other->relStart = this->relStart->clone();
+
+    return other;
+}
+
+
+
+
+// (--)
+void HRect::dump(std::string ind)
+{
+    std::cout << ind << "HRect " << absStart->absToString() << " to (" << absStart->abs_iso_y + rows << ", " << absStart->abs_iso_x + cols << ")\n";
+}
+
+
+
+
+// Regression test
+// (--)
+void HRect::testFunctions()
+{
+    std::cout << "\n\n HRect - testFunctions()----------------------------\n";
+    HRect *rect1 = new HRect(0,0, 10,10, 32, 64);   // GRID size
+    HRect *rect2 = new HRect(0,0, 10,10, 32, 64);   // GRID size
+    HRect *rect3 = nullptr;
+    HRect *rect4a = new HRect(new HPos(1,0, USE_ISO), 10,10, 32, 64);
+    HRect *rect4b = new HRect(1,0 , 10,10, 32, 64);
+
+    std::cout << "\n\nRECT1:\n";
+    rect1->dump("  ");
+    std::cout << "\n\nRECT2:\n";
+    rect2->dump("  ");
+    rect3 = rect1->clone();
+    std::cout << "\n\nRECT3 (clone of rect1):\n";
+    rect3->dump("  ");
+    std::cout << "\n\nRECT4a:\n";
+    rect4a->dump("  ");
+    std::cout << "\n\nRECT4b:\n";
+    rect4b->dump("  ");
+
+
+
+    std::cout << "\n\nTesting absToString:\n";
+    std::cout << "  " <<  rect1->absToString() << "\n";
+    std::cout << "  " << rect2->absToString() << "\n";
+    std::cout << "  " << rect3->absToString() << "\n";
+    std::cout << "  " << rect4a->absToString() << "\n";
+    std::cout << "  " << rect4b->absToString() << "\n";
+
+
+
+
+    // Should not fail
+    assert(rect1->compare(rect2) == 0);
+    assert(rect1->compare(rect3) == 0);
+    assert(rect2->compare(rect1) == 0);
+    assert(rect2->compare(rect3) == 0);
+
+    assert(rect4a->compareAbsStartPoint(rect4b) == 0);
+
+
+
+
+
+
+
+
+
+
+    std::cout << "\n HRect Tests complete -------------------------\n\n";
+
+}
+
+
+// (--) Test
+int HRect::compare(HRect *other)
+{
+
+    // Compare positions
+    if(other->absStart->compare(this->absStart) == 0) {
+
+        if(other->rows == this->rows &&
+           other->cols == this->cols &&
+           other->heightPx == this->heightPx &&
+           other->widthPx == this->widthPx) {
+
+               if(other->relStart->compare(this->relStart) == 0) {
+                    return 0;
+               }
+           }
+    }
+
+    return -1;
+
+}
+
+
+
+// (--) test
+int HRect::compareAbsStartPoint(HRect *other)
+{
+    if(other->absStart->compare(this->absStart) == 0) {
+        return 0;
+    }
+
+    return -1;
+
+
+}
+
+
+// (--) test
+int HRect::compareSize(HRect *other)
+{
+    if(this->rows == other->rows
+       &&
+       this->cols == other->cols) {
+           return 0;
+       }
+
+    return -1;
+}
+
+
+
+
+
+std::string HRect::relToString()
+{
+    return relStart->relToString();
+}
+
+
+
+std::string HRect::absToString()
+{
+    std::string str = "HRect ";
+    str += absStart->absToString();
+    str += " to (";
+    str += std::to_string(absStart->abs_iso_y + rows);
+    str += ", " ;
+    str += std::to_string(absStart->abs_iso_x + cols);
+    str += ")";
+    return str;
 }
 
 
@@ -25,9 +258,57 @@ HRect::HRect(int _absStartY,
 
 
 
+/// Uses the internal start "hpos" object for gameworld position (e.g. it's at iso position {7,1} and at gamepix position {1000,600} )
+/// and the "viewpos" viewing position object to know where we are looking at the moment
+///
+/// @param rt       SFML RenderWindow thingie
+/// @param viewPos  A rectangle which holds the starting x and starting y for looking at the gameboard
+// (--)
+void HRect::draw(RenderTarget& rt, HPos *viewHPos)
+{
+    if(drawable) {
+
+        // Create Grid objects and draw them as you would the grid, but with different texture
+
+        for(int Y=this->absStart->abs_iso_y; Y < (this->absStart->abs_iso_y + this->rows); Y++) {
+
+            for(int X=this->absStart->abs_iso_x; X < (this->absStart->abs_iso_x + this->cols); X++) {
 
 
-	/*	
+            }
+        }
+
+
+    }
+    /*
+
+    int x = this->absStart->gpix_x;
+    int y = this->absStart->gpix_y;
+
+
+    // Viewing offset
+    x += viewHPos->gpix_x;
+    y += viewHPos->gpix_y;
+
+
+    Vector2f _pos = {(float)x,(float)y};
+
+
+    sprite.setPosition(_pos);
+
+    rt.draw(sprite);
+        */
+}
+
+
+
+
+
+
+
+
+
+	/*
 
 /// @param _y Vertical positioning, or on the isometric board= M the sloping down and left.
 /// @param _x Horizontal positioning, or on the isometric board= N the sloping down and right
@@ -253,3 +534,4 @@ void HPos::testFunctions()
 
 }
 */
+

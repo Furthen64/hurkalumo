@@ -8,9 +8,12 @@
 #include "Constants.hpp"
 #include "HPos.hpp"
 
-/// //////////////////////////////////////////////
-/// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
-/// Or something. Haven't decided yet.
+
+///
+/// GameMatrix
+///
+/// GameMatrix is the "container" for the entire gameboard.
+/// For now it does not contain much more than the tiles to show you the size of the board. It's mostly Core that holds all the objects.
 ///
 
 

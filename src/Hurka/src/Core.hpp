@@ -120,7 +120,7 @@ private:
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 3;
+    int lockFPS_n = 25;
 
 
 
@@ -150,7 +150,7 @@ private:
     // Testing for a while, remove when dijkstra is super stable
     bool dijkstraAutoEndpointsAdjust = true;            // If true, the fromRoad and toRoad will bee adjusted if out of bounds
     int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 23;
+    int dijkstraToRoad = 4;
 
 
 
@@ -170,7 +170,7 @@ private:
     bool drawGm = 1;
     bool drawLoco = 0;
     bool drawBuses = 1;
-    bool drawToolbar = 1;
+    bool drawToolbar = 0;
     bool drawGrid = 1;
     bool drawBlocks = 1;
 

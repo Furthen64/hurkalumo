@@ -10,8 +10,23 @@ TrafficManager::TrafficManager()
 
 
 
+// (--) used by Core in clearResources
+void TrafficManager::clearResources()
+{
+
+    RoadNetwork *currRoadnet;
 
 
+    for(std::list<RoadNetwork *>::iterator roadsIter=roadNetworks->begin(); roadsIter != roadNetworks->end(); ++roadsIter)
+    {
+        currRoadnet = (*roadsIter);
+
+        currRoadnet->clearResources();
+
+        delete currRoadnet;
+    }
+
+}
 
 // (+-)
 void TrafficManager::drawBuses(sf::RenderWindow &rt, HPos *viewHPos)
@@ -547,7 +562,7 @@ void TrafficManager::updateAll(HPos *viewHPos)
             currBus->gameUpdate(currRoadnet);
 
 
-            currBus->getNowPos()->dump("          ");
+//currBus->getNowPos()->dump("          ");
 
             busnr++;
         }

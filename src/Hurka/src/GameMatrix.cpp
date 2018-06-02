@@ -25,9 +25,12 @@ GameMatrix::GameMatrix(int _height, int _width, int _textureID)
     if( (height%2 != 0) || (width%2 != 0)) {
         std::cout << "Warning! GameMatrix height Not divisible by 2! \n";
     }
-
-
 }
+
+
+
+
+
 
 int GameMatrix::getWidth()
 {

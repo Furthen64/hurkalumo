@@ -167,69 +167,131 @@ void Grid::hideVisible()
 
 
 
-
+// CR7 - Work in progress 2018-06-02
+/// \brief Given a searchpos with gpix values set, find an iso inside a hmatrix
+// RECURSIVE
 // (--) Test
-HPos *Grid::findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos)
+HPos *Grid::findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind)
 {
+
+
+    // DO: if(!within the square) { return };
+
+
+    // TEST:
+    if( !relRect->insideXPixles( searchPos ) ) {
+        return nullptr;
+    }
+
+
+    if ( !relRect->insideXPixles( searchPos ) ) {
+        return nullptr;
+    }
+
+
+
+
 	int debugLevel = 2;
-	
-	
+
+
 	if(debugLevel >=1) {
-	std::cout << "findGrid() Not tested!\n";
+    std::cout << "\n\n";
+	std::cout << ind << "findGrid---------------------------\n";
 
-	std::cout << "Input hmatrix:\n";
-	hmatrix->dump("  ");
-	
-	std::cout << "Input relrect:\n";
-	relRect->dump("  ");
-	
-	std::cout << "Input searchPos:\n";
-	searchPos->dump("  ");
+	std::cout << ind <<  "Input hmatrix:\n";
+	hmatrix->dump(ind);
+
+	std::cout << ind <<  "Input relrect:\n";
+	relRect->dump(ind);
+
+	std::cout << ind << "Input searchPos:\n";
+	searchPos->dump(ind);
 	}
-	int nrTiles = subMtxRows * subMtxCOls;
-	
-	
+
+	int nrTiles = relRect->nrTiles();
+
+
+
 	if(nrTiles < 16) {
-		return bruteForceFindGrid( mY, mX, subMtxRows, subMtxCols, hmatrix);
+		return bruteForceFindGrid( hmatrix, relRect, searchPos, ind + "  ");                                // RECURSION END
+                                                                 // Can I pass string like this? ind + " " ?
 	}
-	
-	
+
+
+
+
+
 	// Now we approach it the smart way
-	
-	// Divide the submatrix into four squares
-	
+
+
+
+	// Divide the submatrix into four squares with relative positions, all starting at 0,0
+
+    int cols = hmatrix->cols;       // FIXME Correct to use these values?
+    int rows = hmatrix->rows;
+
+    int halfRows1 = -1;
+    int halfRows2 = -1;
+    int halfCols1 = -1;
+    int halfCols2 = -1;
+
+
+
+    // figure out how to divide the four squares, if rows n cols are not evenly divided by 2
+
+    if(rows/2%2==0) {
+        halfRows1 = rows/2;
+        halfRows2 = halfRows1;
+    } else {
+        halfRows1 = (rows-1)/2;
+        halfRows2 = rows - halfRows1;
+    }
+
+
+     if(rows/2%2==0) {
+        halfCols1 = rows/2;
+        halfCols2 = halfCols1;
+    } else {
+        halfCols1 = (rows-1)/2;
+        halfCols2 = rows - halfCols1;
+    }
+
+
+
+    if(debugLevel >=2) {
+
+        std::cout << ind << "Divide the submatrix into four squares with relative positions, all starting at 0,0:\n";
+
+        std::cout << ind << "half1(" << halfRows1 << ", " << halfCols1 << ")";
+        std::cout << ind << "half2(" << halfRows2 << ", " << halfCols2 << ")";
+	}
+
+
 	HRect *sq0, *sq1, *sq2, *sq3;
-	
-	// Where is the first cell ?
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
-		HRect(int _absStartY, 
-			int _absStartX, 
-			int _rows, 
-			int _cols, 
-			int _relStartY, 
-			int _relStartX, 
-			int _height,
-			int _width);
 
-	*/
-	
-	
-	
-	
+	//              startY     startX           ROWS          COLS
+	sq0 = new HRect(0,         0,               halfRows1,    halfCols1, 32,64);
+	sq1 = new HRect(0,         halfCols1,       halfRows1,    cols, 32,64);
+	sq2 = new HRect(halfRows2, 0,               rows,         halfCols1, 32,64);
+	sq3 = new HRect(halfRows2, halfCols2,       rows,         cols, 32,64);
 
-	if(
+
+	sq0->dump("  ");
+	sq1->dump("  ");
+	sq2->dump("  ");
+	sq3->dump("  ");
+
+	// Enter each square and look for the grid
+
+
+
+
+}
+
+
+
+HPos *Grid::bruteForceFindGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind)
+{
+    std::cout << "NOT CODED\n";
+    return nullptr;
 }

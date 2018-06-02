@@ -22,6 +22,7 @@ public:
 
     TrafficManager();
 
+    void clearResources();
 
     /// High level functions
 

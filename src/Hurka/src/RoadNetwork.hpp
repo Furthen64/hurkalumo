@@ -24,6 +24,8 @@ public:
 
     RoadNetwork();
 
+    void clearResources();
+
     HPos *getNrRoad_iso(int findNr, int);
 
 

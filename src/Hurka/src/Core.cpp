@@ -184,10 +184,16 @@ int Core::setup(int width, int height, std::string title)
 void Core::run()
 {
 
+
+
+    HRect *rect = new HRect(0,0,10,10, 32, 64);
+
     std::string ind1 = "   ";
     std::string ind2 = "      ";
     std::string ind3 = "         ";
     std::string ind4 = "            ";
+
+
 
 
 
@@ -605,6 +611,9 @@ void Core::run()
 
         if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
 
+
+        rect->draw(window, viewHPos);
+
         window.draw(lastClickedText);
 
 
@@ -637,6 +646,21 @@ void Core::reset()
 
 void Core::clearResources()
 {
+    std::cout << "\n\nclearResources()\n\n";
+
+    /// Load the Textures
+
+
+    //textureMgr->clearResources();
+
+    delete viewHPos;
+    delete fmgr;
+    trafficMgr->clearResources();
+    delete trafficMgr;
+    delete gm;
+    delete loco;
+    delete toolbarTop;
+    delete grid;
 
 
 }

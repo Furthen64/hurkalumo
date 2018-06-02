@@ -5,6 +5,29 @@ RoadNetwork::RoadNetwork()
     buslist = new std::list<Bus *>();
 }
 
+
+
+void RoadNetwork::clearResources()
+{
+    std::cout << "UNSURE OF DELETE\n";
+
+    Bus *workBus;
+
+    while(buslist->size() >0) {
+
+        workBus = buslist->back();
+        delete workBus;
+        buslist->pop_back();    // FIXME does this one DO a delete of my object?
+
+
+    }
+
+    delete buslist;
+}
+
+
+
+
 // (-+)
 void RoadNetwork::dump(std::string indent)
 {
@@ -61,9 +84,6 @@ Bus *RoadNetwork::busAtPos(HPos *searchPos)
     return nullptr;
 
 }
-
-
-
 
 
 

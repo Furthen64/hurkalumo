@@ -71,6 +71,8 @@
 		<Unit filename="src/Grid.hpp" />
 		<Unit filename="src/HPos.cpp" />
 		<Unit filename="src/HPos.hpp" />
+		<Unit filename="src/HRect.cpp" />
+		<Unit filename="src/HRect.hpp" />
 		<Unit filename="src/HurkaMap.cpp" />
 		<Unit filename="src/HurkaMap.hpp" />
 		<Unit filename="src/HurkaMatrix.cpp" />

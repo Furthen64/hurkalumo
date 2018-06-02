@@ -9,6 +9,8 @@
 #include "HPos.hpp"
 #include "Constants.hpp"
 #include "Utils.hpp"
+#include "HRect.hpp"
+
 
 
 
@@ -35,7 +37,11 @@ public:
 
     void hideVisible();
 
-	HPos *findGrid(int mY, int mX, int subMtxRows, int subMtxCols, HMatrix *hmatrix);
+	//HPos *findGrid(int mY, int mX, int subMtxRows, int subMtxCols, HurkaMatrix *hmatrix);
+
+    HPos *findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind);
+
+    HPos *bruteForceFindGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind);
 
 
 
@@ -366,7 +372,9 @@ private:
     Sprite sprite;
 
     Sprite spriteSelected;
-    Vector2f selected_pix_pos;
+
+
+    Vector2f selected_pix_pos;      // HPOSDELETE FIXME
     Vector2f selected_iso_pos;
     bool drawSelectedGrid = false;
 
