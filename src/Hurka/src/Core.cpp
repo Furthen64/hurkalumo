@@ -194,7 +194,10 @@ void Core::run()
     // Input Control (should be own class)
     bool alreadyButtonPressed = false;
     int inputCooldown = 0;
-    int inputCooldownCyclesPaused = 256000; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
+
+    //int inputCooldownCyclesPaused = 256000; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
+    int inputCooldownCyclesPaused = 10; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
+
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
 
@@ -278,6 +281,7 @@ void Core::run()
         }
 
         if(gamemode == GAMEMODE_PAUSE) {
+                //std::cout << inputCooldown << " vs " << inputCooldownCyclesPaused << "\n";
             if(inputCooldown >= inputCooldownCyclesPaused) {
                 inputCooldown = 0;
                 inputCooldownActive = false;
@@ -464,7 +468,7 @@ void Core::run()
             } else {
 
                 // Find out what iso tile you clicked on
-                mousepos = Grid::convert_gpix_to_iso(mousepos, 64, 32);
+                mousepos = Grid::convert_gpix_to_iso(mousepos, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
 
 
 

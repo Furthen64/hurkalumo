@@ -546,6 +546,9 @@ void TrafficManager::updateAll(HPos *viewHPos)
             // Find out which network it is on
             currBus->gameUpdate(currRoadnet);
 
+
+            currBus->getNowPos()->dump("          ");
+
             busnr++;
         }
 
@@ -603,7 +606,7 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 // (--+)
 int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad, bool dijkstraAutoEndpointsAdjust)
 {
-
+debugLevel = 2;
 
     std::string ind = "  ";
     RoadNetwork *roadnet = nullptr;
@@ -730,8 +733,11 @@ int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int 
             /// For now, make sure we have _no_ absolute positions when entering createSlotPath() (2018-05)
             // remove it later on
 
-            rel_iso_pos_A->abs_iso_x = 0;
             rel_iso_pos_A->abs_iso_y = 0;
+            rel_iso_pos_A->abs_iso_x = 0;
+
+            rel_iso_pos_B->abs_iso_y = 0;
+            rel_iso_pos_B->abs_iso_x = 0;
 
 
 

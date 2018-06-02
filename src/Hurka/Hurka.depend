@@ -1567,13 +1567,13 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1527086792 source:c:\github\lumo\src\hurka\src\core.cpp
+1527093382 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1525815589 source:c:\github\lumo\src\hurka\src\grid.cpp
 	"Grid.hpp"
 
-1527077060 c:\github\lumo\src\hurka\src\grid.hpp
+1527093408 c:\github\lumo\src\hurka\src\grid.hpp
 	<sstream>
 	<SFML/Graphics.hpp>
 	"GameMatrix.hpp"
@@ -1599,7 +1599,7 @@
 	<SFML/Graphics.hpp>
 	"HPos.hpp"
 
-1527080209 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
+1527093402 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
 1527074693 c:\github\lumo\src\hurka\src\gamematrix.hpp
@@ -1654,7 +1654,7 @@
 	<SFML/Graphics.hpp>
 	"TrafficManager.hpp"
 
-1527086660 source:c:\github\lumo\src\hurka\src\bus.cpp
+1527094462 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
 	"RoadNetwork.hpp"
 
@@ -1687,7 +1687,7 @@
 1525869654 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1527087365 c:\github\lumo\src\hurka\src\core.hpp
+1527096131 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1709,10 +1709,10 @@
 
 1521330484 source:c:\github\lumo\src\hurka\src\dijkstra.cpp
 
-1527087262 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
+1527095986 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
-1527087326 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
+1527095210 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
 	"TrafficManager.hpp"
 
 1527087285 c:\github\lumo\src\hurka\src\roadnetwork.hpp
@@ -1775,13 +1775,14 @@
 1523140518 source:c:\github\lumo\src\hurka\src\busroute.cpp
 	"BusRoute.hpp"
 
-1526766472 c:\github\lumo\src\hurka\src\hpos.hpp
+1527093299 c:\github\lumo\src\hurka\src\hpos.hpp
 	<iostream>
 	<assert.h>
 
-1526766465 source:c:\github\lumo\src\hurka\src\hpos.cpp
+1527094697 source:c:\github\lumo\src\hurka\src\hpos.cpp
 	"HPos.hpp"
 	"SlotPos.hpp"
+	"Grid.hpp"
 
 1526130824 source:c:\github\lumo\src\hurka\src\slotpos.cpp
 	"SlotPos.hpp"
@@ -1791,10 +1792,10 @@
 	"TextureManager.hpp"
 	"HPos.hpp"
 
-1527085578 source:c:\github\lumo\src\hurka\src\slotpath.cpp
+1527094589 source:c:\github\lumo\src\hurka\src\slotpath.cpp
 	"SlotPath.hpp"
 
-1526403458 c:\github\lumo\src\hurka\src\slotpath.hpp
+1527096007 c:\github\lumo\src\hurka\src\slotpath.hpp
 	<list>
 	"SlotPos.hpp"
 

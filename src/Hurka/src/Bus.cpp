@@ -56,47 +56,6 @@ void Bus::reset()
 
 
 
-/// \brief Updates all the different position variables from the current iso_pos
-///
-/// run this after you've set the current position!  e.g.: Bus::gameUpdate() which updates the current position.
-/// (--)
-
-
-
-        // needed?
-/*
-
-DELETEME
-
-void Bus::update_all_position_vars_on_abs_iso()
-{
-
-    // pos->abs_iso_x  and pos->abs_iso_y  are the ones we know are set, the rest are not
-    pos->rel_iso_x = pos->abs_iso_x;
-    pos->rel_iso_y = pos->abs_iso_y;
-
-
-    // Calculate the GPix position
-    pos->gpix_y = Grid::convert_iso_to_gpix_y(pos->abs_iso_y, pos->abs_iso_x, 64, 32, 2); // FIXME Lazy coding (64,32 thingie)
-    pos->gpix_x = Grid::convert_iso_to_gpix_x(pos->abs_iso_y, pos->abs_iso_x, 64, 32, 2);
-
-}
-*/
-
-
-/*
-void Bus::update_all_nextPos_vars_on_abs_iso()
-{
-    // nextPos->abs_iso_x  and nextPos->abs_iso_y  are the ones we know are set, the rest are not
-    nextPos->rel_iso_x = nextPos->abs_iso_x;
-    nextPos->rel_iso_y = nextPos->abs_iso_y;
-
-    // Calculate the GPix position
-    nextPos->gpix_y = Grid::convert_iso_to_gpix_y(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
-    nextPos->gpix_x = Grid::convert_iso_to_gpix_x(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
-}
-*/
-
 
 /// \brief Takes roadnetwork the bus is on as argument,
 ///  So whenever the bus needs to move to a new road it can use the correct iso offsets for that particular roadnetwork
@@ -117,7 +76,11 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
         }
 
 
-        this->pos = workPos->hpos;      // FIXME is this even used anymore? arent we using slotpath->getNow() ?
+        // Update current Pos   (gpix only!)
+        this->pos = workPos->hpos;
+
+        // Make sure we get iso position too! use the size of a GRID to get it done
+        this->pos->synchGpixToIsoValues(GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
 
     }
 }
@@ -127,20 +90,15 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 
 
 
-///
-/// LOW-LEVEL POSITION FUNCTIONS
-///
-
-
 
 // (-+)
 void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
 {
 
+
     if(drawSlotPositions) {
         slotPath->drawAllSlots(rt, viewHPos);
     }
-
 
     int x = pos->gpix_x + viewHPos->gpix_x;
     int y = pos->gpix_y + viewHPos->gpix_y;
@@ -157,17 +115,9 @@ void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
 
 
 
-
-
-
-
-
-
-/// RANDOM FUNCTIONS
-
-
-
-
+ ///
+ ///    Random utilities
+ ///
 
 
 

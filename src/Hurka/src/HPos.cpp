@@ -1,5 +1,10 @@
 #include "HPos.hpp"
+
 #include "SlotPos.hpp"  // because of Forward declaration I have to include this hpp in the .cpp file
+
+#include "Grid.hpp"
+
+
 
 /// @param _y Vertical positioning, or on the isometric board= M the sloping down and left.
 /// @param _x Horizontal positioning, or on the isometric board= N the sloping down and right
@@ -126,8 +131,8 @@ int HPos::compareAbsIso(HPos *other)
 
 
 
-// Used by roadnetwork.cpp in createSlotPathFromDijkstraResult
-// Makes a slotpos appear in the middle of an isometric tile/block
+/// \brief Used by roadnetwork.cpp in createSlotPathFromDijkstraResult
+/// Makes a slotpos appear in the middle of an isometric tile/block
 // (-+)
 void HPos::transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos)
 {
@@ -138,8 +143,39 @@ void HPos::transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos)
 
 
 
-/// @brief Copies all the values from the original to the new one, returns newly allocated HPos
-// (-+) Seems to work.. // 2018-05-10
+
+// (--) test!!!!
+void HPos::synchGpixToIsoValues(int height, int width)
+{
+    // this->gpix_y and gpix_x are the ones we know are set, the rest are not
+
+
+
+    HPos *workpos = Grid::convert_gpix_to_iso(this, height, width);        // FIXME hardcoded
+
+
+    this->abs_iso_y = workpos->abs_iso_y;
+    this->abs_iso_x = workpos->abs_iso_x;
+
+    this->rel_iso_y = -1;
+    this->rel_iso_x = -1;
+
+
+
+
+    /*
+    nextPos->rel_iso_x = nextPos->abs_iso_x;
+    nextPos->rel_iso_y = nextPos->abs_iso_y;
+
+    // Calculate the GPix position
+    nextPos->gpix_y = Grid::convert_iso_to_gpix_y(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
+    nextPos->gpix_x = Grid::convert_iso_to_gpix_x(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
+    */
+}
+
+
+/// \brief Copies all the values from the original to the new one, returns newly allocated HPos
+// (-+)
 HPos *HPos::clone()
 {
     HPos *_pos = new HPos(abs_iso_y, abs_iso_x, USE_ISO);

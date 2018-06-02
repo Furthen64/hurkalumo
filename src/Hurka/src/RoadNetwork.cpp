@@ -125,7 +125,7 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr, int debugLevel)
 /// \brief Includes the use of Dijkstra algorithm
 /// \param from_rel_iso_pos relative iso positions given (will be modified!)
 /// \param to_rel_iso_pos relative iso positions given (will be modified!)
-// (-+)     Tested and works
+// (-+)
 
 SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_pos, int debugLevel )
 {
@@ -233,7 +233,7 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     ///
 
     if(debugLevel >=2) {
-        std::cout << ind << "\n\nRunning Dijkstra 1st time:\n" << ind << "------------------------------\n";
+        std::cout << ind << "\n\nRunning Dijkstra :\n" << ind << "------------------------------\n";
     }
 
 
@@ -682,9 +682,9 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 /// \brief Used by highlevel function createSlotPath()
 /// \param dijkstraResult A result from already executed Dijkstra
 /// \param slotpath Allocated, empty.
-/// TODO: This one consumes the result... can only be run once
-/// Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions
-/// (-+)
+
+// Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions
+// (-+)
 void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath, int debugLevel)
 {
 
@@ -726,10 +726,15 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
 
 
 
+        workPos->dump("    createSlotPathFromDijkstraResult->workpos: ");
+
+
         // Now we have a gpix point of reference for generating all the tiny steps the bus will take inside a road
 
         // alpha-0.2:  make this better
         slotPositions = SlotPath::getSlotPosesOnBlockSituation(workPos, 101, 0);
+
+
         slotpath->addListOfSlotPositions(slotPositions);
 
 

@@ -50,17 +50,39 @@ public:
             case 101:
 
                 skipStep = 1;
-                yOffset = -8;
+                yOffset = 0; //yOffset = -8;
                 xOffset = 0;
 
-                for(int n = 0; n < 16; n+=skipStep) {
 
+
+                /*
+
+                VERY UNSURE ABOUT THIS
+                Could be the cause of bugs down the line where the x-axis is freaking out!
+
+
+                for(int n = 0; n < 16; n+=skipStep) {
 
 
                    hpos = new HPos(
                                         (posOfReference->gpix_y + n     + yOffset),
                                         (posOfReference->gpix_x + (2*n) + xOffset),
                                         USE_GPIX);
+
+
+                */
+
+
+
+
+                for(int n = 0; n < 4; n+=skipStep) {
+
+                     // Safer code:
+                     hpos = new HPos(
+                                     (posOfReference->gpix_y + n) + yOffset,
+                                     (posOfReference->gpix_x + n) + xOffset,
+                                     USE_GPIX);
+
 
                    workPos = new SlotPos(hpos);
                    slotPoses->push_back(workPos);

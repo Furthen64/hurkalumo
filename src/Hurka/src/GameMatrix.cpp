@@ -47,7 +47,7 @@ int GameMatrix::getHeight()
 // (-+)
 bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
 {
-    searchpos = Grid::convert_gpix_to_iso(searchpos, 64, 32);   // fixme some dayyyy
+    searchpos = Grid::convert_gpix_to_iso(searchpos, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);   // fixme some dayyyy
 
     if(searchpos->abs_iso_y > -1
        &&

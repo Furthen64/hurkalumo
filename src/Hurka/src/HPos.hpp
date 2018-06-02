@@ -69,6 +69,7 @@ public:
     HPos(int _y, int _x, int positionType);
     HPos();
     void transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos);
+    void synchGpixToIsoValues(int height, int width);
     std::string relToString();
     std::string absToString();
     int compare(HPos *other);

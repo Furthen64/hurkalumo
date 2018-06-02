@@ -66,25 +66,8 @@ public:
 
 private:
 
-    int debugLevel = 1;
-    int SCREEN_WIDTH = 1280;
-    int SCREEN_HEIGHT = 720;
-    int lockFPS = true;
-    int lockFPS_n = 30;
 
 
-
-    // Modes
-    int gamemode = GAMEMODE_EDITOR;
-    int lmbmode = LMB_ENQUIRE;
-
-
-
-    std::string windowTitle = "HurkaLumo editor alpha-0.1";
-    std::string cn = "Core.cpp";
-
-
-    ///
     /// All the Maps
 
 
@@ -99,7 +82,7 @@ private:
 
     //std::string startmapStr = "data/aztec.txt";                   // Works 2018-05    but BUG with drawing the tall house.
 
-    std::string startmapStr = "data/roadnetwork_test.txt";        // Works 2018-05
+    //std::string startmapStr = "data/roadnetwork_test.txt";        // Works 2018-05
 
 
     //std::string startmapStr = "data/bus_traffic_test.txt";          // Works 2018-05
@@ -124,6 +107,36 @@ private:
 
 
     //std::string startmapStr = "data/bus_traffic_test.txt";              // Bugs... somehow! not sure yet. 2018-05
+
+
+    std::string startmapStr = "data/bustest3.txt";              // Bugs
+
+
+
+
+
+
+    int debugLevel = 1;
+    int SCREEN_WIDTH = 1280;
+    int SCREEN_HEIGHT = 720;
+    int lockFPS = true;
+    int lockFPS_n = 3;
+
+
+
+
+
+
+    // Modes
+    int gamemode = GAMEMODE_EDITOR;
+    int lmbmode = LMB_ENQUIRE;
+
+
+
+    std::string windowTitle = "HurkaLumo editor alpha-0.1";
+    std::string cn = "Core.cpp";
+
+
 
 
 

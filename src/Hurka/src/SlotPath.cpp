@@ -100,12 +100,12 @@ void SlotPath::dump()
 
 
 
-/// \brief Makes the object take a step in the slotpath, consumes that step in the std::list slotPositions
+/// \brief take a step in the slotpath, consume a Gpix HPos
+/// consumes that step in the std::list slotPositions!
 // (--)
 SlotPos *SlotPath::stepAndGetPos(int steps)
 {
     SlotPos *workPos = nullptr;
-
 
     for(int nr = 0; nr < steps; nr++)
     {
