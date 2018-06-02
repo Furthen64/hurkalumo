@@ -445,6 +445,8 @@ void Core::run()
         ///
 
 
+        // CR7 - For now trying out the "findGrid" function             //2018-06-02
+
 
 
         /// Left mouse button pressed                                                       even in paused
@@ -454,11 +456,9 @@ void Core::run()
             alreadyButtonPressed = true;
 
 
-
             /// Get mouse position
             sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );             // SFML Specific
             HPos *mousepos = new HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
-
 
             // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
             mousepos->gpix_y -= viewHPos->gpix_y;
@@ -468,13 +468,28 @@ void Core::run()
 
             // Is it inside the gamematrix?
             if( gm->isPosInsideGameMatrix(mousepos) == false) {
-                // Do nothing?
 
+                // Do nothing
 
             } else {
 
+
+
                 // Find out what iso tile you clicked on
-                mousepos = Grid::convert_gpix_to_iso(mousepos, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
+
+                HRect *relrect = new HRect();      // Urgh.. FIXME
+                HRect *entireGameboard = new HRect(0,0, gm->getHeight(), gm->getWidth(),-1,-1); // Simplify...
+
+                mousepos = grid->findTile(entireGameboard, relrect, mousepos, "   ");
+
+
+
+
+
+
+
+                //replacing (DELETE:):
+                        //mousepos = Grid::convert_gpix_to_iso(mousepos, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
 
 
 

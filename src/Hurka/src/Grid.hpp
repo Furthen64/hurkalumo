@@ -5,14 +5,10 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "GameMatrix.hpp"
 #include "HPos.hpp"
 #include "Constants.hpp"
 #include "Utils.hpp"
 #include "HRect.hpp"
-
-
-
 
 
 using namespace sf;
@@ -30,23 +26,19 @@ public:
 
     void draw( RenderTarget& rt, HPos *viewHPos);
 
-    //void setVisible(Vector2f iso_pos); HPOSDELETE
     void setVisible(HPos *_pos);
 
 
 
     void hideVisible();
 
-	//HPos *findGrid(int mY, int mX, int subMtxRows, int subMtxCols, HurkaMatrix *hmatrix);
-
-    HPos *findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind);
-
-    HPos *bruteForceFindGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind);
 
 
+    // Search functions
 
+    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
 
-
+    HPos *bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
 
 
 

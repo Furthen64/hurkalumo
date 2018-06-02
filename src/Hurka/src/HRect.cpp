@@ -1,6 +1,17 @@
 #include "HRect.hpp"
 
 
+
+HRect::HRect()
+{
+    absStart = new HPos(-1,-1, USE_ISO);
+    rows = -1;
+    cols = -1;
+    heightPx = -1;
+    widthPx = -1;
+}
+
+
 // (--)
 HRect::HRect(int _absStartY,
 		int _absStartX,
@@ -63,7 +74,6 @@ bool HRect::insideXPixles(HPos *pxPos)
     int thisLeft = this->absStart->gpix_x;
     int thisRight = this->widthPx;
 
-
     int searchX = pxPos->gpix_x;
 
     if(thisLeft < searchX && searchX < thisRight) {
@@ -77,6 +87,8 @@ bool HRect::insideXPixles(HPos *pxPos)
 
 
 
+
+// (--) test
 bool HRect::insideYPixles(HPos *pxPos)
 {
 

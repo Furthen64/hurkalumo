@@ -2,99 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Release" />
-	<File name="src\HRect.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Grid.hpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1669" topLine="73" />
-		</Cursor>
-	</File>
-	<File name="src\TextureManager.hpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\BinarySearchTree.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3329" topLine="126" />
-		</Cursor>
-	</File>
-	<File name="src\GameMatrix.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="666" topLine="12" />
-		</Cursor>
-	</File>
-	<File name="src\HRect.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1004" topLine="43" />
-		</Cursor>
-	</File>
-	<File name="src\SlotPath.hpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2429" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="src\Grid.hpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="902" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="src\Toolbar.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1876" topLine="41" />
-		</Cursor>
-	</File>
-	<File name="src\HurkaMap.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7396" topLine="288" />
-		</Cursor>
-	</File>
-	<File name="src\TextureManager.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3977" topLine="120" />
-		</Cursor>
-	</File>
-	<File name="src\Graph.hpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4252" topLine="160" />
-		</Cursor>
-	</File>
-	<File name="src\Toolbar.hpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="196" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\Utils.hpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="127" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\Grid.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6780" topLine="256" />
-		</Cursor>
-	</File>
-	<File name="src\SlotPos.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1369" topLine="46" />
-		</Cursor>
-	</File>
-	<File name="src\HurkaMatrix.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="402" topLine="13" />
-		</Cursor>
-	</File>
-	<File name="src\SlotPos.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="138" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\Link.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="209" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\Graph.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="27052" topLine="908" />
+			<Cursor1 position="759" topLine="6" />
 		</Cursor>
 	</File>
 	<File name="src\Bus.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -102,53 +12,19 @@
 			<Cursor1 position="0" topLine="258" />
 		</Cursor>
 	</File>
-	<File name="src\FileManager.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\BinarySearchTree.hpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9975" topLine="367" />
+			<Cursor1 position="159" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Utils.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Toolbar.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="817" topLine="24" />
+			<Cursor1 position="1876" topLine="41" />
 		</Cursor>
-	</File>
-	<File name="src\Core.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="15638" topLine="243" />
-		</Cursor>
-		<Folding>
-			<Collapse line="240" />
-			<Collapse line="288" />
-		</Folding>
 	</File>
 	<File name="src\Block.hpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="499" topLine="12" />
-		</Cursor>
-	</File>
-	<File name="src\Locomotive.hpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="281" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\GameMatrix.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="541" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="src\HPos.hpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2237" topLine="51" />
-		</Cursor>
-	</File>
-	<File name="src\Main.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="561" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\FileManager.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="635" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\Node.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -156,44 +32,24 @@
 			<Cursor1 position="8451" topLine="336" />
 		</Cursor>
 	</File>
-	<File name="src\Node.hpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Bus.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3088" topLine="130" />
+			<Cursor1 position="1379" topLine="36" />
 		</Cursor>
 	</File>
-	<File name="src\TrafficManager.hpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\FileManager.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1950" topLine="49" />
+			<Cursor1 position="9975" topLine="367" />
 		</Cursor>
 	</File>
-	<File name="src\BinarySearchTree.hpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\GameMatrix.hpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="159" topLine="0" />
+			<Cursor1 position="698" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\HurkaMap.hpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Toolbar.hpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="208" topLine="27" />
-		</Cursor>
-	</File>
-	<File name="src\RoadNetwork.hpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="478" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="src\HurkaMatrix.hpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="428" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\SlotPath.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1961" topLine="96" />
-		</Cursor>
-	</File>
-	<File name="src\RoadNetwork.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="387" topLine="2" />
+			<Cursor1 position="196" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\Locomotive.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -201,29 +57,54 @@
 			<Cursor1 position="368" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\HPos.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Utils.hpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2981" topLine="143" />
+			<Cursor1 position="127" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Block.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Locomotive.hpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3098" topLine="110" />
+			<Cursor1 position="281" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Bus.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Utils.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1379" topLine="36" />
+			<Cursor1 position="817" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="src\Constants.hpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\HurkaMatrix.hpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="235" topLine="0" />
+			<Cursor1 position="428" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\BusRoute.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\TrafficManager.hpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="269" topLine="0" />
+			<Cursor1 position="1950" topLine="49" />
+		</Cursor>
+	</File>
+	<File name="src\Main.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="561" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Node.hpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3088" topLine="130" />
+		</Cursor>
+	</File>
+	<File name="src\HRect.hpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1184" topLine="17" />
+		</Cursor>
+	</File>
+	<File name="src\SlotPath.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1961" topLine="96" />
+		</Cursor>
+	</File>
+	<File name="src\SlotPos.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1369" topLine="46" />
 		</Cursor>
 	</File>
 	<File name="src\TrafficManager.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -231,9 +112,127 @@
 			<Cursor1 position="257" topLine="12" />
 		</Cursor>
 	</File>
+	<File name="src\TextureManager.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3977" topLine="120" />
+		</Cursor>
+	</File>
+	<File name="src\TextureManager.hpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\HPos.hpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2237" topLine="51" />
+		</Cursor>
+	</File>
+	<File name="src\RoadNetwork.hpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="478" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="src\GameMatrix.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="666" topLine="12" />
+		</Cursor>
+	</File>
+	<File name="src\Graph.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="27052" topLine="908" />
+		</Cursor>
+	</File>
+	<File name="src\HurkaMap.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7396" topLine="288" />
+		</Cursor>
+	</File>
+	<File name="src\FileManager.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="635" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\RoadNetwork.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="387" topLine="2" />
+		</Cursor>
+	</File>
+	<File name="src\HPos.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2981" topLine="143" />
+		</Cursor>
+	</File>
+	<File name="src\HurkaMap.hpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="208" topLine="27" />
+		</Cursor>
+	</File>
+	<File name="src\SlotPath.hpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2429" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="src\Grid.cpp" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4046" topLine="131" />
+		</Cursor>
+	</File>
+	<File name="src\Graph.hpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4252" topLine="160" />
+		</Cursor>
+	</File>
+	<File name="src\BusRoute.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="269" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Block.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3098" topLine="110" />
+		</Cursor>
+	</File>
+	<File name="src\HRect.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="184" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="src\Core.hpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="3673" topLine="146" />
+		</Cursor>
+	</File>
+	<File name="src\BinarySearchTree.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3383" topLine="126" />
+		</Cursor>
+	</File>
+	<File name="src\HurkaMatrix.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="402" topLine="13" />
+		</Cursor>
+	</File>
+	<File name="src\Core.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="11742" topLine="331" />
+		</Cursor>
+		<Folding>
+			<Collapse line="315" />
+		</Folding>
+	</File>
+	<File name="src\Link.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="209" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\SlotPos.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="138" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Constants.hpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="299" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

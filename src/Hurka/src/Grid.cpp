@@ -167,53 +167,69 @@ void Grid::hideVisible()
 
 
 
+
+
+här var du och pseudokodade nästan iväg.. utna at ttesta findTile()
+
+
+
 // CR7 - Work in progress 2018-06-02
+
+
+
 /// \brief Given a searchpos with gpix values set, find an iso inside a hmatrix
+/// \param entireGameBoard
+/// \param relRect A smaller than entireGameBoard rectangle, used in a divide n conquer manner
+/// \param searchPos Gpix values of search position
 // RECURSIVE
 // (--) Test
-HPos *Grid::findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind)
+HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind)
 {
 
-
-    // DO: if(!within the square) { return };
+	int debugLevel = 2;
 
 
     // TEST:
+
     if( !relRect->insideXPixles( searchPos ) ) {
         return nullptr;
     }
 
 
-    if ( !relRect->insideXPixles( searchPos ) ) {
+    if ( !relRect->insideYPixles( searchPos ) ) {
         return nullptr;
     }
 
 
+    // OK, it CAN be inside here, lets check if we need to do bruteforce or just "divide n conquer" again
 
 
-	int debugLevel = 2;
 
 
 	if(debugLevel >=1) {
     std::cout << "\n\n";
 	std::cout << ind << "findGrid---------------------------\n";
 
-	std::cout << ind <<  "Input hmatrix:\n";
-	hmatrix->dump(ind);
+	std::cout << ind << "- input entireGameboard:\n";
+	entireGameboard->dump(ind);
 
-	std::cout << ind <<  "Input relrect:\n";
+
+	std::cout << ind << "- input relrect:\n";
 	relRect->dump(ind);
 
-	std::cout << ind << "Input searchPos:\n";
-	searchPos->dump(ind);
+	std::cout << ind << "- input searchPos:\n";
+	searchPos->dump(ind + "   ");
 	}
 
+
+
 	int nrTiles = relRect->nrTiles();
+	std::cout << "- nrTiles: " << nrTiles << "\n";
 
 
 
 	if(nrTiles < 16) {
-		return bruteForceFindGrid( hmatrix, relRect, searchPos, ind + "  ");                                // RECURSION END
+		return bruteForceFindTile( entireGameboard, relRect, searchPos, ind + "  ");                                // RECURSION END
                                                                  // Can I pass string like this? ind + " " ?
 	}
 
@@ -227,8 +243,8 @@ HPos *Grid::findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std:
 
 	// Divide the submatrix into four squares with relative positions, all starting at 0,0
 
-    int cols = hmatrix->cols;       // FIXME Correct to use these values?
-    int rows = hmatrix->rows;
+    int cols = entireGameboard->cols;       // FIXME Correct to use these values?
+    int rows = entireGameboard->rows;
 
     int halfRows1 = -1;
     int halfRows2 = -1;
@@ -289,9 +305,159 @@ HPos *Grid::findGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std:
 }
 
 
-
-HPos *Grid::bruteForceFindGrid(HurkaMatrix *hmatrix, HRect *relRect, HPos *searchPos, std::string ind)
+/// \brief internal function used by "findTile()" to go pixelline by line for every tile inside a relative rect
+/// \param entireGameBoard
+/// \param relRect A smaller than entireGameBoard rectangle, used in a divide n conquer manner
+/// \param searchPos Gpix values of search position
+// (--) Test
+HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind)
 {
-    std::cout << "NOT CODED\n";
+
+    HPos *isopos = nullptr;
+
+    for(int Y = 0; Y < relRect->rows; Y++) {
+
+        for(int X = 0; X < relRect->cols; X++) {
+
+
+            // Generate iso pos for all the tiles inside the relrect
+
+            isopos    = new HPos(Y,X,USE_ISO);
+
+
+
+
+
+
+            // Rough check if insideXpixel span
+
+            if( (isopos->gpix_x) < searchPos->gpix_x  && searchPos->gpix_x < (isopos->gpix_x + GRID_TEXTURE_WIDTH) ) {
+                std::cout << ind << "insideXPixel span!\n";
+            } else {
+                return nullptr; // Next!
+            }
+
+
+
+
+
+            // Rough check if insideYpixel span
+
+
+
+            ///
+            /// Now compare if its inside here, use that nice... pixel by pixel row you did on paper
+            ///
+
+
+
+
+
+                                    //const int GRID_TEXTURE_HEIGHT = 32;
+                                    //const int GRID_TEXTURE_WIDTH  = 64;
+
+
+
+
+            //                      ##                  xwidth=2            xoffset=64/2 - width/2
+            //                    ##$$##                xwidth=6    (+4)    xoffset=64/2 - width/2
+            //                  ##$$##$$##              xwidth=10   (+4)
+            //                ##$$##$$##$$##
+
+
+            // Loop1 going downwards from a pointy tip
+
+
+            int xwidth = 2;
+            int xoffset = GRID_TEXTURE_WIDTH/2;     // =32 pixels
+
+            int fromX  = -1;
+            int toX = -1;
+
+            std::cout << "\n\n";
+            std::cout << ind << "Loop 1 begins:\n\n";
+
+            std::cout << "              ##                  xwidth=2            xoffset=64/2 - width/2 \n"
+                      << "            ##$$##                xwidth=6    (+4)    xoffset=64/2 - width/2 \n"
+                      << "          ##$$##$$##              xwidth=10   (+4) \n"
+                      << "        ##$$##$$##$$## \n";
+
+
+
+            for(int y = 0; y < (GRID_TEXTURE_HEIGHT/2); y++)
+            {
+
+                // Setup from and to
+
+                fromX = xoffset;
+                toX = xoffset + xwidth;
+
+                if( fromX < searchPos->gpix_x  && searchPos->gpix_x < toX ) {
+                    // inside!!
+                    std::cout << ind << " --- Eureka!  we are inside " << fromX << " - " << toX << "\n";
+                    return isopos;
+                }
+
+                // No luck, please go down one pixelline and increase Xwidth and adjust xoffset
+                xwidth+=4;
+                xoffset = GRID_TEXTURE_WIDTH/2 - (int)floor(xwidth/2);
+
+            }
+
+
+
+            //
+            //                ##$$##$$##$$##
+            //                  ##$$##$$##
+            //                    ##$$##
+            //                      ##
+
+
+
+            std::cout << "\n\n";
+            std::cout << ind << "Loop 2 begins:\n\n";
+
+            std::cout << "        ##$$##$$##$$## \n"
+                      << "          ##$$##$$##   \n"
+                      << "            ##$$##     \n"
+                      << "              ##       \n";
+
+
+
+
+            xwidth-=4;  // Just step back a bit from the last one,
+            xoffset = GRID_TEXTURE_WIDTH/2 - (int)floor(xwidth/2); // and recalc this one...
+
+
+            // Now we're good to go. Do the same thing in loop2 but reverse the operations
+            // on xwidth and xoffset for every line:
+
+            for(int y = 0; y < (GRID_TEXTURE_HEIGHT/2); y++)
+            {
+
+                // Setup from and to
+
+                fromX = xoffset;
+                toX = xoffset + xwidth;
+
+                if( fromX < searchPos->gpix_x  && searchPos->gpix_x < toX ) {
+                    // inside!!
+                    std::cout << ind << " --- Eureka!  we are inside " << fromX << " - " << toX << "\n";
+                    return isopos;
+                }
+
+                // No luck, please go down one pixelline and increase Xwidth and adjust xoffset
+                xwidth+=4;
+                xoffset = GRID_TEXTURE_WIDTH/2 - (int)floor(xwidth/2);
+
+
+        }
+    }
+
+
+
+    std::cout << "NOT CODED YET\n";
     return nullptr;
 }
+
+
