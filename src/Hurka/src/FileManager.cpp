@@ -137,12 +137,12 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
         return nullptr;
     }
 
-    if(mapRows > gameMatrix->getHeight()) {
+    if(mapRows > gameMatrix->getRows()) {
         std::cout << "ERROR " << cn << " file loaded is larger in height than the gamematrix allows for!\n";
         return nullptr;
     }
 
-    if(mapCols > gameMatrix->getWidth()) {
+    if(mapCols > gameMatrix->getCols()) {
         std::cout << "ERROR " << cn << " file loaded is larger in width than the gamematrix allows for!\n";
         return nullptr;
     }
@@ -164,7 +164,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
     if (infile.is_open())
     {
 
-            int **matrix = allocateMatrix(gameMatrix->getHeight(), gameMatrix->getWidth());
+            int **matrix = allocateMatrix(gameMatrix->getRows(), gameMatrix->getCols());
 
             /// Read lines from the file
             /// For every number (001,002,...) , put it in the matrix
@@ -209,11 +209,11 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
                 std::cout << "\n\n";
 
-                dumpMatrix(matrix, gameMatrix->getHeight(), gameMatrix->getWidth(), ind2);
+                dumpMatrix(matrix, gameMatrix->getRows(), gameMatrix->getCols(), ind2);
             }
 
             // Create output object now that we have the matrix
-            resultMap = new HurkaMap(_filename, matrix, gameMatrix->getHeight(), gameMatrix->getWidth());
+            resultMap = new HurkaMap(_filename, matrix, gameMatrix->getRows(), gameMatrix->getCols());
 
             currRow = 0;
             currCol = 0;

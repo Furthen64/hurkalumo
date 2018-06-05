@@ -36,6 +36,10 @@ public:
 			int _heightPx,
 			int _widthPx);
 
+
+
+    HRect(HPos *_absStartPos, HPos *_absEndPos );
+
     void draw(RenderTarget& rt, HPos *viewHPos);
 
     HRect();

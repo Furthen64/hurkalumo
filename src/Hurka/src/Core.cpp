@@ -477,10 +477,10 @@ void Core::run()
 
                 // Find out what iso tile you clicked on
 
-                HRect *relrect = new HRect();      // Urgh.. FIXME
-                HRect *entireGameboard = new HRect(0,0, gm->getHeight(), gm->getWidth(),-1,-1); // Simplify...
 
-                mousepos = grid->findTile(entireGameboard, relrect, mousepos, "   ");
+
+
+                mousepos = grid->findTile(gm->getHRect(), mousepos, "   ");
 
 
 

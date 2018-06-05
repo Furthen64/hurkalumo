@@ -12,16 +12,22 @@
 /// (++)
 HPos::HPos(int _y, int _x, int positionType)
 {
+    // We have no idea what object it is ... alpha-0.2 could change that
+    // ummm but for now set gpix values as it would be a grid tile
     if(positionType == USE_ISO) {
         abs_iso_y = _y;
         abs_iso_x = _x;
         rel_iso_y = _y;
         rel_iso_x = _x;
-        gpix_y = 0;
-        gpix_x = 0;
+
+        gpix_y = Grid::convert_iso_to_gpix_y(abs_iso_y, abs_iso_x, 64,32,0);
+        gpix_x = Grid::convert_iso_to_gpix_x(abs_iso_y, abs_iso_x, 64,32,0);
     }
 
     if(positionType == USE_GPIX) {
+
+
+        // alpha-0.2: please also update the abs iso positions based on the gpix, using findTile()
         abs_iso_y = 0;
         abs_iso_x = 0;
         rel_iso_y = 0;

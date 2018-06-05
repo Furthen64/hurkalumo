@@ -6,7 +6,7 @@
 
 #include "Grid.hpp"
 #include "Constants.hpp"
-#include "HPos.hpp"
+#include "HRect.hpp" // <-- #include "HPos.hpp"
 
 
 ///
@@ -28,18 +28,31 @@ public:
     GameMatrix() {}
     GameMatrix(int _height, int _width, int _textureID);
 
-    int getWidth();
-    int getHeight();
+
+    int getCols();
+    int getRows();
+
+    int getWidthPx();
+    int getHeightPx();
 
     bool isPosInsideGameMatrix(HPos *);
 
     void draw( RenderTarget& rt, HPos *viewHPos);
 
+    void calculatePxBounds();
+
+    HRect *getHRect();
 
 
 private:
-    int width;
-    int height;
+
+    HPos *startPos;
+    int cols;
+    int rows;
+
+    int widthPx;
+    int heightPx;
+
     int textureID;
     Sprite sprite;
     Texture texture;

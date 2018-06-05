@@ -34,11 +34,9 @@ public:
 
 
 
-    // Search functions
+    // Search function
+    HPos *findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind);
 
-    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
-
-    HPos *bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
 
 
 
@@ -359,6 +357,9 @@ static Vector2f convert_pix_to_iso(Vector2f pix_pos, int width, int height)
 
 
 private:
+
+
+
     Texture texture;
     Texture textureSelected;
     Sprite sprite;
@@ -378,6 +379,16 @@ private:
     Text visibleGridText;
 
     std::string cn = "Grid.cpp";
+
+
+
+    // Search Functions
+    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
+
+    HPos *bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
+
+
+
 
 };
 

@@ -1567,13 +1567,13 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1527973322 source:c:\github\lumo\src\hurka\src\core.cpp
+1528192661 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
-1527971349 source:c:\github\lumo\src\hurka\src\grid.cpp
+1528192351 source:c:\github\lumo\src\hurka\src\grid.cpp
 	"Grid.hpp"
 
-1527973396 c:\github\lumo\src\hurka\src\grid.hpp
+1528186377 c:\github\lumo\src\hurka\src\grid.hpp
 	<sstream>
 	<SFML/Graphics.hpp>
 	"HPos.hpp"
@@ -1599,15 +1599,15 @@
 	<SFML/Graphics.hpp>
 	"HPos.hpp"
 
-1527942747 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
+1528193361 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
-1527942752 c:\github\lumo\src\hurka\src\gamematrix.hpp
+1528187177 c:\github\lumo\src\hurka\src\gamematrix.hpp
 	<iostream>
 	<SFML/Graphics.hpp>
 	"Grid.hpp"
 	"Constants.hpp"
-	"HPos.hpp"
+	"HRect.hpp"
 
 1526601242 c:\github\lumo\src\hurka\src\constants.hpp
 
@@ -1627,7 +1627,7 @@
 	"SFML/Graphics.hpp"
 	"HPos.hpp"
 
-1527064159 source:c:\github\lumo\src\hurka\src\filemanager.cpp
+1528186762 source:c:\github\lumo\src\hurka\src\filemanager.cpp
 	"FileManager.hpp"
 
 1526596891 c:\github\lumo\src\hurka\src\filemanager.hpp
@@ -1687,7 +1687,7 @@
 1525869654 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1527941808 c:\github\lumo\src\hurka\src\core.hpp
+1528187421 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1779,7 +1779,7 @@
 	<iostream>
 	<assert.h>
 
-1527094697 source:c:\github\lumo\src\hurka\src\hpos.cpp
+1528185139 source:c:\github\lumo\src\hurka\src\hpos.cpp
 	"HPos.hpp"
 	"SlotPos.hpp"
 	"Grid.hpp"
@@ -1799,12 +1799,12 @@
 	<list>
 	"SlotPos.hpp"
 
-1527940823 c:\github\lumo\src\hurka\src\hrect.hpp
+1528237200 c:\github\lumo\src\hurka\src\hrect.hpp
 	<iostream>
 	<assert.h>
 	<SFML/Graphics.hpp>
 	"HPos.hpp"
 
-1527949825 source:c:\github\lumo\src\hurka\src\hrect.cpp
+1528237204 source:c:\github\lumo\src\hurka\src\hrect.cpp
 	"HRect.hpp"
 

@@ -43,6 +43,9 @@ HRect::HRect(int _absStartY,
 
 
 
+
+
+
 // (--)
 HRect::HRect(HPos *_absStartPos,
         int _rows,
@@ -57,6 +60,29 @@ HRect::HRect(HPos *_absStartPos,
     widthPx = _widthPx;
 
 }
+
+
+
+// (--)
+HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
+{
+    absStart = _absStartPos;
+    rows = _absEndPos->abs_iso_y - absStart->abs_iso_y;
+    cols = _absEndPos->abs_iso_x - absStart->abs_iso_x;
+
+    std::cout << "new HRECT:   rows=" << rows << ", cols=" << cols << "\n";
+    heightPx = 0;
+    widthPx = 0;        //FIXME: please update these values with a calculateBounds()
+
+
+
+
+}
+
+
+
+
+
 
 
 int HRect::nrTiles()

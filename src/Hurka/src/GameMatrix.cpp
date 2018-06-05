@@ -9,22 +9,31 @@
 ///
 
 
-
-
-GameMatrix::GameMatrix(int _height, int _width, int _textureID)
+GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
 {
-    height = _height;
-    width = _width;
-    textureID = _textureID;
+    rows= _rows;
+    cols = _cols;
+
+    // Figure out min and max heightPx and max widthPx of the gameboard
+    calculatePxBounds();
+
 
 
     // Hardcoded for now
-    texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_2.png");
+    textureID = _textureID;
+
+
+    std::string str = "C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_2.png";
+    texture.loadFromFile(str);
+
+
     sprite = Sprite(texture);
 
-    if( (height%2 != 0) || (width%2 != 0)) {
+
+    if( (rows%2 != 0) || (cols%2 != 0)) {
         std::cout << "Warning! GameMatrix height Not divisible by 2! \n";
     }
+    std::cout << "1\n";
 }
 
 
@@ -32,15 +41,28 @@ GameMatrix::GameMatrix(int _height, int _width, int _textureID)
 
 
 
-int GameMatrix::getWidth()
+int GameMatrix::getCols()
 {
-    return width;
+    return cols;
 }
 
-int GameMatrix::getHeight()
+int GameMatrix::getRows()
 {
-    return height;
+    return rows;
 }
+
+
+
+
+// (--) test
+HRect *GameMatrix::getHRect()
+{
+    return new HRect(0,0, rows, cols, heightPx, widthPx);
+}
+
+
+
+
 
 
 
@@ -78,15 +100,12 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
     int actualXMin = 9999;
     int actualYMin= 9999;
 
-    for(int M= 0; M<height; M++){
-        for(int N= 0; N < width; N++) {
+    for(int Y= 0; Y<rows; Y++){
 
-            // Hey! I'm using the Grid's positioning functions instead of this class's
-            // because the gamematrix's green background should follow the grid
+        for(int X= 0; X < cols; X++) {
 
-
-            x = Grid::convert_iso_to_gpix_x(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
-            y = Grid::convert_iso_to_gpix_y(M,N, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
             if( x <actualXMin) {
                 actualXMin = x;
@@ -101,7 +120,7 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
             x += viewHPos->gpix_x;
 
 
-            Vector2f pos = {(float)x,(float)y};
+            Vector2f pos = {(float)x,(float)y};     // SFML specific for the sprite
 
             if(x < minX) {
                 minX = x;
@@ -118,6 +137,67 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
         }
 
     }
+
+}
+
+
+
+
+// (--) test
+void GameMatrix::calculatePxBounds()
+{
+    std::cout << "calculatePxBounds()\n";
+
+    int minX = 9990;
+    int minY = 9990;
+    int maxX = 0;
+    int maxY = 0;
+
+    int x = 0;
+    int y = 0;
+
+
+    for(int Y= 0; Y<rows; Y++){
+        for(int X= 0; X < cols; X++) {
+
+            x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+
+
+            if(x < minX) {
+                minX = x;
+            }
+
+            if(x > maxX) {
+                maxX = x;
+            }
+
+            if(y < minY) {
+                minY = y;
+            }
+
+            if(y > maxY) {
+                maxY = y;
+            }
+
+        }
+
+    }
+
+    if(startPos == nullptr) {
+        startPos = new HPos( minX, minY, USE_GPIX);
+    } else {
+
+        startPos->gpix_x = minX;
+        startPos->gpix_y = minY;
+    }
+
+
+
+    heightPx = maxY;
+
+    widthPx = maxX;
+
 
 }
 
