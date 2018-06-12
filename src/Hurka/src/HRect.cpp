@@ -2,6 +2,7 @@
 
 
 
+/// \brief Creates an empty rectangle with invalid values
 HRect::HRect()
 {
     absStart = new HPos(-1,-1, USE_ISO);
@@ -12,6 +13,7 @@ HRect::HRect()
 }
 
 
+/// \brief Creates a rectangle given starting positions as integers
 // (--)
 HRect::HRect(int _absStartY,
 		int _absStartX,
@@ -45,7 +47,7 @@ HRect::HRect(int _absStartY,
 
 
 
-
+/// \brief Creates a rectangle given an HPos starting position
 // (--)
 HRect::HRect(HPos *_absStartPos,
         int _rows,
@@ -63,6 +65,7 @@ HRect::HRect(HPos *_absStartPos,
 
 
 
+/// \brief Creates a rectangle given two positions, calculates rows and cols automatically
 // (--)
 HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 {
@@ -71,12 +74,18 @@ HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
     cols = _absEndPos->abs_iso_x - absStart->abs_iso_x;
 
     std::cout << "new HRECT:   rows=" << rows << ", cols=" << cols << "\n";
-    heightPx = 0;
-    widthPx = 0;        //FIXME: please update these values with a calculateBounds()
 
+    heightPx = -1;
+    widthPx = -1;        //FIXME: please update these values with a calculateBounds()
 
+    calculateBounds();
 
+}
 
+void HRect::calculateBounds()
+{
+   int _heightPx = 0;
+   
 }
 
 
