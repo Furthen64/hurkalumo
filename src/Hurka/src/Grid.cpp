@@ -327,9 +327,6 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 
-	int sqHeight = -1;
-	int sqWidth =-1;
-
 	HRect *sq0, *sq1, *sq2, *sq3;
 
 
@@ -339,14 +336,15 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	// SQUARE 0
 
-
-
 	int fromY= relRect->absStart->abs_iso_y;
 	int fromX = relRect->absStart->abs_iso_x;
 	int toY = fromY + halfRows1;
 	int toX = fromX + halfCols1;
 
-	sq0 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
+	//sq0 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
+
+	sq0 = new HRect( new HPos(fromY, fromX,USE_ISO),
+	                 new HPos(toY, toX, USE_ISO));
 
 
 
@@ -357,9 +355,11 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 	fromY = fromY;         // Keep it as is
 	fromX = toX +1;        // Continue from previous square, but add 1 so we dont overlap and run same tiles again
 	toY = toY;             // Keep it as is
-	toX = toX + halfCols2; // Add the other half
+    toX = toX + halfCols2;
+	//sq1 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
 
-	sq1 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
+    sq1 = new HRect( new HPos(fromY, fromX,USE_ISO),
+	                 new HPos(toY, toX, USE_ISO));
 
 
 
@@ -372,7 +372,10 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 	toY = toY + halfRows2;                      // Add the other half
 	toX = halfCols1;
 
-    sq2 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
+    //sq2 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
+
+    sq2 = new HRect( new HPos(fromY, fromX,USE_ISO),
+	                 new HPos(toY, toX, USE_ISO));
 
 
 
@@ -380,13 +383,15 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 	fromY = fromY;                   // Keep as it is
-	fromX = fromX + halfCols1;
+	fromX = fromX + halfCols1 + 1 ;  //
     toY = toY;                      // Keep as it is
     toX = toX + halfCols2;          // Add the other half
 
 
-    sq3 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
+    //sq3 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
 
+    sq3 = new HRect( new HPos(fromY, fromX,USE_ISO),
+	                 new HPos(toY, toX, USE_ISO));
 
 
 
@@ -410,7 +415,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	/// Enter each square and look for the grid
 
-	retpos = findTile(entireGameboard, sq0, searchPos, ind ); // Does this indentation thing cock out the whole string thing?
+	retpos = findTile(entireGameboard, sq0, searchPos, ind );
 	if(retpos != nullptr) { return retpos; }
 
 
@@ -431,7 +436,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 
-
+    return retpos;
 
 }
 
