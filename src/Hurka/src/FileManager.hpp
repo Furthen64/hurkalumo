@@ -2,9 +2,16 @@
 #define FILEMANAGER_H
 
 #include <stdio.h>
-#include <direct.h>
+//#include <direct.h>   Not in linux. Really used anymore?
 #include <exception>
-//#define GetCurrentDir _getcwd
+
+
+#ifdef __linux__
+    #define getCurrentDir getcwd
+    #include <unistd.h>
+#elif _Win32_
+    #define getCurrentDir _getcwd
+#endif
 
 #include <iostream>
 #include <fstream>

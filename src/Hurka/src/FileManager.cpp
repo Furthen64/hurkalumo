@@ -514,7 +514,7 @@ void FileManager::printWorkingDir()
 {
      char cCurrentPath[FILENAME_MAX];
 
-     if (!_getcwd(cCurrentPath, sizeof(cCurrentPath)))
+     if (!getCurrentDir(cCurrentPath, sizeof(cCurrentPath)))
      {
          std::cout << errno << "\n";
         return ;

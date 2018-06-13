@@ -3,8 +3,8 @@
 
 // Always push RUNNING code
 //
-// If it doesn't run, just stub out the errors and make it run before pushing to a branch
-// If that is too much to do, make a git branch!
+// - If it doesn't run, just stub out the errors and make it run before pushing to a branch
+// - If that is too much to do, make a new branch
 
 
 /// Wishlist, wouldn't it be nice with a WindowManager holding vars like:

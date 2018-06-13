@@ -12,6 +12,7 @@ Core::~Core()
 }
 
 
+/// \brief High level function for booting up the editor
 // (-+)
 int Core::boot()
 {

@@ -116,6 +116,7 @@ private:
 
 
 
+    int consoleMode = true;
     int debugLevel = 2;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;

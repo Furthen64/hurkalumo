@@ -8,7 +8,7 @@ class Link
 {
 public:
     Link();
-    connectNodeUp(Node *);
+    void connectNodeUp(Node *);
     Node *from;
     Node *to;
     int weight;

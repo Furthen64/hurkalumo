@@ -40,6 +40,8 @@ public:
 
     HRect(HPos *_absStartPos, HPos *_absEndPos );
 
+    void calculateBounds();
+
     void draw(RenderTarget& rt, HPos *viewHPos);
 
     HRect();
