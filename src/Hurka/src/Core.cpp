@@ -71,16 +71,12 @@ int Core::allocateResources()
 
     gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
 
-    //bus = new Bus(new HPos(0,0, USE_GPIX)); // deleteme?
-
     loco = new Locomotive();
-
-
 
     toolbarTop = new Toolbar(new HPos(0, 600, USE_GPIX));
 
 
-    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
+    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);   // Grid overlayed on the GameMatrix to see where the isometric tiles are
 
 
 
@@ -208,7 +204,9 @@ void Core::run()
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
 
+std::cout << "Hm...\n";
     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
+    std::cout << "Hm...!\n";
 
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);

@@ -19,7 +19,7 @@ Toolbar::Toolbar(HPos *_hpos)
 
 
     // get the whole texture for all the buttons
-    texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TOOLBAR.png");
+    texture.loadFromFile("TOOLBAR.png");
 
 
 

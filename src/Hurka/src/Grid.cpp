@@ -10,13 +10,18 @@
 // (--)
 Grid::Grid(int _height, int _width)
 {
+    std::cout << "Creating a Grid\n";
     width = _width;
     height = _height;
-    texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_1.png");
+
+    texture.loadFromFile("GRID_1.png");
     sprite = Sprite(texture);
 
+    Vector2u usch = textureSelected.getSize();
 
-    textureSelected.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_SELECTED.png");
+    std::cout << "texureSelected=" << usch.y << ", " << usch.x << "\n";    
+    textureSelected.loadFromFile("GRID_SELECTED.png");
+    std::cout << "texureSelected=" << usch.y << ", " << usch.x << "\n";
     spriteSelected = Sprite(textureSelected);
 
     // Load font
@@ -24,6 +29,7 @@ Grid::Grid(int _height, int _width)
     {
         std::cout << "ERROR " << cn << " could not load font.\n";
     }
+std::cout << cn << "1\n";
 }
 
 

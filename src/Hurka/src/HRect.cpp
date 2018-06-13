@@ -38,7 +38,7 @@ HRect::HRect(int _absStartY,
 
 	if(drawable) {
 
-        texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRID_2.png");
+        texture.loadFromFile("GRID_2.png");
         sprite = Sprite(texture);
 	}
 }

@@ -23,7 +23,7 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
     textureID = _textureID;
 
 
-    std::string str = "C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_2.png";
+    std::string str = "GRASS_2.png";
     texture.loadFromFile(str);
 
 
@@ -146,6 +146,7 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
 // (--) test
 void GameMatrix::calculatePxBounds()
 {
+    // we have rows and cols
     std::cout << "calculatePxBounds()\n";
 
     int minX = 9990;
@@ -187,6 +188,8 @@ void GameMatrix::calculatePxBounds()
     if(startPos == nullptr) {
         startPos = new HPos( minX, minY, USE_GPIX);
     } else {
+
+        startPos->dump("   ");
 
         startPos->gpix_x = minX;
         startPos->gpix_y = minY;

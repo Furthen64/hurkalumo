@@ -33,7 +33,7 @@ public:
     BinarySearchTree();
     void dump();
     void dumpBST(BSTNode *currNode, int direction);
-    void add(int x, int debugLevel);
+    int add(int x, int debugLevel);
     int findVal(int x, int debugLevel);
 
 private:

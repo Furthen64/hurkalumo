@@ -18,106 +18,107 @@
 
 void TextureManager::loadTextures()
 {
-
     sf::Texture txt;
 
     // Houses
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_001.png");
+    txt.loadFromFile("HOUSE_001.png");
     pushTexture("HOUSE001", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_002.png");
+    txt.loadFromFile("HOUSE_002.png");
     pushTexture("HOUSE002", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_003.png");
+    txt.loadFromFile("HOUSE_003.png");
     pushTexture("HOUSE003", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_004.png");
+    txt.loadFromFile("HOUSE_004.png");
     pushTexture("HOUSE004", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_005.png");
+    txt.loadFromFile("HOUSE_005.png");
     pushTexture("HOUSE005", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_006.png");
+    txt.loadFromFile("HOUSE_006.png");
     pushTexture("HOUSE006", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_007.png");
+    txt.loadFromFile("HOUSE_007.png");
     pushTexture("HOUSE007", txt);
-/*
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_008.png");
-    pushTexture("HOUSE008", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_009.png");
-    pushTexture("HOUSE009", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\HOUSE_010.png");
-    pushTexture("HOUSE010", txt);
-
-*/
 
 
     // Road
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_001.png");
+    txt.loadFromFile("ROAD_001.png");
     pushTexture("ROAD001", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_002.png");
+    txt.loadFromFile("ROAD_002.png");
     pushTexture("ROAD002", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_003.png");
+
+    txt.loadFromFile("ROAD_003.png");
     pushTexture("ROAD003", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_004.png");
+
+    txt.loadFromFile("ROAD_004.png");
     pushTexture("ROAD004", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_005.png");
+
+    txt.loadFromFile("ROAD_005.png");
     pushTexture("ROAD005", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_006.png");
+
+    txt.loadFromFile("ROAD_006.png");
     pushTexture("ROAD006", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_007.png");
+
+    txt.loadFromFile("ROAD_007.png");
     pushTexture("ROAD007", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_008.png");
+
+    txt.loadFromFile("ROAD_008.png");
     pushTexture("ROAD008", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_009.png");
+
+    txt.loadFromFile("ROAD_009.png");
     pushTexture("ROAD009", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\ROAD_010.png");
+
+    txt.loadFromFile("ROAD_010.png");
     pushTexture("ROAD010", txt);
 
 
 
     // Trees
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_001.png");
+    txt.loadFromFile("TREE_001.png");
     pushTexture("TREE001", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_002.png");
+    txt.loadFromFile("TREE_002.png");
     pushTexture("TREE002", txt);
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\TREE_003.png");
+    txt.loadFromFile("TREE_003.png");
     pushTexture("TREE003", txt);
 
 
     // Grass
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\GRASS_001.png");
+    txt.loadFromFile("GRASS_001.png");
     pushTexture("GRASS001", txt);
 
     // Bus
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\BUS_001.png");
+    txt.loadFromFile("BUS_001.png");
     pushTexture("BUS001", txt);
 
 
 
     // Special
 
-    txt.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\SLOTPOS.png");
+    txt.loadFromFile("SLOTPOS.png");
     pushTexture("SLOTPOS", txt);
+
+
+    std::cout << "Funkar\n";
 
 }
 

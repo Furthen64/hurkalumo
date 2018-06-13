@@ -10,7 +10,7 @@
 
 Locomotive::Locomotive()
 {
-    texture.loadFromFile("C:\\github\\lumo\\src\\Hurka\\bin\\Release\\LOCOMOTIVE.png");
+    texture.loadFromFile("LOCOMOTIVE.png");
     sprite = Sprite(texture);
     sprite.setTextureRect( {0,0,32,32});
 }
