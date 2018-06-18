@@ -117,7 +117,7 @@ private:
 
 
     int consoleMode = true;
-    int debugLevel = 2;
+    int debugLevel = 1;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
