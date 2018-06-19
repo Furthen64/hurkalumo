@@ -1,7 +1,7 @@
 #ifndef BUS_H
 #define BUS_H
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 class RoadNetwork;
 
@@ -58,9 +58,8 @@ public:
 
     /// Random Utilities
 
-    //HPos *getRandomRoad_iso_pos(HurkaMatrix *roadMatrix); DELETEME
-    HPos *rand_iso_pos(int maxM, int maxN); // HPOSTEST!
-    HPos *rand_abs_iso_pos(RoadNetwork *roadnet); // HPOSTEST!
+    HPos *rand_iso_pos(int maxM, int maxN);
+    HPos *rand_abs_iso_pos(RoadNetwork *roadnet);
 
 
 

@@ -1,5 +1,16 @@
 #include "TextureManager.hpp"
 
+
+
+
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <string>
+
+#include "Utils.hpp"
+
+
 ///
 /// SINGLETON
 ///
@@ -16,118 +27,75 @@
 // "H001" which means HOUSE001 , maps it to the first house texture   etc.
 
 
-void TextureManager::loadTextures()
+// Returns 0 on ok , -1 on failure
+int TextureManager::loadTextures()
 {
     sf::Texture txt;
+    bool failed = false;
 
-    // Houses
 
-    txt.loadFromFile("HOUSE_001.png");
-    pushTexture("HOUSE001", txt);
+    // Read a textfile with all the textures listed in it
 
-    txt.loadFromFile("HOUSE_002.png");
-    pushTexture("HOUSE002", txt);
-
-    txt.loadFromFile("HOUSE_003.png");
-    pushTexture("HOUSE003", txt);
-
-    txt.loadFromFile("HOUSE_004.png");
-    pushTexture("HOUSE004", txt);
-
-    txt.loadFromFile("HOUSE_005.png");
-    pushTexture("HOUSE005", txt);
-
-    txt.loadFromFile("HOUSE_006.png");
-    pushTexture("HOUSE006", txt);
-
-    txt.loadFromFile("HOUSE_007.png");
-    pushTexture("HOUSE007", txt);
+    std::string texturesFileList = getFullUri("data\\textures.txt");
+    std::string line;
+    std::string textureFullUri;
+    std::string textureName;
+    std::list<std::string> textureList;
 
 
 
 
-    // Road
+    std::ifstream myfile (texturesFileList);
+    if (myfile.is_open())
+    {
+       while ( myfile.good() )
+       {
+          getline (myfile,line);
 
-    txt.loadFromFile("ROAD_001.png");
-    pushTexture("ROAD001", txt);
+          // Is it a whitespace line? ignore it
+          if(line != "") {
 
-    txt.loadFromFile("ROAD_002.png");
-    pushTexture("ROAD002", txt);
+                  // Create the correct names for the datastructure
 
+                  std::cout << "                     " << line << "\n";
+                  textureName = "data\\textures\\";
+                  textureName += line;
+                  textureName += ".png";
+                    std::cout << "                        " << textureName << "\n";
+                  textureFullUri = getFullUri(textureName);
 
-    txt.loadFromFile("ROAD_003.png");
-    pushTexture("ROAD003", txt);
+                     std::cout << "                       " << textureFullUri << "\n";
 
+                  if(!txt.loadFromFile(textureFullUri)) {
+                        failed = true;
 
-    txt.loadFromFile("ROAD_004.png");
-    pushTexture("ROAD004", txt);
-
-
-    txt.loadFromFile("ROAD_005.png");
-    pushTexture("ROAD005", txt);
-
-
-    txt.loadFromFile("ROAD_006.png");
-    pushTexture("ROAD006", txt);
-
-
-    txt.loadFromFile("ROAD_007.png");
-    pushTexture("ROAD007", txt);
-
-
-    txt.loadFromFile("ROAD_008.png");
-    pushTexture("ROAD008", txt);
+                  }
+                  pushTexture(line, txt);
 
 
-    txt.loadFromFile("ROAD_009.png");
-    pushTexture("ROAD009", txt);
+                  //  txt.loadFromFile("HOUSE_001.png");        så här såg det ut innan
+                  // pushTexture("HOUSE001", txt);
 
+            }
 
-    txt.loadFromFile("ROAD_010.png");
-    pushTexture("ROAD010", txt);
+        }
 
+        myfile.close();
 
+    }  else {
+        std::cout << "ERROR " << cn << " Unable to open file " << texturesFileList << "\n";
+        return -1;
+    }
 
-    // Trees
-
-    txt.loadFromFile("TREE_001.png");
-    pushTexture("TREE001", txt);
-
-    txt.loadFromFile("TREE_002.png");
-    pushTexture("TREE002", txt);
-
-    txt.loadFromFile("TREE_003.png");
-    pushTexture("TREE003", txt);
-
-
-    // Grass
-
-    txt.loadFromFile("GRASS_001.png");
-    pushTexture("GRASS001", txt);
-
-    // Bus
-
-    txt.loadFromFile("BUS_001.png");
-    pushTexture("BUS001", txt);
-
-
-
-    // Special
-
-    txt.loadFromFile("SLOTPOS.png");
-    pushTexture("SLOTPOS", txt);
-
-
-    std::cout << "Funkar\n";
+    if(failed) {return -1; }
+    else {return 0;}
 
 }
 
 
 
 // Converts the integer to string version of textures in the library
-
-
-/// TODO: Automatisera detta :x så det inte blir några mer human errors av att man skriver fel
+// (--)
 std::string TextureManager::getTextureNameByIndex(int nr)
 {
     switch(nr){

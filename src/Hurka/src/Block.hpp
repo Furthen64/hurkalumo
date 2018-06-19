@@ -49,11 +49,7 @@ private:
     Sprite sprite;
     Vector2f pos;
     std::string cn = "Block.cpp";
-
-
     HPos *hpos;
-
-
 };
 
 #endif

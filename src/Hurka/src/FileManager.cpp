@@ -98,7 +98,9 @@ FileManager::FileManager()
 
 
 //gå igenom readRegularFile och se hur den kan göra matrix**  lika stor som GameMatrix
-HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, GameMatrix *gameMatrix)
+
+// (--+)        Soooorta works. It can read basic files.
+HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, GameMatrix *gameMatrix)
 {
 
     // Returnobject HurkaMap
@@ -123,7 +125,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
 
     if(debugLevel > 0) {
-        std::cout << "\n\n*** readRegularFile( " << _filename << ") \n";
+        std::cout << "\n\nreadRegularFile( " << fullUri << ") \n{\n";
     }
 
 
@@ -132,7 +134,8 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
     /// Verify the File and get mapRows and mapCols
 
 
-    if(!verifyFile(_filename, &mapRows, &mapCols, debugLevel)) {
+
+    if(!verifyFile(fullUri, &mapRows, &mapCols, debugLevel)) {
         std::cout << "ERROR " << cn << " unable to verify the file, exiting!\n";
         return nullptr;
     }
@@ -150,13 +153,13 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
 
     if(debugLevel > 0) {
-        std::cout << ind1 << "The file has ROWS=" << mapRows << ", COLS=" << mapCols << "\n";
+        std::cout << ind1 << " - File has rows=" << mapRows << ", cols=" << mapCols << "\n";
     }
 
 
     /// Open the File here
 
-    infile.open(_filename);
+    infile.open(fullUri);
 
 
     /// Get the Rows and Columns out of the map
@@ -213,7 +216,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
             }
 
             // Create output object now that we have the matrix
-            resultMap = new HurkaMap(_filename, matrix, gameMatrix->getRows(), gameMatrix->getCols());
+            resultMap = new HurkaMap(fullUri, matrix, gameMatrix->getRows(), gameMatrix->getCols());
 
             currRow = 0;
             currCol = 0;
@@ -383,7 +386,7 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
             /// Complete!!
 
     } else {
-        std::cout << "ERROR " << cn << ": Could not open file \"" << _filename << "\"!\n";
+        std::cout << "ERROR " << cn << ": Could not open file \"" << fullUri << "\"!\n";
         infile.close();
         return nullptr;
     }
@@ -391,7 +394,8 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 
     if(debugLevel > 1) {
         resultMap->dump("   ");
-        std::cout << "\n readRegularFile complete **** \n\n";
+        std::cout << "\n}     readRegularFile complete \n\n";
+
     }
 
     infile.close();
@@ -410,10 +414,11 @@ HurkaMap *FileManager::readRegularFile(std::string _filename, int debugLevel, Ga
 // Wishlist: Please check that every line ends with ","
 //
 // Wishlist: Check that the map is an NxN matrix
+/// \param fullUri
 // (-+)
-bool FileManager::verifyFile(std::string _filename, int *rows, int *cols, int debugLevel)
+bool FileManager::verifyFile(std::string fullUri, int *rows, int *cols, int debugLevel)
 {
-
+debugLevel = 2; // FIXME DELETEME
 
 
 
@@ -425,13 +430,22 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols, int de
     std::string line;
 
 
+
     if(debugLevel > 0) {
         std::cout << "\n\n**** VerifyFile!\n";
     }
 
 
     /// Open the file
-    std::ifstream infile(_filename);
+
+
+
+    if(debugLevel >= 2) {
+        std::cout << "Trying to open \"" << fullUri << "\"\n";
+    }
+
+
+    std::ifstream infile(fullUri);
 
     if(infile) {
 
@@ -497,7 +511,7 @@ bool FileManager::verifyFile(std::string _filename, int *rows, int *cols, int de
 
     } else {
         // Could not open the file
-        std::cout << "ERROR !!!" << cn << ": Could not open file \"" << _filename << "\"!\n";
+        std::cout << "ERROR !!!" << cn << ": Could not open file \"" << fullUri << "\"!\n";
 
         return false;
     }

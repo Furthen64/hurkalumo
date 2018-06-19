@@ -7,29 +7,30 @@
 // The grid follows the static grid size of 64 x 64 px
 
 
-// (--)
+// (-+)
 Grid::Grid(int _height, int _width)
 {
-    std::cout << "Creating a Grid\n";
     width = _width;
     height = _height;
 
-    texture.loadFromFile("GRID_1.png");
+
+
+
+    texture.loadFromFile(getFullUri("data\\textures\\GRID1.png"));
     sprite = Sprite(texture);
 
-    Vector2u usch = textureSelected.getSize();
 
-    std::cout << "texureSelected=" << usch.y << ", " << usch.x << "\n";    
-    textureSelected.loadFromFile("GRID_SELECTED.png");
-    std::cout << "texureSelected=" << usch.y << ", " << usch.x << "\n";
+
+    textureSelected.loadFromFile(getFullUri("data\\textures\\GRID_SELECTED.png"));
     spriteSelected = Sprite(textureSelected);
 
     // Load font
-    if (!font.loadFromFile("consola.ttf"))
+    if (!font.loadFromFile( getFullUri("data\\fonts\\consola.ttf")))
     {
         std::cout << "ERROR " << cn << " could not load font.\n";
     }
-std::cout << cn << "1\n";
+
+
 }
 
 
@@ -131,6 +132,10 @@ void Grid::draw( RenderTarget& rt, HPos *viewHPos)
 
 void Grid::setVisible(HPos *_pos)
 {
+    if(_pos == nullptr) {
+            std::cout << "WARNING: setVisible: _pos is nullptr!\n";
+            return ;
+    }
     drawSelectedGrid = true;
 
     selected_iso_pos.y = _pos->abs_iso_y;
@@ -187,10 +192,28 @@ void Grid::hideVisible()
 
 
 // Uses internal findTile() function
+
+// (--)
 HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind)
 {
-    HRect *relRect = new HRect(entireGameBoard->absStart, entireGameBoard->rows, entireGameBoard->cols, entireGameBoard->heightPx, entireGameBoard->widthPx);
+    HRect *relRect = new HRect(
+                                    entireGameBoard->absStart,
+                                    entireGameBoard->rows,
+                                    entireGameBoard->cols,
+                                    entireGameBoard->heightPx,
+                                    entireGameBoard->widthPx);
+    std::cout << "\nfindTile()-----------------------------\n";
+
+    relRect->dump(" relRect=   ");
+
+    if(searchPos == nullptr) {
+        std::cout << "ERROR " << cn << " searchpos is nullptr\n";
+        return nullptr;
+    }
+    searchPos->dump(" searchPos=   ");
+
     return findTile(entireGameBoard, relRect, searchPos, ind);
+
 }
 
 
@@ -217,6 +240,23 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
     int debugLevel = 2;
 
+    if(entireGameboard == nullptr) {
+        std::cout << "ERROR " << cn << " findTile() entireGameBoard is nullptr\n";
+        return nullptr;
+    }
+
+
+    if(relRect == nullptr) {
+        std::cout << "ERROR " << cn << " findTile() relRect is nullptr\n";
+        return nullptr;
+    }
+
+    if(searchPos == nullptr) {
+        std::cout << "ERROR " << cn << " findTile() searchPos is nullptr\n";
+    }
+
+
+
     HPos *retpos = nullptr;
 
 
@@ -229,6 +269,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
     // TEST:
     std::cout << ind <<  "funkar insideXpixels?:\n";
+
     if( !relRect->insideXPixles( searchPos ) ) {
         return nullptr;
     }

@@ -26,7 +26,7 @@ public:
     }
 
 
-    void loadTextures();
+    int loadTextures();
 
     void pushTexture(std::string _name, sf::Texture _texture);
 

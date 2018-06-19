@@ -1,5 +1,7 @@
 #include "HRect.hpp"
 
+#include "Utils.hpp"
+
 
 
 /// \brief Creates an empty rectangle with invalid values
@@ -38,7 +40,7 @@ HRect::HRect(int _absStartY,
 
 	if(drawable) {
 
-        texture.loadFromFile("GRID_2.png");
+        texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
         sprite = Sprite(texture);
 	}
 }
@@ -85,7 +87,13 @@ HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 void HRect::calculateBounds()
 {
    int _heightPx = 0;
-   
+   int _widthPx = 0;
+
+   // GO over the isometric field and figure out the min and max in each corner,
+   // set the heihgpx and widthpx of the HRect
+
+   std::cout << "NOT CODED YET!!!\n";
+
 }
 
 
@@ -106,10 +114,17 @@ int HRect::nrTiles()
 bool HRect::insideXPixles(HPos *pxPos)
 {
 
+    int debugLevel = 1;
+
     int thisLeft = this->absStart->gpix_x;
     int thisRight = this->widthPx;
 
     int searchX = pxPos->gpix_x;
+
+    if(debugLevel >= 1)
+    {
+        std::cout << "hrect.left = " << thisLeft << "    vs   pxPos.left= " << searchX <<  " vs  hrect.right= " << thisRight << "\n";
+    }
 
     if(thisLeft < searchX && searchX < thisRight) {
         return true;

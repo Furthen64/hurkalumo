@@ -13,13 +13,17 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add option="-D_Win32_" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
-					<Add library="sfml-graphics-d" />
-					<Add library="sfml-window-d" />
-					<Add library="sfml-system-d" />
-					<Add library="sfml-main-d" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add library="sfml-graphics-d-2" />
+					<Add library="sfml-window-d-2" />
+					<Add library="sfml-system-d-2" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -30,6 +34,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-Wall" />
 					<Add option="-static -static-libgcc -static-libstdc++" />
 					<Add option="-D_Win32_" />
 					<Add directory="include" />

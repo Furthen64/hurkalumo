@@ -2,6 +2,7 @@
 #define TOOLBAR_H
 
 #include <SFML/Graphics.hpp>
+#include "Utils.hpp"
 #include "HPos.hpp"
 
 using namespace sf;

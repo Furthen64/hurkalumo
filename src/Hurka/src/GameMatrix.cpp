@@ -22,9 +22,7 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
     // Hardcoded for now
     textureID = _textureID;
 
-
-    std::string str = "GRASS_2.png";
-    texture.loadFromFile(str);
+    texture.loadFromFile(getFullUri("data\\textures\\GRASS2.png"));
 
 
     sprite = Sprite(texture);
@@ -143,12 +141,13 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
 
 
 
-// (--) test
+// (--) test!
 void GameMatrix::calculatePxBounds()
 {
-    // we have rows and cols
-    std::cout << "calculatePxBounds()\n";
+    std::cout <<"NOT TESTED void GameMatrix::calculatePxBounds()\n";
+    // we have rows and cols, we DO NOT have startPos
 
+    startPos = new HPos(0,0, USE_ISO);
     int minX = 9990;
     int minY = 9990;
     int maxX = 0;

@@ -32,10 +32,10 @@ class FileManager
 {
 public:
     FileManager();
-    bool verifyFile(std::string _filename, int *rows, int *cols, int debugLevel);
+    bool verifyFile(std::string fullUri, int *rows, int *cols, int debugLevel);
 
     void printWorkingDir();
-    HurkaMap *readRegularFile(std::string _filename, int debugLevel, GameMatrix *);
+    HurkaMap *readRegularFile(std::string fullUri, int debugLevel, GameMatrix *);
 
 private:
 

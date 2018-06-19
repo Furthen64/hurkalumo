@@ -183,6 +183,31 @@ void waitForInput()
 }
 
 
+/// \brief relativeUri have a syntax like: "data\filename.txt"
+// (--)
+std::string getFullUri(std::string relativeUri)
+{
+    std::string cn = "Utils.cpp";
+
+    char *cwd = new char[512];
+    cwd = getCurrentDir(cwd, 512);
+    if(cwd == nullptr) {
+        std::cout << "ERROR " << cn << " getFullUri() cannot get working dir, " << errno << "\n";
+    }
+
+    std::string fullUri = cwd;
+
+    fullUri += "\\..\\";
+    fullUri += relativeUri;
+
+    std::cout << "getFullUri=" << fullUri << "\n";
+
+
+    return fullUri;
+
+}
+
+
 
 /// TESTS
 /*
@@ -322,3 +347,5 @@ bool integrityTesting()
 
 }
 */
+
+

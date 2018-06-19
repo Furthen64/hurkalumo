@@ -19,7 +19,7 @@ Toolbar::Toolbar(HPos *_hpos)
 
 
     // get the whole texture for all the buttons
-    texture.loadFromFile("TOOLBAR.png");
+    texture.loadFromFile(getFullUri("data\\textures\\TOOLBAR.png"));
 
 
 

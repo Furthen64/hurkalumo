@@ -27,7 +27,7 @@ int Core::boot()
     }
 
 
-    result = loadResources(startmapStr);
+    result = loadResources(startmapFilename);
     if(result != 0) {
         std::cout << "\n\n*** Exiting with error.\n"; return result;
     }
@@ -55,7 +55,11 @@ int Core::allocateResources()
     /// Load the Textures
     if(debugLevel>=1) { std::cout << "Loading all the textures...\n"; }
     textureMgr = textureMgr->getInstance();
-    textureMgr->loadTextures();
+
+    if(textureMgr->loadTextures() != 0) {
+        std::cout << "Core quitting. Could not load textures.\n";
+        return -1;
+    }
     if(debugLevel >=1) { std::cout << " " << textureMgr->nrOfTextures() << " textures loaded!\n"; }
 
 
@@ -85,11 +89,10 @@ int Core::allocateResources()
 
 
 
-
 // Returns 0 when ok,
 // Return -1 when something failed
 // (-+)
-int Core::loadResources(std::string mapName)
+int Core::loadResources(std::string _mapName)
 {
 
     std::cout << "\n\n\n---------------loadResources-------------\n";
@@ -98,10 +101,10 @@ int Core::loadResources(std::string mapName)
 
 
     /// Read the map
-    std::cout << "Loading map \"" << mapName << "\"\n";
+    std::cout << "Loading map \"" << _mapName << "\"\n";
 
-    hmap = fmgr->readRegularFile(mapName,debugLevel, gm);
-    if(hmap->mapName == "empty") { std::cout << "ERROR Could not read map " << mapName << ", exiting!\n"; return -1;  }
+    hmap = fmgr->readRegularFile(getFullUri(_mapName),debugLevel, gm);
+    if(hmap->fullUriMapName == "empty") { std::cout << "ERROR Could not read map " << _mapName << ", exiting!\n"; return -1;  }
 
 
     /// Get the roads
@@ -112,7 +115,7 @@ int Core::loadResources(std::string mapName)
     }
 
     /// Load font
-    if (!font.loadFromFile("consola.ttf"))
+    if (!font.loadFromFile(getFullUri("data\\fonts\\consola.ttf")))
     { std::cout << "ERROR " << cn << " could not load font consola.ttf.\n"; return -1; }
 
     return 0;
@@ -478,8 +481,50 @@ std::cout << "Hm...\n";
 
 
 
-
+                std::cout << "\n\n\n\n\n\n\n2018-06-19 debugging:\n";
                 mousepos = grid->findTile(gm->getHRect(), mousepos, "   ");
+
+                if(mousepos != nullptr) {
+
+
+                    /// LMB Action!
+
+                    // When you click on the left mousebutton many things can happen throughout different modes,
+                    // alpha-0.2: Might need to have more consideration to MODES.
+
+                    switch(lmbmode)
+                    {
+                        case LMB_CLICK_CREATE_OR_SWAP:
+
+                            grid->setVisible(mousepos);     // Light up the current tile
+
+                            hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
+
+                            break;
+
+                        case LMB_CLICK_CREATE:
+
+                            grid->setVisible(mousepos);
+
+                            hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
+
+                            break;
+
+                        case LMB_ENQUIRE:
+                            grid->setVisible(mousepos);
+
+                            // Find out what's under the cursor
+                            hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
+
+                            break;
+
+                        case LMB_PANNING:
+                            break;
+                    }
+
+                } else {
+                    std::cout << cn << "Mousepos is nullptr\n";
+                }
 
 
 
@@ -492,44 +537,6 @@ std::cout << "Hm...\n";
 
 
 
-
-                /// LMB Action!
-
-                // When you click on the left mousebutton many things can happen throughout different modes,
-                // alpha-0.2: Might need to have more consideration to MODES.
-
-                switch(lmbmode)
-                {
-                    case LMB_CLICK_CREATE_OR_SWAP:
-
-                        grid->setVisible(mousepos);     // Light up the current tile
-
-                        hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
-
-                        break;
-
-                    case LMB_CLICK_CREATE:
-
-                        grid->setVisible(mousepos);
-
-                        hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
-
-                        break;
-
-                    case LMB_ENQUIRE:
-                        grid->setVisible(mousepos);
-
-                        // Find out what's under the cursor
-                        hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
-
-                        break;
-
-                    case LMB_PANNING:
-                        break;
-
-
-
-                }
 
 
             } // if inside the gamematrix when clicking LMB
@@ -616,8 +623,7 @@ std::cout << "Hm...\n";
         if(drawLoco) {  loco->draw(window, viewHPos); }
 
         if(drawBuses) {
-                trafficMgr->drawBuses(window, viewHPos);
-                //bus->draw(window, viewHPos); DELETE
+            trafficMgr->drawBuses(window, viewHPos);
         }
 
 
@@ -667,6 +673,7 @@ void Core::clearResources()
 
     //textureMgr->clearResources();
 
+  /*
     delete viewHPos;
     delete fmgr;
     trafficMgr->clearResources();
@@ -675,7 +682,7 @@ void Core::clearResources()
     delete loco;
     delete toolbarTop;
     delete grid;
-
+  */
 
 }
 

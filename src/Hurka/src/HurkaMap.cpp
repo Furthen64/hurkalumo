@@ -4,10 +4,10 @@
 
 
 // (-+)
-HurkaMap::HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols)
+HurkaMap::HurkaMap(std::string _fullUriMapName, int **_matrix, int mtxRows, int mtxCols)
 {
 
-    mapName = _mapName;
+    fullUriMapName = _fullUriMapName;
     matrix = _matrix;
     matrixRows = mtxRows;
     matrixCols = mtxCols;
@@ -284,14 +284,20 @@ void HurkaMap::dump(std::string ind)
 
 
 
-/// \brief I want to know more about things on the gameboard so here goes... use this!
-// (-+) test moar plz
+/// \brief Will figure out what is under the mouse cursor and run .dump() function on
+///        all the objects.
+// (-+) test more
 void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::string ind)
 {
 
     Block *workBlock = nullptr;
     std::string ind2 = ind;
     ind2 += "   ";
+
+    if(searchPos == nullptr) {
+        std::cout << "dumpEverythingAtPos() searchpos = nullptr!\n";
+        return ;
+    }
 
     std::cout << ind << "dumpEverythingAtPos " << searchPos->absToString() << ":\n";
     std::cout << ind << "{\n";

@@ -1,6 +1,6 @@
 #include "Locomotive.hpp"
 
-
+#include "Utils.hpp"
 ///
 /// Locomotive
 ///
@@ -10,7 +10,8 @@
 
 Locomotive::Locomotive()
 {
-    texture.loadFromFile("LOCOMOTIVE.png");
+
+    texture.loadFromFile(getFullUri("data\\textures\\LOCOMOTIVE.png"));
     sprite = Sprite(texture);
     sprite.setTextureRect( {0,0,32,32});
 }

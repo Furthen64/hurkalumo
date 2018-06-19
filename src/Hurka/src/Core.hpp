@@ -72,32 +72,32 @@ private:
 
 
 
-    //std::string startmapStr = "data/simple.txt";
+    //std::string startmapFilename = "data/simple.txt";
 
-    //std::string startmapStr = "data/two_roads.txt";
-
-
-    //std::string startmapStr = "data/garden.txt";
+    //std::string startmapFilename = "data/two_roads.txt";
 
 
-    //std::string startmapStr = "data/aztec.txt";                   // Works 2018-05    but BUG with drawing the tall house.
-
-    //std::string startmapStr = "data/roadnetwork_test.txt";        // Works 2018-05
+    //std::string startmapFilename = "data/garden.txt";
 
 
-    //std::string startmapStr = "data/bus_traffic_test.txt";          // Works 2018-05
+    //std::string startmapFilename = "data/aztec.txt";                   // Works 2018-05    but BUG with drawing the tall house.
+
+    //std::string startmapFilename = "data/roadnetwork_test.txt";        // Works 2018-05
+
+
+    //std::string startmapFilename = "data/bus_traffic_test.txt";          // Works 2018-05
 
 
 
 
-    //std::string startmapStr = "data/dijkstra_test_1.txt";             // Works!
-    //std::string startmapStr = "data/dijkstra_test_2.txt";             // Works!
-    //std::string startmapStr = "data/dijkstra_test_3.txt";               // Works!
-   // std::string startmapStr = "data/dijkstra_test_4.txt";       // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
+    //std::string startmapFilename = "data/dijkstra_test_1.txt";             // Works!
+    //std::string startmapFilename = "data/dijkstra_test_2.txt";             // Works!
+    //std::string startmapFilename = "data/dijkstra_test_3.txt";               // Works!
+   // std::string startmapFilename = "data/dijkstra_test_4.txt";       // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
                                                                 // This started when I attempted to fix the CONSUME error of the stack from dijkstraresult, 2018-05-21
                                                                 // //planForBusesOnRoadNetwork go there, set debuglevel=1 and watch
 
-    //std::string startmapStr = "data/dijkstra_test_5.txt";
+    //std::string startmapFilename = "data/dijkstra_test_5.txt";
     // dijkstra_test_5
     // Tested: lot of roadnr to roadnrs! 2018-05                    // Works!
 
@@ -106,10 +106,10 @@ private:
 
 
 
-    //std::string startmapStr = "data/bus_traffic_test.txt";              // Bugs... somehow! not sure yet. 2018-05
+    //std::string startmapFilename = "data/bus_traffic_test.txt";              // Bugs... somehow! not sure yet. 2018-05
 
 
-    std::string startmapStr = "data/bustest3.txt";              // Bugs
+    std::string startmapFilename = "data\\maps\\bustest3.txt";              // Bugs
 
 
 
@@ -117,7 +117,7 @@ private:
 
 
     int consoleMode = true;
-    int debugLevel = 1;
+    int debugLevel = 0;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;

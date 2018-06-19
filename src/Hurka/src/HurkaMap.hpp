@@ -25,7 +25,7 @@ class HurkaMap
 {
 public:
 
-    HurkaMap(std::string _mapName, int **_matrix, int mtxRows, int mtxCols);
+    HurkaMap(std::string _fullUriMapName, int **_matrix, int mtxRows, int mtxCols);
     ~HurkaMap();
 
     void draw(RenderTarget& rt, HPos *viewHPos);
@@ -43,7 +43,7 @@ public:
 
     void putBlockList(std::list<Block *> _blockList);
 
-    std::string mapName;
+    std::string fullUriMapName;
 
     HurkaMatrix *getRoadHMatrix();
 
