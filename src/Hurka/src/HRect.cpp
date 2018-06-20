@@ -1,5 +1,8 @@
 #include "HRect.hpp"
 
+#include "Grid.hpp"
+
+
 #include "Utils.hpp"
 
 
@@ -12,6 +15,17 @@ HRect::HRect()
     cols = -1;
     heightPx = -1;
     widthPx = -1;
+
+
+	if(drawable) {
+        texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
+        sprite = Sprite(texture);
+	}
+
+
+	//calculateBounds();  dont run this on a dummy object.
+
+
 }
 
 
@@ -33,16 +47,21 @@ HRect::HRect(int _absStartY,
 	cols = _cols;
 	relStart = new HPos(0,0, USE_ISO);      // the relative starts at 0,0  aaaaaalways
 
+
+
+	// FIXME Maybe not use these at all, just run calcbounds:
 	heightPx = _heightPx;   // Pixel height of texture (w/ mask)
 	widthPx = _widthPx;     // Pixel width of texture (w/ mask)
 
 
 
 	if(drawable) {
-
         texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
         sprite = Sprite(texture);
 	}
+
+
+	calculateBounds();
 }
 
 
@@ -50,7 +69,7 @@ HRect::HRect(int _absStartY,
 
 
 /// \brief Creates a rectangle given an HPos starting position
-// (--)
+// (-+)
 HRect::HRect(HPos *_absStartPos,
         int _rows,
         int _cols,
@@ -60,39 +79,143 @@ HRect::HRect(HPos *_absStartPos,
     absStart = _absStartPos;
     rows = _rows;
     cols = _cols;
-    heightPx = _heightPx;
+
+    heightPx = _heightPx;       // FIXME Maybe not use these at all, just run calcbounds
     widthPx = _widthPx;
 
+
+	if(drawable) {
+        texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
+        sprite = Sprite(texture);
+	}
+
+
+    calculateBounds();
 }
 
 
 
 /// \brief Creates a rectangle given two positions, calculates rows and cols automatically
-// (--)
+// (-+)
 HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 {
     absStart = _absStartPos;
     rows = _absEndPos->abs_iso_y - absStart->abs_iso_y;
     cols = _absEndPos->abs_iso_x - absStart->abs_iso_x;
 
-    std::cout << "new HRECT:   rows=" << rows << ", cols=" << cols << "\n";
-
     heightPx = -1;
     widthPx = -1;        //FIXME: please update these values with a calculateBounds()
 
-    calculateBounds();
 
+
+	if(drawable) {
+        texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
+        sprite = Sprite(texture);
+	}
+
+
+    calculateBounds();
 }
 
+
+
+
+// There ought to be FOUR positions that determines the BOUNDS
+// of a Rectangle, the Top, Right, Bottom and Left
+
+
+// Hopefully you know what to use, absolute, relative?
+// Used by "Grid->findTile()"
+// (--) test pllllzz
 void HRect::calculateBounds()
 {
+
+    HPos *topBound = new HPos(-1,-1,USE_ISO);
+    HPos *rightBound = new HPos(-1,-1, USE_ISO);
+    HPos *bottomBound = new HPos(-1,-1, USE_ISO);
+    HPos *leftBound = new HPos(-1,-1, USE_ISO);
+
+
+   // We have startpos (iso values)
+   // We have rows and cols
+
    int _heightPx = 0;
    int _widthPx = 0;
 
-   // GO over the isometric field and figure out the min and max in each corner,
-   // set the heihgpx and widthpx of the HRect
 
-   std::cout << "NOT CODED YET!!!\n";
+
+    HPos *startPos = new HPos(0,0, USE_ISO);
+    int minX = 9990;
+    int minY = 9990;
+    int maxX = 0;
+    int maxY = 0;
+
+    int x = 0;
+    int y = 0;
+
+
+
+    // Go over every tile
+    // Look for min max positions
+    // Update Bound positions as the min max are found
+
+    for(int Y= 0; Y<rows; Y++){
+        for(int X= 0; X < cols; X++) {
+
+            x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+
+
+            if(x < minX) {
+                minX = x;
+                leftBound->abs_iso_y = Y;
+                leftBound->abs_iso_x = X;
+                leftBound->gpix_x = x;
+                leftBound->gpix_y = y;
+            }
+
+            if(x > maxX) {
+                maxX = x;
+                rightBound->abs_iso_y = Y;
+                rightBound->abs_iso_x = X;
+                rightBound->gpix_x = x + GRID_TEXTURE_WIDTH;
+                rightBound->gpix_y = y;
+            }
+
+            if(y < minY) {
+                minY = y;
+                topBound->abs_iso_y = Y;
+                topBound->abs_iso_x = X;
+                topBound->gpix_y = y;
+                topBound->gpix_x = x;
+            }
+
+            if(y > maxY) {
+                maxY = y;
+                bottomBound->abs_iso_y = Y;
+                bottomBound->abs_iso_x = X;
+                bottomBound->gpix_y = y + GRID_TEXTURE_HEIGHT;
+                bottomBound->gpix_x = x;
+            }
+
+        }
+
+    }
+
+    heightPx = maxY;
+    widthPx = maxX;
+
+   /* topBound->dump("topBound: ");
+    rightBound->dump("rightBound: ");
+    bottomBound->dump("bottomBound: ");
+    leftBound->dump("leftBound: ");
+*/
+
+
+    topB = topBound;
+    rightB = rightBound;
+    bottomB = bottomBound;
+    leftB = leftBound;
 
 }
 
@@ -101,7 +224,7 @@ void HRect::calculateBounds()
 
 
 
-
+// (++)
 int HRect::nrTiles()
 {
     return rows * cols;
@@ -114,16 +237,22 @@ int HRect::nrTiles()
 bool HRect::insideXPixles(HPos *pxPos)
 {
 
+    if(leftB == nullptr) {
+        calculateBounds();
+    }
+
+
+/// Make it use the bounds
     int debugLevel = 1;
 
-    int thisLeft = this->absStart->gpix_x;
-    int thisRight = this->widthPx;
+    int thisLeft = this->leftB->gpix_x;
+    int thisRight = this->rightB->gpix_x;
 
     int searchX = pxPos->gpix_x;
 
     if(debugLevel >= 1)
     {
-        std::cout << "hrect.left = " << thisLeft << "    vs   pxPos.left= " << searchX <<  " vs  hrect.right= " << thisRight << "\n";
+        std::cout << "hrect.leftBound = " << thisLeft << "    vs   pxPos.x= " << searchX <<  " vs  hrect.rightBound= " << thisRight << "\n";
     }
 
     if(thisLeft < searchX && searchX < thisRight) {
@@ -142,10 +271,26 @@ bool HRect::insideXPixles(HPos *pxPos)
 bool HRect::insideYPixles(HPos *pxPos)
 {
 
-    int thisTop   = this->absStart->gpix_y;
-    int thisBottom = this->heightPx;
+
+    if(topB == nullptr) {
+        calculateBounds();
+    }
+
+
+/// Make it use the bounds
+
+    int debugLevel = 1;
+
+    int thisTop   = this->topB->gpix_y;
+    int thisBottom = this->bottomB->gpix_y;
 
     int searchY = pxPos->gpix_y;
+
+     if(debugLevel >= 1)
+    {
+        std::cout << "hrect.topBound = " << thisTop << "    vs   pxPos.y= " << searchY <<  " vs  hrect.bottomBound= " << thisBottom << "\n";
+    }
+
 
     if(thisTop < searchY && searchY < thisBottom) {
         return true;
@@ -184,7 +329,7 @@ void HRect::dump(std::string ind)
 
 
 // Regression test
-// (--)
+// (-+)
 void HRect::testFunctions()
 {
     std::cout << "\n\n HRect - testFunctions()----------------------------\n";
@@ -240,7 +385,7 @@ void HRect::testFunctions()
 }
 
 
-// (--) Test
+// (--) // FIXME remove the heightpx and widthpx
 int HRect::compare(HRect *other)
 {
 
@@ -328,6 +473,7 @@ std::string HRect::absToString()
 // (--)
 void HRect::draw(RenderTarget& rt, HPos *viewHPos)
 {
+    std::cout << "                  drawinghrect!\n";
     if(drawable) {
 
         // Create Grid objects and draw them as you would the grid, but with different texture
@@ -336,6 +482,15 @@ void HRect::draw(RenderTarget& rt, HPos *viewHPos)
 
             for(int X=this->absStart->abs_iso_x; X < (this->absStart->abs_iso_x + this->cols); X++) {
 
+                Vector2f currPos = Vector2f();
+                currPos.y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+                currPos.x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+
+                currPos.y += viewHPos->gpix_y;
+                currPos.x += viewHPos->gpix_x;
+
+                sprite.setPosition(currPos);
+                rt.draw(sprite);
 
             }
         }

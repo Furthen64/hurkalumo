@@ -383,7 +383,7 @@ private:
 
 
     // Search Functions
-    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
+    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int );
 
     HPos *bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind);
 

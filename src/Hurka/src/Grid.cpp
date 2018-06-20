@@ -212,7 +212,7 @@ HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind)
     }
     searchPos->dump(" searchPos=   ");
 
-    return findTile(entireGameBoard, relRect, searchPos, ind);
+    return findTile(entireGameBoard, relRect, searchPos, ind, 0);
 
 }
 
@@ -235,8 +235,27 @@ HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind)
 /// \param searchPos Gpix values of search position
 // RECURSIVE
 // (--) Test
-HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind)
+// Does not work yet
+
+
+
+
+
+//              Osäker på om calcbounds fungerar            2018-06-19
+//              Osäker på om insideYPixels fungerar
+
+
+
+
+HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int counter)
 {
+
+    if(counter > 20) {
+        std::cout << "WARNING: findTile reached limit, counter= " << counter << "\n";
+        return nullptr;
+    }
+
+
 
     int debugLevel = 2;
 
@@ -253,6 +272,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
     if(searchPos == nullptr) {
         std::cout << "ERROR " << cn << " findTile() searchPos is nullptr\n";
+        return nullptr;
     }
 
 
@@ -268,7 +288,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
     // TEST:
-    std::cout << ind <<  "funkar insideXpixels?:\n";
+    std::cout << ind <<  "Funkar insideXpixels?:\n";
 
     if( !relRect->insideXPixles( searchPos ) ) {
         return nullptr;
@@ -277,7 +297,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 
-    std::cout << ind <<  "funkar insideYpixels?:\n";
+    std::cout << ind <<  "Funkar insideYpixels?:\n";
     if ( !relRect->insideYPixles( searchPos ) ) {
         return nullptr;
     }
@@ -287,7 +307,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
     /// OK - it CAN be inside here, lets check if we need to do bruteforce or just "divide n conquer" again
 
-
+/*
 	if(debugLevel >=2) {
         std::cout << ind << " - Ok, it CAN be inside this rectangle.\n\n";
 
@@ -304,7 +324,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
         searchPos->dump(ind + "   ");
         std::cout << "\n";
 	}
-
+*/
 
 
 	int nrTiles = relRect->nrTiles();
@@ -312,7 +332,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 
-	if(nrTiles < 16) {
+	if(nrTiles <= 16) {
 		return bruteForceFindTile( entireGameboard, relRect, searchPos, ind );                                // RECURSION END
                                                                  // Can I pass string like this? ind + " " ?
 	}
@@ -326,8 +346,8 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 	// Divide the submatrix into four squares
 
 
-    int cols = entireGameboard->cols;       // FIXME Correct to use these values?
-    int rows = entireGameboard->rows;
+    int cols = relRect->cols;
+    int rows = relRect->rows;
 
 
 
@@ -358,7 +378,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
     }
 
 
-
+/*
     if(debugLevel >=2) {
 
         std::cout << "\n";
@@ -372,7 +392,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	}
 
-
+*/
 
 	HRect *sq0, *sq1, *sq2, *sq3;
 
@@ -383,7 +403,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	// SQUARE 0
 
-	int fromY= relRect->absStart->abs_iso_y;
+	int fromY= relRect->absStart->abs_iso_y;    // Are these VALID, are the abs_isos set correctlt?
 	int fromX = relRect->absStart->abs_iso_x;
 	int toY = fromY + halfRows1;
 	int toX = fromX + halfCols1;
@@ -446,10 +466,8 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 	if(debugLevel >=2) {
 
         std::cout << "\n";
-        std::cout << ind << "Given entireGameBoard:\n";
-        std::cout << ind << " - rows=" << rows << ", cols=" << cols << "\n";
 
-        std::cout << ind << "we divided it up to these 4 squares:\n";
+        std::cout << ind << "We divide up current relrect to these new 4 squares:\n";
 
         sq0->dump("  ");
         sq1->dump("  ");
@@ -462,20 +480,21 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	/// Enter each square and look for the grid
 
-	retpos = findTile(entireGameboard, sq0, searchPos, ind );
+	if(debugLevel >=2) {std::cout << " entering sq0: \n"; }
+	retpos = findTile(entireGameboard, sq0, searchPos, ind ,++counter );
 	if(retpos != nullptr) { return retpos; }
 
-
-    retpos = findTile(entireGameboard, sq1, searchPos, ind );
+    if(debugLevel >=2) {std::cout << " entering sq1: \n"; }
+    retpos = findTile(entireGameboard, sq1, searchPos, ind, ++counter );
     if(retpos != nullptr) { return retpos; }
 
 
-
-    retpos = findTile(entireGameboard, sq2, searchPos, ind );
+    if(debugLevel >=2) {std::cout << " entering sq2: \n"; }
+    retpos = findTile(entireGameboard, sq2, searchPos, ind ,++counter  );
     if(retpos != nullptr) { return retpos; }
 
-
-    retpos = findTile(entireGameboard, sq3, searchPos, ind );
+    if(debugLevel >=2) {std::cout << " entering sq3: \n"; }
+    retpos = findTile(entireGameboard, sq3, searchPos, ind  ,++counter );
     if(retpos != nullptr) { return retpos; }
 
 
@@ -502,10 +521,18 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
     // Generate iso pos for all the tiles inside the relrect
     // and check if we're inside it
 
-    for(int Y = 0; Y < relRect->rows; Y++)
+    // Make sure you use ABSOLUTE positioning, considering the gpix
+    // of the searchpos is ABSOLUTE positioned....
+
+    // So DONT set Y=0 and X=0 and go from there
+    // You have to figure out the starting position and use the ROWS and COLS
+    // of the RELRECT
+
+    for(int Y = relRect->absStart->abs_iso_y; Y < (relRect->absStart->abs_iso_y+relRect->rows); Y++)
     {
 
-        for(int X = 0; X < relRect->cols; X++)
+    //for(int X = 0; X < relRect->cols; X++)
+        for(int X = relRect->absStart->abs_iso_x; X < (relRect->absStart->abs_iso_x+relRect->cols); X++)
          {
 
 
@@ -519,7 +546,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             if( isopos->gpix_x < searchPos->gpix_x  && searchPos->gpix_x < (isopos->gpix_x + GRID_TEXTURE_WIDTH) ) {
                 std::cout << ind << "   - inside x span.\n";
             } else {
-                return nullptr; // Next!
+                continue; // No reason to look into pixel by pixel ... Next!
             }
 
 
@@ -532,7 +559,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             if( isopos->gpix_y < searchPos->gpix_y  && searchPos->gpix_y < (isopos->gpix_y + GRID_TEXTURE_HEIGHT) ) {
                 std::cout << ind << "   - inside y span.\n";
             } else {
-                return nullptr; // Next!
+                continue; // Next!
             }
 
 
@@ -580,7 +607,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
                       << ind <<"        ##$$##$$##$$## \n";
 
 
-
+            // y = 0 ? ska de va så? Ska de inte vara gpix y på nåt sätt för current Y och X?
             for(int y = 0; y < (GRID_TEXTURE_HEIGHT/2); y++)
             {
 
@@ -602,8 +629,22 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
                 // No luck, please go down one pixelline and increase Xwidth and adjust xoffset
                 xwidth+=4;
-                xoffset = GRID_TEXTURE_WIDTH/2 - (int)floor(xwidth/2);
 
+
+                xoffset = GRID_TEXTURE_WIDTH/2 - (int)floor(xwidth/2);
+                xoffset += isopos->gpix_x;              // add the position of the Tile we're currently looking at
+            /*
+
+             eh... xoffset blir 29 , från att ha varit 1852 typ... efter första körningen. felräkning?
+
+
+
+
+             int xoffset = GRID_TEXTURE_WIDTH/2;     // =32 pixels
+
+            Ska det inte vara += isopos->gpix_x ?
+            xoffset += isopos->gpix_x;              // add the position of the Tile we're currently looking at
+            */
             }
 
 
@@ -655,6 +696,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
                 // No luck, please go down one pixelline and decrease Xwidth and adjust xoffset
                 xwidth-=4;
                 xoffset = GRID_TEXTURE_WIDTH/2 - (int)floor(xwidth/2);
+                xoffset += isopos->gpix_x;  // add the position of the Tile we're currently looking at
             }
 
 
@@ -666,7 +708,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-    std::cout << "NOT CODED YET\n";
+
     return nullptr;
 }
 

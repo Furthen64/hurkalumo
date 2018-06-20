@@ -529,54 +529,8 @@ std::cout << "Hm...\n";
 
 
 
-
-
-
-                //replacing (DELETE:):
-                        //mousepos = Grid::convert_gpix_to_iso(mousepos, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
-
-
-
-
-
             } // if inside the gamematrix when clicking LMB
 
-/*
-            if (toolbarTop->within(mousePos_i.x, mousepPos_i.y) {
-                toolbarTop->pushButton(0); // debug test
-            }
-
-
-
-            std::stringstream sstm;
-
-
-            sstm << "WPOS(" << mousepos.gpix_y<< ", " << mousepos.gpix_x << ")\n";
-            sstm << "GPOS(" << mousepos.gpix_y << ", " << mousepos.gpix_x << ")\n";
-
-            HPos *visibleIsoPos = Grid::convert_gpix_to_iso(&mousepos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
-
-            /// Update the text
-            lastClickedText.setFont(font);
-            lastClickedText.setString(sstm.str());
-            lastClickedText.setCharacterSize(18);
-            lastClickedText.setFillColor(sf::Color::White);
-
-            lastClickedText.setPosition(mouseWPos);
-
-            if(debugLevel > 1)  {
-                std::cout << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
-
-                //dumpPosition(iso_pos);// HPOSADAPT
-            }
-
-
-            /// Pushing button on top toolbar
-
-            // if (toolbarTop.within(mousePos_i.x, mousepPos_i.y) { pushbutton(x,y));
-            toolbarTop->pushButton(0); // debug test
-
-*/
 
         }
 
@@ -589,26 +543,22 @@ std::cout << "Hm...\n";
 
             /// Trains
 
-
-
             /// Buses
-
-
 
             trafficMgr->updateAll(viewHPos);
 
 
-            /// Render
 
         }
 
 
 
+
+
+
+        /// Render
+
         window.clear({0, 0, 0});
-
-
-
-
 
 
         if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers

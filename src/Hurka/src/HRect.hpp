@@ -70,7 +70,16 @@ public:
 	int rows;
 	int cols;
 	HPos *relStart;
-	int heightPx;
+
+
+	// Boundaries of the rect
+	HPos *topB = nullptr;
+	HPos *rightB = nullptr;
+	HPos *bottomB = nullptr;
+	HPos *leftB = nullptr;
+
+
+	int heightPx;  // FIXME remove the heightpx and widthpx ?
 	int widthPx;
 
 
