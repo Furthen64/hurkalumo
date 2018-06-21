@@ -621,7 +621,7 @@ DijkstraResult *TrafficManager::runDijkstraOnBus(int busId, Vector2f *from_iso_p
 // (--+)
 int TrafficManager::planForBusesOnRoadNetwork(int debugLevel, int fromRoad, int toRoad, bool dijkstraAutoEndpointsAdjust)
 {
-debugLevel = 2;
+
 
     std::string ind = "  ";
     RoadNetwork *roadnet = nullptr;

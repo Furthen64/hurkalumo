@@ -22,7 +22,7 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
     // Hardcoded for now
     textureID = _textureID;
 
-    texture.loadFromFile(getFullUri("data\\textures\\GRASS2.png"));
+    texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
 
 
     sprite = Sprite(texture);

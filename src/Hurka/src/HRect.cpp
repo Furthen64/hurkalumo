@@ -126,9 +126,14 @@ HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 
 // Hopefully you know what to use, absolute, relative?
 // Used by "Grid->findTile()"
-// (--) test pllllzz
+// (--)
 void HRect::calculateBounds()
 {
+
+
+   // We have startpos (iso values)
+   // We have rows and cols
+
 
     HPos *topBound = new HPos(-1,-1,USE_ISO);
     HPos *rightBound = new HPos(-1,-1, USE_ISO);
@@ -136,27 +141,21 @@ void HRect::calculateBounds()
     HPos *leftBound = new HPos(-1,-1, USE_ISO);
 
 
-   // We have startpos (iso values)
-   // We have rows and cols
 
-   int _heightPx = 0;
-   int _widthPx = 0;
-
-
-
-    HPos *startPos = new HPos(0,0, USE_ISO);
+    // Setup extreme limits
     int minX = 9990;
     int minY = 9990;
     int maxX = 0;
     int maxY = 0;
 
-    int x = 0;
-    int y = 0;
+    int x;
+    int y;
 
 
 
-    // Go over every tile
-    // Look for min max positions
+    /// Go over every tile
+
+    // Look for min and max positions
     // Update Bound positions as the min max are found
 
     for(int Y= 0; Y<rows; Y++){
@@ -202,6 +201,8 @@ void HRect::calculateBounds()
 
     }
 
+
+    // FIXME delete this? heightpx and widthpx are nonsense that are too ambigious to use
     heightPx = maxY;
     widthPx = maxX;
 
@@ -209,7 +210,7 @@ void HRect::calculateBounds()
     rightBound->dump("rightBound: ");
     bottomBound->dump("bottomBound: ");
     leftBound->dump("leftBound: ");
-*/
+    */
 
 
     topB = topBound;
@@ -237,13 +238,7 @@ int HRect::nrTiles()
 bool HRect::insideXPixles(HPos *pxPos)
 {
 
-    if(leftB == nullptr) {
-        calculateBounds();
-    }
-
-
-/// Make it use the bounds
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int thisLeft = this->leftB->gpix_x;
     int thisRight = this->rightB->gpix_x;
@@ -270,21 +265,13 @@ bool HRect::insideXPixles(HPos *pxPos)
 // (--) test
 bool HRect::insideYPixles(HPos *pxPos)
 {
-
-
-    if(topB == nullptr) {
-        calculateBounds();
-    }
-
-
-/// Make it use the bounds
-
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int thisTop   = this->topB->gpix_y;
     int thisBottom = this->bottomB->gpix_y;
 
     int searchY = pxPos->gpix_y;
+
 
      if(debugLevel >= 1)
     {
@@ -473,7 +460,7 @@ std::string HRect::absToString()
 // (--)
 void HRect::draw(RenderTarget& rt, HPos *viewHPos)
 {
-    std::cout << "                  drawinghrect!\n";
+
     if(drawable) {
 
         // Create Grid objects and draw them as you would the grid, but with different texture

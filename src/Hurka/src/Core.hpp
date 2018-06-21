@@ -114,13 +114,14 @@ private:
 
 
 
+    HRect *debugRect = new HRect(new HPos(0,0, USE_ISO), new HPos(10,10, USE_ISO));
 
 
-    int consoleMode = true;
+    int consoleMode = false;
     int debugLevel = 0;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
-    int lockFPS = true;
+    int lockFPS = false;
     int lockFPS_n = 25;
 
 

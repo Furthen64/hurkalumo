@@ -186,8 +186,6 @@ void Core::run()
 
 
 
-    HRect *rect = new HRect(0,0,10,10, 32, 64);
-
     std::string ind1 = "   ";
     std::string ind2 = "      ";
     std::string ind3 = "         ";
@@ -207,9 +205,11 @@ void Core::run()
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
 
-std::cout << "Hm...\n";
-    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
-    std::cout << "Hm...!\n";
+
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
+
+     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, desktop.bitsPerPixel), "HurkaLumo editor 0.1-alpha");
 
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
@@ -451,6 +451,17 @@ std::cout << "Hm...\n";
 
 
 
+
+
+//FIXME restore order to this
+        window.clear();
+
+
+  if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
+
+
+
+
         /// Left mouse button pressed                                                       even in paused
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
         {
@@ -482,7 +493,7 @@ std::cout << "Hm...\n";
 
 
                 std::cout << "\n\n\n\n\n\n\n2018-06-19 debugging:\n";
-                mousepos = grid->findTile(gm->getHRect(), mousepos, "   ");
+                mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos);
 
                 if(mousepos != nullptr) {
 
@@ -545,7 +556,8 @@ std::cout << "Hm...\n";
 
             /// Buses
 
-            trafficMgr->updateAll(viewHPos);
+
+            // FIXME enable this line of code again: trafficMgr->updateAll(viewHPos);
 
 
 
@@ -558,11 +570,16 @@ std::cout << "Hm...\n";
 
         /// Render
 
-        window.clear({0, 0, 0});
+     // FIXME, revert to this:    window.clear({0, 0, 0});
 
 
-        if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
 
+
+
+
+/*
+
+        if(drawGrid) {  grid->draw(window, viewHPos); }
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in render order
@@ -577,20 +594,20 @@ std::cout << "Hm...\n";
         }
 
 
-        if(drawGrid) {  grid->draw(window, viewHPos); }
+
 
         if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
 
 
-        rect->draw(window, viewHPos);
+        debugRect->draw(window, viewHPos);
 
         window.draw(lastClickedText);
-
+*/
 
         // Finally push rendered buffer to screen
 
 
-        window.display();       // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
+       // window.display();       // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
 
 
 

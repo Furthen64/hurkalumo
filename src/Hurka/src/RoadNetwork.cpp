@@ -149,13 +149,8 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr, int debugLevel)
 
 SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_pos, int debugLevel )
 {
-
-
-
     SlotPath *slotpath = new SlotPath();
     std::string ind = "  ";
-
-
 
     /// Error handling
 
@@ -252,10 +247,6 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     /// D I J K S T R A
     ///
 
-    if(debugLevel >=2) {
-        std::cout << ind << "\n\nRunning Dijkstra :\n" << ind << "------------------------------\n";
-    }
-
 
 
 
@@ -263,6 +254,10 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
     /// Setup start and end positions
+
+    if(debugLevel >=2) {
+        std::cout << ind << "\n\nSetup start and end for Dijkstra :\n" << ind << "------------------------------\n";
+    }
 
     Node *startNode = graph->findNode( Node::genIDfrom_rel_iso(from_rel_iso_pos), 0);
     Node *endNode   = graph->findNode( Node::genIDfrom_rel_iso(to_rel_iso_pos), 0);
@@ -289,13 +284,13 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
 
+    if(debugLevel >=2) {
+        std::cout << ind << "\n\nRunning Dijkstra :\n" << ind << "------------------------------\n";
+    }
+
 
     /// Do the Dijkstra!
 
-    if(debugLevel >=2 ) {
-        std::cout << ind << "\n\nrunDijkstra()\n";
-        std::cout << ind << "{\n";
-    }
 
     dijkstraResult = graph->runDijkstra(startNode, endNode, debugLevel - 1);
 

@@ -200,11 +200,7 @@ std::string getFullUri(std::string relativeUri)
     fullUri += "\\..\\";
     fullUri += relativeUri;
 
-    std::cout << "getFullUri=" << fullUri << "\n";
-
-
     return fullUri;
-
 }
 
 
