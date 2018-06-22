@@ -17,6 +17,20 @@ Core::~Core()
 // (-+)
 int Core::boot()
 {
+
+    if(runRegressionTestAndExit) {
+
+        std::cout << "Running Regression tests on all classes ****\n{\n";
+        HRect *hrect = new HRect();
+
+        hrect->testFunctions();
+        std::cout << "\nExiting runRegressionTest.\n}\n";
+        return 0;
+
+    }
+
+
+
     int result = 0;
 
     std::cout << "\n\n\n---------------booting-------------------\n";

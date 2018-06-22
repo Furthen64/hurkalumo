@@ -99,6 +99,7 @@ private:
 
 
     int consoleMode = false;
+    int runRegressionTestAndExit = false;
 
     int debugLevel = 0;
     int SCREEN_WIDTH = 1280;
