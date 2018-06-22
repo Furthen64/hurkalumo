@@ -708,9 +708,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-
-
-
                 // Along the x-pixels we're looking, draw a orange line
                 sf::RectangleShape searchLine(sf::Vector2f(xwidth, 1));
 

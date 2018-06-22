@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include "TextureManager.hpp"
 #include "Grid.hpp"
 #include "Constants.hpp"
 #include "HRect.hpp" // <-- #include "HPos.hpp"
@@ -53,7 +54,7 @@ private:
     int widthPx;
     int heightPx;
 
-    int textureID;
+   // int textureID; DELETEME
     Sprite sprite;
     Texture texture;
 

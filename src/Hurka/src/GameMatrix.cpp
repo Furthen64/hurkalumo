@@ -19,12 +19,14 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
 
 
 
-    // Hardcoded for now
-    textureID = _textureID;
 
+    // CR24
+
+    TextureManager *textureMgr;
+    textureMgr = textureMgr->getInstance();
+    std::string textureName = "GRID2";
+    texture = textureMgr->getTexture(textureName);
     texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
-
-
     sprite = Sprite(texture);
 
 

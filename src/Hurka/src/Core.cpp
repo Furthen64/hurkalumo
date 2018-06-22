@@ -1,5 +1,6 @@
 #include "Core.hpp"
 
+// Design: a Core instance should only exist in Main.cpp
 
 Core::Core()
 {
@@ -98,8 +99,6 @@ int Core::loadResources(std::string _mapName)
     std::cout << "\n\n\n---------------loadResources-------------\n";
 
 
-
-
     /// Read the map
     std::cout << "Loading map \"" << _mapName << "\"\n";
 
@@ -195,6 +194,7 @@ void Core::run()
 
 
 
+
     // Input Control (should be own class)
     bool alreadyButtonPressed = false;
     int inputCooldown = 0;
@@ -205,15 +205,25 @@ void Core::run()
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
 
+//
+//    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-
-     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, desktop.bitsPerPixel), "HurkaLumo editor 0.1-alpha");
+    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
 
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
     }
+
+
+    // Check OPENGL for old versions or something off
+
+    ContextSettings settings = window.getSettings();
+
+    std::cout << "OpenGL: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
+
+
+
 
     std::cout << "\n\n\n---------------run--------------------\n";
 
@@ -221,6 +231,8 @@ void Core::run()
         std::cout << "ERROR " << cn << " sf::window is not open!\n";
         return ;
     }
+
+
 
 
 
@@ -631,15 +643,12 @@ void Core::reset()
     // Run
 }
 
+
+
+// Not sure how I want this to work
+// And having issues with SFML doing weird error messsages.... I disable all delete (https://en.sfml-dev.org/forums/index.php?topic=10247.0)
 void Core::clearResources()
 {
-    std::cout << "\n\nclearResources()\n\n";
-
-    /// Load the Textures
-
-
-    //textureMgr->clearResources();
-
   /*
     delete viewHPos;
     delete fmgr;

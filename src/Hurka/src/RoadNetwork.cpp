@@ -7,10 +7,10 @@ RoadNetwork::RoadNetwork()
 
 
 
+// Not sure how to do this yet
 void RoadNetwork::clearResources()
 {
-    std::cout << "UNSURE OF DELETE\n";
-
+    /*
     Bus *workBus;
 
     while(buslist->size() >0) {
@@ -23,6 +23,7 @@ void RoadNetwork::clearResources()
     }
 
     delete buslist;
+    */
 }
 
 

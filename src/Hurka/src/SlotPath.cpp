@@ -69,10 +69,11 @@ bool SlotPath::hasValues()
 }
 
 
-// (--) TEST
+// Not yet
 void SlotPath::reset()
 {
-    slotPositions->clear();
+    std::cout << "slotpath::reset is NOT implemented!\n";
+    //slotPositions->clear();
 }
 
 

@@ -73,23 +73,11 @@ private:
 
 
     //std::string startmapFilename = "data/simple.txt";
-
     //std::string startmapFilename = "data/two_roads.txt";
-
-
     //std::string startmapFilename = "data/garden.txt";
-
-
     //std::string startmapFilename = "data/aztec.txt";                   // Works 2018-05    but BUG with drawing the tall house.
-
     //std::string startmapFilename = "data/roadnetwork_test.txt";        // Works 2018-05
-
-
     //std::string startmapFilename = "data/bus_traffic_test.txt";          // Works 2018-05
-
-
-
-
     //std::string startmapFilename = "data/dijkstra_test_1.txt";             // Works!
     //std::string startmapFilename = "data/dijkstra_test_2.txt";             // Works!
     //std::string startmapFilename = "data/dijkstra_test_3.txt";               // Works!
@@ -104,20 +92,14 @@ private:
                 // 14 = first road on left, 26 = farthest road on the right
                 // 53 = very low very right
 
-
-
     //std::string startmapFilename = "data/bus_traffic_test.txt";              // Bugs... somehow! not sure yet. 2018-05
-
-
     std::string startmapFilename = "data\\maps\\bustest3.txt";              // Bugs
 
 
 
 
-    HRect *debugRect = new HRect(new HPos(0,0, USE_ISO), new HPos(10,10, USE_ISO));
-
-
     int consoleMode = false;
+
     int debugLevel = 0;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
@@ -176,14 +158,8 @@ private:
     bool drawGrid = 1;
     bool drawBlocks = 1;
 
-
-
-
     Font font;
     Text lastClickedText;
-
-
-
 
 };
 

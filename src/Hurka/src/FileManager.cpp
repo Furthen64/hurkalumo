@@ -89,16 +89,9 @@ FileManager::FileManager()
 //
 // docs: readRegularFile.png
 // docs: C:\github\FAT64_MEDIA_TOO_BIG_FOR_GITHUB\Parsing_Matrix_to_BlockList.mp4
-// (-+)
-
-
-
+//
 // Wishlist: Having a BlockList for every Layer :3 would be easier to FIND where to insert and manipulate BLOCKs
-
-
-
-//gå igenom readRegularFile och se hur den kan göra matrix**  lika stor som GameMatrix
-
+//
 // (--+)        Soooorta works. It can read basic files.
 HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, GameMatrix *gameMatrix)
 {
@@ -114,7 +107,7 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
 
     // The blocklist will be attached to the resultmap if all goes well
 
-    std::list<Block *> blockList;
+    std::list<Block *> blockList; // FIXME: hm... this exists here in this scope, and then stored inside a ADT that returns to caller, outside this scope. Good? Maybe a "new" is in order?
 
     std::ifstream infile;
     std::string line;
@@ -124,16 +117,14 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
 
 
 
-    if(debugLevel > 0) {
-        std::cout << "\n\nreadRegularFile( " << fullUri << ") \n{\n";
-    }
 
+
+
+    if(debugLevel >= 1) { std::cout << "\n\nreadRegularFile( " << fullUri << ") \n{\n"; }
 
 
 
     /// Verify the File and get mapRows and mapCols
-
-
 
     if(!verifyFile(fullUri, &mapRows, &mapCols, debugLevel)) {
         std::cout << "ERROR " << cn << " unable to verify the file, exiting!\n";
@@ -152,9 +143,8 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
 
 
 
-    if(debugLevel > 0) {
-        std::cout << ind1 << " - File has rows=" << mapRows << ", cols=" << mapCols << "\n";
-    }
+    if(debugLevel >= 1) { std::cout << ind1 << " - File has rows=" << mapRows << ", cols=" << mapCols << "\n"; }
+
 
 
     /// Open the File here
@@ -169,17 +159,19 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
 
             int **matrix = allocateMatrix(gameMatrix->getRows(), gameMatrix->getCols());
 
-            /// Read lines from the file
-            /// For every number (001,002,...) , put it in the matrix
-
-            if(debugLevel > 0) {
-                std::cout << "\n" << ind1 << "Read file and put content into a Matrix\n";
-            }
-
             unsigned int currRow = 0;
             unsigned int currCol = 0;
             unsigned int w;
             unsigned int offset = 0;
+
+
+
+            /// Read lines from the file
+            /// For every number (001,002,...) , put it in the matrix
+
+            if(debugLevel >= 1) {
+                std::cout << "\n" << ind1 << "Read file and put content into a Matrix\n";
+            }
 
             while (std::getline(infile, line))
             {
@@ -208,7 +200,7 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
 
             // Output matrix
 
-            if(debugLevel > 0) {
+            if(debugLevel >= 2) {
 
                 std::cout << "\n\n";
 
@@ -262,10 +254,6 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
            // Loop 1
            if(debugLevel >= 2) {
                 std::cout << ind2 << "Loop 1:\n" << ind2<< "-----------\n";
-
-
-
-
                std::cout << ind3 << "yDown, yUp     xRight, xDownRight\n";
                std::cout << ind3 << "------ ----   -------   ------- \n";
            }
