@@ -17,6 +17,8 @@
 
 
 
+/// 2018-06-22  jörgen engström         Now loads all textures that are listed in a .txt file
+
 
 // Wishlist:
 // automatically assign a name to a texture by its filename?
@@ -28,6 +30,7 @@
 
 
 // Returns 0 on ok , -1 on failure
+// (-+)
 int TextureManager::loadTextures()
 {
     sf::Texture txt;
@@ -57,24 +60,23 @@ int TextureManager::loadTextures()
 
                   // Create the correct names for the datastructure
 
-                  std::cout << "                     " << line << "\n";
                   textureName = "data\\textures\\";
                   textureName += line;
                   textureName += ".png";
-                    std::cout << "                        " << textureName << "\n";
+
                   textureFullUri = getFullUri(textureName);
 
-                     std::cout << "                       " << textureFullUri << "\n";
+
 
                   if(!txt.loadFromFile(textureFullUri)) {
+                        std::cout << " texture load from file failed with \"" << textureFullUri << "\"\n";
                         failed = true;
 
                   }
+
+
+                  // Put it in the ADT
                   pushTexture(line, txt);
-
-
-                  //  txt.loadFromFile("HOUSE_001.png");        så här såg det ut innan
-                  // pushTexture("HOUSE001", txt);
 
             }
 
@@ -87,9 +89,12 @@ int TextureManager::loadTextures()
         return -1;
     }
 
-    if(failed) {return -1; }
-    else {return 0;}
+    if(failed) {
+            return -1;
+    }
 
+
+    return 0;
 }
 
 

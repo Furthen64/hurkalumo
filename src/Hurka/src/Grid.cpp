@@ -237,28 +237,33 @@ HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, R
 // (--) Test     Does not work yet
 HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int counter, RenderTarget& rt, HPos *viewHPos)
 {
-int debugLevel = 1; // FIXME
+    int debugLevel = 1; // FIXME
 
 
-    if(counter > 20) {
-        std::cout << "WARNING: findTile reached limit, counter= " << counter << "\n";
-        return nullptr;
-    }
-
-    if(entireGameboard == nullptr) {
-        std::cout << "ERROR " << cn << " findTile() entireGameBoard is nullptr\n";
-        return nullptr;
-    }
+    /// Error Checking
+    {
 
 
-    if(relRect == nullptr) {
-        std::cout << "ERROR " << cn << " findTile() relRect is nullptr\n";
-        return nullptr;
-    }
+        if(counter > 20) {
+            std::cout << "WARNING: findTile reached limit, counter= " << counter << "\n";
+            return nullptr;
+        }
 
-    if(searchPos == nullptr) {
-        std::cout << "ERROR " << cn << " findTile() searchPos is nullptr\n";
-        return nullptr;
+        if(entireGameboard == nullptr) {
+            std::cout << "ERROR " << cn << " findTile() entireGameBoard is nullptr\n";
+            return nullptr;
+        }
+
+
+        if(relRect == nullptr) {
+            std::cout << "ERROR " << cn << " findTile() relRect is nullptr\n";
+            return nullptr;
+        }
+
+        if(searchPos == nullptr) {
+            std::cout << "ERROR " << cn << " findTile() searchPos is nullptr\n";
+            return nullptr;
+        }
     }
 
 
@@ -273,15 +278,15 @@ int debugLevel = 1; // FIXME
 	}
 
 
-    std::cout << ind <<  "- insideXpixels: ";
 
+	// Make a rough check if we're inside x and y bounds
+
+    std::cout << ind <<  "- insideXpixels: ";
     if( !relRect->insideXPixles( searchPos ) ) {
         std::cout << " No.\n";
         return nullptr;
     }
     std::cout << " Yes.\n";
-
-
 
 
     std::cout << ind <<  "- insideYpixels: ";
@@ -299,8 +304,6 @@ int debugLevel = 1; // FIXME
 
 	int nrTiles = relRect->nrTiles();
 	std::cout << ind << "- nrTiles: " << nrTiles << "\n";
-
-
 
 	if(nrTiles <= 16) {
 		return bruteForceFindTile( entireGameboard, relRect, searchPos, ind, rt, viewHPos );                // RECURSION END
@@ -439,10 +442,10 @@ int debugLevel = 1; // FIXME
 
         std::cout << ind << "We divide up current relrect to these new 4 squares:\n";
 
-        sq0->dump("  ");
-        sq1->dump("  ");
-        sq2->dump("  ");
-        sq3->dump("  ");
+        sq0->dump(" sq0: ");
+        sq1->dump("      sq1: ");
+        sq2->dump(" sq2: ");
+        sq3->dump("      sq3: ");
 
 	}
 
@@ -485,8 +488,8 @@ int debugLevel = 1; // FIXME
 HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, RenderTarget &rt, HPos *viewHPos)
 {
 
-    std::cout << "\n";
-    std::cout << ind <<  "bruteForecFindTile()------------\n";
+    std::cout << "\n\n\n";
+    std::cout << ind <<  "bruteForceFindTile()------------\n";
 
 
 // FIXME remove all graphical debug nonsens
@@ -517,12 +520,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-    // ALSO
-
-    // Check for Y !!!
-    // SHEESH.
-
-
     int currentY = -1;
 
 
@@ -537,7 +534,8 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             isopos    = new HPos(Y,X,USE_ISO);
             std::cout << ind << " - Current Tile: " << isopos->absToString() << "\n";
 
-            // Figure out what Y pixelliune we're at
+            // Figure out which Y pixelline we're at
+
             currentY = Grid::convert_iso_to_gpix_y(isopos->abs_iso_y, isopos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
 
@@ -554,12 +552,8 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-
-            // Rough check if insideXpixel span
-
+            // Rough check if inside x pixel bounds
             // Is this the the way to do it? Shouldnt it check against the hrect bounds? isopos is not a rect, so it does not have those. It has gpixx and we know the grid texture width
-
-
 
             if( isopos->gpix_x < searchPos->gpix_x  && searchPos->gpix_x < (isopos->gpix_x + GRID_TEXTURE_WIDTH) ) {
                 std::cout << ind << "   - inside x span.\n";
@@ -571,8 +565,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-            // Rough check if insideYpixel span
-
+            // Rough check if inside y pixel bounds
 
             if( isopos->gpix_y < searchPos->gpix_y  && searchPos->gpix_y < (isopos->gpix_y + GRID_TEXTURE_HEIGHT) ) {
                 std::cout << ind << "   - inside y span.\n";
@@ -587,12 +580,8 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
             ///
-            /// Now compare if its inside here, use that nice... pixel by pixel row you did on paper
+            /// Now look at individual pixel lines to see if our gpix y,x is in there
             ///
-
-
-
-
 
             //const int GRID_TEXTURE_HEIGHT = 32;
             //const int GRID_TEXTURE_WIDTH  = 64;
@@ -606,7 +595,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             //                ##$$##$$##$$##
 
 
-            // Loop1 going downwards from a pointy tip
+            // Loop 1 going downwards from a pointy tip
 
 
             int xwidth = 2;
@@ -630,7 +619,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-                // Along the x-pixels we're looking, draw a red line
+                // Draw a red lines along the x-pixels we're looking
                 sf::RectangleShape searchLine(sf::Vector2f(xwidth, 1));
 
                 drawFromX = fromX + viewHPos->gpix_x;
@@ -649,13 +638,11 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
                 rt.draw(searchLine);
 
 
-
                 if( fromX < searchPos->gpix_x  && searchPos->gpix_x < toX ) {
                     if(currentY == searchPos->gpix_y) {
 
                         // inside?
                         std::cout << ind << " - - -  Eureka!  we are inside " << fromX << " - ( " << searchPos->gpix_x << " ) - " << toX << "\n";
-                        rw->display();
                         return isopos;
                     }
                 }
@@ -699,7 +686,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             fromX = xoffset;
 
 
-            for(int y = (GRID_TEXTURE_HEIGHT/2); y < GRID_TEXTURE_HEIGHT; y++)
+            for(int y = (GRID_TEXTURE_HEIGHT/2); y <= GRID_TEXTURE_HEIGHT; y++)
             {
 
                 // Setup from and to
@@ -708,7 +695,7 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-                // Along the x-pixels we're looking, draw a orange line
+                // Along the x-pixels we're looking, draw an orange line
                 sf::RectangleShape searchLine(sf::Vector2f(xwidth, 1));
 
                 drawFromX = fromX + viewHPos->gpix_x;
@@ -740,7 +727,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
                         // inside?
                         std::cout << ind << " - - -  Eureka!  we are inside " << fromX << " - ( " << searchPos->gpix_x << " ) - " << toX << "\n";
-                        rw->display();
                         return isopos;
 
                     }
@@ -762,8 +748,8 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             }
 
 
-            rw->display();
 
+            std::cout << "Shouldnt I Reset fromX, xwidth, currentY all that....?!\n";
 
         }  // for x   iso tiles
 
@@ -771,10 +757,38 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 
-    rw->display();
-
-
     return nullptr;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

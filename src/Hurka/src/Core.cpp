@@ -84,6 +84,9 @@ int Core::allocateResources()
 
 
 
+
+    /// Allocate all our Managers and Objects
+
     fmgr = new FileManager();
 
     trafficMgr = new TrafficManager();
@@ -165,12 +168,13 @@ int Core::setup(int width, int height, std::string title)
 
 
 
+
+
+    /// Place buses on all the RoadNetworks
     int maxnr = trafficMgr->nrOfRoadnetworks();
-
     Bus *bus;
-
     for(int nr = 0; nr < maxnr; nr++) {
-        /// Place a bus on a roadnetwork
+
         bus = new Bus();
         trafficMgr->addBus(bus, nr);
     }
@@ -192,7 +196,12 @@ int Core::setup(int width, int height, std::string title)
 
 
 /// Run - The main loop for the editor/game
-// For now it does the very basics, has some sense of Modes
+
+//
+//  NO Multithreading,
+//  Broken Input handling
+//  Welcome to Alpha, guys
+
 // (--+)
 void Core::run()
 {
@@ -219,10 +228,9 @@ void Core::run()
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
 
-//
-//    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-
+    // Main Window
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
 
     if(lockFPS) {
@@ -235,9 +243,6 @@ void Core::run()
     ContextSettings settings = window.getSettings();
 
     std::cout << "OpenGL: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
-
-
-
 
     std::cout << "\n\n\n---------------run--------------------\n";
 
@@ -283,7 +288,6 @@ void Core::run()
 
 
         /// Spacebar pressed
-
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !inputCooldownActive) {
 
@@ -461,10 +465,9 @@ void Core::run()
 
 
 
-        // Did you let go of LMB?
-        if(!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            alreadyButtonPressed = false;
-        }
+
+
+
 
 
 
@@ -472,19 +475,15 @@ void Core::run()
         ///     LMB
         ///
 
-
-        // CR7 - For now trying out the "findGrid" function             //2018-06-02
-
-
-
-
-
-//FIXME restore order to this
-        window.clear();
+        // Did you let go of LMB?
+        if(!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            alreadyButtonPressed = false;
+        }
 
 
-  if(drawGm)   {  gm->draw(window, viewHPos);  } // Draws the ground and water and suchers
 
+
+    // CR7 - For now trying out the "findGrid" function             //2018-06-02
 
 
 
@@ -518,8 +517,14 @@ void Core::run()
 
 
 
-                std::cout << "\n\n\n\n\n\n\n2018-06-19 debugging:\n";
+                std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2018-06-19 debugging:\n";
+
+
+
+                window.clear({0, 0, 0});
+                gm->draw(window, viewHPos);
                 mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos);
+                changedCanvas = true;
 
                 if(mousepos != nullptr) {
 
@@ -560,15 +565,13 @@ void Core::run()
                     }
 
                 } else {
-                    std::cout << cn << "Mousepos is nullptr\n";
+                    //std::cout << cn << "Mousepos is nullptr\n";
                 }
 
 
 
 
             } // if inside the gamematrix when clicking LMB
-
-
         }
 
 
@@ -596,16 +599,13 @@ void Core::run()
 
         /// Render
 
-     // FIXME, revert to this:    window.clear({0, 0, 0});
 
 
 
+        //if(drawGrid) {  grid->draw(window, viewHPos); }
 
+        /*
 
-
-/*
-
-        if(drawGrid) {  grid->draw(window, viewHPos); }
         if(drawBlocks) {
 
             /// Iterate list of blocklists to draw them in render order
@@ -625,15 +625,22 @@ void Core::run()
         if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
 
 
-        debugRect->draw(window, viewHPos);
+
 
         window.draw(lastClickedText);
+
+
 */
 
-        // Finally push rendered buffer to screen
 
 
-       // window.display();       // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
+    // Render what has been drawn to buffer
+    if(changedCanvas) {
+         window.display();      // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
+                                // WILL DRAW A BLANK SCREEN if you forgot to paint something to canvas this frame around
+                                // so I added variable changedCanvas (see CR#7)
+         changedCanvas = false;
+    }
 
 
 

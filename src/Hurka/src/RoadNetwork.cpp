@@ -704,10 +704,6 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath, int debugLevel)
 {
 
-    if(debugLevel > 0) {
-        debugLevel--;
-    }
-
     if(debugLevel >=1) { std::cout << "createSlotPathFromDijkstraResult()\n{"; }
 
     if(dijkstraResult == nullptr) {
@@ -740,9 +736,6 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
         workPos->gpix_y = Grid::convert_iso_to_gpix_y(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
         workPos->gpix_x = Grid::convert_iso_to_gpix_x(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
 
-
-
-        workPos->dump("    createSlotPathFromDijkstraResult->workpos: ");
 
 
         // Now we have a gpix point of reference for generating all the tiny steps the bus will take inside a road

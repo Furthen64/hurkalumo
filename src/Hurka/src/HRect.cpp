@@ -26,6 +26,7 @@ HRect::HRect()
 	//calculateBounds();  dont run this on a dummy object.
 
 
+
 }
 
 
@@ -238,7 +239,7 @@ int HRect::nrTiles()
 bool HRect::insideXPixles(HPos *pxPos)
 {
 
-    int debugLevel = 0;
+    int debugLevel = 1;
 
     int thisLeft = this->leftB->gpix_x;
     int thisRight = this->rightB->gpix_x;
@@ -265,7 +266,7 @@ bool HRect::insideXPixles(HPos *pxPos)
 // (--) test
 bool HRect::insideYPixles(HPos *pxPos)
 {
-    int debugLevel = 0;
+    int debugLevel = 1;
 
     int thisTop   = this->topB->gpix_y;
     int thisBottom = this->bottomB->gpix_y;
