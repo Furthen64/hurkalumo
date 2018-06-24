@@ -194,7 +194,7 @@ void Grid::hideVisible()
 // Uses internal findTile() function
 
 // (--)
-HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, RenderTarget& rt, HPos *viewHPos)
+HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, RenderTarget& rt, HPos *viewHPos, std::string recursionName)
 {
     HRect *relRect = new HRect(
                                     entireGameBoard->absStart,
@@ -212,7 +212,8 @@ HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, R
     }
     std::cout << " - searchpos= " << searchPos->gpix_y << "," << searchPos->gpix_x << "\n";
 
-    return findTile(entireGameBoard, relRect, searchPos, ind, 0, rt, viewHPos);
+
+    return findTile(entireGameBoard, relRect, searchPos, ind, 0, rt, viewHPos, recursionName);
 
 }
 
@@ -235,14 +236,17 @@ HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, R
 /// \param searchPos Gpix values of search position
 // RECURSIVE
 // (--) Test     Does not work yet
-HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int counter, RenderTarget& rt, HPos *viewHPos)
+HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int counter, RenderTarget& rt, HPos *viewHPos, std::string recursionName)
 {
     int debugLevel = 1; // FIXME
 
 
+    for(int n = 0; n < counter; n++) {
+        ind += " ";
+    }
+
     /// Error Checking
     {
-
 
         if(counter > 20) {
             std::cout << "WARNING: findTile reached limit, counter= " << counter << "\n";
@@ -273,8 +277,11 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	if(debugLevel >=1) {
         std::cout << "\n\n";
-        std::cout << ind << "findTile()---------------------------\n";
-        std::cout << ind << " - relrect: " << relRect->absToString() << "\n";
+        std::cout << ind << recursionName << " findTile()---------------------------\n";
+        //std::cout << ind << " - relrect: " << relRect->absToString() << "\n";
+        std::cout << ind <<  " current RECT:\n";
+        relRect->fullDump(ind);
+
 	}
 
 
@@ -283,18 +290,18 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
     std::cout << ind <<  "- insideXpixels: ";
     if( !relRect->insideXPixles( searchPos ) ) {
-        std::cout << " No.\n";
+        std::cout << ind << " No.\n";
         return nullptr;
     }
-    std::cout << " Yes.\n";
+    std::cout << ind << " Yes.\n";
 
 
     std::cout << ind <<  "- insideYpixels: ";
     if ( !relRect->insideYPixles( searchPos ) ) {
-            std::cout << " No.\n";
+            std::cout << ind <<  " No.\n";
         return nullptr;
     }
-    std::cout << " Yes.\n";
+    std::cout << ind << " Yes.\n";
 
 
 
@@ -306,7 +313,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 	std::cout << ind << "- nrTiles: " << nrTiles << "\n";
 
 	if(nrTiles <= 16) {
-		return bruteForceFindTile( entireGameboard, relRect, searchPos, ind, rt, viewHPos );                // RECURSION END
+		return bruteForceFindTile( entireGameboard, relRect, searchPos, ind, rt, viewHPos, recursionName );                // RECURSION END
 	}
 
 
@@ -333,21 +340,24 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
     // figure out how to divide the four squares, if rows n cols are not evenly divided by 2
 
-    if(rows/2%2==0) {
+	/// CR7 BUG! Oh my god the amount of bugs these things produce:
+
+
+    if(rows%2==0) {
         halfRows1 = rows/2;
-        halfRows2 = halfRows1  -1;               // We need -1 because the last position is not 20 its 19, because 0->19 is 20 elements hope that makes sense.
+        halfRows2 = halfRows1;
     } else {
         halfRows1 = (rows-1)/2;
-        halfRows2 = rows - halfRows1  -1;        // same here
+        halfRows2 = rows - halfRows1  ;
     }
 
 
-     if(cols/2%2==0) {
+     if(cols%2==0) {
         halfCols1 = cols/2;
-        halfCols2 = halfCols1   -1;              // same here
+        halfCols2 = halfCols1;
     } else {
         halfCols1 = (cols-1)/2;
-        halfCols2 = rows - halfCols1    -1;      // same here
+        halfCols2 = rows - halfCols1    ;
     }
 
 
@@ -373,18 +383,22 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 
+	/// CR7 BUG! Oh my god the amount of bugs these things produce:
+
+    if(recursionName == "-sq0-sq1") {
+        std::cout << "Debug\n";
+    }
+
 
 	// SQUARE 0
 
-	int fromY= relRect->absStart->abs_iso_y;    // Are these VALID, are the abs_isos set correctlt?
+	int fromY= relRect->absStart->abs_iso_y;
 	int fromX = relRect->absStart->abs_iso_x;
-	int toY = fromY + halfRows1;
-	int toX = fromX + halfCols1;
+	int toY = fromY + (halfRows1-1);            // halfRows1 is "nr of rows", not index of, so we -1 to get the right value
+	int toX = fromX + (halfCols1-1);            // halfcols1 is "nr of cols", not index of, so we -1 to get the right value
 
-	//sq0 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
-
-	sq0 = new HRect( new HPos(fromY, fromX,USE_ISO),
-	                 new HPos(toY, toX, USE_ISO));
+	sq0 = new HRect( new HPos(fromY, fromX,   USE_ISO),
+	                 new HPos(toY, toX,       USE_ISO));
 
 
 
@@ -396,10 +410,9 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 	fromX = toX +1;        // Continue from previous square, but add 1 so we dont overlap and run same tiles again
 	toY = toY;             // Keep it as is
     toX = toX + halfCols2;
-	//sq1 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
 
-    sq1 = new HRect( new HPos(fromY, fromX,USE_ISO),
-	                 new HPos(toY, toX, USE_ISO));
+    sq1 = new HRect( new HPos(fromY, fromX,  USE_ISO),
+	                 new HPos(toY, toX,      USE_ISO));
 
 
 
@@ -407,15 +420,15 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	// Beginning on a new line
 
-	fromY = halfRows1 + 1;  // Continue from the previous squares, but add 1 so we dont overlap and run same tiles again
+
+	fromY = halfRows1;
 	fromX = relRect->absStart->abs_iso_x;
-	toY = toY + halfRows2;                      // Add the other half
-	toX = halfCols1;
+	toY = toY + halfRows2;                      // Add the other half (already redacted -1 in sq0)             //WISHLIST alpha-0.2: omg, this is getting outta hand with these wonky variables... cleanup? rename? new vars?
+	toX = fromX + (halfCols1-1);                        // halfcols1 is "nr of cols", not index of, so we -1 to get the right value
 
-    //sq2 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
 
-    sq2 = new HRect( new HPos(fromY, fromX,USE_ISO),
-	                 new HPos(toY, toX, USE_ISO));
+    sq2 = new HRect( new HPos(fromY, fromX,  USE_ISO),
+	                 new HPos(toY, toX,     USE_ISO));
 
 
 
@@ -423,15 +436,13 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 
 	fromY = fromY;                   // Keep as it is
-	fromX = fromX + halfCols1 + 1 ;  //
+	fromX = fromX + halfCols1;       // Dont redact from halfCols1 this time because we are starting +1 compared to sq2
     toY = toY;                      // Keep as it is
-    toX = toX + halfCols2;          // Add the other half
+    toX = toX + halfCols2;          // Add the other half (already redacted -1 in sq2)
 
 
-    //sq3 = new HRect( fromY,         fromX,               toY,    toX, 32,64);
-
-    sq3 = new HRect( new HPos(fromY, fromX,USE_ISO),
-	                 new HPos(toY, toX, USE_ISO));
+    sq3 = new HRect( new HPos(fromY, fromX,  USE_ISO),
+	                 new HPos(toY, toX,     USE_ISO));
 
 
 
@@ -442,10 +453,12 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
         std::cout << ind << "We divide up current relrect to these new 4 squares:\n";
 
-        sq0->dump(" sq0: ");
-        sq1->dump("      sq1: ");
-        sq2->dump(" sq2: ");
-        sq3->dump("      sq3: ");
+
+
+        sq0->dump(ind + " sq0: ");
+        sq1->dump(ind + "      sq1: ");
+        sq2->dump(ind + " sq2: ");
+        sq3->dump(ind + "      sq3: ");
 
 	}
 
@@ -453,21 +466,21 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 
 	/// Enter each square and look for the grid
 
-	if(debugLevel >=2) {std::cout << " entering sq0: \n"; }
-	retpos = findTile(entireGameboard, sq0, searchPos, ind ,++counter , rt, viewHPos);
+	if(debugLevel >=2) {std::cout << ind << " entering sq0: \n"; }
+	retpos = findTile(entireGameboard, sq0, searchPos, ind ,++counter , rt, viewHPos, recursionName + "-sq0");
 	if(retpos != nullptr) { return retpos; }
 
-    if(debugLevel >=2) {std::cout << " entering sq1: \n"; }
-    retpos = findTile(entireGameboard, sq1, searchPos, ind, ++counter, rt , viewHPos);
+    if(debugLevel >=2) {std::cout << ind << " entering sq1: \n"; }
+    retpos = findTile(entireGameboard, sq1, searchPos, ind, ++counter, rt , viewHPos, recursionName + "-sq1");
     if(retpos != nullptr) { return retpos; }
 
 
-    if(debugLevel >=2) {std::cout << " entering sq2: \n"; }
-    retpos = findTile(entireGameboard, sq2, searchPos, ind ,++counter , rt, viewHPos );
+    if(debugLevel >=2) {std::cout << ind << " entering sq2: \n"; }
+    retpos = findTile(entireGameboard, sq2, searchPos, ind ,++counter , rt, viewHPos, recursionName + "-sq2");
     if(retpos != nullptr) { return retpos; }
 
-    if(debugLevel >=2) {std::cout << " entering sq3: \n"; }
-    retpos = findTile(entireGameboard, sq3, searchPos, ind  ,++counter, rt, viewHPos );
+    if(debugLevel >=2) {std::cout << ind << " entering sq3: \n"; }
+    retpos = findTile(entireGameboard, sq3, searchPos, ind  ,++counter, rt, viewHPos , recursionName + "-sq3");
     if(retpos != nullptr) { return retpos; }
 
 
@@ -485,7 +498,7 @@ HPos *Grid::findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, st
 /// \param relRect A smaller than entireGameBoard rectangle, used in a divide n conquer manner
 /// \param searchPos Gpix values of search position
 // (--) Test
-HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, RenderTarget &rt, HPos *viewHPos)
+HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, RenderTarget &rt, HPos *viewHPos, std::string recursionName)
 {
 
     std::cout << "\n\n\n";
@@ -493,8 +506,9 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
 
 // FIXME remove all graphical debug nonsens
-    sf::RenderWindow *rw;
+   /* sf::RenderWindow *rw;
     rw = (sf::RenderWindow*) &rt;
+*/
 
 
     HPos *isopos = nullptr;

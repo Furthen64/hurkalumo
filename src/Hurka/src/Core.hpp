@@ -104,8 +104,8 @@ private:
     int debugLevel = 0;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
-    int lockFPS = false;
-    int lockFPS_n = 5;
+    int lockFPS = true;
+    int lockFPS_n = 10;
 
 
 
@@ -124,13 +124,12 @@ private:
     std::string cn = "Core.cpp";
 
 
-    // int mouseSensitivity = 3*ceil(100/lockFPS_n);    // Pan speed in percentage
+    float mouseSensitivity = 3*ceil(100/lockFPS_n);    // Pan speed in percentage
 
-    int mouseSensitivity = 1;    // Pan speed in percentage
 
 
     // Why these values?
-    // Well I dont want to be in negative euclidian space so I offset everything so a huge gameboard can fit on the right side, inside positive x-space :)
+    // Well I dont want to be in negative euclidian space so I offset everything. A huge gameboard with many tiles can fit on the right side inside positive x-space :)
     HPos *viewHPos;
     int startViewPosY = -331;                               // -331 works with 64 x 64
     int startViewPosX = -(NR_GRIDS_WIDTH*15+1000);          // -2178 works with 64 x 64

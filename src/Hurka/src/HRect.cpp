@@ -70,7 +70,7 @@ HRect::HRect(int _absStartY,
 
 
 /// \brief Creates a rectangle given an HPos starting position
-// (-+)
+// (--)
 HRect::HRect(HPos *_absStartPos,
         int _rows,
         int _cols,
@@ -97,12 +97,12 @@ HRect::HRect(HPos *_absStartPos,
 
 
 /// \brief Creates a rectangle given two positions, calculates rows and cols automatically
-// (-+)
+// (--)
 HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 {
     absStart = _absStartPos;
-    rows = _absEndPos->abs_iso_y - absStart->abs_iso_y;
-    cols = _absEndPos->abs_iso_x - absStart->abs_iso_x;
+    rows = _absEndPos->abs_iso_y - absStart->abs_iso_y + 1;         // Why +1? because nr of rows starts counting at 1 , not 0 like indexing is, so we have to offset the nr by 1
+    cols = _absEndPos->abs_iso_x - absStart->abs_iso_x + 1 ;
 
     heightPx = -1;
     widthPx = -1;        //FIXME: please update these values with a calculateBounds()
@@ -121,12 +121,15 @@ HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 
 
 
+
+
+
+
 // There ought to be FOUR positions that determines the BOUNDS
 // of a Rectangle, the Top, Right, Bottom and Left
-
-
-// Hopefully you know what to use, absolute, relative?
 // Used by "Grid->findTile()"
+// BUGFIX:              for(int Y= 0; Y <=rows; Y++){          RESOLUTION
+//                      for(int Y= 0; Y < rows; Y++){          BUG
 // (--)
 void HRect::calculateBounds()
 {
@@ -159,8 +162,12 @@ void HRect::calculateBounds()
     // Look for min and max positions
     // Update Bound positions as the min max are found
 
-    for(int Y= 0; Y<rows; Y++){
-        for(int X= 0; X < cols; X++) {
+
+
+    for(int Y= absStart->abs_iso_y; Y <= (absStart->abs_iso_y + rows -1) ; Y++){            // Why -1? Because "rows" dont start counting at 0, they start at 1. So offset indexing by -1 to get the right value.
+        for(int X= absStart->abs_iso_x; X <= (absStart->abs_iso_x + cols -1); X++) {
+
+
 
             x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
             y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
@@ -235,10 +242,9 @@ int HRect::nrTiles()
 
 
 // Please note: +-1 error possible, should it go to <= or to < when matching bounds? should we have a function insideXPixlesOrOnBounds which uses >= and <= ?
-// (--) Test
+// (--) Test, very buggy
 bool HRect::insideXPixles(HPos *pxPos)
 {
-
     int debugLevel = 1;
 
     int thisLeft = this->leftB->gpix_x;
@@ -251,7 +257,7 @@ bool HRect::insideXPixles(HPos *pxPos)
         std::cout << "hrect.leftBound = " << thisLeft << "    vs   pxPos.x= " << searchX <<  " vs  hrect.rightBound= " << thisRight << "\n";
     }
 
-    if(thisLeft < searchX && searchX < thisRight) {
+    if(thisLeft <= searchX && searchX < thisRight) {
         return true;
     }
 
@@ -280,7 +286,7 @@ bool HRect::insideYPixles(HPos *pxPos)
     }
 
 
-    if(thisTop < searchY && searchY < thisBottom) {
+    if(thisTop <= searchY && searchY < thisBottom) {
         return true;
     }
 
@@ -296,7 +302,7 @@ bool HRect::insideYPixles(HPos *pxPos)
 // (--) test
 HRect *HRect::clone()
 {
-
+    std::cout << "Needs BOUND cloning too!\n";
     HRect *other = new HRect(this->absStart->clone(), this->rows, this->cols, this->heightPx, this->widthPx);
 
     other->relStart = this->relStart->clone();
@@ -310,8 +316,25 @@ HRect *HRect::clone()
 // (--)
 void HRect::dump(std::string ind)
 {
-    std::cout << ind << "HRect " << absStart->absToString() << " to (" << absStart->abs_iso_y + rows << ", " << absStart->abs_iso_x + cols << ")\n";
+     std::cout << ind << "HRect " << absStart->absToString() << " to (" << absStart->abs_iso_y + (rows-1)<< ", " << absStart->abs_iso_x + (cols-1)<< ")\n";
 }
+
+
+
+
+// (--)
+void HRect::fullDump(std::string ind)
+{
+
+// Full Dump:
+    std::cout << ind << "absStart->abs_iso_y = " << absStart->abs_iso_y << "\n";
+    std::cout << ind << "absStart->abs_iso_x = " << absStart->abs_iso_x << "\n";
+    std::cout << ind << "absStart->rows = " << rows << "\n";
+    std::cout << ind << "absStart->cols = " << cols << "\n";
+    std::cout << ind << "absStart->abs_iso_y + (rows-1)= " << absStart->abs_iso_y + (rows-1) << "\n";
+    std::cout << ind << "absStart->abs_iso_x + (cols-1) = " << absStart->abs_iso_x + (cols-1) << "\n";
+}
+
 
 
 

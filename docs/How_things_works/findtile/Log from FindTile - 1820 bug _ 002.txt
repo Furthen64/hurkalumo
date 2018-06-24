@@ -1,0 +1,109 @@
+  clicked on 0,8
+
+nothing happens, why?
+
+
+
+---
+
+2018-06-19 debugging:
+
+findTile()-----------------------------
+ - relRect = HRect (0,0) to (20, 20)
+ - searchpos= 674,2108
+
+
+    findTile()---------------------------
+    current RECT:
+   absStart->abs_iso_y = 0
+   absStart->abs_iso_x = 0
+   absStart->rows = 20
+   absStart->cols = 20
+   absStart->abs_iso_y + (rows-1)= 19
+   absStart->abs_iso_x + (cols-1) = 19
+   - insideXpixels: hrect.leftBound = 1212    vs   pxPos.x= 2108 vs  hrect.rightBound= 2492
+    Yes.
+   - insideYpixels: hrect.topBound = 532    vs   pxPos.y= 674 vs  hrect.bottomBound= 1172
+    Yes.
+   - nrTiles: 400
+
+   We divide up current relrect to these new 4 squares:
+    sq0: HRect (0,0) to (9, 9)
+         sq1: HRect (0,10) to (9, 19)
+    sq2: HRect (10,0) to (19, 9)
+         sq3: HRect (10,10) to (19, 19)
+
+
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+    -sq0 findTile()---------------------------
+     current RECT:
+    absStart->abs_iso_y = 0
+    absStart->abs_iso_x = 0
+    absStart->rows = 10
+    absStart->cols = 10
+    absStart->abs_iso_y + (rows-1)= 9
+    absStart->abs_iso_x + (cols-1) = 9
+    - insideXpixels: hrect.leftBound = 1532    vs   pxPos.x= 2108 vs  hrect.rightBound= 2172
+     Yes.
+    - insideYpixels: hrect.topBound = 532    vs   pxPos.y= 674 vs  hrect.bottomBound= 852
+     Yes.
+    - nrTiles: 100
+
+    We divide up current relrect to these new 4 squares:
+     sq0: HRect (0,0) to (3, 3)
+          sq1: HRect (0,4) to (3, 9)
+     sq2: HRect (4,0) to (9, 3)
+          sq3: HRect (4,4) to (9, 9)
+
+		  
+		  
+
+      -sq0-sq0 findTile()---------------------------
+       current RECT:
+      absStart->abs_iso_y = 0
+      absStart->abs_iso_x = 0
+      absStart->rows = 4
+      absStart->cols = 4
+      absStart->abs_iso_y + (rows-1)= 3
+      absStart->abs_iso_x + (cols-1) = 3
+      - insideXpixels: hrect.leftBound = 1724    vs   pxPos.x= 2108 vs  hrect.rightBound= 1980
+       No.
+
+	   
+	   
+	   
+	   
+	   
+
+       -sq0-sq1 findTile()---------------------------
+        current RECT:
+       absStart->abs_iso_y = 0
+       absStart->abs_iso_x = 4
+       absStart->rows = 4
+       absStart->cols = 6
+       absStart->abs_iso_y + (rows-1)= 3
+       absStart->abs_iso_x + (cols-1) = 9
+       - insideXpixels: hrect.leftBound = 1852    vs   pxPos.x= 2108 vs  hrect.rightBound= 2172
+        Yes.
+       - insideYpixels: hrect.topBound = 596    vs   pxPos.y= 674 vs  hrect.bottomBound= 756
+        Yes.
+       - nrTiles: 24
+
+
+
+
+
+
+
+
+
+
+

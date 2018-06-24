@@ -63,6 +63,7 @@ public:
 
 	HRect *clone();
     void dump(std::string ind);
+    void fullDump(std::string ind);
 
 
 	// The position and sizes

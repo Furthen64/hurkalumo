@@ -38,7 +38,7 @@ public:
 
 
 
-    HPos *findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, RenderTarget& rt, HPos *viewHPos);
+    HPos *findTile(HRect *entireGameBoard, HPos *searchPos, std::string ind, RenderTarget& rt, HPos *viewHPos, std::string recursionName);
 
 
 
@@ -387,9 +387,9 @@ private:
 
 
     // Search Functions
-    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int counter, RenderTarget &rt, HPos *viewHPos);
+    HPos *findTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, int counter, RenderTarget &rt, HPos *viewHPos, std::string recursionName);
 
-    HPos *bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, RenderTarget &rt, HPos *viewHPos);
+    HPos *bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *searchPos, std::string ind, RenderTarget &rt, HPos *viewHPos, std::string recursionName);
 
 
 

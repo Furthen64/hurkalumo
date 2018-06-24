@@ -207,16 +207,65 @@ void Core::run()
 {
 
 
-
     std::string ind1 = "   ";
     std::string ind2 = "      ";
     std::string ind3 = "         ";
     std::string ind4 = "            ";
 
 
+// <DEBUG FIXME DELETEME>
+/*
+    HPos *topIso = new HPos(0,0, USE_ISO);
+    HPos *rightIso = new HPos(0,19, USE_ISO);
+    HPos *bottomIso = new HPos(19,19, USE_ISO);
+    HPos *leftIso = new HPos(19,0, USE_ISO);
+
+
+    HPos *pos1010= new HPos(10,10, USE_ISO);
 
 
 
+    int gpix_y_top = Grid::convert_iso_to_gpix_y(topIso->abs_iso_y, topIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+
+    int gpix_x_right = Grid::convert_iso_to_gpix_x(rightIso->abs_iso_y, rightIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0)
+                       +
+                       GRID_TEXTURE_WIDTH;
+
+
+    int gpix_y_bottom = Grid::convert_iso_to_gpix_y(bottomIso->abs_iso_y, bottomIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0)
+                        +
+                        GRID_TEXTURE_HEIGHT;
+
+
+    int gpix_x_left =  Grid::convert_iso_to_gpix_x(leftIso->abs_iso_y, leftIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+
+
+
+    int pos1010_x_left =  Grid::convert_iso_to_gpix_x(pos1010->abs_iso_y, pos1010->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    int pos1010_y_top =   Grid::convert_iso_to_gpix_y(pos1010->abs_iso_y, pos1010->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+
+
+
+    std::cout << "gpix y top=" << gpix_y_top << "\n";
+    std::cout << "gpix x right=" << gpix_x_right << "\n";
+    std::cout << "gpix y bottom=" << gpix_y_bottom << "\n";
+    std::cout << "gpix x right=" << gpix_x_left << "\n";
+
+    std::cout << "10,10 x left=" << pos1010_x_left<< "\n";
+    std::cout << "10,10 x top=" << pos1010_y_top<< "\n";
+
+    return ;
+
+
+
+*/
+// </DEBUG>
+
+
+
+
+
+    /// Prepare for Running the Main Loop
 
     // Input Control (should be own class)
     bool alreadyButtonPressed = false;
@@ -231,7 +280,7 @@ void Core::run()
 
     // Main Window
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "HurkaLumo editor 0.1-alpha");
+    RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, desktop.bitsPerPixel), "HurkaLumo editor 0.1-alpha");
 
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
@@ -240,17 +289,18 @@ void Core::run()
 
     // Check OPENGL for old versions or something off
 
-    ContextSettings settings = window.getSettings();
+    if(debugLevel >=2) {
+            ContextSettings settings = window.getSettings();
+            std::cout << "SFML window->OpenGL version used: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
+    }
 
-    std::cout << "OpenGL: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
-
-    std::cout << "\n\n\n---------------run--------------------\n";
 
     if(!window.isOpen()) {
         std::cout << "ERROR " << cn << " sf::window is not open!\n";
         return ;
     }
 
+    std::cout << "\n\n\n---------------run--------------------\n";
 
 
 
@@ -268,7 +318,7 @@ void Core::run()
     ///
 
 
-
+    std::cout << "\n\n\n---------------run--------------------\n";
 
     while (window.isOpen())
     {
@@ -346,6 +396,7 @@ void Core::run()
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
+
 
 
 
@@ -434,8 +485,15 @@ void Core::run()
             // Adjust speed of panning
             // that 120, 80 is adjustment for the ratio of screen width and height
 
-            relativeX =   ( (float) relativeX * mouseSensitivity/120 );
-            relativeY =   ( (float) relativeY * mouseSensitivity/80 );
+
+            if(lockFPS) {
+                relativeX =   ( (float) relativeX * mouseSensitivity/120 );
+                relativeY =   ( (float) relativeY * mouseSensitivity/80 );
+
+            } else {
+                relativeX =   ( (float) relativeX *0.02 );
+                relativeY =   ( (float) relativeY *0.05 );
+            }
 
 
 
@@ -460,6 +518,14 @@ void Core::run()
             if(debugLevel > 1)  {
                 std::cout << ind1 << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
+
+
+
+
+            //FIXME CR7
+            window.clear({0, 0, 0});
+            gm->draw(window, viewHPos);
+            changedCanvas = true;
 
         }
 
@@ -494,8 +560,8 @@ void Core::run()
             alreadyButtonPressed = true;
 
 
-            /// Get mouse position
-            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );             // SFML Specific
+            // Get mouse position
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
             HPos *mousepos = new HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
 
             // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
@@ -523,7 +589,7 @@ void Core::run()
 
                 window.clear({0, 0, 0});
                 gm->draw(window, viewHPos);
-                mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos);
+                mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos, "");
                 changedCanvas = true;
 
                 if(mousepos != nullptr) {
