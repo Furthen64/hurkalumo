@@ -182,6 +182,15 @@ void Block::dump(std::string ind)
 }
 
 
+// (-+)
+void Block::minimaldump(std::string ind)
+{
+    std::cout << ind << " -- Block (" << textureName << ") -- \n";
+    std::cout << ind << "abs position= " << hpos->absToString() << "\n";
+    std::cout << ind << "rel position= " << hpos->relToString() << "\n";
+}
+
+
 
 
 

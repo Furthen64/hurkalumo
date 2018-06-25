@@ -448,31 +448,45 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
 /// \brief Go over all roadnets and all their positions to see if any of them match the HPos searchpos
 // Speed: O(N^2) at worst
-// (--) TEST
+// (--) bug with relative positioning... keep saying invalid searchposition
 RoadNetwork *TrafficManager::roadNetworkAtPos(HPos *searchpos)
 {
     int debugLevel = 0;
     bool foundRoad = false;
 
 
+    if(searchpos==nullptr) {
+        std::cout << "ERROR " << cn << " roadNetworkAtPos got nullptr\n";
+        return nullptr;
+    }
+
 
 
     HPos *relpos = new HPos(searchpos->abs_iso_y, searchpos->abs_iso_x, USE_ISO);
-
-
 
 
     for (std::list<RoadNetwork *>::iterator it=roadNetworks->begin(); it != roadNetworks->end(); ++it) {
 
         RoadNetwork *currNet = (*it);
 
+        // Are we inside the bounds of this roadnetwork?
+        if((searchpos->abs_iso_y < currNet->min_isoYOffset)
+           ||
+           (searchpos->abs_iso_x < currNet->min_isoXOffset))  {
+
+               continue; // Take the next one, not worth looking in to this network.
+
+        }
+
         // Transform the absolute values from the searchpos into relative position for current roadnetwork
 
         relpos->rel_iso_y = relpos->abs_iso_y - currNet->min_isoYOffset;
         relpos->rel_iso_x = relpos->abs_iso_x - currNet->min_isoXOffset;
 
+
+
         if(relpos->rel_iso_y < 0 || relpos->rel_iso_x < 0) {
-            std::cout << "Invalid searchposition\n";
+            std::cout << "Invalid searchposition: relpos(" << relpos->rel_iso_y << ", " << relpos->rel_iso_x << ") \n";
             continue;
         }
 

@@ -245,7 +245,7 @@ int HRect::nrTiles()
 // (--) Test, very buggy
 bool HRect::insideXPixles(HPos *pxPos)
 {
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int thisLeft = this->leftB->gpix_x;
     int thisRight = this->rightB->gpix_x;
@@ -272,7 +272,7 @@ bool HRect::insideXPixles(HPos *pxPos)
 // (--) test
 bool HRect::insideYPixles(HPos *pxPos)
 {
-    int debugLevel = 1;
+    int debugLevel = 0;
 
     int thisTop   = this->topB->gpix_y;
     int thisBottom = this->bottomB->gpix_y;

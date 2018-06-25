@@ -1,0 +1,340 @@
+5,5-bug
+
+
+
+
+2018-06-19 debugging:
+
+findTile()-----------------------------
+ - relRect = HRect (0,0) to (20, 20)
+ - searchpos= 704,1843
+
+ 
+ 
+ 
+
+    findTile()---------------------------
+    current RECT:
+   absStart->abs_iso_y = 0
+   absStart->abs_iso_x = 0
+   absStart->rows = 20
+   absStart->cols = 20
+   absStart->abs_iso_y + (rows-1)= 19
+   absStart->abs_iso_x + (cols-1) = 19
+   - insideXpixels: hrect.leftBound = 1212    vs   pxPos.x= 1843 vs  hrect.rightBound= 2492
+    Yes.
+   - insideYpixels: hrect.topBound = 532    vs   pxPos.y= 704 vs  hrect.bottomBound= 1172
+    Yes.
+   - nrTiles: 400
+
+   We divide up current relrect to these new 4 squares:
+    sq0: HRect (0,0) to (9, 9)
+         sq1: HRect (0,10) to (9, 19)
+    sq2: HRect (10,0) to (19, 9)
+         sq3: HRect (10,10) to (19, 19)
+
+		 
+		 
+		 
+		 
+		 
+		 >>> LOOKS GOOD SO FAR.
+		 
+		 
+		 
+
+    -sq0 findTile()---------------------------
+     current RECT:
+    absStart->abs_iso_y = 0
+    absStart->abs_iso_x = 0
+    absStart->rows = 10
+    absStart->cols = 10
+    absStart->abs_iso_y + (rows-1)= 9
+    absStart->abs_iso_x + (cols-1) = 9
+    - insideXpixels: hrect.leftBound = 1532    vs   pxPos.x= 1843 vs  hrect.rightBound= 2172
+     Yes.
+    - insideYpixels: hrect.topBound = 532    vs   pxPos.y= 704 vs  hrect.bottomBound= 852
+     Yes.
+    - nrTiles: 100
+
+    
+	
+	
+	
+	
+	We divide up current relrect to these new 4 squares:
+	
+     sq0: HRect (0,0) to (4, 4)									
+          sq1: HRect (0,5) to (4, 9)
+     sq2: HRect (5,0) to (9, 4)
+          sq3: HRect (5,5) to (9, 9)
+		  
+		  
+			>>> LOOKS GOOD SO FAR.
+		  
+		  
+		  
+		  
+      -sq0-sq0 findTile()---------------------------
+		   current RECT:
+		  absStart->abs_iso_y = 0
+		  absStart->abs_iso_x = 0
+		  absStart->rows = 5
+		  absStart->cols = 5
+		  absStart->abs_iso_y + (rows-1)= 4
+		  absStart->abs_iso_x + (cols-1) = 4
+		  - insideXpixels: hrect.leftBound = 1692    vs   pxPos.x= 1843 vs  hrect.rightBound= 2012
+		   Yes.
+		  - insideYpixels: hrect.topBound = 532    vs   pxPos.y= 704 vs  hrect.bottomBound= 692
+       No.
+
+
+       -sq0-sq1 findTile()---------------------------
+			current RECT:
+		   absStart->abs_iso_y = 0
+		   absStart->abs_iso_x = 5
+		   absStart->rows = 5
+		   absStart->cols = 5
+		   absStart->abs_iso_y + (rows-1)= 4
+		   absStart->abs_iso_x + (cols-1) = 9
+		   - insideXpixels: hrect.leftBound = 1852    vs   pxPos.x= 1843 vs  hrect.rightBound= 2172
+        No.
+
+
+        -sq0-sq2 findTile()---------------------------
+			 current RECT:
+			absStart->abs_iso_y = 5
+			absStart->abs_iso_x = 0
+			absStart->rows = 5
+			absStart->cols = 5
+			absStart->abs_iso_y + (rows-1)= 9
+			absStart->abs_iso_x + (cols-1) = 4 													<-- ERROR! ought to be 9,3 !
+			
+			
+			
+			- insideXpixels: hrect.leftBound = 1532    vs   pxPos.x= 1843 vs  hrect.rightBound= 1852
+         Yes.
+        - insideYpixels: hrect.topBound = 612    vs   pxPos.y= 704 vs  hrect.bottomBound= 772
+         Yes.
+        - nrTiles: 25
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+        We divide up current relrect to these new 4 squares:
+         sq0: HRect (5,0) to (6, 1)
+              sq1: HRect (5,2) to (6, 4)
+         sq2: HRect (2,0) to (9, 1)
+              sq3: HRect (2,2) to (9, 4)
+
+
+             -sq0-sq2-sq0 findTile()---------------------------
+              current RECT:
+             absStart->abs_iso_y = 5
+             absStart->abs_iso_x = 0
+             absStart->rows = 2
+             absStart->cols = 2
+             absStart->abs_iso_y + (rows-1)= 6
+             absStart->abs_iso_x + (cols-1) = 1
+             - insideXpixels: hrect.leftBound = 1628    vs   pxPos.x= 1843 vs  hrect.rightBound= 1756
+              No.
+
+
+              -sq0-sq2-sq1 findTile()---------------------------
+               current RECT:
+              absStart->abs_iso_y = 5
+              absStart->abs_iso_x = 2
+              absStart->rows = 2
+              absStart->cols = 3
+              absStart->abs_iso_y + (rows-1)= 6
+              absStart->abs_iso_x + (cols-1) = 4
+              - insideXpixels: hrect.leftBound = 1692    vs   pxPos.x= 1843 vs  hrect.rightBound= 1852
+               Yes.
+              - insideYpixels: hrect.topBound = 644    vs   pxPos.y= 704 vs  hrect.bottomBound= 724
+               Yes.
+              - nrTiles: 6
+
+
+
+              bruteForceFindTile()------------
+               - Current Tile: (5,2)
+               - Current Tile: (5,3)
+               - Current Tile: (5,4)
+                 - inside x span.
+                 - inside y span.
+Shouldnt I Reset fromX, xwidth, currentY all that....?!
+               - Current Tile: (6,2)
+               - Current Tile: (6,3)
+               - Current Tile: (6,4)
+
+
+               -sq0-sq2-sq2 findTile()---------------------------
+                current RECT:
+               absStart->abs_iso_y = 2
+               absStart->abs_iso_x = 0
+               absStart->rows = 8
+               absStart->cols = 2
+               absStart->abs_iso_y + (rows-1)= 9
+               absStart->abs_iso_x + (cols-1) = 1
+               - insideXpixels: hrect.leftBound = 1532    vs   pxPos.x= 1843 vs  hrect.rightBound= 1852
+                Yes.
+               - insideYpixels: hrect.topBound = 564    vs   pxPos.y= 704 vs  hrect.bottomBound= 724
+                Yes.
+               - nrTiles: 16
+
+
+
+               bruteForceFindTile()------------
+                - Current Tile: (2,0)
+                - Current Tile: (2,1)
+                  - inside x span.
+                - Current Tile: (3,0)
+                - Current Tile: (3,1)
+                - Current Tile: (4,0)
+                - Current Tile: (4,1)
+                - Current Tile: (5,0)
+                - Current Tile: (5,1)
+                - Current Tile: (6,0)
+                - Current Tile: (6,1)
+                - Current Tile: (7,0)
+                - Current Tile: (7,1)
+                - Current Tile: (8,0)
+                - Current Tile: (8,1)
+                - Current Tile: (9,0)
+                - Current Tile: (9,1)
+
+
+                -sq0-sq2-sq3 findTile()---------------------------
+                 current RECT:
+                absStart->abs_iso_y = 2
+                absStart->abs_iso_x = 2
+                absStart->rows = 8
+                absStart->cols = 3
+                absStart->abs_iso_y + (rows-1)= 9
+                absStart->abs_iso_x + (cols-1) = 4
+                - insideXpixels: hrect.leftBound = 1596    vs   pxPos.x= 1843 vs  hrect.rightBound= 1948
+                 Yes.
+                - insideYpixels: hrect.topBound = 596    vs   pxPos.y= 704 vs  hrect.bottomBound= 772
+                 Yes.
+                - nrTiles: 24
+
+                We divide up current relrect to these new 4 squares:
+                 sq0: HRect (2,2) to (5, 2)
+                      sq1: HRect (2,3) to (5, 9)
+                 sq2: HRect (4,2) to (9, 2)
+                      sq3: HRect (4,3) to (9, 9)
+
+
+                         -sq0-sq2-sq3-sq0 findTile()---------------------------
+                          current RECT:
+                         absStart->abs_iso_y = 2
+                         absStart->abs_iso_x = 2
+                         absStart->rows = 4
+                         absStart->cols = 1
+                         absStart->abs_iso_y + (rows-1)= 5
+                         absStart->abs_iso_x + (cols-1) = 2
+                         - insideXpixels: hrect.leftBound = 1724    vs   pxPos.x= 1843 vs  hrect.rightBound= 1884
+                          Yes.
+                         - insideYpixels: hrect.topBound = 596    vs   pxPos.y= 704 vs  hrect.bottomBound= 676
+                          No.
+
+
+                          -sq0-sq2-sq3-sq1 findTile()---------------------------
+                           current RECT:
+                          absStart->abs_iso_y = 2
+                          absStart->abs_iso_x = 3
+                          absStart->rows = 4
+                          absStart->cols = 7
+                          absStart->abs_iso_y + (rows-1)= 5
+                          absStart->abs_iso_x + (cols-1) = 9
+                          - insideXpixels: hrect.leftBound = 1756    vs   pxPos.x= 1843 vs  hrect.rightBound= 2108
+                           Yes.
+                          - insideYpixels: hrect.topBound = 612    vs   pxPos.y= 704 vs  hrect.bottomBound= 788
+                           Yes.
+                          - nrTiles: 28
+
+                          We divide up current relrect to these new 4 squares:
+                           sq0: HRect (2,3) to (3, 5)
+                                sq1: HRect (2,6) to (3, 6)
+                           sq2: HRect (2,3) to (5, 5)
+                                sq3: HRect (2,6) to (5, 6)
+
+
+                                     -sq0-sq2-sq3-sq1-sq0 findTile()---------------------------
+                                      current RECT:
+                                     absStart->abs_iso_y = 2
+                                     absStart->abs_iso_x = 3
+                                     absStart->rows = 2
+                                     absStart->cols = 3
+                                     absStart->abs_iso_y + (rows-1)= 3
+                                     absStart->abs_iso_x + (cols-1) = 5
+                                     - insideXpixels: hrect.leftBound = 1820    vs   pxPos.x= 1843 vs  hrect.rightBound= 1980
+                                      Yes.
+                                     - insideYpixels: hrect.topBound = 612    vs   pxPos.y= 704 vs  hrect.bottomBound= 692
+                                      No.
+
+
+                                      -sq0-sq2-sq3-sq1-sq1 findTile()---------------------------
+                                       current RECT:
+                                      absStart->abs_iso_y = 2
+                                      absStart->abs_iso_x = 6
+                                      absStart->rows = 2
+                                      absStart->cols = 1
+                                      absStart->abs_iso_y + (rows-1)= 3
+                                      absStart->abs_iso_x + (cols-1) = 6
+                                      - insideXpixels: hrect.leftBound = 1916    vs   pxPos.x= 1843 vs  hrect.rightBound= 2012
+                                       No.
+
+
+                                       -sq0-sq2-sq3-sq1-sq2 findTile()---------------------------
+                                        current RECT:
+                                       absStart->abs_iso_y = 2
+                                       absStart->abs_iso_x = 3
+                                       absStart->rows = 4
+                                       absStart->cols = 3
+                                       absStart->abs_iso_y + (rows-1)= 5
+                                       absStart->abs_iso_x + (cols-1) = 5
+                                       - insideXpixels: hrect.leftBound = 1756    vs   pxPos.x= 1843 vs  hrect.rightBound= 1980
+                                        Yes.
+                                       - insideYpixels: hrect.topBound = 612    vs   pxPos.y= 704 vs  hrect.bottomBound= 724
+                                        Yes.
+                                       - nrTiles: 12
+
+
+
+                                       bruteForceFindTile()------------
+                                        - Current Tile: (2,3)
+                                        - Current Tile: (2,4)
+                                        - Current Tile: (2,5)
+                                        - Current Tile: (3,3)
+                                          - inside x span.
+                                        - Current Tile: (3,4)
+                                        - Current Tile: (3,5)
+                                        - Current Tile: (4,3)
+                                          - inside x span.
+                                        - Current Tile: (4,4)
+                                          - inside x span.
+                                        - Current Tile: (4,5)
+                                        - Current Tile: (5,3)
+                                        - Current Tile: (5,4)
+                                          - inside x span.
+                                          - inside y span.
+Shouldnt I Reset fromX, xwidth, currentY all that....?!
+                                        - Current Tile: (5,5)
+                                          - inside x span.
+                                          - inside y span.
+                                        - - -  Eureka!  we are inside 1827 - ( 1843 ) - 1877
+   dumpEverythingAtPos (5,5):
+   {
+   }
+
+
+
+

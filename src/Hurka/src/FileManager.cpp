@@ -406,7 +406,7 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
 // (-+)
 bool FileManager::verifyFile(std::string fullUri, int *rows, int *cols, int debugLevel)
 {
-debugLevel = 2; // FIXME DELETEME
+
 
 
 

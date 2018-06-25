@@ -1,8 +1,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-
-
 #include <stdlib.h>
 #include <iostream>
 #include <unordered_map>
@@ -11,8 +9,6 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 
-
-// Project includes
 #include "HurkaMap.hpp"
 #include "Constants.hpp"
 #include "Utils.hpp"
@@ -72,30 +68,29 @@ private:
 
 
 
-    //std::string startmapFilename = "data/simple.txt";
-    //std::string startmapFilename = "data/two_roads.txt";
-    //std::string startmapFilename = "data/garden.txt";
-    //std::string startmapFilename = "data/aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
-    //std::string startmapFilename = "data/roadnetwork_test.txt";                // Works 2018-05
-    //std::string startmapFilename = "data/bus_traffic_test.txt";                // Works 2018-05
-    //std::string startmapFilename = "data/dijkstra_test_1.txt";                 // Works!
-    //std::string startmapFilename = "data/dijkstra_test_2.txt";                 // Works!
-    //std::string startmapFilename = "data/dijkstra_test_3.txt";                 // Works!
-   // std::string startmapFilename = "data/dijkstra_test_4.txt";                 // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
+    //std::string startmapFilename = "data\\maps\\simple.txt";
+    //std::string startmapFilename = "data\\maps\\two_roads.txt";
+    //std::string startmapFilename = "data\\maps\\garden.txt";
+    //std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
+    //std::string startmapFilename = "data\\maps\\roadnetwork_test.txt";                // Works 2018-05
+    //std::string startmapFilename = "data\\maps\\roadnetwork_long.txt";                // requires 43x43 Works 2018-05
+    //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Works 2018-05
+    //std::string startmapFilename = "data\\maps\\dijkstra_test_1.txt";                 // Works!
+    //std::string startmapFilename = "data\\maps\\dijkstra_test_2.txt";                 // Works!
+    //std::string startmapFilename = "data\\maps\\dijkstra_test_3.txt";                 // Works!
+    std::string startmapFilename = "data\\maps\\dijkstra_test_4.txt";                 // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
                                                                 // This started when I attempted to fix the CONSUME error of the stack from dijkstraresult, 2018-05-21
                                                                 // //planForBusesOnRoadNetwork go there, set debuglevel=1 and watch
 
-    //std::string startmapFilename = "data/dijkstra_test_5.txt";
+    //std::string startmapFilename = "data\\maps\\dijkstra_test_5.txt";
     // dijkstra_test_5
     // Tested: lot of roadnr to roadnrs! 2018-05                                 // Works!
 
                 // 14 = first road on left, 26 = farthest road on the right
                 // 53 = very low very right
 
-    //std::string startmapFilename = "data/bus_traffic_test.txt";              // Bugs... somehow! not sure yet. 2018-05
-    std::string startmapFilename = "data\\maps\\bustest3.txt";                 // Bugs
-
-
+    //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";         // Bugs... somehow! not sure yet. 2018-05
+    //std::string startmapFilename = "data\\maps\\bustest3.txt";                 // Works 2018-06
 
 
     int consoleMode = false;
@@ -105,7 +100,7 @@ private:
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 10;
+    int lockFPS_n = 60;
 
 
 
@@ -115,7 +110,6 @@ private:
     // Modes
     int gamemode = GAMEMODE_EDITOR;
     int lmbmode = LMB_ENQUIRE;
-
     bool changedCanvas = false;
 
 
@@ -138,7 +132,7 @@ private:
     // Testing for a while, remove when dijkstra is super stable (2018-05)
     bool dijkstraAutoEndpointsAdjust = true;            // If true, the fromRoad and toRoad vars below will bee adjusted automatically if out of bounds
     int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 4;
+    int dijkstraToRoad = 40;
 
 
 

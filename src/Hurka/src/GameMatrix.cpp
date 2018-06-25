@@ -19,14 +19,18 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
 
 
 
-
-    // CR24
-
     TextureManager *textureMgr;
     textureMgr = textureMgr->getInstance();
-    std::string textureName = "GRID2";
-    texture = textureMgr->getTexture(textureName);
-    texture.loadFromFile(getFullUri("data\\textures\\GRID2.png"));
+    int _textureId = 551;
+    std::string textureName = textureMgr->getTextureNameByIndex(_textureId);
+
+    bool result = textureMgr->applyTexture(textureName, &texture);
+
+    if(!result) {
+        std::cout << "ERROR GameMatrix creation, cannot find texture id \"" << _textureId << "\".\n";
+        return ;
+    }
+
     sprite = Sprite(texture);
 
 
@@ -131,7 +135,6 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
             }
 
             sprite.setPosition(pos);
-
 
             rt.draw(sprite);
         }

@@ -195,71 +195,21 @@ int Core::setup(int width, int height, std::string title)
 
 
 
-/// Run - The main loop for the editor/game
+
 
 //
 //  NO Multithreading,
 //  Broken Input handling
-//  Welcome to Alpha, guys
-
+//  Welcome to Alpha, guys!
 // (--+)
+/// \brief Run - The main loop for the editor/game
 void Core::run()
 {
-
-
     std::string ind1 = "   ";
     std::string ind2 = "      ";
     std::string ind3 = "         ";
     std::string ind4 = "            ";
 
-
-// <DEBUG FIXME DELETEME>
-/*
-    HPos *topIso = new HPos(0,0, USE_ISO);
-    HPos *rightIso = new HPos(0,19, USE_ISO);
-    HPos *bottomIso = new HPos(19,19, USE_ISO);
-    HPos *leftIso = new HPos(19,0, USE_ISO);
-
-
-    HPos *pos1010= new HPos(10,10, USE_ISO);
-
-
-
-    int gpix_y_top = Grid::convert_iso_to_gpix_y(topIso->abs_iso_y, topIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-
-    int gpix_x_right = Grid::convert_iso_to_gpix_x(rightIso->abs_iso_y, rightIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0)
-                       +
-                       GRID_TEXTURE_WIDTH;
-
-
-    int gpix_y_bottom = Grid::convert_iso_to_gpix_y(bottomIso->abs_iso_y, bottomIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0)
-                        +
-                        GRID_TEXTURE_HEIGHT;
-
-
-    int gpix_x_left =  Grid::convert_iso_to_gpix_x(leftIso->abs_iso_y, leftIso->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-
-
-
-    int pos1010_x_left =  Grid::convert_iso_to_gpix_x(pos1010->abs_iso_y, pos1010->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-    int pos1010_y_top =   Grid::convert_iso_to_gpix_y(pos1010->abs_iso_y, pos1010->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-
-
-
-    std::cout << "gpix y top=" << gpix_y_top << "\n";
-    std::cout << "gpix x right=" << gpix_x_right << "\n";
-    std::cout << "gpix y bottom=" << gpix_y_bottom << "\n";
-    std::cout << "gpix x right=" << gpix_x_left << "\n";
-
-    std::cout << "10,10 x left=" << pos1010_x_left<< "\n";
-    std::cout << "10,10 x top=" << pos1010_y_top<< "\n";
-
-    return ;
-
-
-
-*/
-// </DEBUG>
 
 
 
@@ -518,15 +468,6 @@ void Core::run()
             if(debugLevel > 1)  {
                 std::cout << ind1 << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
-
-
-
-
-            //FIXME CR7
-            window.clear({0, 0, 0});
-            gm->draw(window, viewHPos);
-            changedCanvas = true;
-
         }
 
 
@@ -545,11 +486,6 @@ void Core::run()
         if(!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             alreadyButtonPressed = false;
         }
-
-
-
-
-    // CR7 - For now trying out the "findGrid" function             //2018-06-02
 
 
 
@@ -579,18 +515,10 @@ void Core::run()
 
 
 
-                // Find out what iso tile you clicked on
+                // Find out what iso tile you clicked on        (runs recursive function, has a limiter of how many levels deep it can go)
 
 
-
-                std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2018-06-19 debugging:\n";
-
-
-
-                window.clear({0, 0, 0});
-                gm->draw(window, viewHPos);
                 mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos, "");
-                changedCanvas = true;
 
                 if(mousepos != nullptr) {
 
@@ -652,7 +580,7 @@ void Core::run()
             /// Buses
 
 
-            // FIXME enable this line of code again: trafficMgr->updateAll(viewHPos);
+            trafficMgr->updateAll(viewHPos);
 
 
 
@@ -665,18 +593,20 @@ void Core::run()
 
         /// Render
 
+        window.clear({0, 0, 0});
 
 
 
-        //if(drawGrid) {  grid->draw(window, viewHPos); }
+        if(drawGm) {gm->draw(window, viewHPos);}
 
-        /*
+
 
         if(drawBlocks) {
-
             /// Iterate list of blocklists to draw them in render order
             hmap->draw(window, viewHPos);
         }
+
+        if(drawGrid) {  grid->draw(window, viewHPos); }
 
 
         if(drawLoco) {  loco->draw(window, viewHPos); }
@@ -685,28 +615,16 @@ void Core::run()
             trafficMgr->drawBuses(window, viewHPos);
         }
 
-
-
-
         if(drawToolbar) {   toolbarTop->draw(window, viewHPos); }
 
 
 
 
-        window.draw(lastClickedText);
-
-
-*/
+        window.display();      // Performance issue when we get to many thousands of Blocks. Time: 5610 ms
+                               // Note: this will draw a blank screen if you forgot to paint something to canvas this frame around, making it flicker
 
 
 
-    // Render what has been drawn to buffer
-    if(changedCanvas) {
-         window.display();      // PERFORMANCE ISSUE when we get to many thousands of Blocks            Time: 5610 ms
-                                // WILL DRAW A BLANK SCREEN if you forgot to paint something to canvas this frame around
-                                // so I added variable changedCanvas (see CR#7)
-         changedCanvas = false;
-    }
 
 
 
@@ -746,7 +664,6 @@ void Core::clearResources()
     delete toolbarTop;
     delete grid;
   */
-
 }
 
 

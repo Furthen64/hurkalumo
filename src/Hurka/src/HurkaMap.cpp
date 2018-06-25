@@ -286,7 +286,7 @@ void HurkaMap::dump(std::string ind)
 
 /// \brief Will figure out what is under the mouse cursor and run .dump() function on
 ///        all the objects.
-// (-+) test more
+// (-+)
 void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::string ind)
 {
 
@@ -299,7 +299,7 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
         return ;
     }
 
-    std::cout << ind << "dumpEverythingAtPos " << searchPos->absToString() << ":\n";
+    std::cout << ind << "---- POS " << searchPos->absToString() << " ---------\n";
     std::cout << ind << "{\n";
 
 
@@ -314,7 +314,7 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
 
         if(workBlock->getHPos()->compareAbsIso(searchPos) == 0) {
 
-            workBlock->dump(ind2);
+            workBlock->minimaldump(ind2);
 
         }
 
@@ -331,11 +331,7 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
     }
 
 
-
-
-
-
-    // clicked on a bus on that roadnetwork?
+    // Clicked on a bus ON that roadnetwork?
     if(roadnet != nullptr) {
 
         Bus *bus = roadnet->busAtPos(searchPos);        // alpha-0.2: What if there are several buses at the same iso tile?
@@ -462,7 +458,7 @@ int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
 
 
 
-                (*it) = new Block(roadPos, textureStr);     // BUG FIXME something crashes if you try wrong textuername
+                (*it) = new Block(roadPos, textureStr);     // BUG FIXME something crashes if you try wrong texturename
 
                 if(debugLevel >=1) {
                     std::cout << ind << " - UPDATED!\n";

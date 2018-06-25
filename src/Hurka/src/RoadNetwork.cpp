@@ -33,20 +33,16 @@ void RoadNetwork::clearResources()
 void RoadNetwork::dump(std::string indent)
 {
 
-    std::cout << "\n\n" << indent << "----------------- roadnetwork (" << min_isoYOffset << ", " << min_isoXOffset << " ------------------\n";
+    std::cout << "\n\n" << indent << "-- roadnetwork (" << min_isoYOffset << ", " << min_isoXOffset << ") --\n";
 
     std::cout << indent << "absolute iso position = " << min_isoYOffset<< ", " << min_isoXOffset<< "\n";
-    std::cout << indent << "height = " << max_isoYOffset << "\n";
-    std::cout << indent << "width = " << max_isoXOffset << "\n";
+    std::cout << indent << "rows = " << max_isoYOffset << "\n";
+    std::cout << indent << "cols = " << max_isoXOffset << "\n";
     std::cout << indent << "nr of buses = " << buslist->size() << "\n";
-    std::cout << indent << "matrix:\n";
-
     std::string indent2 = indent;
     indent2 += "   ";
     hMatrix->dump(indent2);
     std::cout << "\n";
-
-
 }
 
 

@@ -133,7 +133,15 @@ std::string TextureManager::getTextureNameByIndex(int nr)
         case 303: return "TREE003";
 
 
+
+
         case 401: return "BUS001";
+
+        case 501: return "GRID1";
+        case 502: return "GRID2";
+
+        case 551: return "GRASS1";
+        case 552: return "GRASS2";
 
 
         default:
