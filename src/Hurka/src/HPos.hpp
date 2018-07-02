@@ -75,12 +75,14 @@ public:
     int compare(HPos *other);
     int compareAbsIso(HPos *other);
 
-    int abs_iso_y;
+    int abs_iso_y;  // Absolute tile position  from 0,0 to gameboard's max min
     int abs_iso_x;
-    int rel_iso_y;
+    int rel_iso_y;  // Relative tile position  useful for inside rectangles on the gameboard
     int rel_iso_x;
-    int gpix_y;
+    int gpix_y;     // Gameboard pixel inside Euclidian grid space!
     int gpix_x;
+    int wpix_y;     // Window pixel (0,0 to 640,480)
+    int wpix_x;
 
     HPos *clone();
     void dump(std::string ind);

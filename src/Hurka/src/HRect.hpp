@@ -68,6 +68,7 @@ public:
 
 	// The position and sizes
 	HPos *absStart;
+	HPos *absEnd;
 	int rows;
 	int cols;
 	HPos *relStart;
@@ -88,7 +89,7 @@ public:
 
 private:
 
-    bool drawable = true;       // OPTIMIZE set to false for faster HRects
+    bool drawable = false ;       // OPTIMIZE set to false for faster HRects
 
     Texture texture;
     Sprite sprite;

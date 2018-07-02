@@ -34,6 +34,8 @@ HPos::HPos(int _y, int _x, int positionType)
         rel_iso_x = 0;
         gpix_y = _y;
         gpix_x = _x;
+        wpix_y = _y;
+        wpix_x = _x;
 
     }
 }

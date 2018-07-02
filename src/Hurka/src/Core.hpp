@@ -147,12 +147,12 @@ private:
     Grid *grid = nullptr;
     HurkaMap *hmap = nullptr;
     HurkaMatrix *roadMatrix = nullptr;
-    FileManager *fmgr;
+    FileManager *fm;
 
     bool drawGm = 1;
     bool drawLoco = 0;
     bool drawBuses = 1;
-    bool drawToolbar = 0;
+    bool drawToolbar = 1;
     bool drawGrid = 1;
     bool drawBlocks = 1;
 

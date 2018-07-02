@@ -87,7 +87,7 @@ int Core::allocateResources()
 
     /// Allocate all our Managers and Objects
 
-    fmgr = new FileManager();
+    fm = new FileManager();
 
     trafficMgr = new TrafficManager();
 
@@ -119,7 +119,7 @@ int Core::loadResources(std::string _mapName)
     /// Read the map
     std::cout << "Loading map \"" << _mapName << "\"\n";
 
-    hmap = fmgr->readRegularFile(getFullUri(_mapName),debugLevel, gm);
+    hmap = fm->readRegularFile(getFullUri(_mapName),debugLevel, gm);
     if(hmap->fullUriMapName == "empty") { std::cout << "ERROR Could not read map " << _mapName << ", exiting!\n"; return -1;  }
 
 
@@ -493,6 +493,9 @@ void Core::run()
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
         {
 
+
+
+
             alreadyButtonPressed = true;
 
 
@@ -501,18 +504,60 @@ void Core::run()
             HPos *mousepos = new HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
 
             // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
+
             mousepos->gpix_y -= viewHPos->gpix_y;
             mousepos->gpix_x -= viewHPos->gpix_x;
 
 
 
+
+
+
+
+            // Clicked on a Toolbar Button?
+
+                //std::string startmapFilename = "data\\maps\\dijkstra_test_3.txt";                 // Works!
+
+
+            if( toolbarTop->isPosInsideToolbar(mousepos) == true )
+            {
+                int toolbarResult = toolbarTop->whatButtonDidIPress(mousepos);
+
+
+               toolbarTop->pushButton(0);
+
+
+                std::ofstream outfile;
+                std::string line;
+
+
+                if(toolbarResult == TB_SAVE_FILE) {
+                        std::cout << " ** saving all the codeblocks to a map ** \n";
+                        std::cout << "gamematrix size: " << gm->getRows() << ", " << gm->getCols() << "\n";
+
+
+                        std::string defaultSaveFile = "data\\maps\\_default.txt";                 // Works!
+                        std::string fullUri = getFullUri(defaultSaveFile);
+
+                        outfile.open(fullUri);
+
+
+                        if(outfile.is_open()) {
+
+                            outfile << "001,002,003\n";
+                            outfile << gm->getRows() << " - "  << gm->getCols()<< "\n";
+
+                        } else {
+                            outfile.close();
+                        }
+                }
+            }
+
+
+
             // Is it inside the gamematrix?
-            if( gm->isPosInsideGameMatrix(mousepos) == false) {
-
-                // Do nothing
-
-            } else {
-
+            if( gm->isPosInsideGameMatrix(mousepos))
+            {
 
 
                 // Find out what iso tile you clicked on        (runs recursive function, has a limiter of how many levels deep it can go)
@@ -574,16 +619,10 @@ void Core::run()
 
         if(gamemode != GAMEMODE_PAUSE) {
 
-
             /// Trains
 
             /// Buses
-
-
             trafficMgr->updateAll(viewHPos);
-
-
-
         }
 
 
@@ -595,11 +634,7 @@ void Core::run()
 
         window.clear({0, 0, 0});
 
-
-
         if(drawGm) {gm->draw(window, viewHPos);}
-
-
 
         if(drawBlocks) {
             /// Iterate list of blocklists to draw them in render order
@@ -656,7 +691,7 @@ void Core::clearResources()
 {
   /*
     delete viewHPos;
-    delete fmgr;
+    delete fm;
     trafficMgr->clearResources();
     delete trafficMgr;
     delete gm;

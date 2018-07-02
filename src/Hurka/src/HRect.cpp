@@ -8,6 +8,7 @@
 
 
 /// \brief Creates an empty rectangle with invalid values
+// (--)
 HRect::HRect()
 {
     absStart = new HPos(-1,-1, USE_ISO);
@@ -101,11 +102,15 @@ HRect::HRect(HPos *_absStartPos,
 HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 {
     absStart = _absStartPos;
+    absEnd   = _absEndPos;
     rows = _absEndPos->abs_iso_y - absStart->abs_iso_y + 1;         // Why +1? because nr of rows starts counting at 1 , not 0 like indexing is, so we have to offset the nr by 1
     cols = _absEndPos->abs_iso_x - absStart->abs_iso_x + 1 ;
 
     heightPx = -1;
-    widthPx = -1;        //FIXME: please update these values with a calculateBounds()
+    widthPx = -1;        // FIXME should these be deleted?
+
+
+
 
 
 
@@ -329,10 +334,11 @@ void HRect::fullDump(std::string ind)
 // Full Dump:
     std::cout << ind << "absStart->abs_iso_y = " << absStart->abs_iso_y << "\n";
     std::cout << ind << "absStart->abs_iso_x = " << absStart->abs_iso_x << "\n";
-    std::cout << ind << "absStart->rows = " << rows << "\n";
-    std::cout << ind << "absStart->cols = " << cols << "\n";
+    std::cout << ind << "rows = " << rows << "\n";
+    std::cout << ind << "cols = " << cols << "\n";
     std::cout << ind << "absStart->abs_iso_y + (rows-1)= " << absStart->abs_iso_y + (rows-1) << "\n";
     std::cout << ind << "absStart->abs_iso_x + (cols-1) = " << absStart->abs_iso_x + (cols-1) << "\n";
+
 }
 
 
