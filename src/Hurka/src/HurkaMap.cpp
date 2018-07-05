@@ -349,6 +349,11 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
 
 
 
+// (--)
+int **HurkaMap::getMatrix()
+{
+    return matrix;
+}
 
 
 // (-+)

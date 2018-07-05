@@ -24,9 +24,13 @@ public:
 
     HRect *getRect();
 
-    void pushButton(int relXPos);
+    void setButtonPushed(int );
+
+    int pushButton(HPos *mousepos);
 
     void resetButton(int indexNr);
+
+    void resetButtons();
 
     void draw( RenderTarget& rt, HPos *viewHPos);
 

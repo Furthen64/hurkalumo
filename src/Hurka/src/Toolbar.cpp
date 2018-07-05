@@ -65,8 +65,9 @@ void Toolbar::set_pos_by_gpix(HPos *_hpos)
 
 
 // used by Core
+/// \brief Sets the graphics of the button to be in "set" state
 // (--)
-void Toolbar::pushButton(int indexNr)
+void Toolbar::setButtonPushed(int indexNr)
 {
     if(indexNr > nrButtons) {
         std::cout << "ERROR " << cn << " pushButton index out of bounds\n";
@@ -76,11 +77,36 @@ void Toolbar::pushButton(int indexNr)
     visibleSpritesTopArr[indexNr] = !visibleSpritesTopArr[indexNr];
 }
 
+
+
+// Figure out what button the user pressed on and return the enum for that menu item
+int Toolbar::pushButton(HPos *mousepos)
+{
+    int toolbarResult = this->whatButtonDidIPress(mousepos);
+    this-> setButtonPushed(toolbarResult);
+    return toolbarResult;
+}
+
+
+
+
+
 // used by Core
 // (--)
 void Toolbar::resetButton(int indexNr)
 {
-    visibleSpritesTopArr[indexNr] = false;
+    visibleSpritesTopArr[indexNr] = true;
+}
+
+
+
+void Toolbar::resetButtons()
+{
+    for(int n = 0; n < nrButtons; n++)
+    {
+        visibleSpritesTopArr[n] = true;
+    }
+
 }
 
 
@@ -105,8 +131,10 @@ void Toolbar::draw( RenderTarget& rt, HPos *viewHPos)
 
 
 
+
+/// \brief Returns true if the given hpos is inside the rectangle of the toolbar
 /// \param mousepos An hpos with gpix values set
-// (--) TEST
+// (-+)
 bool Toolbar::isPosInsideToolbar(HPos *mousepos)
 {
 
@@ -117,8 +145,8 @@ bool Toolbar::isPosInsideToolbar(HPos *mousepos)
 
 
 
-    std::cout << "isPosInsideToolbar()------------!\n";
-    std::string ind = "   ";
+//     std::cout << "isPosInsideToolbar()------------!\n";          // FIXME delete all these stdcouts
+    // std::string ind = "   ";
 
     int tbStartY = rect->absStart->gpix_y;
     int tbStartX = rect->absStart->gpix_x;
@@ -126,8 +154,8 @@ bool Toolbar::isPosInsideToolbar(HPos *mousepos)
     int tbEndX = rect->absEnd->gpix_x;
 
 
-    std::cout << " mouse wpix ( " << mousepos->wpix_y << "," << mousepos->wpix_x << " )\n";
-    std::cout << " toolbar rect gpix ( " << rect->absStart->gpix_y << "," << rect->absStart->gpix_x << " ) -> ( " << rect->absEnd->gpix_y  << ", " << rect->absEnd->gpix_x << ")\n";
+//     std::cout << " mouse wpix ( " << mousepos->wpix_y << "," << mousepos->wpix_x << " )\n";
+    // std::cout << " toolbar rect gpix ( " << rect->absStart->gpix_y << "," << rect->absStart->gpix_x << " ) -> ( " << rect->absEnd->gpix_y  << ", " << rect->absEnd->gpix_x << ")\n";
 
 
 
@@ -135,20 +163,20 @@ bool Toolbar::isPosInsideToolbar(HPos *mousepos)
     if(mousepos->wpix_y >= tbStartY && mousepos->wpix_y <= tbEndY) {
         if(mousepos->wpix_x >= tbStartX && mousepos->wpix_x <= tbEndX) {
 
-            std::cout << "\n\n\n";
+            // std::cout << "\n\n\n";
             return true;
         }
     }
 
 
-    std::cout << "\n\n\n";
+//     std::cout << "\n\n\n";
 
     return false;
 }
 
 
 // used by Core
-// (--) test!
+// (-+)
 int Toolbar::whatButtonDidIPress(HPos *mousepos)
 {
     int toolbarInts [TOOLBAR_BUTTONS] {TB_NEW_FILE, TB_SAVE_FILE, TB_LOAD_FILE, TB_ONE, TB_TWO, TB_EXIT};
@@ -159,8 +187,8 @@ int Toolbar::whatButtonDidIPress(HPos *mousepos)
 
 
 
-    std::cout << "what button did I press()------------!\n";
-    std::string ind = "   ";
+    // std::cout << "what button did I press()------------!\n";
+    // std::string ind = "   ";
 
     int buttonStartY = rect->absStart->gpix_y;
     int buttonStartX = rect->absStart->gpix_x;
@@ -174,19 +202,19 @@ int Toolbar::whatButtonDidIPress(HPos *mousepos)
         buttonStartX = rect->absStart->gpix_x + (n *16);
 
         buttonEndY = rect->absEnd->gpix_y;
-        buttonEndX = buttonStartX + (n * 16) + 16;
+        buttonEndX = buttonStartX +  16;
 
         if(mousepos->wpix_y >= buttonStartY && mousepos->wpix_y <= buttonEndY) {
             if(mousepos->wpix_x >= buttonStartX && mousepos->wpix_x <= buttonEndX) {
 
-                std::cout << "n=" << n << ",  toolbarInts[n]=" << toolbarInts[n] << " pressed\n";
+               // std::cout << "n=" << n << ",  toolbarInts[n]=" << toolbarInts[n] << " pressed\n";
 
                 return toolbarInts[n];
             }
         }
     }
 
-    std::cout << "Warning" << cn << " whatButtonDidIPress returns TB_NONE\n";
+    // std::cout << "Warning" << cn << " whatButtonDidIPress returns TB_NONE\n";
     return TB_NONE;
 }
 

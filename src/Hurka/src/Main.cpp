@@ -42,7 +42,11 @@ int main()
 
     Core core = Core();
 
-    core.boot();
+
+    LifecycleResult *lfRes = core.lifecycle();
+
+    // For now dump output, dont react to it
+    lfRes->dump();
 
     logWindow.close();
 

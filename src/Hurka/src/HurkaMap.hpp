@@ -38,6 +38,8 @@ public:
 
     int indexInBlockList(HPos *);
 
+    int **getMatrix();
+
 
     int layerNrInBlockList(HPos *);
 

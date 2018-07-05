@@ -149,7 +149,6 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
 // (--) test!
 void GameMatrix::calculatePxBounds()
 {
-    std::cout <<"NOT TESTED void GameMatrix::calculatePxBounds()\n";
     // we have rows and cols, we DO NOT have startPos
 
     startPos = new HPos(0,0, USE_ISO);
@@ -205,6 +204,8 @@ void GameMatrix::calculatePxBounds()
 
     widthPx = maxX;
 
+
+    // FIXME is this used anywhere?
 
 }
 

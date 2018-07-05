@@ -547,3 +547,119 @@ void FileManager::printWorkingDir()
 
 
 
+
+
+
+
+//                              The structure goes like this..
+//
+//
+//                                   HurkaMap    -> std::list<Block *> blocklist, contains all the blocks , houses roads
+//                                               -> name of map
+//                                               -> map size
+//
+//                                   GameMatrix  -> map size not sure I need the gamematrix for this
+//
+//
+//                              We will save the content of this in clear text for now
+//
+
+/// \brief For now, it just dumps the matrix in hmap to file. We will assume that all the roads (101) and houses (001) data is in the matrix.
+/// \param fullUri filename
+/// \param hmap the current map
+/// \param gm the current gamematrix
+/// \return true on ok, false if something failed
+// (--) TEST!
+bool FileManager::saveRegularFile(std::string fullUri, int debugLevel, HurkaMap *hmap, GameMatrix *gm)
+{
+    bool retStatus = false;
+
+
+
+    if(fullUri == "") {
+        std::cout << "ERROR " << cn << " saveRegularFile() trying to save to empty filename!\n";
+        return false;
+    }
+
+    if(hmap == nullptr)
+    {
+        std::cout << "ERROR " << cn << " saveRegularFile() hmap is nullptr!\n";
+    }
+
+     if(gm == nullptr)
+    {
+        std::cout << "ERROR " << cn << " saveRegularFile() gm is nullptr!\n";
+    }
+
+    std::string ind1 = "   ";
+    std::string ind2 = "      ";
+    std::string ind3 = "         ";
+
+    std::ofstream outfile;
+    std::string line;
+
+
+    std::cout << "saveRegularFile NOT TESTED YET!!!\n";
+
+    // std::string defaultSaveFile = "data\\maps\\_default.txt";                 // Works!
+    // std::string fullUri = getFullUri(defaultSaveFile);
+
+    outfile.open(fullUri);
+
+    if(debugLevel >=2)
+    {
+        std::cout << ind1 << "Saving the Matrix from hmap:\n";
+        dumpMatrix(hmap->getMatrix(), hmap->getRows(), hmap->getCols(), ind2);
+    }
+
+
+
+
+
+
+    if(outfile.is_open()) {
+
+
+       // Actual file writing
+        for(int r = 0; r < hmap->getRows(); r++) {
+            for(int c = 0; c < hmap->getCols(); c++) {
+                outfile << hmap->getMatrix()[r][c] << ",";
+            }
+            outfile << "\n";
+        }
+
+        retStatus = true;   // We saved the content, everything is good
+
+    } else {
+        retStatus = false;
+    }
+
+
+    outfile.close();
+
+
+    return retStatus;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -26,16 +26,19 @@
 #include "Constants.hpp"
 #include "Utils.hpp"
 
-using namespace sf;
-
 class FileManager
 {
 public:
     FileManager();
+
     bool verifyFile(std::string fullUri, int *rows, int *cols, int debugLevel);
 
-    void printWorkingDir();
     HurkaMap *readRegularFile(std::string fullUri, int debugLevel, GameMatrix *);
+
+    bool saveRegularFile(std::string fullUri, int debugLevel, HurkaMap *, GameMatrix *);
+
+
+    void printWorkingDir();
 
 private:
 

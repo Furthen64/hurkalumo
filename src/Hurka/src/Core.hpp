@@ -32,8 +32,68 @@ using namespace sf;
 
 enum GAMEMODES { GAMEMODE_EDITOR, GAMEMODE_PAUSE };
 enum LMBMODES  { LMB_CLICK_CREATE_OR_SWAP, LMB_CLICK_CREATE, LMB_PANNING, LMB_ENQUIRE };
+enum RUNRESULTS { RUN_RESULT_QUIT, RUN_RESULT_LOAD_NEW_MAP, RUN_RESULT_NEW_MAP };
 
 
+
+
+class LifecycleResult
+{
+public:
+    LifecycleResult() {}
+    LifecycleResult(int _intReturn, std::string str1)
+    {
+        intReturn = _intReturn;
+        lfStr1 = str1;
+    }
+    ~LifecycleResult() {}
+
+
+    void dump()
+    {
+        std::cout << "lfRes:      intReturn=" << intReturn << ", lfStr1= " << lfStr1 << ", lfStr2= " << lfStr2 << ", lfStr3 = " << lfStr3 << "\n";
+
+    }
+
+    int intReturn;
+    std::string lfStr1;
+    std::string lfStr2;
+    std::string lfStr3;
+
+
+
+
+
+};
+
+// Pretty heavy return class, used by Core::run()
+class RunResult
+{
+public:
+    RunResult() {}
+    ~RunResult() {}
+
+    void dump()
+    {
+        std::cout << "runResult:      quitresult= " << quitresult << ", intReturn=" << intReturn << ", retStr1= " << retStr1 << ", retStr2= " << retStr2 << ", retStr3 = " << retStr3 << "\n";
+
+    }
+
+    int quitresult;         // See Enum RUNRESULTS
+    int intReturn = -999;       // Magic nr to know if values has been set or not (uglycode)
+    char charReturn;
+    std::string retStr1 ;   // Usually used for filename
+    std::string retStr2 ;
+    std::string retStr3 ;
+
+
+private:
+
+};
+
+
+
+// The Core , hard as fuck
 class Core
 {
 
@@ -41,7 +101,7 @@ public:
     Core();
     ~Core();
 
-    int boot();
+    LifecycleResult * lifecycle();
 
     int allocateResources();
 
@@ -49,7 +109,7 @@ public:
 
     int setup(int, int, std::string);
 
-    void run();
+    RunResult *run();
 
     void reset();
 

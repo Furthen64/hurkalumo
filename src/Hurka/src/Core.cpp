@@ -13,51 +13,126 @@ Core::~Core()
 }
 
 
-/// \brief High level function for booting up the editor
-// (-+)
-int Core::boot()
+/// \brief High level function for starting up and running the editor/game
+// Needs more testing now that it has lifecycles and not just a boot function -2018-07-05
+// (--)
+LifecycleResult *Core::lifecycle()
 {
 
-    if(runRegressionTestAndExit) {
+    // Might need a better state machine than these loosy goosy variables to control the thing
+    LifecycleResult *lifecycleResult = new LifecycleResult();
+    bool lifecycleActive = true;
+    RunResult *runResult = nullptr;
+    std::string loadNextMapFullUri = "";
+    int retResult;
 
-        std::cout << "Running Regression tests on all classes ****\n{\n";
-        HRect *hrect = new HRect();
 
-        hrect->testFunctions();
-        std::cout << "\nExiting runRegressionTest.\n}\n";
-        return 0;
+
+    //
+    /// Lifecycle loop that has several exit points
+    //
+
+    while(lifecycleActive)
+    {
+
+        std::cout << "\n\n\n\n\n\n\n\n\n";
+        std::cout << "core lifecycle() ------------------------------------------\n";
+
+
+        if(runRegressionTestAndExit) {
+
+            std::cout << "running Regression tests on all classes ****\n{\n";
+
+            HRect *hrect = new HRect();
+
+            hrect->testFunctions();
+
+            std::cout << "\nexiting runRegressionTest.\n}\n";
+            return 0;
+
+        }
+
+
+
+
+        retResult = allocateResources();
+        if(retResult != 0) {
+            std::cout << "\n\n*** Exiting with error.\n";
+            lifecycleResult = new LifecycleResult(-1, "allocateResources failed");
+            return lifecycleResult;
+        }
+
+
+
+        retResult = loadResources(                                                                                                  startmapFilename);
+        if(retResult != 0) {
+            std::cout << "\n\n*** Exiting with error.\n";
+            lifecycleResult = new LifecycleResult(-1, "loadResources failed");
+            return lifecycleResult;
+        }
+
+
+        retResult = setup(1024,768, "Hurkalumo Editor 0.1-alpha");
+        if(retResult != 0) {
+            std::cout << "\n\n*** Exiting with error.\n";
+            lifecycleResult = new LifecycleResult(-1, "setup failed");
+            return lifecycleResult;
+
+        }
+
+
+
+
+        /// Startup the game / editor
+
+        runResult = run();
+
+
+
+
+        // Usecase - Quit the editor/game
+        if(runResult->quitresult == RUN_RESULT_QUIT)
+        {
+            lifecycleActive = false;
+        }
+
+        // Usecase - User wants to load a file
+        if(runResult->quitresult == RUN_RESULT_LOAD_NEW_MAP)
+        {
+
+            loadNextMapFullUri = runResult->retStr1;    // ASSUMING it's already a full uri provided
+            std::cout << " setting  loadNextMapFullUri= " << loadNextMapFullUri;
+            lifecycleResult->intReturn = 0;
+            lifecycleResult->lfStr1 = loadNextMapFullUri;
+
+        }
+
+
+
 
     }
 
 
 
-    int result = 0;
-
-    std::cout << "\n\n\n---------------booting-------------------\n";
-
-
-    result = allocateResources();
-    if(result != 0) {
-        std::cout << "\n\n*** Exiting with error.\n"; return result;
-    }
+    // Why did we arrive here?
+    if(runResult->intReturn != -999) {
 
 
-    result = loadResources(startmapFilename);
-    if(result != 0) {
-        std::cout << "\n\n*** Exiting with error.\n"; return result;
-    }
+        // Check reasons
 
 
-    result = setup(800,600, "Hurkalumo Editor 0.1-alpha");
-    if(result != 0) {
-        std::cout << "\n\n*** Exiting with error.\n"; return result;
+
+
+    } else {
+        // We didnt even run once? Something seems off.
+        std::cout << "Warning! " << cn << "core::lifecycle() why didnt we do a core::run at least once?\n";
+
     }
 
 
 
-    run();
 
-    return result;
+    return lifecycleResult;
 }
 
 // (-+)
@@ -202,16 +277,25 @@ int Core::setup(int width, int height, std::string title)
 //  Broken Input handling
 //  Welcome to Alpha, guys!
 // (--+)
+
+// 2018-07-05           jörgen engström     CR#28       Adding some type of Lifecycle and Result classes to this thing.
+
+// Called from core:lifecycle
+
 /// \brief Run - The main loop for the editor/game
-void Core::run()
+RunResult *Core::run()
 {
+    RunResult *runResult  = new RunResult();
+
+
+
     std::string ind1 = "   ";
     std::string ind2 = "      ";
     std::string ind3 = "         ";
     std::string ind4 = "            ";
 
 
-
+    std::string userLoadFileStr = "\\data\\maps\\dijkstra1.txt";
 
 
 
@@ -240,14 +324,16 @@ void Core::run()
     // Check OPENGL for old versions or something off
 
     if(debugLevel >=2) {
-            ContextSettings settings = window.getSettings();
-            std::cout << "SFML window->OpenGL version used: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
+        ContextSettings settings = window.getSettings();
+        std::cout << "SFML window->OpenGL version used: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
     }
 
 
     if(!window.isOpen()) {
         std::cout << "ERROR " << cn << " sf::window is not open!\n";
-        return ;
+        runResult->retStr1 = "sf::window is not open\n";
+        runResult->intReturn = -1;
+        return runResult;
     }
 
     std::cout << "\n\n\n---------------run--------------------\n";
@@ -281,8 +367,16 @@ void Core::run()
         Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == Event::Closed)
+            if (event.type == Event::Closed) {
+
+
+                // usecase: User clicked on Close Window
+                runResult->retStr1 = "User clicked on Close Window.";
+                runResult->intReturn = 0;
+                runResult->quitresult = RUN_RESULT_QUIT;
+
                 window.close();
+            }
         }
 
 
@@ -485,6 +579,7 @@ void Core::run()
         // Did you let go of LMB?
         if(!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             alreadyButtonPressed = false;
+            toolbarTop->resetButtons();
         }
 
 
@@ -492,9 +587,6 @@ void Core::run()
         /// Left mouse button pressed                                                       even in paused
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !alreadyButtonPressed)
         {
-
-
-
 
             alreadyButtonPressed = true;
 
@@ -516,40 +608,50 @@ void Core::run()
 
             // Clicked on a Toolbar Button?
 
-                //std::string startmapFilename = "data\\maps\\dijkstra_test_3.txt";                 // Works!
-
-
             if( toolbarTop->isPosInsideToolbar(mousepos) == true )
             {
-                int toolbarResult = toolbarTop->whatButtonDidIPress(mousepos);
-
-
-               toolbarTop->pushButton(0);
-
+                int tbResult = toolbarTop->pushButton(mousepos);
 
                 std::ofstream outfile;
                 std::string line;
 
 
-                if(toolbarResult == TB_SAVE_FILE) {
-                        std::cout << " ** saving all the codeblocks to a map ** \n";
-                        std::cout << "gamematrix size: " << gm->getRows() << ", " << gm->getCols() << "\n";
+                switch(tbResult)
+                {
 
 
-                        std::string defaultSaveFile = "data\\maps\\_default.txt";                 // Works!
-                        std::string fullUri = getFullUri(defaultSaveFile);
-
-                        outfile.open(fullUri);
-
-
-                        if(outfile.is_open()) {
-
-                            outfile << "001,002,003\n";
-                            outfile << gm->getRows() << " - "  << gm->getCols()<< "\n";
-
-                        } else {
-                            outfile.close();
+                    case TB_NEW_FILE:
+                        runResult->intReturn = 0;
+                        runResult->quitresult = RUN_RESULT_NEW_MAP;
+                        break;
+                    case TB_LOAD_FILE:
+                        {
+                        std::cout << "TB_LOAD_FILE\n";
+                        std::string fullUri = "\\data\\maps\\dijkstra1.txt";
+                        runResult->intReturn = 0;
+                        runResult->quitresult = RUN_RESULT_LOAD_NEW_MAP;
+                        runResult->retStr1 = fullUri;
+                        break;
                         }
+                    case TB_SAVE_FILE:
+                        {
+                        std::string fullUri;
+                        fullUri = getFullUri(DEFAULT_FILENAME);
+                        fm->saveRegularFile(fullUri, debugLevel-1, hmap, gm);
+                        break;
+                        }
+
+                    case TB_EXIT:
+                        runResult->intReturn = 0;
+                        runResult->quitresult = RUN_RESULT_QUIT;
+                        break;
+                    default:
+                        std::cout << "Warning! Not reacting to user pushing toolbar button\n";
+                        break;
+                }
+
+                if(tbResult == TB_SAVE_FILE) {
+
                 }
             }
 
@@ -660,14 +762,13 @@ void Core::run()
 
 
 
-
-
-
-
-
     } // while window is open
 
 
+
+    runResult->dump();
+
+    return runResult;   // Go back to core::lifecycle with this information
 }
 
 
