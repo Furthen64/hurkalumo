@@ -36,7 +36,7 @@ LifecycleResult *Core::lifecycle()
 
 
     //
-    /// Lifecycle loop that has several exit points
+    /// Lifecycle loop
     //
 
     while(lifecycleActive)
@@ -71,7 +71,13 @@ LifecycleResult *Core::lifecycle()
 
 
 
-        retResult = loadResources(                                                                                                  startmapFilename);
+        // User clicked on Load Map in previous cycle?
+
+        if(lifecycleResult->intReturn == LF_LOAD_NEW_MAP) {
+            retResult = loadResources( lifecycleResult->lfStr1);
+        } else {
+            retResult = loadResources( startmapFilename);
+        }
         if(retResult != 0) {
             std::cout << "\n\n*** Exiting with error.\n";
             lifecycleResult = new LifecycleResult(-1, "loadResources failed");
@@ -107,10 +113,9 @@ LifecycleResult *Core::lifecycle()
         if(runResult->quitresult == RUN_RESULT_LOAD_NEW_MAP)
         {
 
-            loadNextMapFullUri = runResult->retStr1;    // ASSUMING it's already a full uri provided
-            std::cout << " setting  loadNextMapFullUri= " << loadNextMapFullUri;
-            lifecycleResult->intReturn = 0;
-            lifecycleResult->lfStr1 = loadNextMapFullUri;
+            // Setup for next lifecycle to deal with this
+            lifecycleResult->intReturn = LF_LOAD_NEW_MAP;
+            lifecycleResult->lfStr1 = runResult->retStr1;         // ASSUMING it's already a full uri provided
 
         }
 
@@ -214,11 +219,16 @@ int Core::loadResources(std::string _mapName)
     std::cout << "\n\n\n---------------loadResources-------------\n";
 
 
-    /// Read the map
-    std::cout << "Loading map \"" << _mapName << "\"\n";
 
-    hmap = fm->readRegularFile(getFullUri(_mapName),debugLevel, gm);
-    if(hmap->fullUriMapName == "empty") { std::cout << "ERROR Could not read map " << _mapName << ", exiting!\n"; return -1;  }
+    int retStatus = 0;
+
+    retStatus = loadMap(_mapName, false);
+
+    if(retStatus != 0) {
+        std::cout << "ERROR " << cn << " loadResources failed while loading map. Aborting\n";
+        return -1;
+    }
+
 
 
     /// Get the roads
@@ -234,6 +244,31 @@ int Core::loadResources(std::string _mapName)
 
     return 0;
 }
+
+
+// Used by LoadResources and the Toolbar when someone clicks on load map
+
+/// \return Returns -1 when failed, 0 when OK
+// (-+)
+int Core::loadMap(std::string _mapName, bool fullUriProvided)
+{
+
+
+    std::cout << "Loading map \"" << _mapName << "\"\n";
+    if(fullUriProvided) {
+        hmap = fm->readRegularFile(_mapName,debugLevel, gm);
+    } else {
+        hmap = fm->readRegularFile(getFullUri(_mapName),debugLevel, gm);
+    }
+
+    if(hmap->fullUriMapName == "empty") { std::cout << "ERROR Could not read map " << _mapName << ", exiting!\n"; return -1;  }
+
+
+
+    return 0;
+
+}
+
 
 
 
@@ -653,10 +688,13 @@ RunResult *Core::run()
                     case TB_LOAD_FILE:
                         {
                         std::cout << "User clicked Load File\n";
-                        std::string fullUri = "\\data\\maps\\dijkstra1.txt";
+                        std::string mapNameLoad = "\\data\\maps\\_default_.txt";
                         runResult->intReturn = 0;
                         runResult->quitresult = RUN_RESULT_LOAD_NEW_MAP;
-                        runResult->retStr1 = fullUri;
+                        runResult->retStr1 = mapNameLoad;
+
+                        window.close();
+
                         break;
                         }
                     case TB_SAVE_FILE:

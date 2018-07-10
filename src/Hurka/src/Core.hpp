@@ -33,6 +33,7 @@ using namespace sf;
 enum GAMEMODES { GAMEMODE_EDITOR, GAMEMODE_PAUSE };
 enum LMBMODES  { LMB_CLICK_CREATE_OR_SWAP, LMB_CLICK_CREATE, LMB_PANNING, LMB_ENQUIRE };
 enum RUNRESULTS { RUN_RESULT_QUIT, RUN_RESULT_LOAD_NEW_MAP, RUN_RESULT_NEW_MAP };
+enum LIFECYCLERESULTS { LF_NONE, LF_LOAD_NEW_MAP  };
 
 
 
@@ -107,6 +108,7 @@ public:
 
     int loadResources(std::string _mapName);
 
+    int loadMap(std::string _mapName, bool fullUriProvided);
     int setup(int, int, std::string);
 
     RunResult *run();
@@ -122,38 +124,31 @@ public:
 
 private:
 
-
-
     /// All the Maps
 
-
-
-    std::string startmapFilename = "data\\maps\\_default_.txt";
+    //std::string startmapFilename = "data\\maps\\_default_.txt";
     //std::string startmapFilename = "data\\maps\\simple.txt";
 
 
     //std::string startmapFilename = "data\\maps\\two_roads.txt";
     //std::string startmapFilename = "data\\maps\\garden.txt";
-    //std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
+    std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
     //std::string startmapFilename = "data\\maps\\roadnetwork_test.txt";                // Works 2018-05
-    //std::string startmapFilename = "data\\maps\\roadnetwork_long.txt";                // requires 43x43 Works 2018-05
+    //std::string startmapFilename = "data\\maps\\roadnetwork_long.txt";                // require 43x43    Works 2018-05
     //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Works 2018-05
     //std::string startmapFilename = "data\\maps\\dijkstra_test_1.txt";                 // Works!
     //std::string startmapFilename = "data\\maps\\dijkstra_test_2.txt";                 // Works!
     //std::string startmapFilename = "data\\maps\\dijkstra_test_3.txt";                 // Works!
     //std::string startmapFilename = "data\\maps\\dijkstra_test_4.txt";                 // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
-                                                                // This started when I attempted to fix the CONSUME error of the stack from dijkstraresult, 2018-05-21
-                                                                // //planForBusesOnRoadNetwork go there, set debuglevel=1 and watch
+                                                                                        // This started when I attempted to fix the CONSUME error of the stack from dijkstraresult, 2018-05-21
+                                                                                        // //planForBusesOnRoadNetwork go there, set debuglevel=1 and watch
 
-    //std::string startmapFilename = "data\\maps\\dijkstra_test_5.txt";
-    // dijkstra_test_5
-    // Tested: lot of roadnr to roadnrs! 2018-05                                 // Works!
+    //std::string startmapFilename = "data\\maps\\dijkstra_test_5.txt";                 // Tested: lot of roadnr to roadnrs!        Works!
+                                                                                        // 14 = first road on left, 26 = farthest road on the right
+                                                                                        // 53 = very low very right
 
-                // 14 = first road on left, 26 = farthest road on the right
-                // 53 = very low very right
-
-    //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";         // Bugs... somehow! not sure yet. 2018-05
-    //std::string startmapFilename = "data\\maps\\bustest3.txt";                 // Works 2018-06
+    //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Bugs... somehow! not sure yet. 2018-05
+    //std::string startmapFilename = "data\\maps\\bustest3.txt";                        // Works 2018-06
 
 
     int consoleMode = false;

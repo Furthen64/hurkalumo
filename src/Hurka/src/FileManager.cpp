@@ -541,26 +541,6 @@ void FileManager::printWorkingDir()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //                              The structure goes like this..
 //
 //
@@ -574,17 +554,15 @@ void FileManager::printWorkingDir()
 //                              We will save the content of this in clear text for now
 //
 
-/// \brief For now, it just dumps the matrix in hmap to file. We will assume that all the roads (101) and houses (001) data is in the matrix.
+/// \brief For now, it just dumps the matrix in hmap to file. We will assume that all the roads (101) and houses (001) data are in the matrix.
 /// \param fullUri filename
 /// \param hmap the current map
 /// \param gm the current gamematrix
 /// \return true on ok, false if something failed
-// (--) TEST!
+// (-+)
 bool FileManager::saveRegularFile(std::string fullUri, int debugLevel, HurkaMap *hmap, GameMatrix *gm)
 {
     bool retStatus = false;
-
-
 
     if(fullUri == "") {
         std::cout << "ERROR " << cn << " saveRegularFile() trying to save to empty filename!\n";
@@ -608,12 +586,6 @@ bool FileManager::saveRegularFile(std::string fullUri, int debugLevel, HurkaMap 
     std::ofstream outfile;
     std::string line;
 
-
-    std::cout << "saveRegularFile NOT TESTED YET!!!\n";
-
-    // std::string defaultSaveFile = "data\\maps\\_default.txt";                 // Works!
-    // std::string fullUri = getFullUri(defaultSaveFile);
-
     outfile.open(fullUri);
 
     if(debugLevel >=2)
@@ -621,11 +593,6 @@ bool FileManager::saveRegularFile(std::string fullUri, int debugLevel, HurkaMap 
         std::cout << ind1 << "Saving the Matrix from hmap:\n";
         dumpMatrix(hmap->getMatrix(), hmap->getRows(), hmap->getCols(), ind2);
     }
-
-
-
-
-
 
     if(outfile.is_open()) {
 
@@ -641,6 +608,7 @@ bool FileManager::saveRegularFile(std::string fullUri, int debugLevel, HurkaMap 
         retStatus = true;   // We saved the content, everything is good
 
     } else {
+        std::cout << "ERROR " << cn << " saveRegularFile() outfile handle is not open... Filesystem issue? Full path= \"" << fullUri << "\"\n";
         retStatus = false;
     }
 
