@@ -27,6 +27,13 @@ LifecycleResult *Core::lifecycle()
     int retResult;
 
 
+    sf::Window deleteWindow;
+    deleteWindow.create(sf::VideoMode(320, 240), "deleteWindow for HurkaLumo");
+
+    deleteWindow.display();
+
+
+
 
     //
     /// Lifecycle loop that has several exit points
@@ -135,6 +142,11 @@ LifecycleResult *Core::lifecycle()
     return lifecycleResult;
 }
 
+
+
+
+
+
 // (-+)
 int Core::allocateResources()
 {
@@ -144,13 +156,27 @@ int Core::allocateResources()
 
     /// Load the Textures
     if(debugLevel>=1) { std::cout << "Loading all the textures...\n"; }
-    textureMgr = textureMgr->getInstance();
+    textureMgr = textureMgr->getInstance();                                         // textureMgr is a singleton, this could lead to potential problems with GL_FLUSH issues that I have
+                                                                                    // experienced with using the SFML library. SOmetimes Texture object calls its destructor function
+                                                                                    // while not being in a gl context, even though there are windows open and running opengl.
+                                                                                    // Could be that the destructor function runs inside another scope alltogether.... bah, humbug!
+    if( textureMgr->nrOfTextures() <= 0 )
+    {
 
-    if(textureMgr->loadTextures() != 0) {
-        std::cout << "Core quitting. Could not load textures.\n";
-        return -1;
+        if(textureMgr->loadTextures() != 0) {
+            std::cout << "Core quitting. Could not load textures.\n";
+            return -1;
+        }
+        if(debugLevel >=1) { std::cout << " " << textureMgr->nrOfTextures() << " textures loaded!\n"; }
+
     }
-    if(debugLevel >=1) { std::cout << " " << textureMgr->nrOfTextures() << " textures loaded!\n"; }
+
+
+
+    // Viewhpos is the viewport to the gamematrix,
+    // if you wouldnt have it, you'd be looking at 0,0 to 1024,768 and the gamematrix starts at .. lets say 400,2500px .
+    // suffice to say you would not be able to see the gamematrix
+    // So.. these two values of y and x are offsets so everything gets rendered on the window canvas for you to see at somewhere around 400,2500px :)
 
 
     viewHPos = new HPos();
@@ -162,18 +188,15 @@ int Core::allocateResources()
 
     /// Allocate all our Managers and Objects
 
-    fm = new FileManager();
+    fm = new FileManager();                                             // Utility class for Loading and Saving maps
 
-    trafficMgr = new TrafficManager();
+    trafficMgr = new TrafficManager();                                  // Controls traffic, all the roadnetworks and buses
 
-    gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});          /// high level structure of game
+    gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});            // High level structure of the gameboard , maybe should be called that instead of gamematrix... alpha-0.2
 
-    loco = new Locomotive();
+    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);                   // Grid is just graphics overlayed on the GameMatrix to see where the isometric tiles are, alpha-0.2 move into GameBoard?
 
-    toolbarTop = new Toolbar(new HPos(0, 600, USE_GPIX));
-
-
-    grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);   // Grid overlayed on the GameMatrix to see where the isometric tiles are
+    toolbarTop = new Toolbar(new HPos(0, 600, USE_GPIX));               // Needs to be a Gui Widget subclass or something (BETA)
 
 
 
@@ -621,12 +644,15 @@ RunResult *Core::run()
 
 
                     case TB_NEW_FILE:
+                        std::cout << "User clicked New\n";
                         runResult->intReturn = 0;
                         runResult->quitresult = RUN_RESULT_NEW_MAP;
+                        window.close();
+
                         break;
                     case TB_LOAD_FILE:
                         {
-                        std::cout << "TB_LOAD_FILE\n";
+                        std::cout << "User clicked Load File\n";
                         std::string fullUri = "\\data\\maps\\dijkstra1.txt";
                         runResult->intReturn = 0;
                         runResult->quitresult = RUN_RESULT_LOAD_NEW_MAP;
@@ -635,6 +661,7 @@ RunResult *Core::run()
                         }
                     case TB_SAVE_FILE:
                         {
+                        std::cout << "User clicked Save File\n";
                         std::string fullUri;
                         fullUri = getFullUri(DEFAULT_FILENAME);
                         fm->saveRegularFile(fullUri, debugLevel-1, hmap, gm);
@@ -642,8 +669,13 @@ RunResult *Core::run()
                         }
 
                     case TB_EXIT:
+                        // usecase: User clicked on Quit
+                        runResult->retStr1 = "User clicked on Quit.";
                         runResult->intReturn = 0;
                         runResult->quitresult = RUN_RESULT_QUIT;
+
+                        window.close();
+
                         break;
                     default:
                         std::cout << "Warning! Not reacting to user pushing toolbar button\n";

@@ -21,7 +21,7 @@ SlotPos::SlotPos(HPos *_hpos)
     TextureManager *textureMgr;
     textureMgr = textureMgr->getInstance();
 
-    bool result = textureMgr->applyTexture(textureName, &texture);
+    bool result = textureMgr->applyTexture(textureName, &texture, false);
     if(!result) { std::cout << "ERROR Block creation, cannot find texture \"" << textureName << "\".\n";  return ;  }
 
     // Set SFML sprite

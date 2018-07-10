@@ -34,21 +34,39 @@ TextureManager* TextureManager::m_instanceSingleton = nullptr;
 
 int main()
 {
-
-    // Start up an OpenGL context for the application
-
-    sf::Window logWindow;
-    logWindow.create(sf::VideoMode(320, 240), "Log for HurkaLumo");
-
     Core core = Core();
 
-
     LifecycleResult *lfRes = core.lifecycle();
+
+    std::cout << "main: Core completed its entire lifecycle *** \n";
 
     // For now dump output, dont react to it
     lfRes->dump();
 
-    logWindow.close();
+
 
     return 0;
 }
+
+
+
+ /* bugtest
+    // Start up an OpenGL context for the application and then close it(?) testing stuff... 2018-07
+
+        sf::Window logWindow;
+        logWindow.create(sf::VideoMode(320, 240), "Log for HurkaLumo");
+        logWindow.close();
+
+        sf::Texture text;
+
+        text.loadFromFile(getFullUri("data\\textures\\LOCOMOTIVE.png"));
+        sf::Sprite sprite = Sprite(text);
+        sprite.setTextureRect( {0,0,32,32});
+
+
+        std::cout << "press any key\n";
+        getchar();
+        return 0;
+
+
+    */

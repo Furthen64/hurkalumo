@@ -32,7 +32,7 @@ public:
 
     sf::Texture getTexture(std::string _key);
 
-    bool applyTexture(std::string textureName, sf::Texture *texture);
+    bool applyTexture(std::string textureName, sf::Texture *texture, bool startGLContext);
 
     bool applyTextureById(unsigned int _textureId, sf::Texture *texture);
 
@@ -52,8 +52,8 @@ public:
 
 private:
 
-    TextureManager() { /* put code here if you want */ }
-    ~TextureManager() {}
+    TextureManager() { std::cout << "TextureManager has been allocated - SINGLETON - \n"; /* put code here if you want */ }
+    ~TextureManager() { std::cout << "TextureManager has been destroyed - SINGLETON - \n";}
 
     // private copy constructor and assignment operator
     TextureManager(const TextureManager&);
@@ -61,12 +61,9 @@ private:
 
     static TextureManager *m_instanceSingleton;
 
-
-
     std::string cn = "TextureManager.cpp";
 
     std::unordered_map<std::string,sf::Texture> textureMap;
-
 
 };
 

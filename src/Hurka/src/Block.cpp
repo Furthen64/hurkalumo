@@ -31,7 +31,7 @@ Block::Block(HPos *_hpos, std::string _textureName)
     TextureManager *textureMgr;
     textureMgr = textureMgr->getInstance();
 
-    bool result = textureMgr->applyTexture(_textureName, &texture);
+    bool result = textureMgr->applyTexture(_textureName, &texture, false);
     if(!result) { std::cout << "ERROR Block creation, cannot find texture \"" << _textureName << "\".\n";  return ;  }
 
     textureName = _textureName;
@@ -67,7 +67,7 @@ Block::Block(HPos *_hpos, int _textureId)
 
     textureName = textureMgr->getTextureNameByIndex(_textureId);
 
-    bool result = textureMgr->applyTexture(textureName, &texture);
+    bool result = textureMgr->applyTexture(textureName, &texture, false);
 
     if(!result) {
         std::cout << "ERROR Block creation, cannot find texture id \"" << _textureId << "\".\n";
@@ -131,7 +131,7 @@ void Block::setTextureByName(std::string _textureName)
     textureName = _textureName;
 
 
-    bool result = textureMgr->applyTexture(_textureName, &texture);
+    bool result = textureMgr->applyTexture(_textureName, &texture, false);
 
 
     if(!result) {

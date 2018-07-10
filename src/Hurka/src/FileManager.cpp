@@ -416,7 +416,8 @@ bool FileManager::verifyFile(std::string fullUri, int *rows, int *cols, int debu
     int nrElementsM = 0;
     unsigned int firstLineLength = 0;
     std::string line;
-
+    int lineLength = 0;
+    int lineRowNr = 0;
 
 
     if(debugLevel > 0) {
@@ -440,12 +441,14 @@ bool FileManager::verifyFile(std::string fullUri, int *rows, int *cols, int debu
         /// Get the first line
         std::getline(infile, line);
 
+        lineRowNr++;
+
 
         nrElementsM++;
         firstLineLength = line.length();
 
         if(firstLineLength%nrCharsPerElement!=0) {  // is it equyally divisable by "4" for instance...?
-            std::cout << "ERROR " << cn << ": Line not divisible by " << nrCharsPerElement << ", missing comma? missing leading zeroes? every number in the format of 001,002,003?\n";
+            std::cout << "ERROR " << cn << ": Line at row=" << lineRowNr << " is not divisible by " << nrCharsPerElement << ". Missing a comma? Missing leading zeroes? Every number in the format of 001,002,003?\n";
             infile.close();
             return false;
         }
@@ -462,27 +465,34 @@ bool FileManager::verifyFile(std::string fullUri, int *rows, int *cols, int debu
 
         /// Check rest of lines in file to see if they are the same length
 
+
         while (std::getline(infile, line))
         {
+
+            lineLength = line.length();
+
             if(debugLevel > 0) { std::cout << ind << "\"" << line << "\"  linelength=" << line.length() <<"\n"; }
 
             nrElementsM++;  // Increase M counter (Y, vertical axis)
 
             if(line.length()!= firstLineLength) {
-                std::cout << "ERROR " << cn << ": Line is not same length as the first one !\n";
+                std::cout << ind << "Line content causing error: \"" << line << "\"\n";
+                std::cout << "ERROR " << cn << ": Line at row " << lineRowNr << " has lineLength=" << lineLength << " which is not same length as the first one =" << firstLineLength << "!\n";
                 infile.close();
                 return false;
             }
 
+
+            lineRowNr++;
         }
 
 
 
-        /// Check that we have equal length on both axises (MxM)
+        /// Check that we have equal length on both axises (an MxM matrix)
 
         if(nrElementsM != nrElementsN) {
             std::cout << "ERROR " << cn << ": The file should contain an M x M matrix... " <<
-              " The amount of elements on one axis should be same as the other axis. This is an " << nrElementsM << "x" << nrElementsN << "!\n";
+                         " The amount of elements on one axis should be same as the other axis. This is an " << nrElementsM << "x" << nrElementsN << "!\n";
             infile.close();
             return false;
         }
@@ -499,7 +509,7 @@ bool FileManager::verifyFile(std::string fullUri, int *rows, int *cols, int debu
 
     } else {
         // Could not open the file
-        std::cout << "ERROR !!!" << cn << ": Could not open file \"" << fullUri << "\"!\n";
+        std::cout << "ERROR " << cn << ": Could not open file \"" << fullUri << "\"!\n";
 
         return false;
     }
@@ -623,7 +633,7 @@ bool FileManager::saveRegularFile(std::string fullUri, int debugLevel, HurkaMap 
        // Actual file writing
         for(int r = 0; r < hmap->getRows(); r++) {
             for(int c = 0; c < hmap->getCols(); c++) {
-                outfile << hmap->getMatrix()[r][c] << ",";
+                outfile << convertToOutputString(hmap->getMatrix()[r][c]) << ",";
             }
             outfile << "\n";
         }

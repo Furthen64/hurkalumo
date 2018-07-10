@@ -66,7 +66,7 @@ public:
 
 };
 
-// Pretty heavy return class, used by Core::run()
+// return class, used by Core::run()
 class RunResult
 {
 public:
@@ -128,7 +128,10 @@ private:
 
 
 
+    std::string startmapFilename = "data\\maps\\_default_.txt";
     //std::string startmapFilename = "data\\maps\\simple.txt";
+
+
     //std::string startmapFilename = "data\\maps\\two_roads.txt";
     //std::string startmapFilename = "data\\maps\\garden.txt";
     //std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
@@ -138,7 +141,7 @@ private:
     //std::string startmapFilename = "data\\maps\\dijkstra_test_1.txt";                 // Works!
     //std::string startmapFilename = "data\\maps\\dijkstra_test_2.txt";                 // Works!
     //std::string startmapFilename = "data\\maps\\dijkstra_test_3.txt";                 // Works!
-    std::string startmapFilename = "data\\maps\\dijkstra_test_4.txt";                 // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
+    //std::string startmapFilename = "data\\maps\\dijkstra_test_4.txt";                 // Issue with Graph/Roadnetworks... seems to make unecessary 0,0,0,0,0,0,0 rows ?
                                                                 // This started when I attempted to fix the CONSUME error of the stack from dijkstraresult, 2018-05-21
                                                                 // //planForBusesOnRoadNetwork go there, set debuglevel=1 and watch
 

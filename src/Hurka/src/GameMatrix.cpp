@@ -3,11 +3,9 @@
 
 
 
-/// //////////////////////////////////////////////
-/// (-+) GameMatrix is the grid with all the visible sprites oh shit, its the whole game set right?
-/// Or something. Haven't decided yet.
-///
 
+// (-+)
+// What is this class?
 
 GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
 {
@@ -24,7 +22,7 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
     int _textureId = 551;
     std::string textureName = textureMgr->getTextureNameByIndex(_textureId);
 
-    bool result = textureMgr->applyTexture(textureName, &texture);
+    bool result = textureMgr->applyTexture(textureName, &texture, true);
 
     if(!result) {
         std::cout << "ERROR GameMatrix creation, cannot find texture id \"" << _textureId << "\".\n";
@@ -191,9 +189,6 @@ void GameMatrix::calculatePxBounds()
     if(startPos == nullptr) {
         startPos = new HPos( minX, minY, USE_GPIX);
     } else {
-
-        startPos->dump("   ");
-
         startPos->gpix_x = minX;
         startPos->gpix_y = minY;
     }

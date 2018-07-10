@@ -182,7 +182,7 @@ void TextureManager::pushTexture(std::string _name, sf::Texture _texture)
 
 /// Given a key and an already loaded texture, put it into the internal storage
 ///(-+)
-bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture)
+bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture, bool startGLContext)
 {
     bool result = false;
 
@@ -192,7 +192,24 @@ bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture)
         std::cout << "ERROR " << cn << " applyTextureById could not find the texture: \"" << textureName << "\"!\n";
     } else {
         // Dereference our *texture and set it to the texture we have loaded into the hashmap
-        (*texture) = textureMap[textureName];
+
+
+
+        // ** OPENGL **
+        if(startGLContext) {
+
+            sf::Window logWindow;
+            logWindow.create(sf::VideoMode(320, 240), "HurkaLumo - temporary GL Context");
+               (*texture) = textureMap[textureName];       // FIXME: Causes crashes, if you close the main loop window and do this and open window later (ugh)
+            logWindow.close();
+
+
+
+        } else {
+            (*texture) = textureMap[textureName];       // FIXME: Causes crashes, if you close the main loop window and do this and open window later (ugh)
+        }
+
+
         result = true;
     }
 
