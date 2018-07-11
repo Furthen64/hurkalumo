@@ -25,6 +25,7 @@ int **allocateMatrix(int rows, int cols)
     }
 
 
+    // Set all values in the matrix to 0
     for(int r = 0; r < rows; r++) {
 
         for(int c = 0; c < cols; c++) {

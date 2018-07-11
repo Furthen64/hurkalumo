@@ -26,7 +26,9 @@ class HurkaMap
 public:
 
     HurkaMap(std::string _fullUriMapName, int **_matrix, int mtxRows, int mtxCols);
+    HurkaMap(int mtxRows, int mtxCols);
     ~HurkaMap();
+
 
     void draw(RenderTarget& rt, HPos *viewHPos);
 

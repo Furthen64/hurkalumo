@@ -33,7 +33,7 @@ using namespace sf;
 enum GAMEMODES { GAMEMODE_EDITOR, GAMEMODE_PAUSE };
 enum LMBMODES  { LMB_CLICK_CREATE_OR_SWAP, LMB_CLICK_CREATE, LMB_PANNING, LMB_ENQUIRE };
 enum RUNRESULTS { RUN_RESULT_QUIT, RUN_RESULT_LOAD_NEW_MAP, RUN_RESULT_NEW_MAP };
-enum LIFECYCLERESULTS { LF_NONE, LF_LOAD_NEW_MAP  };
+enum LIFECYCLERESULTS { LF_NONE, LF_LOAD_NEW_MAP, LF_EMPTY_MAP  };
 
 
 
@@ -106,6 +106,7 @@ public:
 
     int allocateResources();
 
+    int loadResources();
     int loadResources(std::string _mapName);
 
     int loadMap(std::string _mapName, bool fullUriProvided);

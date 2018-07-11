@@ -14,7 +14,11 @@ Core::~Core()
 
 
 /// \brief High level function for starting up and running the editor/game
-// Needs more testing now that it has lifecycles and not just a boot function -2018-07-05
+// Makes a Run(), looks at what happened in a run and responds accordingly.
+// Maybe user wanted to quit, maybe load a new map, maybe even clear the gameboard and start fresh with an empty map.
+// All of this is taken care in this lifecycle function.
+//
+// Needs more testing now that it has lifecycles and not just a boot function -2018-07-11
 // (--)
 LifecycleResult *Core::lifecycle()
 {
@@ -75,6 +79,13 @@ LifecycleResult *Core::lifecycle()
 
         if(lifecycleResult->intReturn == LF_LOAD_NEW_MAP) {
             retResult = loadResources( lifecycleResult->lfStr1);
+        }
+
+        // User clicked on New Map ?
+        else if( lifecycleResult->intReturn == LF_EMPTY_MAP ) {
+
+            retResult = loadResources( );
+
         } else {
             retResult = loadResources( startmapFilename);
         }
@@ -117,6 +128,11 @@ LifecycleResult *Core::lifecycle()
             lifecycleResult->intReturn = LF_LOAD_NEW_MAP;
             lifecycleResult->lfStr1 = runResult->retStr1;         // ASSUMING it's already a full uri provided
 
+        }
+
+        // Usecase - User wants a new Empty Map
+        if(runResult->quitresult == RUN_RESULT_NEW_MAP) {
+            lifecycleResult->intReturn = LF_EMPTY_MAP;
         }
 
 
@@ -203,9 +219,16 @@ int Core::allocateResources()
 
     toolbarTop = new Toolbar(new HPos(0, 600, USE_GPIX));               // Needs to be a Gui Widget subclass or something (BETA)
 
-
-
     return 0;
+}
+
+
+
+// (--)
+int Core::loadResources()
+{
+    // Start fresh, no file loading
+    return loadResources("");
 }
 
 
@@ -218,15 +241,29 @@ int Core::loadResources(std::string _mapName)
 
     std::cout << "\n\n\n---------------loadResources-------------\n";
 
+    bool loadFromFile = true;
+
+    if(_mapName == "") {
+        loadFromFile = false;
+    }
 
 
     int retStatus = 0;
 
-    retStatus = loadMap(_mapName, false);
 
-    if(retStatus != 0) {
-        std::cout << "ERROR " << cn << " loadResources failed while loading map. Aborting\n";
-        return -1;
+    /// Load from file into hmap object
+    if(loadFromFile) {
+        retStatus = loadMap(_mapName, false);
+
+        if(retStatus != 0) {
+            std::cout << "ERROR " << cn << " loadResources failed while loading map. Aborting\n";
+            return -1;
+        }
+    } else {
+
+        /// Start with a clean hmap object
+
+        hmap = new HurkaMap(gm->getRows(), gm->getCols());
     }
 
 
@@ -416,9 +453,6 @@ RunResult *Core::run()
 
     while (window.isOpen())
     {
-
-
-
 
         /// Get events
 

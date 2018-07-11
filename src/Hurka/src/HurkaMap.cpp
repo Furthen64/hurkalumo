@@ -3,7 +3,21 @@
 
 
 
-// (-+)
+
+// Used for a clean hurkamap with no data
+// (--) untested
+HurkaMap::HurkaMap(int mtxRows, int mtxCols)
+{
+
+    fullUriMapName = "";
+    matrix = allocateMatrix(mtxRows, mtxCols);
+    matrixRows = mtxRows;
+    matrixCols = mtxCols;
+}
+
+
+// Has been working for quite some time now, months
+// (+-)
 HurkaMap::HurkaMap(std::string _fullUriMapName, int **_matrix, int mtxRows, int mtxCols)
 {
 
