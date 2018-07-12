@@ -4,9 +4,10 @@
 
 #include <string>
 #include <iostream>
+#include <SFML/Graphics.hpp>
 /*
 #include <unordered_map>
-#include <SFML/Graphics.hpp>
+
 #include <exception>
 #include "../Constants.hpp"
 */
@@ -22,6 +23,7 @@ public:
             m_instanceSingleton;
     }
 
+    sf::Context sfContext;
 
     int doSomething();
 

@@ -1695,7 +1695,7 @@
 1527080825 source:c:\github\lumo\src\hurka\src\hurkamatrix.cpp
 	"HurkaMatrix.hpp"
 
-1531390189 source:c:\github\lumo\src\hurka\src\main.cpp
+1531393339 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
 1531391113 c:\github\lumo\src\hurka\src\core.hpp
@@ -2231,7 +2231,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1531392470 source:c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.cpp
+1531392648 source:c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.cpp
 	"GLContextSingleton.hpp"
 	<iostream>
 	<fstream>
@@ -2255,11 +2255,11 @@
 	<string>
 	"../Utils.hpp"
 
-1531392598 c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.hpp
+1531393319 c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.hpp
 	<string>
 	<iostream>
-	<unordered_map>
 	<SFML/Graphics.hpp>
+	<unordered_map>
 	<exception>
 	"../Constants.hpp"
 

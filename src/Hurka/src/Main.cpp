@@ -3,7 +3,7 @@
 
 
 /// REDESIGN
-// 2018-06-22 jörgen engström     #CR24  Trying to remove annoying bug... Need to have sf::renderwindow exist before allocating any sf::texture object.
+// 2018-06-22 jörgen engström     #CR29  Trying to remove annoying bug... Need to have sf::renderwindow exist before allocating any sf::texture object.
 
 
 
@@ -35,7 +35,13 @@ int main()
     // If we only create the primary windows (main menu, game window, editor window) that gets open and closed,
     // we suffer issues with SFML Texture objects...  See CR#29 at github
 
-    sf::Context context;
+
+    GLContextSingleton *ctx;
+    ctx = ctx->getInstance();
+    // Now we have a context, let's make it the active one
+    ctx->sfContext.setActive(true);
+
+
 
     Core core = Core();
 

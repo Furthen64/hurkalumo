@@ -399,9 +399,18 @@ RunResult *Core::run()
     bool inputCooldownActive = false;
 
 
-    // Main Window
+    /// Main Window
+
+
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, desktop.bitsPerPixel), "HurkaLumo editor 0.1-alpha");
+    // Move the control of glContext to this window
+    GLContextSingleton *ctx;
+    ctx = ctx->getInstance();
+    ctx->sfContext.setActive(false);
+    window.setActive(true);
+
+
 
     if(lockFPS) {
         window.setFramerateLimit(lockFPS_n);
@@ -861,6 +870,10 @@ RunResult *Core::run()
     } // while window is open
 
 
+
+
+    // Now that the Window is closed, move over the glcontext to the global context
+    ctx->sfContext.setActive(true);
 
     runResult->dump();
 
