@@ -8,7 +8,7 @@ class RoadNetwork;
 
 
 #include "GameMatrix.hpp"
-#include "TextureManager.hpp"
+#include "Singletons/TextureManager.hpp"
 #include "HurkaMatrix.hpp"
 #include "Block.hpp"
 #include "Grid.hpp"

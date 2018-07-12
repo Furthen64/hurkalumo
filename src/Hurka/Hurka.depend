@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1531266497 source:c:\github\lumo\src\hurka\src\core.cpp
+1531388704 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1529931567 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1589,7 +1589,7 @@
 	<exception>
 	"Constants.hpp"
 
-1530907895 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
+1531388896 source:c:\github\lumo\src\hurka\src\texturemanager.cpp
 	"TextureManager.hpp"
 	<iostream>
 	<fstream>
@@ -1608,10 +1608,10 @@
 1531263645 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
-1529674966 c:\github\lumo\src\hurka\src\gamematrix.hpp
+1531391088 c:\github\lumo\src\hurka\src\gamematrix.hpp
 	<iostream>
 	<SFML/Graphics.hpp>
-	"TextureManager.hpp"
+	"Singletons/TextureManager.hpp"
 	"Grid.hpp"
 	"Constants.hpp"
 	"HRect.hpp"
@@ -1621,9 +1621,9 @@
 1530907958 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
-1529962580 c:\github\lumo\src\hurka\src\block.hpp
+1531391093 c:\github\lumo\src\hurka\src\block.hpp
 	<SFML/Graphics.hpp>
-	"TextureManager.hpp"
+	"Singletons/TextureManager.hpp"
 	"GameMatrix.hpp"
 	"Constants.hpp"
 
@@ -1638,7 +1638,7 @@
 1531266042 source:c:\github\lumo\src\hurka\src\filemanager.cpp
 	"FileManager.hpp"
 
-1531265619 c:\github\lumo\src\hurka\src\filemanager.hpp
+1531391098 c:\github\lumo\src\hurka\src\filemanager.hpp
 	<stdio.h>
 	<exception>
 	<unistd.h>
@@ -1648,7 +1648,7 @@
 	<sstream>
 	<string>
 	<SFML/Graphics.hpp>
-	"TextureManager.hpp"
+	"Singletons/TextureManager.hpp"
 	"HurkaMap.hpp"
 	"Constants.hpp"
 	"Utils.hpp"
@@ -1667,10 +1667,10 @@
 	"Bus.hpp"
 	"RoadNetwork.hpp"
 
-1529430548 c:\github\lumo\src\hurka\src\bus.hpp
+1531391100 c:\github\lumo\src\hurka\src\bus.hpp
 	<SFML/Graphics.hpp>
 	"GameMatrix.hpp"
-	"TextureManager.hpp"
+	"Singletons/TextureManager.hpp"
 	"HurkaMatrix.hpp"
 	"Block.hpp"
 	"Grid.hpp"
@@ -1695,10 +1695,10 @@
 1527080825 source:c:\github\lumo\src\hurka\src\hurkamatrix.cpp
 	"HurkaMatrix.hpp"
 
-1531263654 source:c:\github\lumo\src\hurka\src\main.cpp
+1531390189 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
 
-1531340850 c:\github\lumo\src\hurka\src\core.hpp
+1531391113 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1710,7 +1710,8 @@
 	"Constants.hpp"
 	"Utils.hpp"
 	"Grid.hpp"
-	"TextureManager.hpp"
+	"Singletons/TextureManager.hpp"
+	"Singletons/GLContextSingleton.hpp"
 	"Toolbar.hpp"
 	"TrafficManager.hpp"
 	"GameMatrix.hpp"
@@ -1798,9 +1799,9 @@
 1530907969 source:c:\github\lumo\src\hurka\src\slotpos.cpp
 	"SlotPos.hpp"
 
-1526130840 c:\github\lumo\src\hurka\src\slotpos.hpp
+1531391102 c:\github\lumo\src\hurka\src\slotpos.hpp
 	<SFML/Graphics.hpp>
-	"TextureManager.hpp"
+	"Singletons/TextureManager.hpp"
 	"HPos.hpp"
 
 1529618792 source:c:\github\lumo\src\hurka\src\slotpath.cpp
@@ -2229,4 +2230,36 @@
 	<SFML/Graphics/PrimitiveType.hpp>
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
+
+1531392470 source:c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.cpp
+	"GLContextSingleton.hpp"
+	<iostream>
+	<fstream>
+	<list>
+	<string>
+	"../Utils.hpp"
+
+1531391073 c:\github\lumo\src\hurka\src\singletons\texturemanager.hpp
+	<string>
+	<iostream>
+	<unordered_map>
+	<SFML/Graphics.hpp>
+	<exception>
+	"../Constants.hpp"
+
+1531391081 source:c:\github\lumo\src\hurka\src\singletons\texturemanager.cpp
+	"TextureManager.hpp"
+	<iostream>
+	<fstream>
+	<list>
+	<string>
+	"../Utils.hpp"
+
+1531392598 c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.hpp
+	<string>
+	<iostream>
+	<unordered_map>
+	<SFML/Graphics.hpp>
+	<exception>
+	"../Constants.hpp"
 

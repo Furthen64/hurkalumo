@@ -5,7 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "TextureManager.hpp"
+#include "Singletons/TextureManager.hpp"
 #include "GameMatrix.hpp"
 #include "Constants.hpp"
 

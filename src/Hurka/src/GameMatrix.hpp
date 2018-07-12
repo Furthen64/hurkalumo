@@ -4,7 +4,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "TextureManager.hpp"
+#include "Singletons/TextureManager.hpp"
 #include "Grid.hpp"
 #include "Constants.hpp"
 #include "HRect.hpp" // <-- #include "HPos.hpp"

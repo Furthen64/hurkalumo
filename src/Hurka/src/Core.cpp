@@ -31,14 +31,6 @@ LifecycleResult *Core::lifecycle()
     int retResult;
 
 
-    sf::Window deleteWindow;
-    deleteWindow.create(sf::VideoMode(320, 240), "deleteWindow for HurkaLumo");
-
-    deleteWindow.display();
-
-
-
-
     //
     /// Lifecycle loop
     //

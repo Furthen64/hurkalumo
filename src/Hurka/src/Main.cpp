@@ -18,22 +18,25 @@
 /// Wishlist, wouldn't it be nice with a WindowManager holding vars like:
 ///         * RenderWindow
 ///         * inputs
-///         * viewPos  so you wouldn't have to pass it along to all draw functions
+///         * viewPos  so you wouldn't have to pass it along to all draw functions  =>      sfml library has a View that I should look into (no pun intended)
 
 
 
 
-
-
-
-
-/// GLOBALS
-
+// My two singletons, maybe a third one on the way which carry high level settings
 TextureManager* TextureManager::m_instanceSingleton = nullptr;
+GLContextSingleton* GLContextSingleton::m_instanceSingleton = nullptr;
 
 
 int main()
 {
+
+    // Create an sf::Context so that OpenGL calls have a GL Context to work with.
+    // If we only create the primary windows (main menu, game window, editor window) that gets open and closed,
+    // we suffer issues with SFML Texture objects...  See CR#29 at github
+
+    sf::Context context;
+
     Core core = Core();
 
     LifecycleResult *lfRes = core.lifecycle();
@@ -47,26 +50,3 @@ int main()
 
     return 0;
 }
-
-
-
- /* bugtest
-    // Start up an OpenGL context for the application and then close it(?) testing stuff... 2018-07
-
-        sf::Window logWindow;
-        logWindow.create(sf::VideoMode(320, 240), "Log for HurkaLumo");
-        logWindow.close();
-
-        sf::Texture text;
-
-        text.loadFromFile(getFullUri("data\\textures\\LOCOMOTIVE.png"));
-        sf::Sprite sprite = Sprite(text);
-        sprite.setTextureRect( {0,0,32,32});
-
-
-        std::cout << "press any key\n";
-        getchar();
-        return 0;
-
-
-    */

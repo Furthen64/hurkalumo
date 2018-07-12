@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "TextureManager.hpp"
+#include "Singletons/TextureManager.hpp"
 
 #include "HPos.hpp"
 

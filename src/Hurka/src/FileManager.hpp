@@ -21,7 +21,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "TextureManager.hpp"
+#include "Singletons/TextureManager.hpp"
 #include "HurkaMap.hpp"
 #include "Constants.hpp"
 #include "Utils.hpp"

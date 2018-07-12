@@ -13,7 +13,8 @@
 #include "Constants.hpp"
 #include "Utils.hpp"
 #include "Grid.hpp"
-#include "TextureManager.hpp"
+#include "Singletons/TextureManager.hpp"
+#include "Singletons/GLContextSingleton.hpp"
 #include "Toolbar.hpp"
 #include "TrafficManager.hpp"       // ==> RoadNetwork.hpp
                                     // ==> Bus.hpp
