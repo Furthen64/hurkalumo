@@ -31,11 +31,9 @@ GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
 
     sprite = Sprite(texture);
 
-
     if( (rows%2 != 0) || (cols%2 != 0)) {
         std::cout << "Warning! GameMatrix height Not divisible by 2! \n";
     }
-    std::cout << "1\n";
 }
 
 
@@ -56,12 +54,11 @@ int GameMatrix::getRows()
 
 
 
-// (--) test
+// (-+)
 HRect *GameMatrix::getHRect()
 {
     return new HRect(0,0, rows, cols, heightPx, widthPx);
 }
-
 
 
 
@@ -92,7 +89,7 @@ bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
 /// Wishlist: Add Clipping to this!
 ///           If you are drawing outside the viewing 800x600 px window, you could just NOT draw that sprite, make ac
 ///           clipping rectangle and compare to it
-/// (-+)
+// (-+)
 void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
 {
     minX = 9990;

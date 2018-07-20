@@ -90,12 +90,14 @@
 		<Unit filename="src/Node.hpp" />
 		<Unit filename="src/RoadNetwork.cpp" />
 		<Unit filename="src/RoadNetwork.hpp" />
+		<Unit filename="src/Singletons/GLContextSingleton.cpp" />
+		<Unit filename="src/Singletons/GLContextSingleton.hpp" />
+		<Unit filename="src/Singletons/TextureManager.cpp" />
+		<Unit filename="src/Singletons/TextureManager.hpp" />
 		<Unit filename="src/SlotPath.cpp" />
 		<Unit filename="src/SlotPath.hpp" />
 		<Unit filename="src/SlotPos.cpp" />
 		<Unit filename="src/SlotPos.hpp" />
-		<Unit filename="src/TextureManager.cpp" />
-		<Unit filename="src/TextureManager.hpp" />
 		<Unit filename="src/Toolbar.cpp" />
 		<Unit filename="src/Toolbar.hpp" />
 		<Unit filename="src/TrafficManager.cpp" />

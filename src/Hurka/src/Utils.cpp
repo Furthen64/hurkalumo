@@ -1,5 +1,27 @@
 #include "Utils.hpp"
 
+#include "Singletons/GLContextSingleton.hpp"
+
+
+// This is a function for GLContextSingleton
+// (--)
+void enableFallbackContext()
+{
+    GLContextSingleton *ctx;
+    ctx = ctx->getInstance();
+
+    // Now we have a context, let's make it the active one
+    ctx->sfContext.setActive(true);
+}
+
+void disableFallbackContext()
+{
+    GLContextSingleton *ctx;
+    ctx = ctx->getInstance();
+
+    // Now we have a context, disable it
+    ctx->sfContext.setActive(false);
+}
 
 
 

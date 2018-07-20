@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1531388704 source:c:\github\lumo\src\hurka\src\core.cpp
+1531430056 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1529931567 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1605,7 +1605,7 @@
 	"HRect.hpp"
 	"Utils.hpp"
 
-1531263645 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
+1531430138 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
 1531391088 c:\github\lumo\src\hurka\src\gamematrix.hpp
@@ -1677,7 +1677,7 @@
 	"BusRoute.hpp"
 	"SlotPath.hpp"
 
-1529427241 c:\github\lumo\src\hurka\src\utils.hpp
+1531430043 c:\github\lumo\src\hurka\src\utils.hpp
 	<iostream>
 	<time.h>
 	<random>
@@ -1685,8 +1685,9 @@
 	<direct.h>
 	"HurkaMatrix.hpp"
 
-1531341070 source:c:\github\lumo\src\hurka\src\utils.cpp
+1531430035 source:c:\github\lumo\src\hurka\src\utils.cpp
 	"Utils.hpp"
+	"Singletons/GLContextSingleton.hpp"
 
 1527080725 c:\github\lumo\src\hurka\src\hurkamatrix.hpp
 	"HPos.hpp"
@@ -1695,8 +1696,9 @@
 1527080825 source:c:\github\lumo\src\hurka\src\hurkamatrix.cpp
 	"HurkaMatrix.hpp"
 
-1531393339 source:c:\github\lumo\src\hurka\src\main.cpp
+1531429944 source:c:\github\lumo\src\hurka\src\main.cpp
 	"Core.hpp"
+	"Utils.hpp"
 
 1531391113 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
@@ -2231,7 +2233,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1531392648 source:c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.cpp
+1531429912 source:c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.cpp
 	"GLContextSingleton.hpp"
 	<iostream>
 	<fstream>
@@ -2239,7 +2241,7 @@
 	<string>
 	"../Utils.hpp"
 
-1531391073 c:\github\lumo\src\hurka\src\singletons\texturemanager.hpp
+1531430218 c:\github\lumo\src\hurka\src\singletons\texturemanager.hpp
 	<string>
 	<iostream>
 	<unordered_map>
@@ -2255,7 +2257,7 @@
 	<string>
 	"../Utils.hpp"
 
-1531393319 c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.hpp
+1531429973 c:\github\lumo\src\hurka\src\singletons\glcontextsingleton.hpp
 	<string>
 	<iostream>
 	<SFML/Graphics.hpp>

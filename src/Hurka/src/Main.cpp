@@ -1,5 +1,5 @@
 #include "Core.hpp"
-
+#include "Utils.hpp"
 
 
 /// REDESIGN
@@ -28,20 +28,16 @@ TextureManager* TextureManager::m_instanceSingleton = nullptr;
 GLContextSingleton* GLContextSingleton::m_instanceSingleton = nullptr;
 
 
+
+
 int main()
 {
 
-    // Create an sf::Context so that OpenGL calls have a GL Context to work with.
+    // First time you run enableFallBackContext, an sf::Context will be created,
+    // so that OpenGL calls have a GL Context to work with.
     // If we only create the primary windows (main menu, game window, editor window) that gets open and closed,
     // we suffer issues with SFML Texture objects...  See CR#29 at github
-
-
-    GLContextSingleton *ctx;
-    ctx = ctx->getInstance();
-    // Now we have a context, let's make it the active one
-    ctx->sfContext.setActive(true);
-
-
+    enableFallbackContext();
 
     Core core = Core();
 
@@ -51,7 +47,6 @@ int main()
 
     // For now dump output, dont react to it
     lfRes->dump();
-
 
 
     return 0;

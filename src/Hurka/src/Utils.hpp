@@ -16,6 +16,8 @@
 
 #include "HurkaMatrix.hpp"
 
+void enableFallbackContext();
+void disableFallbackContext();
 int **allocateMatrix(int rows, int cols);
 void dumpMatrix(int** matrix, int rows, int cols, std::string);
 int **copySubMatrix(int **srcMtx, int srcRows, int srcCols, int startY, int startX, int height, int width,int debugLevel);

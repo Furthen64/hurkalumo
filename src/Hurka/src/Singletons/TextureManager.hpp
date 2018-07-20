@@ -17,7 +17,6 @@ class TextureManager
 public:
 
 
-
     static TextureManager* getInstance() {
 
         return (!m_instanceSingleton) ?
@@ -52,8 +51,8 @@ public:
 
 private:
 
-    TextureManager() { std::cout << "TextureManager has been allocated - SINGLETON - \n"; /* put code here if you want */ }
-    ~TextureManager() { std::cout << "TextureManager has been destroyed - SINGLETON - \n";}
+    TextureManager() {  }
+    ~TextureManager() { }
 
     // private copy constructor and assignment operator
     TextureManager(const TextureManager&);

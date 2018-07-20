@@ -29,8 +29,8 @@ public:
 
 private:
 
-    GLContextSingleton() { std::cout << "GLContextSingleton has been allocated - SINGLETON - \n"; }
-    ~GLContextSingleton() { std::cout << "GLContextSingleton has been destroyed - SINGLETON - \n";}
+    GLContextSingleton() { }
+    ~GLContextSingleton() { }
 
     // private copy constructor and assignment operator
     GLContextSingleton(const GLContextSingleton&);

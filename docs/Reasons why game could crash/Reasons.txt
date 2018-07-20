@@ -1,0 +1,40 @@
+In Case of Crashes
+Typically these have to do with driver incompatibilities or issues with the Steam
+client.
+? Make sure Steam is Really, Truly Running – For reasons unknown to
+anyone, sometimes Steam doesn’t report itself as running, and you’ll get
+an error message letting you know. Fully exit Steam and restart if this
+happens.
+? Make sure Steam is Done Updating – If you start a game at just the wrong
+moment, you can catch it in the midst of a Steam update. It’ll try to start
+and hang. The only way out of this is to terminate and start over.
+? Disable the Steam Overlay – This is the most common source of startup
+crashes as Steam modifies game code at runtime in order to work, but it
+isn’t compatible with all video cards.
+? Update Your Video Drivers – An old driver can wreak havoc.
+? Make Sure It’s Using The Right Card – Many new computers come with a
+low-power GPU in addition to a fast dedicated graphics card by NVIdia or
+AMD. You may have to use your graphics card’s software to specify that
+it should run AV on the faster card rather than the integrated one.
+? Check the Min Specs – The current min specs are posted on the Steam
+store page; it’s possible that the card you are using is simply too old to run
+the game.
+? Uninstall and Reinstall – Steam appears to corrupt downloads at an
+unusual rate. Sometimes this is the only way around it.
+? In Linux – There is a crash experienced by some users initializing the audio
+device. For some users switching to Pulseaudio resolved the issue.
+? Windows 10 + NVidia – If you are hanging at startup, many users have
+reported that going into the NVidia control panel and enabling FXAA will
+solve the issue.
+? AMD Triplebuffering – AMD has an option to enable triblebuffering for
+OpenGL, either globally or individually, which works similarly to VSync and
+helps prevent tearing. For AV this will (or can) cause a crash.
+Unfortunately the individual setting doesn’t always work and you may
+need to disable triblebuffering globally.
+? Crashes on Save/Load of Save game – Save games are Rijndael
+encrypted to keep speedrunners somewhat honest, but some windows
+machines disable this. To enable, you need to run “regedit” and search
+for
+“HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\FipsAlgorithmPolicy”
+and set enable to 0. (This is fixed in newer versions of AV, but, incidentally,
+disabling FIPS is actually a good thing in most cases, just google it).
