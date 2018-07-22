@@ -15,15 +15,14 @@ Core::~Core()
 
 /// \brief High level function for starting up and running the editor/game
 // Makes a Run(), looks at what happened in a run and responds accordingly.
-// Maybe user wanted to quit, maybe load a new map, maybe even clear the gameboard and start fresh with an empty map.
+// Maybe user wanted to quit, load a new map or maybe even clear the gameboard and start fresh with an empty map.
 // All of this is taken care in this lifecycle function.
 //
-// Needs more testing now that it has lifecycles and not just a boot function -2018-07-11
-// (--)
+// (--) // FIXME: Needs more testing 2018-07-11
 LifecycleResult *Core::lifecycle()
 {
 
-    // Might need a better state machine than these loosy goosy variables to control the thing
+    // Alpha-0.2: Might need a better state machine than these loosy goosy variables to control the thing
     LifecycleResult *lifecycleResult = new LifecycleResult();
     bool lifecycleActive = true;
     RunResult *runResult = nullptr;
@@ -46,12 +45,100 @@ LifecycleResult *Core::lifecycle()
 
             std::cout << "running Regression tests on all classes ****\n{\n";
 
-            HRect *hrect = new HRect();
 
-            hrect->testFunctions();
+            /// HRect
+            {
+                HRect *hrect = new HRect();
+                hrect->testFunctions();
+            }
 
-            std::cout << "\nexiting runRegressionTest.\n}\n";
-            return 0;
+
+            /// HurkaMap and RoadNetwork
+            {
+                debugLevel = 1;
+                int retStatus = -1;
+                std::string roadnetMap = "data\\maps\\roadnetwork_test.txt";
+
+
+
+                enableFallbackContext();
+
+
+
+
+                // Load a specific test map for the RoadNetwork class
+
+                TextureManager *txtmgr;
+                txtmgr= txtmgr->getInstance();
+                retStatus = txtmgr->loadTextures();
+
+
+
+
+                GameMatrix *gamematrix = new GameMatrix(64,64);
+
+
+
+
+
+
+                assert(retStatus == 0);
+
+                HurkaMap *hmap = fm->readRegularFile(getFullUri(roadnetMap),debugLevel, gamematrix);
+
+                HurkaMatrix *hmatrix = hmap->getRoadHMatrix();
+
+                assert(hmap != nullptr);
+
+                assert(hmap->fullUriMapName != "empty");
+
+
+                assert(hmatrix->rows < 10000);
+
+                assert(hmatrix->cols < 10000);
+
+                TrafficManager *tmgr = new TrafficManager();
+
+
+
+                retStatus = tmgr->readRoadNetworksFromHMatrix(hmatrix, debugLevel);
+
+                assert(retStatus == 0);
+
+
+                // Now do spot checks where we assume there should be a road (1:s)
+                assert(tmgr->nrOfRoadnetworks() >0);
+
+                RoadNetwork *largestRn = tmgr->roadNetworkAtPos(new HPos(1,1, USE_ISO));      // At (1,1) we should find the largest roadnetwork
+                RoadNetwork *smallestRn = tmgr->roadNetworkAtPos(new HPos(4,4, USE_ISO));     // At e.g. (4,4) is the other one
+
+
+                assert(largestRn != nullptr);
+                assert(smallestRn != nullptr);
+
+
+                assert(largestRn->getMatrix()[1][1] == 0);
+                assert(largestRn->getMatrix()[2][2] == 0);
+
+
+                assert(largestRn->getMatrix()[0][0] == 1);
+                assert(largestRn->getMatrix()[9][0] == 1);
+                assert(largestRn->getMatrix()[0][6] == 1);
+
+
+
+            }
+
+            lifecycleResult = new LifecycleResult(0, "OK");
+            runResult = new RunResult();
+            runResult->intReturn = 0;
+            runResult->quitresult = RUN_RESULT_QUIT;
+
+            allTestsSucceeded();
+
+
+            std::cout << "\n *** exiting runRegressionTest.\n}\n";
+            return lifecycleResult;
 
         }
 
@@ -205,7 +292,7 @@ int Core::allocateResources()
 
     trafficMgr = new TrafficManager();                                  // Controls traffic, all the roadnetworks and buses
 
-    gm = new GameMatrix({NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH,1});            // High level structure of the gameboard , maybe should be called that instead of gamematrix... alpha-0.2
+    gm = new GameMatrix(NR_GRIDS_HEIGHT,NR_GRIDS_WIDTH);            // High level structure of the gameboard , maybe should be called that instead of gamematrix... alpha-0.2
 
     grid = new Grid(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);                   // Grid is just graphics overlayed on the GameMatrix to see where the isometric tiles are, alpha-0.2 move into GameBoard?
 
@@ -319,7 +406,7 @@ int Core::setup(int width, int height, std::string title)
 
     if(debugLevel >=1) {    std::cout << "\n\nParsing current Roads....\n"; }
 
-    status = trafficMgr->parseCurrentRoads(roadMatrix, 0);
+    status = trafficMgr->readRoadNetworksFromHMatrix(roadMatrix, 0);
 
     if(debugLevel >=1) {        std::cout << "                          complete!\n"; }
 
@@ -880,19 +967,6 @@ RunResult *Core::run()
 }
 
 
-// (--)
-void Core::reset()
-{
-    std::cout << "\n\n\n---------------** RESET **-------------------\n";
-    // Clear resources
-    // Boot game
-    // Allocate
-    // Load
-    // Setup
-    // Run
-}
-
-
 
 // Not sure how I want this to work
 // And having issues with SFML doing weird error messsages.... I disable all delete (https://en.sfml-dev.org/forums/index.php?topic=10247.0)
@@ -915,3 +989,29 @@ void Core::clearResources()
 
 
 
+
+void Core::allTestsSucceeded()
+{
+
+
+
+
+    std::cout <<  "   _   _ _    _            _                                     _          _   _ \n";
+    std::cout <<   "  /_\\ | | |  | |_ ___  ___| |_ ___    ___ _   _  ___ ___ ___  __| | ___  __| | / \\\n",
+    std::cout <<   " //_\\\\| | |  | __/ _ \\/ __| __/ __|  / __| | | |/ __/ __/ _ \\/ _` |/ _ \\/ _` |/  /\n",
+    std::cout <<   "/  _  \\ | |  | ||  __/\\__ \\ |_\\__ \\  \\__ \\ |_| | (_| (_|  __/ (_| |  __/ (_| /\\_/ \n",
+    std::cout <<   "\\_/ \\_/_|_|   \\__\\___||___/\\__|___/  |___/\\__,_|\\___\\___\\___|\\__,_|\\___|\\__,_\\/   \n",
+    std::cout <<   "                                                                                  \n";
+
+
+
+    /*
+     _   _ _    _            _                                     _          _   _
+      /_\ | | |  | |_ ___  ___| |_ ___    ___ _   _  ___ ___ ___  __| | ___  __| | / \
+     //_\\| | |  | __/ _ \/ __| __/ __|  / __| | | |/ __/ __/ _ \/ _` |/ _ \/ _` |/  /
+    /  _  \ | |  | ||  __/\__ \ |_\__ \  \__ \ |_| | (_| (_|  __/ (_| |  __/ (_| /\_/
+    \_/ \_/_|_|   \__\___||___/\__|___/  |___/\__,_|\___\___\___|\__,_|\___|\__,_\/
+
+    */
+
+}

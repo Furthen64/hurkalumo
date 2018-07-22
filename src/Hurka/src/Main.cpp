@@ -45,7 +45,13 @@ int main()
 
     std::cout << "main: Core completed its entire lifecycle *** \n";
 
+    if(lfRes == nullptr) {
+            std::cout << "ERROR main received LifecycleResult = nullptr.\n";
+            return -1;
+    }
+
     // For now dump output, dont react to it
+
     lfRes->dump();
 
 

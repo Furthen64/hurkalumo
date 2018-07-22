@@ -27,7 +27,7 @@ class GameMatrix
 public:
 
     GameMatrix() {}
-    GameMatrix(int _height, int _width, int _textureID);
+    GameMatrix(int _rows, int _cols);
 
 
     int getCols();
@@ -54,7 +54,6 @@ private:
     int widthPx;
     int heightPx;
 
-   // int textureID; DELETEME
     Sprite sprite;
     Texture texture;
 

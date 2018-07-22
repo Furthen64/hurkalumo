@@ -115,11 +115,11 @@ public:
 
     RunResult *run();
 
-    void reset();
-
     void clearResources();
 
     void updateTraffic();
+
+    void allTestsSucceeded();
 
 
 
@@ -133,8 +133,8 @@ private:
 
 
     //std::string startmapFilename = "data\\maps\\two_roads.txt";
-    //std::string startmapFilename = "data\\maps\\garden.txt";
-    std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
+    std::string startmapFilename = "data\\maps\\garden.txt";
+    //std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
     //std::string startmapFilename = "data\\maps\\roadnetwork_test.txt";                // Works 2018-05
     //std::string startmapFilename = "data\\maps\\roadnetwork_long.txt";                // require 43x43    Works 2018-05
     //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Works 2018-05

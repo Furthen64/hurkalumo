@@ -3,10 +3,13 @@
 
 
 
+
+
 #include <iostream>
 #include <fstream>
 #include <list>
 #include <string>
+#include <utility>
 
 #include "../Utils.hpp"
 
@@ -29,10 +32,17 @@
 // "H001" which means HOUSE001 , maps it to the first house texture   etc.
 
 
-// Returns 0 on ok , -1 on failure
-// (-+)
+/// \brief CLears all already loaded textures and loads all textures as listed in "textures.txt"
+/// \return 0 on OK, -1 on failure
+// (--)
 int TextureManager::loadTextures()
 {
+
+    // Clear all the old ones
+    textureMap.clear();
+    loadedTextures = false;
+
+
     sf::Texture txt;
     bool failed = false;
 
@@ -90,10 +100,10 @@ int TextureManager::loadTextures()
     }
 
     if(failed) {
-            return -1;
+       return -1;
     }
 
-
+    loadedTextures = true;
     return 0;
 }
 
@@ -179,9 +189,26 @@ void TextureManager::pushTexture(std::string _name, sf::Texture _texture)
     textureMap.insert( {_name, _texture});
 }
 
+void TextureManager::dump()
+{
+    std::cout << "\n\nTextureManager.dump()\n----------------------\n{\n";
+
+    for( std::unordered_map<std::string, sf::Texture>::const_iterator it = textureMap.begin(); it != textureMap.end(); ++it)
+    {
+        std::pair<std::string, sf::Texture> pair1 = (*it);
+
+        std::cout << " texturename=" << (std::string) pair1.first << "\n";
+    }
+
+    std::cout << "}\n";
+}
+
+
+
+
 
 /// Given a key and an already loaded texture, put it into the internal storage
-//(--) buggy for now
+//(--) buggy for now 2018-07
 bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture, bool startGLContext)
 {
     bool result = false;
@@ -189,7 +216,10 @@ bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture,
     std::unordered_map<std::string, sf::Texture>::const_iterator got = textureMap.find(textureName);
 
     if(got == textureMap.end()) {
-        std::cout << "ERROR " << cn << " applyTextureById could not find the texture: \"" << textureName << "\"!\n";
+        std::cout << "ERROR " << cn << " applyTexture could not find the texture: \"" << textureName << "\" in the textureMap!\n";
+
+        dump();
+
     } else {
 
         // Dereference our *texture and set it to the texture we have loaded into the hashmap
@@ -207,12 +237,19 @@ bool TextureManager::applyTexture(std::string textureName, sf::Texture *texture,
 
 
 
-/// Update the datastructure with this texture pointer
-/// Example: supply id=001 and it looks up the texture name "HOUSE001"  and then assigns that to the texture pointer
-/// (-+)
-bool TextureManager::applyTextureById(unsigned int _textureId, sf::Texture *texture)
+
+
+/// \brief Update a texture inside "textureMap"
+/// \brief Example: supply id=001 and it looks up the texture name "HOUSE001"  and then assigns that to the texture pointer
+/// \return true on OK, false on failure
+// (-+)
+bool TextureManager::applyTextureById(unsigned int _textureId, sf::Texture *texture, bool startGLContext)
 {
     bool result = false;
+
+    if(!loadedTextures) {
+        return false;
+    }
 
 
     // Convert the integer to the right string name

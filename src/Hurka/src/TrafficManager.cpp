@@ -212,20 +212,21 @@ void TrafficManager::follow(HurkaMatrix *fullRoadMatrix,
 
 
 
-// Calls a recursive function that walks through the matrix, following the 1:s
+
 //
 // wishlist: Makeover! Minimilize by using a RoadNetwork *pointer instead of the individual parts  (newMatrix, min_iso, max_iso...)
-//
-/// @param fullRoadMatrix  A matrix with all the roads as 1:s, anything else as 0:s
-/// @param curr_iso_pos    The position of which to start following the 1:s
-/// @param min_iso_pos     Minimum x and y limits
-/// @param max_iso_pos     Maximum x and y limits
-/// @param visited         used internally, just supply a new() one
-/// @param debuglevel      Obvious
 
-// test:    Worked once
+/// \brief Creates a RoadNetwork, calls recursive function that walks through the matrix, following the 1:s
+/// \param fullRoadMatrix  A matrix with all the roads as 1:s, anything else as 0:s
+/// \param curr_iso_pos    The position of which to start following the 1:s
+/// \param min_iso_pos     Min y and x limits
+/// \param max_iso_pos     Max y and x limits
+/// \param visited         used internally, just supply an allocated BinarySearchTree
+
+
+// alpha-0.2: FIXME test more please pretty please!
 // (-+)
-RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
+RoadNetwork *TrafficManager::followMatrixAndAddRoadsToBST(HurkaMatrix *fullRoadMatrix,
                                                HPos *curr_iso_pos,
                                                HPos *min_iso_pos,
                                                HPos *max_iso_pos,
@@ -234,19 +235,15 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 {
     std::string ind = "   ";
 
-    if(debugLevel >= 2)  {
+    if(debugLevel >= 1)  {
         std::cout << ind << "\n\nfollowAndAddToBST():\n";
     }
 
 
 
-    /// Create an empty matrix for the RoadNetwork
+    // Create an empty matrix for the RoadNetwork
 
     HurkaMatrix *hmatrix = new HurkaMatrix(fullRoadMatrix->rows, fullRoadMatrix->cols);
-
-
-
-
 
 
 
@@ -267,12 +264,13 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 
 
 
-    /// Setup the return object
+    // Setup the return object
     int newRows = max_iso_pos->abs_iso_y - min_iso_pos->abs_iso_y +1;  // lite osäker, +-1 felet
     int newCols = max_iso_pos->abs_iso_x - min_iso_pos->abs_iso_x +1;
 
-    /// We only want a matrix with the size containing roads, not the whitespace around it
 
+
+    // We only want a matrix with the size containing roads, not the whitespace around it
 
     if(debugLevel >= 2)  {
         std::cout << "hmatrix now:\n";
@@ -280,16 +278,15 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
     }
 
 
-    ///         int **copySubMatrix(int **srcMtx,    int srcRows,   int srcCols,   int startY,      int startX,  int height, int width)
+    ///         int **copySubMatrix(int **srcMtx,    int srcRows,   int srcCols,   int startY,                int startX,        int height, int width)
 
-    hmatrix->matrix = copySubMatrix(hmatrix->matrix, hmatrix->rows, hmatrix->cols, min_iso_pos->abs_iso_y, min_iso_pos->abs_iso_x, newRows,   newCols, debugLevel);
+    hmatrix->matrix = copySubMatrix(hmatrix->matrix, hmatrix->rows, hmatrix->cols, min_iso_pos->abs_iso_y, min_iso_pos->abs_iso_x, newRows,   newCols, 0);
     if(hmatrix->matrix == nullptr) {
         std::cout << "ERROR " << cn << " Something went wrong while copying a subsection of a matrix to another matrix!\n";
         return nullptr;
     }
     hmatrix->rows = newRows;
     hmatrix->cols = newCols;
-
 
     if(debugLevel >= 2)  {
         std::cout << "New matrix after sub:\n";
@@ -298,10 +295,13 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 
 
 
+
+
     RoadNetwork *roadNetwork = new RoadNetwork();
     roadNetwork->hMatrix = hmatrix;
+    roadNetwork->rect = new HRect(curr_iso_pos->clone(), newRows, newCols, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);   // TESTME :>
 
-    if(debugLevel >= 2)  {
+    if(debugLevel >= 1)  {
         std::cout << ind << "Completed a roadnetwork:\n";
         roadNetwork->dump(ind);
     }
@@ -318,11 +318,11 @@ RoadNetwork *TrafficManager::followAndAddToBST(HurkaMatrix *fullRoadMatrix,
 
 
 
-/// \brief Parse the 1:s in the roadmatrix, and group together them into RoadNetworks
-/// \brief After its done, it should have populated the std::list<RoadNetwork *> *roadNetworks;
+/// \brief Follow the 1:s in the roadmatrix, and group together them into RoadNetworks
+/// \brief After its done, it should have populated the std::list<RoadNetwork *> *roadNetworks in TrafficManager
 /// \return 0 on ok, -1 on failure
-/// (-+)
-int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
+// (--)
+int TrafficManager::readRoadNetworksFromHMatrix(HurkaMatrix *roadMatrix, int debugLevel)
 {
 
     if(debugLevel >= 1) {
@@ -333,14 +333,18 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
     HPos *min_iso_pos = new HPos(0,0, USE_ISO);
     HPos *max_iso_pos = new HPos(0,0, USE_ISO);
 
-
     int searchId = -1;
 
     int M_LENGTH = roadMatrix->rows;
     int N_LENGTH = roadMatrix->cols;
 
 
-    if(debugLevel >=1) {
+    // Debug Control!
+    int maxLogs = 50;
+    int nrLogs = 0;
+
+
+    if(debugLevel >=2) {
         roadMatrix->dump();
     }
 
@@ -367,6 +371,7 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
 
     if(debugLevel >=1) {std::cout << "\n\nIterating all the cells:\n-------------------\n";}
+
     for(int y = 0; y < M_LENGTH; y++) {
         for(int x = 0; x < N_LENGTH; x++) {
 
@@ -376,7 +381,7 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
             searchId = Node::genIDfrom_abs_iso(curr_iso);
 
-            if(debugLevel >=1) {std::cout << "Pos(" << y << ", " << x << ") id=" << searchId << "\n";}
+            if(debugLevel >=1 && nrLogs < maxLogs) {std::cout << "Pos(" << y << ", " << x << ") id=" << searchId << "\n";}
 
             if(roadMatrix->matrix[y][x] == 1) {
 
@@ -384,22 +389,22 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
                 if(bst->findVal(searchId,0) != -1) {
 
-                    /// found it!    Ignore it. We found it so it's already been visited.
+                    // found it!    Ignore it. We found it so it's already been visited.
 
-                    if(debugLevel >=1) {std::cout << "Already in BST\n";}
+                    if(debugLevel >=1 && nrLogs < maxLogs) {std::cout << "Already in BST\n";}
 
 
 
                 } else {
 
 
-                    if(debugLevel >=1) {std::cout << "Running followAndAddToBst\n";}
+                    if(debugLevel >=1) {std::cout << "Running followAndAddToBst which generates a RoadNetwork\n";}
 
-                    /// Did not find it?
-                    /// Start a "Follow and Add" recursion, which returns a roadNetwork
+                    // Did not find it?
+                    // Start a "Follow and Add" recursion, which returns a roadNetwork
 
 
-                    RoadNetwork *network = followAndAddToBST(roadMatrix, curr_iso, min_iso_pos, max_iso_pos, bst, debugLevel);
+                    RoadNetwork *network = followMatrixAndAddRoadsToBST(roadMatrix, curr_iso, min_iso_pos, max_iso_pos, bst, debugLevel);
 
                     if(network == nullptr) {
                         std::cout << "ERROR " << cn << " parseCurrentRoads() failed while executing: followAndAddToBST(), got nullptr.\n";
@@ -409,19 +414,12 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
                         return -1;
                     }
 
-                    network->min_isoYOffset = min_iso_pos->abs_iso_y;
-                    network->min_isoXOffset = min_iso_pos->abs_iso_x;
 
-                    network->max_isoYOffset = max_iso_pos->abs_iso_y;
-                    network->max_isoXOffset = max_iso_pos->abs_iso_x;
-
-
-
-                    /// Store a completed roadnetwork
+                    // Store a completed roadnetwork
                     roadNetworks->push_back(network);
 
 
-                    /// Reset for the next round
+                    // Reset for the next round
                     min_iso_pos->abs_iso_y = roadMatrix->rows;
                     min_iso_pos->abs_iso_x = roadMatrix->cols;
 
@@ -434,6 +432,9 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
             } // if value == 1 in matrix
 
 
+
+            // Do the next cell in matrix
+            nrLogs++;
         }
     }
 
@@ -446,9 +447,11 @@ int TrafficManager::parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel)
 
 
 
-/// \brief Go over all roadnets and all their positions to see if any of them match the HPos searchpos
+/// \brief Look and see if there is a roadnetwork at this "searchpos".
+/// \brief Go over all RoadNetworks and all their positions to see if any of them match the HPos searchpos.
 // Speed: O(N^2) at worst
-// (--) bug with relative positioning... keep saying invalid searchposition
+// (--) bug with relative positioning... keep saying invalid searchposition     2018-06-15
+//      testing CR#19
 RoadNetwork *TrafficManager::roadNetworkAtPos(HPos *searchpos)
 {
     int debugLevel = 0;
@@ -469,19 +472,33 @@ RoadNetwork *TrafficManager::roadNetworkAtPos(HPos *searchpos)
 
         RoadNetwork *currNet = (*it);
 
-        // Are we inside the bounds of this roadnetwork?
-        if((searchpos->abs_iso_y < currNet->min_isoYOffset)
-           ||
-           (searchpos->abs_iso_x < currNet->min_isoXOffset))  {
 
-               continue; // Take the next one, not worth looking in to this network.
 
+        // Are we not inside the bounds of this roadnetwork?
+        if(!currNet->rect->containsIsoPos(searchpos)) {
+            continue; // Take the next one, not worth looking in to this network.
         }
+
+
+        //  deleteme:
+        //        if((searchpos->abs_iso_y < currNet->min_isoYOffset)
+        //||
+        //(searchpos->abs_iso_x < currNet->min_isoXOffset))  {
+        //
+        //continue; // Take the next one, not worth looking in to this network.
+        //
+        //}
+
+
+
+
 
         // Transform the absolute values from the searchpos into relative position for current roadnetwork
 
-        relpos->rel_iso_y = relpos->abs_iso_y - currNet->min_isoYOffset;
-        relpos->rel_iso_x = relpos->abs_iso_x - currNet->min_isoXOffset;
+        relpos->rel_iso_y = relpos->abs_iso_y - currNet->rect->absStart->abs_iso_y;
+        relpos->rel_iso_x = relpos->abs_iso_x - currNet->rect->absStart->abs_iso_x;
+
+        // relpos->rel_iso_x = relpos->abs_iso_x - currNet->min_isoXOffset; deleteme
 
 
 

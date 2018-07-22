@@ -9,10 +9,10 @@
 
 using namespace sf;
 
-/// A bus rides on a particular Road Network
-///
-/// A road network is a matrix of the roads with an x,y offset integer so it knows where in the gamematrix it really is
-/// See docs: road_networks.png
+// A bus rides on a particular network of connected roads. These connected roads are all in individual class instances of "RoadNetwork".
+//
+// A road network is a matrix of the roads with an x,y offset integer so it knows where in the gamematrix it really is
+// See docs: road_networks.png
 
 
 
@@ -24,11 +24,14 @@ public:
 
     void clearResources();
 
-    /// High level functions
 
+    // General functions
+
+    // Special functions
 
     void drawBuses(sf::RenderWindow &rt, HPos *viewHPos);
 
+    int readRoadNetworksFromHMatrix(HurkaMatrix *roadMatrix, int debugLevel);
 
     DijkstraResult *runDijkstraOnBus(int busId, Vector2f *from_iso_pos, Vector2f *to_iso_pos);
 
@@ -36,15 +39,12 @@ public:
 
     void updateBusesOnRoadNetwork(int busId, int roadnetId);
 
-
-
-    RoadNetwork *followAndAddToBST(HurkaMatrix *fullRoadMatrix,
+    RoadNetwork *followMatrixAndAddRoadsToBST(HurkaMatrix *fullRoadMatrix,
                                    HPos *curr_iso_pos,
                                    HPos *min_iso_pos,
                                    HPos *max_iso_pos,
                                    BinarySearchTree *visited,
                                    int debugLevel);
-
 
     void follow(HurkaMatrix *fullRoadMatrix,
                 HurkaMatrix *newMatrix,
@@ -54,7 +54,7 @@ public:
                 BinarySearchTree *visited,
                 int debugLevel);
 
-    int parseCurrentRoads(HurkaMatrix *roadMatrix, int debugLevel);
+
 
 
     RoadNetwork *roadNetworkAtPos(HPos *);
@@ -62,9 +62,6 @@ public:
     void dumpRoadNetworks(std::string , bool);
 
     void updateAll(HPos *viewHPos);
-
-
-
 
 
 
@@ -78,12 +75,11 @@ public:
 
 
 
-
-
-
 private:
     std::string cn = "TrafficManager.cpp";
     std::list<RoadNetwork *> *roadNetworks;
+
+
 
 };
 

@@ -27,17 +27,23 @@ void RoadNetwork::clearResources()
 }
 
 
+int ** RoadNetwork::getMatrix()
+{
+    return hMatrix->matrix;
+}
+
+
 
 
 // (-+)
 void RoadNetwork::dump(std::string indent)
 {
 
-    std::cout << "\n\n" << indent << "-- roadnetwork (" << min_isoYOffset << ", " << min_isoXOffset << ") --\n";
+    std::cout << "\n\n" << indent << "-- roadnetwork (" << rect->absStart->absToString() << ") -- \n";
 
-    std::cout << indent << "absolute iso position = " << min_isoYOffset<< ", " << min_isoXOffset<< "\n";
-    std::cout << indent << "rows = " << max_isoYOffset << "\n";
-    std::cout << indent << "cols = " << max_isoXOffset << "\n";
+    std::cout << indent << "absolute iso position = " << rect->absStart->abs_iso_y << ", " << rect->absStart->abs_iso_x << "\n";
+    std::cout << indent << "rows = " << rect->rows << "\n";
+    std::cout << indent << "cols = " << rect->cols << "\n";
     std::cout << indent << "nr of buses = " << buslist->size() << "\n";
     std::string indent2 = indent;
     indent2 += "   ";
@@ -85,18 +91,21 @@ Bus *RoadNetwork::busAtPos(HPos *searchPos)
 
 
 
+
+// Used by  TrafficManager
 /// \brief Get a random road in this roadnetwork, sets both abs_iso and rel_iso
 /// \param findNr FOR NOW the function takes the 5th road if you give findNr=5 for example
 /// \return Position of the road or (-1,-1) when not found a road
-/// (-+)
+// (-+)
 HPos *RoadNetwork::getNrRoad_iso(int findNr, int debugLevel)
 {
 
     HPos *iso_pos = new HPos(-1,-1, USE_ISO);
 
     // Figure out the limits of the road matrix
-    int YMAX = max_isoYOffset - min_isoYOffset;
-    int XMAX = max_isoXOffset - min_isoXOffset;
+
+    int YMAX = rect->rows-1;
+    int XMAX = rect->cols-1;
 
     int nr = 0;
 
@@ -110,8 +119,8 @@ HPos *RoadNetwork::getNrRoad_iso(int findNr, int debugLevel)
                 // Found one!
                 // Set iso positions for return object
 
-                iso_pos->abs_iso_y = min_isoYOffset + y;
-                iso_pos->abs_iso_x = min_isoXOffset + x;
+                iso_pos->abs_iso_y = rect->absStart->abs_iso_y + y;
+                iso_pos->abs_iso_x = rect->absStart->abs_iso_x + x;
 
                 iso_pos->rel_iso_y = y;
                 iso_pos->rel_iso_x = x;
@@ -165,7 +174,6 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
     if(debugLevel >=2) {         std::cout << "\n**createSlotPath()\n{\n";     }
 
     if(debugLevel >=2) {
-        std::cout << ind << "roadnetwork-maxY and maxX= (" << max_isoYOffset << ", " << max_isoXOffset<<")\n";
         std::cout << ind << "parameter from_rel_iso_pos:\n";
         from_rel_iso_pos->dump(ind);
         std::cout << ind << "parameter to_rel_iso_pos:\n";
@@ -184,7 +192,9 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
 
-    Graph *graph = new Graph("road_network_1", max_isoYOffset + 1, max_isoXOffset+ 1);
+    //Graph *graph = new Graph("road_network_1", max_isoYOffset + 1, max_isoXOffset+ 1); deleteme
+    Graph *graph = new Graph("road_network_1", rect->absEnd->abs_iso_y + 1, rect->absEnd->abs_iso_x + 1);
+
     DijkstraResult *dijkstraResult = nullptr;
 
     int searchId = -1;
@@ -206,16 +216,17 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
 
-    // setup some objects...
+    // Setup some objects...
     BinarySearchTree *visited = new BinarySearchTree();
 
-    // ... so we can recursively walk the roadnetwork to get the coordinates for each road
+    // ... so we can recursively walk the roadnetwork to get the positions for each road
     if(debugLevel >=2) {
         hMatrix->dump("  ");
     }
 
 
     /// Create a Graph
+    // use the matrix of 1s for roads, follow it and string together a graph recursively , can hold any nr of topologies
 
     createGraphFromHMatrix(hMatrix, graph, currNode, nullptr, from_rel_iso_pos->clone(), nullptr, visited, debugLevel - 1 );
 
@@ -334,6 +345,13 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
 
+
+
+
+
+
+
+
 /// This is used by RoadNet to get a Graph in order to Dijkstra a Route
 ///
 /// \brief given a matrix with roads, walk the 1:s inside the matrix and connect everything accordingly in a Graph object
@@ -348,14 +366,20 @@ SlotPath *RoadNetwork::createSlotPath(HPos *from_rel_iso_pos, HPos *to_rel_iso_p
 
 
 
+
 //
-// Bug  2018-05-13  It only runs attachNewNode , so when an old node is found
+// Bug  2018-05-13  CR#5 It only runs attachNewNode , so when an old node is found
 //                  a new node is created. Like in dijkstra_test_1.txt where
-//                  the road loops in on itself                                 SOLVED!
+//                  the road loops in on itself                                         SOLVED!
+//                  This is a Copy from TrafficManager's "follow()" function
+//                  Maybe that also suffers this bug <- FIXME take a look
 
 // Test 2018-05-16  I followed quite complex graph that
-//                  was created and it all looked fine to me.                   WORKS!
+//                  was created and it all looked fine to me.                           WORKS!
 // RECURSIVE
+/// \brief Uses the matrix of 1:s for roads, follows it and strings together a graph recursively. Can hold any variant of topologies, star , hub , line.
+/// \param roadMatrix A matrix where 1:s are roads, 0:s everything else
+/// \param graph N
 // (-+)
 void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                                          Graph *graph,
@@ -367,8 +391,7 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                                          int dbgLevel)
 {
 
-    // This is a Copy from TrafficManager's "follow()" function
-    // Maybe that also suffers this bug CR5 2018-05-13?
+
 
 
 
@@ -499,11 +522,11 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
 
 
-            // TEST... also not sure if we run attachNodeUp if we need to run this createGraph recursion call again because we are already there in the stack?
+            // FIXME: TEST... also not sure if we run attachNodeUp if we need to run this createGraph recursion call again because we are already there in the stack?
             // Now move along to the next one
             createGraphFromHMatrix(roadMatrix,
                                        graph,
-                                       workNode2,       /* currNode */
+                                       workNode2,       /* becomes: currNode */
                                        workNode,
                                        up_iso,
                                        curr_rel_iso_pos,
@@ -533,7 +556,8 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
                 workNode2 = graph->findNode(searchId, 0);
 
                 if(workNode2 == nullptr) {
-                    std::cout << "ERROR " << cn << " should not be possible, createGraphFromHMatrix fail to find a node that it was able to locate just a couple of steps ago.. weird\n";
+                    std::cout << "ERROR " << cn << " should not be possible, createGraphFromHMatrix failed ";
+                    std::cout << "to find a node that it was able to locate just a couple of steps ago. \n";
                     return ;
                 }
 
@@ -558,12 +582,12 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
             createGraphFromHMatrix(roadMatrix,
                                    graph,
-                                   workNode2,   /* currNode*/
+                                   workNode2,   /* becomes: currNode*/
                                    workNode,
                                    right_iso,
                                    curr_rel_iso_pos,
                                    visited,
-                                   dbgLevel);                                                     // RECURSION CALL
+                                   dbgLevel);                                                          // RECURSION CALL
         }
     }
 
@@ -614,12 +638,12 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
             createGraphFromHMatrix(roadMatrix,
                                    graph,
-                                   workNode2,
+                                   workNode2,       /* becomes: currNode */
                                    workNode,
                                    down_iso,
                                    curr_rel_iso_pos,
                                    visited,
-                                   dbgLevel);                                  // RECURSION CALL
+                                   dbgLevel);                                                                         // RECURSION CALL
 
         }
     }
@@ -668,15 +692,18 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
             createGraphFromHMatrix(roadMatrix,
                                    graph,
-                                   workNode2,
+                                   workNode2,           /* becomes currNode */
                                    workNode,
                                    left_iso,
                                    curr_rel_iso_pos,
                                    visited,
-                                   dbgLevel);                                  // RECURSION CALL
+                                   dbgLevel);                                                     // RECURSION CALL
 
         }
     }
+
+
+
 }
 
 
@@ -691,12 +718,11 @@ void RoadNetwork::createGraphFromHMatrix(HurkaMatrix *roadMatrix,
 
 
 
-/// \brief Used by highlevel function createSlotPath()
+/// \brief Specific function. Used by high level function "createSlotPath".
 /// \param dijkstraResult A result from already executed Dijkstra
 /// \param slotpath Allocated, empty.
-
 // Wishlist: alpha-0.2: please make it more traffic situation aware, and direction aware, when creating all those slotpositions
-// (-+)
+// (--) testme
 void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResult, SlotPath *slotpath, int debugLevel)
 {
 
@@ -726,8 +752,8 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
 
 
         // Now adjust to full gamematrix by using roadnetworks offsets
-        workPos->abs_iso_y = workPos->rel_iso_y + min_isoYOffset;
-        workPos->abs_iso_x = workPos->rel_iso_x + min_isoXOffset;
+        workPos->abs_iso_y = workPos->rel_iso_y  + rect->absStart->abs_iso_y;
+        workPos->abs_iso_x = workPos->rel_iso_x + rect->absStart->abs_iso_x;
 
         workPos->gpix_y = Grid::convert_iso_to_gpix_y(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID
         workPos->gpix_x = Grid::convert_iso_to_gpix_x(workPos->abs_iso_y, workPos->abs_iso_x, 64, 32, 2);   // rendered as a GRID

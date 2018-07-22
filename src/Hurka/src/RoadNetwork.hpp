@@ -10,12 +10,16 @@
 #include "HurkaMatrix.hpp"
 
 
-/// Used by TrafficManager
+/// Created by TrafficManager
+/// Used by Bus
 ///
 /// A bus rides on a particular Road Network
-///
-/// A road network is a matrix of the roads with an x,y offset integer so it knows where in the gamematrix it really is
+/// A road network is basically a matrix of the interconnected roads
+/// It also contains a rect to tell you where in the gamematrix it is
+
 /// See docs: road_networks.png
+
+
 
 
 class RoadNetwork
@@ -24,10 +28,13 @@ public:
 
     RoadNetwork();
 
+    // General functions
+
+    int ** getMatrix();
+
     void clearResources();
 
     HPos *getNrRoad_iso(int findNr, int);
-
 
     Bus *busAtPos(HPos *searchPos);
 
@@ -58,20 +65,12 @@ public:
 // Variables:
 
     HurkaMatrix *hMatrix;           // The roadnetwork datastructure
-
+    HRect *rect;                    // The rectangle it occupies on the GameMatrix
     std::list<Bus *> *buslist;      // Buses on the roadnetwork
-
-    int min_isoYOffset;
-    int min_isoXOffset;
-
-    int max_isoYOffset;
-    int max_isoXOffset;
 
 
 
 // Static Utilities
-
-
 
     /// \brief Given a roadMatrix (matrix with 1s for roads, 0s else) find a random position where a road is
     /// \param roadMatrix Allocated HurkaMatrix object with set values

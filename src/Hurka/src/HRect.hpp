@@ -40,15 +40,13 @@ public:
 
     HRect(HPos *_absStartPos, HPos *_absEndPos );
 
-    void calculateBounds();
-
-    void draw(RenderTarget& rt, HPos *viewHPos);
-
     HRect();
 
-    int nrTiles();
 
-    void testFunctions();
+    // General functions
+    bool containsIsoPos(HPos *searchPos);
+
+    int nrTiles();
 
 	std::string relToString();
     std::string absToString();
@@ -64,6 +62,22 @@ public:
 	HRect *clone();
     void dump(std::string ind);
     void fullDump(std::string ind);
+
+
+
+
+
+
+    // Special functions
+
+    void calculateBounds();
+
+    void testFunctions();
+
+    void draw(RenderTarget& rt, HPos *viewHPos);
+
+
+
 
 
 	// The position and sizes
@@ -89,16 +103,13 @@ public:
 
 private:
 
-    bool drawable = false ;       // OPTIMIZE set to false for faster HRects
+    bool drawable = false ;       // OPTIMIZE set to false for faster HRects    , OPTIMIZE further by coding #defines to disable if-checks in draw()
 
     Texture texture;
     Sprite sprite;
 
 
     std::string cn = "HRect.cpp";
-
-
-
 };
 
 #endif

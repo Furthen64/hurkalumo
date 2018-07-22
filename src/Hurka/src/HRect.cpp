@@ -7,11 +7,16 @@
 
 
 
+
+// 2018-07-22:  Starting to become better but needs more testing... This class is used <everywhere> so regression tests would be nice.
+
+
 /// \brief Creates an empty rectangle with invalid values
 // (--)
 HRect::HRect()
 {
     absStart = new HPos(-1,-1, USE_ISO);
+    absEnd = new HPos(-1,-1, USE_ISO);
     rows = -1;
     cols = -1;
     heightPx = -1;
@@ -42,12 +47,18 @@ HRect::HRect(int _absStartY,
 {
 
 
-    // setup the position and sizes
-
-	absStart = new HPos(_absStartY, _absStartX, USE_ISO);
-	rows = _rows;
+    rows = _rows;
 	cols = _cols;
-	relStart = new HPos(0,0, USE_ISO);      // the relative starts at 0,0  aaaaaalways
+
+
+
+    // Start position absStart = top left corner of the rect
+	absStart = new HPos(_absStartY, _absStartX, USE_ISO);
+	relStart = new HPos(0,0, USE_ISO);                              // the relative starts at 0,0  aaaaaalways
+
+
+	// End position absEnd = bottom right corner
+	absEnd = new HPos(_absStartY + _rows -1 , _absStartX + _cols -1, USE_ISO);
 
 
 
@@ -78,9 +89,18 @@ HRect::HRect(HPos *_absStartPos,
         int _heightPx,
         int _widthPx)
 {
-    absStart = _absStartPos;
+
+
     rows = _rows;
     cols = _cols;
+
+    // Start position absStart = top left corner of the rect
+    absStart = _absStartPos;
+
+	// End position absEnd = bottom right corner
+	absEnd = new HPos(_absStartPos->abs_iso_y + _rows -1, _absStartPos->abs_iso_x + _cols -1, USE_ISO);
+
+
 
     heightPx = _heightPx;       // FIXME Maybe not use these at all, just run calcbounds
     widthPx = _widthPx;
@@ -126,7 +146,28 @@ HRect::HRect(HPos *_absStartPos, HPos *_absEndPos)
 
 
 
+// ASSUMES absEnd is set
+// (--)
 
+bool HRect::containsIsoPos(HPos *searchPos)
+{
+    if(searchPos->abs_iso_y >= absStart->abs_iso_y
+       &&
+       searchPos->abs_iso_y <= absEnd->abs_iso_y
+       &&
+       searchPos->abs_iso_x >= absStart->abs_iso_x
+       &&
+       searchPos->abs_iso_x <= absEnd->abs_iso_x) {
+
+           return true;
+       }
+
+
+
+       return false;
+
+
+}
 
 
 

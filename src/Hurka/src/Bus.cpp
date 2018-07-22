@@ -145,9 +145,12 @@ HPos *Bus::rand_iso_pos(int maxM, int maxN)
 
 
 
+
+
+
 /// \brief Randomize an iso position on the RoadNetwork, use the Y and X offset to figure out the absolute position on the gamematrix
 /// \param roadnet
-/// (---)
+// (---) TESTME alpha-0.2
 
 HPos *Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
 {
@@ -176,9 +179,16 @@ HPos *Bus::rand_abs_iso_pos(RoadNetwork *roadnet)
 
         if(roadnet->hMatrix->matrix[r][c] == 1) {
 
+
+
+
+            newPos->abs_iso_y = r + roadnet->rect->absStart->abs_iso_y;
+            newPos->abs_iso_x = c + roadnet->rect->absStart->abs_iso_x;
+
+/*
             newPos->abs_iso_y = r + roadnet->min_isoYOffset;
             newPos->abs_iso_x = c + roadnet->min_isoXOffset;
-
+*/
             found = true;
 
         }

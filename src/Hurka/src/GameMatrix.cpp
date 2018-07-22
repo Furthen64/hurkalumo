@@ -5,9 +5,7 @@
 
 
 // (-+)
-// What is this class?
-
-GameMatrix::GameMatrix(int _rows, int _cols, int _textureID)
+GameMatrix::GameMatrix(int _rows, int _cols)
 {
     rows= _rows;
     cols = _cols;
