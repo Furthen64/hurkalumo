@@ -63,13 +63,13 @@ HRect *GameMatrix::getHRect()
 
 
 
-/// \brief Given a searchpos with abs iso values set, checks if thats within the gamematrix
+/// \brief Takes a HPos with iso values, checks if that's within the gamematrix
 /// \param searchpos Iso abs values set
 /// \return returns true if inside, false if not
-// (-+)
+// (--) untested
 bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
 {
-    searchpos = Grid::convert_gpix_to_iso(searchpos, GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);   // fixme some dayyyy
+    searchpos = Grid::convert_gpix_to_iso(searchpos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
 
     if(searchpos->abs_iso_y > -1
        &&

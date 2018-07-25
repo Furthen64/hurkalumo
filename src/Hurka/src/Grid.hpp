@@ -213,6 +213,30 @@ static Vector2f convert_iso_to_gpix(Vector2f iso_pos, int width, int height)
 
 
 
+/// \brief Takes isopos data, defaults to GRID texture size, and converts to gpix data
+// (--)
+static HPos *convert_iso_to_gpix(HPos *isopos)
+{
+    HPos *gpixpos = new HPos();
+
+    // we have abs_iso_y  and abs_iso_x
+
+    gpixpos->gpix_y = convert_iso_to_gpix_y(isopos->abs_iso_y, isopos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+    gpixpos->gpix_x = convert_iso_to_gpix_x(isopos->abs_iso_y, isopos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+
+    return gpixpos;
+}
+
+
+
+
+
+/// \brief Takes gpix data, defaults to GRID texture size, and converts to isometric tile position
+static HPos *convert_gpix_to_iso(HPos *pix_pos)
+{
+    return convert_gpix_to_iso(pix_pos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+}
+
 
 
 /// Takes gpix data, looks at the grid and finds the isometric tile position where that gameboard pixel position would be in

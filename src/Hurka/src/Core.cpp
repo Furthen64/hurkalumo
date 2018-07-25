@@ -1,6 +1,8 @@
 #include "Core.hpp"
 
-// Design: a Core instance should only exist in Main.cpp
+// GUIDELINE: a Core instance should only exist in Main.cpp
+
+
 
 Core::Core()
 {
@@ -41,11 +43,19 @@ LifecycleResult *Core::lifecycle()
         std::cout << "core lifecycle() ------------------------------------------\n";
 
 
+        ///
+        /// Regression testing
+        ///
+        /// Let's do unit testing of all the classes and see if hurkalumo's base is stable
+
         if(runRegressionTestAndExit) {
 
-            std::cout << "running Regression tests on all classes ****\n{\n";
+            std::cout << "  *** Running Regression tests on all classes ***\n{\n";
 
 
+
+            std::cout << "\n\nUNIT TEST    \"HRect\" \n";
+            std::cout << "------------------------------------------\n";
             /// HRect
             {
                 HRect *hrect = new HRect();
@@ -54,6 +64,8 @@ LifecycleResult *Core::lifecycle()
 
 
             /// HurkaMap and RoadNetwork
+            std::cout << "\n\nUNIT TEST    \"HurkaMap and RoadNetwork\" \n";
+            std::cout << "------------------------------------------\n";
             {
                 debugLevel = 1;
                 int retStatus = -1;
@@ -76,11 +88,6 @@ LifecycleResult *Core::lifecycle()
 
 
                 GameMatrix *gamematrix = new GameMatrix(64,64);
-
-
-
-
-
 
                 assert(retStatus == 0);
 
@@ -126,6 +133,39 @@ LifecycleResult *Core::lifecycle()
                 assert(largestRn->getMatrix()[0][6] == 1);
 
 
+
+            }
+
+
+            /// "iso -> gpix -> iso"
+            std::cout << "\n\nUNIT TEST    \"iso -> gpix -> iso\"  \n";
+            std::cout << "------------------------------------------\n";
+            {
+
+
+                // "iso -> gpix"
+                HPos *isopos = new HPos(5,10, USE_ISO);
+                isopos->dump(" isopos: ");
+
+                HPos *gpixpos = new HPos(); // starts out with dummy values -1,-1
+
+                gpixpos = Grid::convert_iso_to_gpix(isopos);    // "iso -> gpix" now done
+
+
+                // "gpix -> iso"
+                HPos *isopos_eq = new HPos();
+                isopos_eq = Grid::convert_gpix_to_iso(gpixpos);
+
+
+                // Now compare the two isopos and isopos_eq
+                isopos_eq->dump(" isopos_eq: ");
+                assert(isopos->compare(isopos_eq) == 0);
+
+            }
+
+
+            {
+                // "gpix -> iso -> gpix"
 
             }
 
@@ -897,7 +937,7 @@ RunResult *Core::run()
                     }
 
                 } else {
-                    //std::cout << cn << "Mousepos is nullptr\n";
+                   //std::cout << cn << "Mousepos is nullptr\n";
                 }
 
 

@@ -6,10 +6,11 @@
 
 
 
+/// \brief USE_ISO: Creates a HPos with rows and cols, assumes it's a grid sized object and creates gpix values thereof
 /// @param _y Vertical positioning, or on the isometric board= M the sloping down and left.
 /// @param _x Horizontal positioning, or on the isometric board= N the sloping down and right
 /// @param positionType USE_ISO or USE_GPIX , choose what values to store away.
-/// (++)
+// (--)
 HPos::HPos(int _y, int _x, int positionType)
 {
     // We have no idea what object it is ... alpha-0.2 could change that
@@ -20,8 +21,11 @@ HPos::HPos(int _y, int _x, int positionType)
         rel_iso_y = _y;
         rel_iso_x = _x;
 
-        gpix_y = Grid::convert_iso_to_gpix_y(abs_iso_y, abs_iso_x, 64,32,0);
-        gpix_x = Grid::convert_iso_to_gpix_x(abs_iso_y, abs_iso_x, 64,32,0);
+
+        gpix_y = Grid::convert_iso_to_gpix_y(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
+        gpix_x = Grid::convert_iso_to_gpix_x(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
+
+
     }
 
     if(positionType == USE_GPIX) {
@@ -159,7 +163,7 @@ void HPos::synchGpixToIsoValues(int height, int width)
 
 
 
-    HPos *workpos = Grid::convert_gpix_to_iso(this, height, width);        // FIXME hardcoded
+    HPos *workpos = Grid::convert_gpix_to_iso(this, width, height);        // FIXME hardcoded
 
 
     this->abs_iso_y = workpos->abs_iso_y;
