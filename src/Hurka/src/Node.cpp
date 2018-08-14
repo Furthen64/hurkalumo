@@ -229,10 +229,10 @@ void Node::dump(int indent)
 }
 
 
-/// Figures out automatically where it is in relation to the original Node
-///
-/// FIXME: Should be via Graph instead... you should call it from Graph::attachNewNode( and supply a BST *visitedNodes ) so you can
-/// search for the _id and see if it's already in the tree and yeah warn at least?
+// Figures out automatically where it is in relation to the original Node
+//
+// FIXME: Should be via Graph instead... you should call it from Graph::attachNewNode( and supply a BST *visitedNodes ) so you can
+// search for the _id and see if it's already in the tree and yeah warn at least?
 /// \param _name Just a identifier, not needed.
 /// \param _id The id of the node you're attaching.
 /// \param rel_iso_pos The HPos of the node with only relative values
@@ -241,8 +241,6 @@ void Node::dump(int indent)
 /// \param debugLevel selfexplanatory
 /// \return nullptr on error, otherwise the new node we created
 // (--)
-// HPOSTEST:
-
 Node *Node::attachNewNode(std::string _name, int _id, HPos *_rel_iso_pos, int weight1, int weight2, int debugLevel)
 {
 

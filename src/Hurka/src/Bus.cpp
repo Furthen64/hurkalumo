@@ -80,6 +80,8 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
         this->pos = workPos->hpos;
 
         // Make sure we get iso position too! use the size of a GRID to get it done
+
+        // Heavy duty tool tho, makes recursions and shit:
         this->pos->synchGpixToIsoValues(GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
 
     }
@@ -100,8 +102,8 @@ void Bus::draw( RenderTarget& rt, HPos *viewHPos, int drawSlotPositions)
         slotPath->drawAllSlots(rt, viewHPos);
     }
 
-    int x = pos->gpix_x + viewHPos->gpix_x;
-    int y = pos->gpix_y + viewHPos->gpix_y;
+    int x = pos->gpix_x_topleft + viewHPos->gpix_x_topleft;
+    int y = pos->gpix_y_topleft + viewHPos->gpix_y_topleft;
 
     Vector2f _pos = {(float)x,(float)y};
 
@@ -229,7 +231,7 @@ void Bus::dump(std::string ind)
 
     std::cout << " --- bus " << pos->absToString() << " ------\n";
     std::cout << ind << "         abs_iso_y,abs_iso-x     rel_iso_y,rel_iso_x        gpix_y,gpix_x  \n";
-    std::cout << ind << "   pos           " << pos->abs_iso_y << "," << pos->abs_iso_x << "                    "  << pos->rel_iso_y << ", " << pos->rel_iso_x << "                      " << pos->gpix_y << "," << pos->gpix_x << "\n";
+    std::cout << ind << "   pos           " << pos->abs_iso_y << "," << pos->abs_iso_x << "                    "  << pos->rel_iso_y << ", " << pos->rel_iso_x << "                      " << pos->gpix_y_topleft << "," << pos->gpix_x_topleft << "\n";
     std::cout << ind << "slotpath:\n";
     slotPath->dump();
     std::cout << "\n";
@@ -243,13 +245,13 @@ void Bus::dump(HPos *viewHPos)
     int wy = 0;
     int wx = 0;
     if(viewHPos != nullptr) {
-        wy = viewHPos->gpix_y;
-        wx = viewHPos->gpix_x;;
+        wy = viewHPos->gpix_y_topleft;
+        wx = viewHPos->gpix_x_topleft;
     }
     std::cout << "\n\nBus:\n";
     std::cout << "       abs_iso_y,abs_iso-x     rel_iso_y,rel_iso_x        gpix_y,gpix_x     wpix_y,wpix_x\n";
-    std::cout << "   pos           " << pos->abs_iso_y << "," << pos->abs_iso_x << "                    "  << pos->rel_iso_y << ", " << pos->rel_iso_x << "                      " << pos->gpix_y << "," << pos->gpix_x <<  "            " << wy + pos->gpix_y << "," << wx + pos->gpix_x << "\n";
-    std::cout << "   nextPos       " << nextPos->abs_iso_y << "," << nextPos->abs_iso_x << "                    "  << nextPos->rel_iso_y << ", " << nextPos->rel_iso_x << "                      " << nextPos->gpix_y << "," << nextPos->gpix_x <<  "            " << wy + nextPos->gpix_y << "," << wx + nextPos->gpix_x << "\n\n";
+    std::cout << "   pos           " << pos->abs_iso_y << "," << pos->abs_iso_x << "                    "  << pos->rel_iso_y << ", " << pos->rel_iso_x << "                      " << pos->gpix_y_topleft << "," << pos->gpix_x_topleft <<  "            " << wy + pos->gpix_y_topleft << "," << wx + pos->gpix_x_topleft << "\n";
+    std::cout << "   nextPos       " << nextPos->abs_iso_y << "," << nextPos->abs_iso_x << "                    "  << nextPos->rel_iso_y << ", " << nextPos->rel_iso_x << "                      " << nextPos->gpix_y_topleft << "," << nextPos->gpix_x_topleft <<  "            " << wy + nextPos->gpix_y_topleft << "," << wx + nextPos->gpix_x_topleft << "\n\n";
 
 }
 
@@ -286,41 +288,9 @@ bool Bus::atPos(HPos *searchpos)
 
     if(now != nullptr) {
         if(now->compareAbsIso(searchpos) == 0) {
-
             return true;
         }
     }
 
     return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

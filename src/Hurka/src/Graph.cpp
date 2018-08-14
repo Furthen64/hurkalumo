@@ -370,7 +370,7 @@ void Graph::traverseAndReset(Node *curr, BinarySearchTree *visited)
 
 
 
-// (--)
+// (--) not tested
 void Graph::resetAllNodes()
 {
     BinarySearchTree *visited = new BinarySearchTree();
@@ -421,9 +421,7 @@ DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLeve
     // We need a Priority Queue to see which has the lowest value tempLabel (shortest total distance as of now)
     std::priority_queue<Node *, std::vector<Node *>, graphNodeCompare> workList;
 
-
-
-    /// FIXME, TODO: Run resetDijkstra for all Nodes
+    // Reset from previous runs, not tested, not sure it works
     resetAllNodes();
 
 

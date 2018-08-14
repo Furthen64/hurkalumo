@@ -79,8 +79,8 @@ public:
 
                      // Safer code:
                      hpos = new HPos(
-                                     (posOfReference->gpix_y + n) + yOffset,
-                                     (posOfReference->gpix_x + n) + xOffset,
+                                     (posOfReference->gpix_y_topleft + n) + yOffset,
+                                     (posOfReference->gpix_x_topleft + n) + xOffset,
                                      USE_GPIX);
 
 

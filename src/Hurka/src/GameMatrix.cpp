@@ -69,7 +69,14 @@ HRect *GameMatrix::getHRect()
 // (--) untested
 bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
 {
+
+    std::cout << "FIXME " << cn << " isPosInsideGameMatri() should make use of findTile plz\n";
     searchpos = Grid::convert_gpix_to_iso(searchpos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
+
+    if(searchpos == nullptr) {
+        std::cout << "ERROR " << cn << " isPosInsideGameMatrix, searchpos was nullptr from findTile()\n";
+        return false;
+    }
 
     if(searchpos->abs_iso_y > -1
        &&
@@ -101,8 +108,8 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
 
         for(int X= 0; X < cols; X++) {
 
-            x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
-            y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            x = Grid::convert_iso_to_gpix_x_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_gpix_y_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
             if( x <actualXMin) {
                 actualXMin = x;
@@ -113,8 +120,8 @@ void GameMatrix::draw( RenderTarget& rt, HPos *viewHPos)
             }
 
             // Offset for viewing position
-            y += viewHPos->gpix_y;
-            x += viewHPos->gpix_x;
+            y += viewHPos->gpix_y_topleft;
+            x += viewHPos->gpix_x_topleft;
 
 
             Vector2f pos = {(float)x,(float)y};     // SFML specific for the sprite
@@ -157,8 +164,8 @@ void GameMatrix::calculatePxBounds()
     for(int Y= 0; Y<rows; Y++){
         for(int X= 0; X < cols; X++) {
 
-            x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
-            y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            x = Grid::convert_iso_to_gpix_x_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_gpix_y_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
 
             if(x < minX) {
@@ -184,18 +191,16 @@ void GameMatrix::calculatePxBounds()
     if(startPos == nullptr) {
         startPos = new HPos( minX, minY, USE_GPIX);
     } else {
-        startPos->gpix_x = minX;
-        startPos->gpix_y = minY;
+        startPos->gpix_x_topleft = minX;
+        startPos->gpix_y_topleft = minY;
     }
 
 
 
+    // Return values
+    // These are used when creating an HRect from GameMatrix
     heightPx = maxY;
-
     widthPx = maxX;
-
-
-    // FIXME is this used anywhere?
 
 }
 

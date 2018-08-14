@@ -154,9 +154,10 @@ private:
 
 
     int consoleMode = false;
-    int runRegressionTestAndExit = true;
 
-    int debugLevel = 0;
+    int runRegressionTestAndExit = false;
+
+    int debugLevel = 1;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;

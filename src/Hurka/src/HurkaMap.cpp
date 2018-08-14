@@ -101,177 +101,6 @@ int HurkaMap::indexInBlockList(HPos *blockpos)
 
 
 
-// If you look at the gamematrix like this:
-//
-//
-//                           (0,0)
-//                       (1,0)   (0,1)
-//                    (2,0)  (1,1)  (0,2)
-//                  (3,0) (2,1) (1,2) (0,3)
-//
-// You could put a layernr on each layer  (each new line here in this asciiart)
-//
-//
-//
-//   Layer0                  (0,0)
-//   Layer1              (1,0)   (0,1)
-//   Layer2           (2,0)  (1,1)  (0,2)
-//   Layer3         (3,0) (2,1) (1,2) (0,3)
-//   ...
-//
-// Thats what this function does, it finds out on what layer a particular HPos would be.
-//
-// Wishlist: Please synch this with the readRegularFile .... needs to copy this documentation to that one
-
-/// \brief Finds out on what layer to render a particular block, given its HPos position
-/// \param searchPos Allocated with values, abs_iso
-/// \return returns the layernr when found, -1 otherwise.
-// (-+)     Seems to work fine!
-int HurkaMap::layerNrInBlockList(HPos *searchPos)
-{
-
-    int debugLevel = 0;
-
-
-
-    // we know the  Y max in this shiiiit
-    // make loop1 and loop2 like in "readRegularFile"
-
-    // If you generate a whole isometric gamematrix again... like from a matrix
-    // you could easily tell where a HPos would be , because you'd have all positions..
-    //
-
-    // So you STOP when you hit that HPos
-
-
-    int layerNr = 0;
-    HPos *workPos = nullptr;
-    std::string searchPosStr = searchPos->absToString();
-    std::string ind1 = "   ";
-
-
-
-    // Loop 1:
-    int yDown = 0;
-    int yUp = 0;
-    int xRight = 0;
-
-
-
-    // Loop 2:
-    int xDownRight = 0;
-
-    if(debugLevel >=1) {
-
-        std::cout << "\n\n* layerNrInBlockList()\n{";
-
-        std::cout << ind1 << "matrixRows= " << matrixRows << ", matrixCols= " << matrixCols << "\n\n";
-
-    }
-
-
-
-
-
-    if(debugLevel >=1) {
-        std::cout << ind1 << "Loop1:\n" << ind1 << "----------\n";
-        std::cout << ind1 << "layerNr=" << layerNr << "\n";
-    }
-
-    while(yDown < matrixRows)
-    {
-        while(yUp > -1 && xRight < matrixCols)
-        {
-
-            // matrix coordinates:
-            //   row = yUp
-            //   col = xRight
-
-            workPos = new HPos( yUp, xRight, USE_ISO);
-
-            if(debugLevel >= 2) { std::cout << ind1 << "At= " << workPos->absToString() << " vs Search=" << searchPosStr << " \n"; }
-
-
-            if(workPos->compareAbsIso(searchPos) == 0) {
-                if(debugLevel >=1) { std::cout << ind1 << "   Match found!\n"; }
-                return layerNr;
-            }
-
-
-            yUp--;
-            xRight++;
-        }
-
-
-
-        layerNr++;
-        if(debugLevel >=1) { std::cout << ind1 << "layerNr=" << layerNr << "\n"; }
-
-
-        // Go down the matrix in the Y axis
-        yDown++;
-
-        // Reset x iterator
-        xRight = 0;
-
-        // Now yUp starts a step lower down
-        yUp = yDown;
-    }
-
-
-    if(debugLevel >=1) {
-
-        std::cout << ind1 << "\n\nLoop2:\n" << ind1 << "-------------\n";
-        std::cout << ind1 << "layerNr=" << layerNr << "\n";
-    }
-
-
-    yUp = matrixRows-1; // Start at the Bottom Left
-
-    xDownRight++;
-
-    xRight = xDownRight;
-
-    while(xDownRight < matrixCols)
-    {
-        while(yUp > -1 && xRight < matrixCols)
-        {
-            workPos = new HPos(yUp, xRight, USE_ISO);
-
-            if(debugLevel >=2) {std::cout << ind1 << "At= " << workPos->absToString() << " vs Search=" << searchPosStr << " \n";}
-
-            if(workPos->compareAbsIso(searchPos) == 0) {
-
-                if(debugLevel >=1) { std::cout << ind1 << "   Match found!\n"; }
-
-                return layerNr;
-            }
-
-            yUp--;      // going upwards...
-            xRight++;   // ...and right
-
-        }
-
-        layerNr++;
-        if(debugLevel >=1) { std::cout << ind1 << "layerNr=" << layerNr << "\n";}
-
-        xDownRight++;
-
-        xRight = xDownRight;
-        yUp = matrixRows -1;
-    }
-
-
-
-    if(debugLevel >=1) { std::cout << "\n}\n\n"; }
-
-
-
-    // We did not find anything
-    return -1;
-}
-
-
 
 // Needs two loops to iterate and graphically output the data,
 // if you imagine an isometric tile, it has a top part and a bottom part:
@@ -500,7 +329,7 @@ int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
     int searchPosLayer = 0;
     int currLayer = 0;
 
-    searchPosLayer = layerNrInBlockList(roadPos);
+    searchPosLayer = Grid::layerNrInBlockList(roadPos);
     if(debugLevel >=2) {
         std::cout << ind << " - parameter \"roadpos\"'s searchPosLayer= " << searchPosLayer << "\n\n";
     }
@@ -522,7 +351,7 @@ int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
             // First find a block on the same layer
 
             if(!sameLayer) {
-                currLayer = layerNrInBlockList(workBlock->getHPos());
+                currLayer = Grid::layerNrInBlockList(workBlock->getHPos());
 
 
                 if(currLayer == searchPosLayer) {
@@ -591,7 +420,7 @@ int HurkaMap::placeNewOrSwapRoad(HPos *roadPos, int debugLevel)
 
                 workBlock = (*it);
 
-                currLayer = layerNrInBlockList(workBlock->getHPos());
+                currLayer = Grid::layerNrInBlockList(workBlock->getHPos());
 
                 if(currLayer > searchPosLayer) {
 

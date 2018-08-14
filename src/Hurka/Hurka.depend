@@ -1567,13 +1567,13 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1532554302 source:c:\github\lumo\src\hurka\src\core.cpp
+1534290218 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
-1529931567 source:c:\github\lumo\src\hurka\src\grid.cpp
+1534289770 source:c:\github\lumo\src\hurka\src\grid.cpp
 	"Grid.hpp"
 
-1532554378 c:\github\lumo\src\hurka\src\grid.hpp
+1534291517 c:\github\lumo\src\hurka\src\grid.hpp
 	<sstream>
 	<SFML/Graphics.hpp>
 	"HPos.hpp"
@@ -1597,7 +1597,7 @@
 	<string>
 	"Utils.hpp"
 
-1530695023 source:c:\github\lumo\src\hurka\src\toolbar.cpp
+1534286807 source:c:\github\lumo\src\hurka\src\toolbar.cpp
 	"Toolbar.hpp"
 
 1530695133 c:\github\lumo\src\hurka\src\toolbar.hpp
@@ -1605,10 +1605,10 @@
 	"HRect.hpp"
 	"Utils.hpp"
 
-1532554216 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
+1534291350 source:c:\github\lumo\src\hurka\src\gamematrix.cpp
 	"GameMatrix.hpp"
 
-1532272360 c:\github\lumo\src\hurka\src\gamematrix.hpp
+1534291486 c:\github\lumo\src\hurka\src\gamematrix.hpp
 	<iostream>
 	<SFML/Graphics.hpp>
 	"Singletons/TextureManager.hpp"
@@ -1616,9 +1616,9 @@
 	"Constants.hpp"
 	"HRect.hpp"
 
-1530641609 c:\github\lumo\src\hurka\src\constants.hpp
+1534291250 c:\github\lumo\src\hurka\src\constants.hpp
 
-1530907958 source:c:\github\lumo\src\hurka\src\block.cpp
+1534289547 source:c:\github\lumo\src\hurka\src\block.cpp
 	"Block.hpp"
 
 1531391093 c:\github\lumo\src\hurka\src\block.hpp
@@ -1653,7 +1653,7 @@
 	"Constants.hpp"
 	"Utils.hpp"
 
-1531341003 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
+1534109869 source:c:\github\lumo\src\hurka\src\hurkamap.cpp
 	"HurkaMap.hpp"
 	"Node.hpp"
 
@@ -1663,7 +1663,7 @@
 	<SFML/Graphics.hpp>
 	"TrafficManager.hpp"
 
-1532090579 source:c:\github\lumo\src\hurka\src\bus.cpp
+1534291232 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
 	"RoadNetwork.hpp"
 
@@ -1685,7 +1685,7 @@
 	<direct.h>
 	"HurkaMatrix.hpp"
 
-1531430035 source:c:\github\lumo\src\hurka\src\utils.cpp
+1534108991 source:c:\github\lumo\src\hurka\src\utils.cpp
 	"Utils.hpp"
 	"Singletons/GLContextSingleton.hpp"
 
@@ -1700,7 +1700,7 @@
 	"Core.hpp"
 	"Utils.hpp"
 
-1532554483 c:\github\lumo\src\hurka\src\core.hpp
+1534290991 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>
@@ -1723,7 +1723,7 @@
 
 1521330484 source:c:\github\lumo\src\hurka\src\dijkstra.cpp
 
-1532554438 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
+1534286846 source:c:\github\lumo\src\hurka\src\roadnetwork.cpp
 	"RoadNetwork.hpp"
 
 1532272345 source:c:\github\lumo\src\hurka\src\trafficmanager.cpp
@@ -1756,7 +1756,7 @@
 	<string>
 	<iostream>
 
-1526238325 source:c:\github\lumo\src\hurka\src\node.cpp
+1534289862 source:c:\github\lumo\src\hurka\src\node.cpp
 	"Node.hpp"
 	"Link.hpp"
 
@@ -1778,7 +1778,7 @@
 	"Link.hpp"
 	"BinarySearchTree.hpp"
 
-1527065437 source:c:\github\lumo\src\hurka\src\graph.cpp
+1534289582 source:c:\github\lumo\src\hurka\src\graph.cpp
 	"Graph.hpp"
 
 1523096660 c:\github\lumo\src\hurka\src\busroute.hpp
@@ -1789,16 +1789,16 @@
 1523140518 source:c:\github\lumo\src\hurka\src\busroute.cpp
 	"BusRoute.hpp"
 
-1530541252 c:\github\lumo\src\hurka\src\hpos.hpp
+1534287965 c:\github\lumo\src\hurka\src\hpos.hpp
 	<iostream>
 	<assert.h>
 
-1532554107 source:c:\github\lumo\src\hurka\src\hpos.cpp
+1534291423 source:c:\github\lumo\src\hurka\src\hpos.cpp
 	"HPos.hpp"
 	"SlotPos.hpp"
 	"Grid.hpp"
 
-1530907969 source:c:\github\lumo\src\hurka\src\slotpos.cpp
+1534286728 source:c:\github\lumo\src\hurka\src\slotpos.cpp
 	"SlotPos.hpp"
 
 1531391102 c:\github\lumo\src\hurka\src\slotpos.hpp
@@ -1809,17 +1809,17 @@
 1529618792 source:c:\github\lumo\src\hurka\src\slotpath.cpp
 	"SlotPath.hpp"
 
-1527096007 c:\github\lumo\src\hurka\src\slotpath.hpp
+1534285878 c:\github\lumo\src\hurka\src\slotpath.hpp
 	<list>
 	"SlotPos.hpp"
 
-1532091629 c:\github\lumo\src\hurka\src\hrect.hpp
+1534287209 c:\github\lumo\src\hurka\src\hrect.hpp
 	<iostream>
 	<assert.h>
 	<SFML/Graphics.hpp>
 	"HPos.hpp"
 
-1532254849 source:c:\github\lumo\src\hurka\src\hrect.cpp
+1534287269 source:c:\github\lumo\src\hurka\src\hrect.cpp
 	"HRect.hpp"
 	"Grid.hpp"
 	"Utils.hpp"

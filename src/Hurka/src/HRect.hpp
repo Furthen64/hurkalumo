@@ -55,8 +55,8 @@ public:
     int compareAbsStartPoint(HRect *other);
 	int compareSize(HRect *other);
 
-	bool insideXPixles(HPos *pxPos);
-	bool insideYPixles(HPos *pxPos);
+	bool insideXPixles_middle(HPos *pxPos);
+	bool insideYPixles_middle(HPos *pxPos);
 
 
 	HRect *clone();

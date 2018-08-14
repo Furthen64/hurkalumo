@@ -65,7 +65,7 @@ int **allocateMatrix(int rows, int cols)
 
 
 
-/// (++)
+// (++)
 void dumpMatrix(int** matrix, int rows, int cols, std::string indent)
 {
 

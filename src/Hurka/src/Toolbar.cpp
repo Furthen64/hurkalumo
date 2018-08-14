@@ -20,9 +20,9 @@ Toolbar::Toolbar(HPos *_hpos)
 
 
     // Create a pixel rectangle
-    rect = new HRect(pos, new HPos( (int) (pos->gpix_y + toolbarHeightPx), (int) (pos->gpix_x + toolbarWidthPx) , USE_GPIX) );
+    rect = new HRect(pos, new HPos( (int) (pos->gpix_y_topleft + toolbarHeightPx), (int) (pos->gpix_x_topleft + toolbarWidthPx) , USE_GPIX) );
 
-    toolbarXOffset = pos->gpix_x;
+    toolbarXOffset = pos->gpix_x_topleft;
 
     // get the whole texture for all the buttons
     texture.loadFromFile(getFullUri("data\\textures\\TOOLBAR.png"));
@@ -57,8 +57,8 @@ Toolbar::Toolbar(HPos *_hpos)
 // (-+)
 void Toolbar::set_pos_by_gpix(HPos *_hpos)
 {
-    pos->gpix_y = _hpos->gpix_y;
-    pos->gpix_x = _hpos->gpix_x;
+    pos->gpix_y_topleft = _hpos->gpix_y_topleft;
+    pos->gpix_x_topleft = _hpos->gpix_x_topleft;
 }
 
 
@@ -134,7 +134,7 @@ void Toolbar::draw( RenderTarget& rt, HPos *viewHPos)
 
 /// \brief Returns true if the given hpos is inside the rectangle of the toolbar
 /// \param mousepos An hpos with gpix values set
-// (-+)
+// (--)
 bool Toolbar::isPosInsideToolbar(HPos *mousepos)
 {
 
@@ -148,10 +148,10 @@ bool Toolbar::isPosInsideToolbar(HPos *mousepos)
 //     std::cout << "isPosInsideToolbar()------------!\n";          // FIXME delete all these stdcouts
     // std::string ind = "   ";
 
-    int tbStartY = rect->absStart->gpix_y;
-    int tbStartX = rect->absStart->gpix_x;
-    int tbEndY = rect->absEnd->gpix_y;
-    int tbEndX = rect->absEnd->gpix_x;
+    int tbStartY = rect->absStart->gpix_y_topleft;
+    int tbStartX = rect->absStart->gpix_x_topleft;
+    int tbEndY = rect->absEnd->gpix_y_topleft;
+    int tbEndX = rect->absEnd->gpix_x_topleft;
 
 
 //     std::cout << " mouse wpix ( " << mousepos->wpix_y << "," << mousepos->wpix_x << " )\n";
@@ -190,18 +190,18 @@ int Toolbar::whatButtonDidIPress(HPos *mousepos)
     // std::cout << "what button did I press()------------!\n";
     // std::string ind = "   ";
 
-    int buttonStartY = rect->absStart->gpix_y;
-    int buttonStartX = rect->absStart->gpix_x;
-    int buttonEndY = rect->absEnd->gpix_y;
-    int buttonEndX = rect->absEnd->gpix_x;
+    int buttonStartY = rect->absStart->gpix_y_topleft;
+    int buttonStartX = rect->absStart->gpix_x_topleft;
+    int buttonEndY = rect->absEnd->gpix_y_topleft;
+    int buttonEndX = rect->absEnd->gpix_x_topleft;
 
 
     for(int n = 0; n < TOOLBAR_BUTTONS; n++) {
 
-        buttonStartY = rect->absStart->gpix_y;
-        buttonStartX = rect->absStart->gpix_x + (n *16);
+        buttonStartY = rect->absStart->gpix_y_topleft;
+        buttonStartX = rect->absStart->gpix_x_topleft + (n *16);
 
-        buttonEndY = rect->absEnd->gpix_y;
+        buttonEndY = rect->absEnd->gpix_y_topleft;
         buttonEndX = buttonStartX +  16;
 
         if(mousepos->wpix_y >= buttonStartY && mousepos->wpix_y <= buttonEndY) {
@@ -214,7 +214,7 @@ int Toolbar::whatButtonDidIPress(HPos *mousepos)
         }
     }
 
-    // std::cout << "Warning" << cn << " whatButtonDidIPress returns TB_NONE\n";
+    std::cout << "Warning" << cn << " whatButtonDidIPress returns TB_NONE\n";
     return TB_NONE;
 }
 

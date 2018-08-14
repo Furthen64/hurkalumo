@@ -755,8 +755,8 @@ void RoadNetwork::createSlotPathFromDijkstraResult(DijkstraResult *dijkstraResul
         workPos->abs_iso_y = workPos->rel_iso_y  + rect->absStart->abs_iso_y;
         workPos->abs_iso_x = workPos->rel_iso_x + rect->absStart->abs_iso_x;
 
-        workPos->gpix_y = Grid::convert_iso_to_gpix_y(workPos->abs_iso_y, workPos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 2);   // rendered as a GRID
-        workPos->gpix_x = Grid::convert_iso_to_gpix_x(workPos->abs_iso_y, workPos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 2);   // rendered as a GRID
+        workPos->gpix_y_topleft = Grid::convert_iso_to_gpix_y_topleft(workPos->abs_iso_y, workPos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 2);   // rendered as a GRID
+        workPos->gpix_x_topleft = Grid::convert_iso_to_gpix_x_topleft(workPos->abs_iso_y, workPos->abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 2);   // rendered as a GRID
 
 
 

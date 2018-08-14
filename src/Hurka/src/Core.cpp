@@ -1,8 +1,5 @@
 #include "Core.hpp"
 
-// GUIDELINE: a Core instance should only exist in Main.cpp
-
-
 
 Core::Core()
 {
@@ -20,7 +17,7 @@ Core::~Core()
 // Maybe user wanted to quit, load a new map or maybe even clear the gameboard and start fresh with an empty map.
 // All of this is taken care in this lifecycle function.
 //
-// (--) // FIXME: Needs more testing 2018-07-11
+// (--) wishlist: Needs more testing
 LifecycleResult *Core::lifecycle()
 {
 
@@ -53,6 +50,20 @@ LifecycleResult *Core::lifecycle()
             std::cout << "  *** Running Regression tests on all classes ***\n{\n";
 
 
+            std::cout << "\n\nUNIT TEST    \"HPos\" \n";
+            {
+                HPos *dummy = new HPos();
+                dummy->testFunctions();
+                delete dummy;
+
+
+                HPos *dummy2 = new HPos();
+                dummy2->testFunctions();
+                delete dummy2;
+
+            }
+
+
 
             std::cout << "\n\nUNIT TEST    \"HRect\" \n";
             std::cout << "------------------------------------------\n";
@@ -71,11 +82,7 @@ LifecycleResult *Core::lifecycle()
                 int retStatus = -1;
                 std::string roadnetMap = "data\\maps\\roadnetwork_test.txt";
 
-
-
                 enableFallbackContext();
-
-
 
 
                 // Load a specific test map for the RoadNetwork class
@@ -83,9 +90,6 @@ LifecycleResult *Core::lifecycle()
                 TextureManager *txtmgr;
                 txtmgr= txtmgr->getInstance();
                 retStatus = txtmgr->loadTextures();
-
-
-
 
                 GameMatrix *gamematrix = new GameMatrix(64,64);
 
@@ -99,14 +103,11 @@ LifecycleResult *Core::lifecycle()
 
                 assert(hmap->fullUriMapName != "empty");
 
-
                 assert(hmatrix->rows < 10000);
 
                 assert(hmatrix->cols < 10000);
 
                 TrafficManager *tmgr = new TrafficManager();
-
-
 
                 retStatus = tmgr->readRoadNetworksFromHMatrix(hmatrix, debugLevel);
 
@@ -144,30 +145,73 @@ LifecycleResult *Core::lifecycle()
 
 
                 // "iso -> gpix"
-                HPos *isopos = new HPos(5,10, USE_ISO);
+                HPos *isopos = new HPos(5,2, USE_ISO);
+
+                isopos->gpix_y_middle = Grid::isoToGpixMiddleY(isopos, 0, 1);
+
+                isopos->gpix_x_middle = Grid::isoToGpixMiddleX(isopos, 0, 1);     //Test me
+
+                std::cout << "\n\n";
                 isopos->dump(" isopos: ");
 
-                HPos *gpixpos = new HPos(); // starts out with dummy values -1,-1
+                std::cout << "\n\n";
+                HPos *gpixpos = new HPos();
+                gpixpos = Grid::convert_iso_to_gpix_middle(isopos);
+                std::cout << "\n\n";
+                gpixpos->dump(" gpix: ");
 
-                gpixpos = Grid::convert_iso_to_gpix(isopos);    // "iso -> gpix" now done
+
 
 
                 // "gpix -> iso"
                 HPos *isopos_eq = new HPos();
-                isopos_eq = Grid::convert_gpix_to_iso(gpixpos);
+                RenderWindow *wPtr = new sf::RenderWindow(sf::VideoMode(320,240),"Title");
+                gm = new GameMatrix(NR_GRIDS_HEIGHT, NR_GRIDS_WIDTH);
+                std::cout << "gm->gethrect:\n";
+                gm->getHRect()->dump("    ");
+
+                std::cout << "Recursion call findTile:\n";
+                isopos_eq = grid->findTile(gm->getHRect(),
+                                           gpixpos,
+                                           "   ",
+                                           *wPtr,
+                                           viewHPos,
+                                           "");
+
+
+                assert(isopos_eq != nullptr);
+
+
+
+
 
 
                 // Now compare the two isopos and isopos_eq
                 isopos_eq->dump(" isopos_eq: ");
                 assert(isopos->compare(isopos_eq) == 0);
 
+                wPtr->close();
             }
 
 
+
+
+
+            std::cout << "\n\nUNIT TEST     \"gpix -> iso -> gpix\"\n";
+            std::cout << "------------------------------------------\n";
             {
                 // "gpix -> iso -> gpix"
 
+
+
+
+
             }
+
+
+
+
+
 
             lifecycleResult = new LifecycleResult(0, "OK");
             runResult = new RunResult();
@@ -182,10 +226,8 @@ LifecycleResult *Core::lifecycle()
 
         }
 
-
-
-
         retResult = allocateResources();
+
         if(retResult != 0) {
             std::cout << "\n\n*** Exiting with error.\n";
             lifecycleResult = new LifecycleResult(-1, "allocateResources failed");
@@ -220,7 +262,6 @@ LifecycleResult *Core::lifecycle()
             std::cout << "\n\n*** Exiting with error.\n";
             lifecycleResult = new LifecycleResult(-1, "setup failed");
             return lifecycleResult;
-
         }
 
 
@@ -302,15 +343,12 @@ int Core::allocateResources()
                                                                                     // Could be that the destructor function runs inside another scope alltogether.... bah, humbug!
     if( textureMgr->nrOfTextures() <= 0 )
     {
-
         if(textureMgr->loadTextures() != 0) {
             std::cout << "Core quitting. Could not load textures.\n";
             return -1;
         }
         if(debugLevel >=1) { std::cout << " " << textureMgr->nrOfTextures() << " textures loaded!\n"; }
-
     }
-
 
 
     // Viewhpos is the viewport to the gamematrix,
@@ -320,8 +358,8 @@ int Core::allocateResources()
 
 
     viewHPos = new HPos();
-    viewHPos->gpix_y = startViewPosY;
-    viewHPos->gpix_x = startViewPosX;
+    viewHPos->gpix_y_topleft = startViewPosY;
+    viewHPos->gpix_x_topleft = startViewPosX;
 
 
 
@@ -492,7 +530,7 @@ int Core::setup(int width, int height, std::string title)
 //  Welcome to Alpha, guys!
 // (--+)
 
-// 2018-07-05           jörgen engström     CR#28       Adding some type of Lifecycle and Result classes to this thing.
+// 2018-07-05           Fat64   CR#28       Adding some type of Lifecycle and Result classes to this thing.
 
 // Called from core:lifecycle
 
@@ -681,20 +719,20 @@ RunResult *Core::run()
 
             /// Do not allow us to click outside the resolution of the window
 
-            if( mousepos.gpix_x > SCREEN_WIDTH ) {
-                    mousepos.gpix_x = SCREEN_WIDTH;
+            if( mousepos.gpix_x_topleft > SCREEN_WIDTH ) {
+                    mousepos.gpix_x_topleft = SCREEN_WIDTH;
             }
 
-            if( mousepos.gpix_y > SCREEN_HEIGHT ) {
-                mousepos.gpix_y = SCREEN_HEIGHT;
+            if( mousepos.gpix_y_topleft > SCREEN_HEIGHT ) {
+                mousepos.gpix_y_topleft = SCREEN_HEIGHT;
             }
 
-            if(mousepos.gpix_y < 0) {
-                mousepos.gpix_y = 0;
+            if(mousepos.gpix_y_topleft < 0) {
+                mousepos.gpix_y_topleft = 0;
             }
 
-            if(mousepos.gpix_x < 0) {
-                mousepos.gpix_x = 0;
+            if(mousepos.gpix_x_topleft < 0) {
+                mousepos.gpix_x_topleft = 0;
             }
 
 
@@ -703,10 +741,10 @@ RunResult *Core::run()
             /// Where in relation to the Center point are we clicking?
             /// Above? Below?
 
-            if(mousepos.gpix_y < ceil(SCREEN_HEIGHT/2))
+            if(mousepos.gpix_y_topleft < ceil(SCREEN_HEIGHT/2))
             {
                 topof = true;
-            } else if(mousepos.gpix_y > ceil(SCREEN_HEIGHT/2))
+            } else if(mousepos.gpix_y_topleft > ceil(SCREEN_HEIGHT/2))
             {
                 topof = false;
                 belowof = true;
@@ -717,9 +755,9 @@ RunResult *Core::run()
 
 
             // Left of? Right of?
-            if(mousepos.gpix_x < ceil(SCREEN_WIDTH/2)) {
+            if(mousepos.gpix_x_topleft < ceil(SCREEN_WIDTH/2)) {
                 leftof = true;
-            } else if(mousepos.gpix_x > ceil(SCREEN_WIDTH/2)) {
+            } else if(mousepos.gpix_x_topleft > ceil(SCREEN_WIDTH/2)) {
                 leftof = false;
                 rightof = true;
             } else {
@@ -730,17 +768,17 @@ RunResult *Core::run()
 
             // the nr of pixels between the click and the center position of screen
 
-            if( ceil(SCREEN_WIDTH/2) > mousepos.gpix_x) {
-                relativeX = ceil(SCREEN_WIDTH/2) - mousepos.gpix_x;
+            if( ceil(SCREEN_WIDTH/2) > mousepos.gpix_x_topleft) {
+                relativeX = ceil(SCREEN_WIDTH/2) - mousepos.gpix_x_topleft;
             } else {
-                relativeX = mousepos.gpix_x - ceil(SCREEN_WIDTH/2);
+                relativeX = mousepos.gpix_x_topleft - ceil(SCREEN_WIDTH/2);
             }
 
 
-            if( ceil(SCREEN_HEIGHT/2) > mousepos.gpix_y) {
-                relativeY = ceil(SCREEN_HEIGHT/2) - mousepos.gpix_y;
+            if( ceil(SCREEN_HEIGHT/2) > mousepos.gpix_y_topleft) {
+                relativeY = ceil(SCREEN_HEIGHT/2) - mousepos.gpix_y_topleft;
             } else {
-                relativeY = mousepos.gpix_y - ceil(SCREEN_HEIGHT/2);
+                relativeY = mousepos.gpix_y_topleft - ceil(SCREEN_HEIGHT/2);
             }
 
 
@@ -763,23 +801,23 @@ RunResult *Core::run()
             /// Add or remove from the x- and y-offset because of the clicking
 
             if(rightof && topof) {
-                viewHPos->gpix_x -= relativeX;
-                viewHPos->gpix_y += relativeY;
+                viewHPos->gpix_x_topleft -= relativeX;
+                viewHPos->gpix_y_topleft += relativeY;
             } else if(rightof && belowof) {
-                viewHPos->gpix_x -= relativeX;
-                viewHPos->gpix_y -= relativeY;
+                viewHPos->gpix_x_topleft -= relativeX;
+                viewHPos->gpix_y_topleft -= relativeY;
             } else if(leftof && belowof) {
-                viewHPos->gpix_x += relativeX;
-                viewHPos->gpix_y -= relativeY;
+                viewHPos->gpix_x_topleft += relativeX;
+                viewHPos->gpix_y_topleft -= relativeY;
             } else if(leftof && topof) {
-                viewHPos->gpix_x += relativeX;
-                viewHPos->gpix_y += relativeY;
+                viewHPos->gpix_x_topleft += relativeX;
+                viewHPos->gpix_y_topleft += relativeY;
             } else {
 
             }
 
             if(debugLevel > 1)  {
-                std::cout << ind1 << " VIEWPOS x=" << viewHPos->gpix_x << ", y=" << viewHPos->gpix_y << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
+                std::cout << ind1 << " VIEWPOS x=" << viewHPos->gpix_x_topleft << ", y=" << viewHPos->gpix_y_topleft << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
         }
 
@@ -816,8 +854,8 @@ RunResult *Core::run()
 
             // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
 
-            mousepos->gpix_y -= viewHPos->gpix_y;
-            mousepos->gpix_x -= viewHPos->gpix_x;
+            mousepos->gpix_y_topleft -= viewHPos->gpix_y_topleft;
+            mousepos->gpix_x_topleft -= viewHPos->gpix_x_topleft;
 
 
 

@@ -215,40 +215,40 @@ void HRect::calculateBounds()
 
 
 
-            x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
-            y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            x = Grid::convert_iso_to_gpix_x_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
+            y = Grid::convert_iso_to_gpix_y_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 1);
 
 
             if(x < minX) {
                 minX = x;
                 leftBound->abs_iso_y = Y;
                 leftBound->abs_iso_x = X;
-                leftBound->gpix_x = x;
-                leftBound->gpix_y = y;
+                leftBound->gpix_x_topleft = x;
+                leftBound->gpix_y_topleft = y;
             }
 
             if(x > maxX) {
                 maxX = x;
                 rightBound->abs_iso_y = Y;
                 rightBound->abs_iso_x = X;
-                rightBound->gpix_x = x + GRID_TEXTURE_WIDTH;
-                rightBound->gpix_y = y;
+                rightBound->gpix_x_topleft = x + GRID_TEXTURE_WIDTH;
+                rightBound->gpix_y_topleft = y;
             }
 
             if(y < minY) {
                 minY = y;
                 topBound->abs_iso_y = Y;
                 topBound->abs_iso_x = X;
-                topBound->gpix_y = y;
-                topBound->gpix_x = x;
+                topBound->gpix_y_topleft = y;
+                topBound->gpix_x_topleft = x;
             }
 
             if(y > maxY) {
                 maxY = y;
                 bottomBound->abs_iso_y = Y;
                 bottomBound->abs_iso_x = X;
-                bottomBound->gpix_y = y + GRID_TEXTURE_HEIGHT;
-                bottomBound->gpix_x = x;
+                bottomBound->gpix_y_topleft = y + GRID_TEXTURE_HEIGHT;
+                bottomBound->gpix_x_topleft = x;
             }
 
         }
@@ -287,16 +287,19 @@ int HRect::nrTiles()
 
 
 
+
+
+
 // Please note: +-1 error possible, should it go to <= or to < when matching bounds? should we have a function insideXPixlesOrOnBounds which uses >= and <= ?
 // (--) Test, very buggy
-bool HRect::insideXPixles(HPos *pxPos)
+bool HRect::insideXPixles_middle(HPos *pxPos)
 {
     int debugLevel = 0;
 
-    int thisLeft = this->leftB->gpix_x;
-    int thisRight = this->rightB->gpix_x;
+    int thisLeft = this->leftB->gpix_x_topleft;
+    int thisRight = this->rightB->gpix_x_topleft;
 
-    int searchX = pxPos->gpix_x;
+    int searchX = pxPos->gpix_x_middle;
 
     if(debugLevel >= 1)
     {
@@ -316,14 +319,14 @@ bool HRect::insideXPixles(HPos *pxPos)
 
 
 // (--) test
-bool HRect::insideYPixles(HPos *pxPos)
+bool HRect::insideYPixles_middle(HPos *pxPos)
 {
     int debugLevel = 0;
 
-    int thisTop   = this->topB->gpix_y;
-    int thisBottom = this->bottomB->gpix_y;
+    int thisTop   = this->topB->gpix_y_topleft;
+    int thisBottom = this->bottomB->gpix_y_topleft;
 
-    int searchY = pxPos->gpix_y;
+    int searchY = pxPos->gpix_y_middle;
 
 
      if(debugLevel >= 1)
@@ -508,9 +511,9 @@ std::string HRect::absToString()
     std::string str = "HRect ";
     str += absStart->absToString();
     str += " to (";
-    str += std::to_string(absStart->abs_iso_y + rows);
+    str += std::to_string(absStart->abs_iso_y + (rows-1));
     str += ", " ;
-    str += std::to_string(absStart->abs_iso_x + cols);
+    str += std::to_string(absStart->abs_iso_x + (cols-1));
     str += ")";
     return str;
 }
@@ -541,11 +544,11 @@ void HRect::draw(RenderTarget& rt, HPos *viewHPos)
             for(int X=this->absStart->abs_iso_x; X < (this->absStart->abs_iso_x + this->cols); X++) {
 
                 Vector2f currPos = Vector2f();
-                currPos.y = Grid::convert_iso_to_gpix_y(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
-                currPos.x = Grid::convert_iso_to_gpix_x(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+                currPos.y = Grid::convert_iso_to_gpix_y_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
+                currPos.x = Grid::convert_iso_to_gpix_x_topleft(Y,X, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, 0);
 
-                currPos.y += viewHPos->gpix_y;
-                currPos.x += viewHPos->gpix_x;
+                currPos.y += viewHPos->gpix_y_topleft;
+                currPos.x += viewHPos->gpix_x_topleft;
 
                 sprite.setPosition(currPos);
                 rt.draw(sprite);
@@ -555,24 +558,6 @@ void HRect::draw(RenderTarget& rt, HPos *viewHPos)
 
 
     }
-    /*
-
-    int x = this->absStart->gpix_x;
-    int y = this->absStart->gpix_y;
-
-
-    // Viewing offset
-    x += viewHPos->gpix_x;
-    y += viewHPos->gpix_y;
-
-
-    Vector2f _pos = {(float)x,(float)y};
-
-
-    sprite.setPosition(_pos);
-
-    rt.draw(sprite);
-        */
 }
 
 

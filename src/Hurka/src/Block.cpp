@@ -99,13 +99,13 @@ Block::Block(HPos *_hpos, int _textureId)
 // (-+)
 void Block::draw( RenderTarget& rt, HPos *viewHPos)
 {
-    int x = hpos->gpix_x;
-    int y = hpos->gpix_y;
+    int x = hpos->gpix_x_topleft;
+    int y = hpos->gpix_y_topleft;
 
 
     // Viewing offset
-    x += viewHPos->gpix_x;
-    y += viewHPos->gpix_y;
+    x += viewHPos->gpix_x_topleft;
+    y += viewHPos->gpix_y_topleft;
 
 
     Vector2f _pos = {(float)x,(float)y};
@@ -154,15 +154,17 @@ void Block::setTextureByName(std::string _textureName)
 // Sets the position by a hpos object,
 // The only thing we know is set is the "abs_iso" position data
 //
-// (-+)
+// (--) untested
 void Block::set_pos_by_abs_iso(HPos *_abs_iso)
 {
-
-
     hpos = _abs_iso;
 
-    hpos->gpix_x = Grid::convert_iso_to_gpix_x(hpos->abs_iso_y, hpos->abs_iso_x, textureSize.width, textureSize.height, 2);
-    hpos->gpix_y = Grid::convert_iso_to_gpix_y(hpos->abs_iso_y, hpos->abs_iso_x, textureSize.width, textureSize.height, 2);
+    hpos->gpix_y_middle = Grid::isoToGpixMiddleY(_abs_iso, 2, 0);
+    hpos->gpix_x_middle = Grid::isoToGpixMiddleX(_abs_iso, 2, 0 );
+
+    hpos->gpix_x_topleft = Grid::convert_iso_to_gpix_x_topleft(hpos->abs_iso_y, hpos->abs_iso_x, textureSize.width, textureSize.height, 2);
+    hpos->gpix_y_topleft = Grid::convert_iso_to_gpix_y_topleft(hpos->abs_iso_y, hpos->abs_iso_x, textureSize.width, textureSize.height, 2);
+
 
 }
 
@@ -175,7 +177,8 @@ void Block::dump(std::string ind)
     std::cout << ind << "position:\n";
     std::cout << ind << "  absolute iso position = " << hpos->abs_iso_y << ", " << hpos->abs_iso_x << "\n";
     std::cout << ind << "  relative iso position = " << hpos->rel_iso_y << ", " << hpos->rel_iso_x << "\n";
-    std::cout << ind << "  gameworld pixel position = " << hpos->gpix_y << ", " << hpos->gpix_x << "\n";
+    std::cout << ind << "  topleft pixel position = " << hpos->gpix_y_topleft << ", " << hpos->gpix_x_topleft << "\n";
+    std::cout << ind << "  middle of tile pixel position = " << hpos->gpix_y_middle << ", " << hpos->gpix_x_middle << "\n";
     std::cout << ind << "Texture: " << textureName << "\n";
     std::cout << ind << "ID: " << textureID << "\n";
     std::cout << ind << "texturesize: " << textureSize.height  << " x " << textureSize.width << "\n";
@@ -199,11 +202,7 @@ Block *Block::clone()
 {
     std::cout << "Block.clone(): UNDEFINED BEHAVIOUR !! Needs more testing.\n";
 
-//    Block *block = new Block({pos.x, pos.y}, textureName);
-
     Block *block = new Block(hpos->clone(), textureName);
-
-    // FIXME add delete
 
     return block;
 }

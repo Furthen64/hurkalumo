@@ -67,7 +67,9 @@ class HPos
 public:
 
     HPos(int _y, int _x, int positionType);
+    HPos(int _y, int _x, int positionType, int typeOfElement);
     HPos();
+
     void transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos);
     void synchGpixToIsoValues(int height, int width);
     std::string relToString();
@@ -79,8 +81,10 @@ public:
     int abs_iso_x;
     int rel_iso_y;  // Relative tile position  useful for inside rectangles on the gameboard
     int rel_iso_x;
-    int gpix_y;     // Gameboard pixel inside Euclidian grid space!
-    int gpix_x;
+    int gpix_y_topleft;     // Topleft tile pixel position
+    int gpix_x_topleft;
+    int gpix_y_middle;     // Middle of tile pixel position
+    int gpix_x_middle;
     int wpix_y;     // Window pixel (0,0 to 640,480)
     int wpix_x;
 
@@ -118,11 +122,11 @@ public:
 
 
     // (-+)
-    static int compareTwoGpix(HPos *first, HPos *other)
+    static int compareTwoGpixTopLeft(HPos *first, HPos *other)
     {
-        if(first->gpix_y == other->gpix_y
+        if(first->gpix_y_topleft == other->gpix_y_topleft
            &&
-           first->gpix_x == other->gpix_x)
+           first->gpix_x_topleft == other->gpix_x_topleft)
         {
             return 0;
         }
@@ -131,11 +135,13 @@ public:
     }
 
 
+    void testFunctions();
+
+
+
 
 private:
 
-
-    void testFunctions();
 
 
 

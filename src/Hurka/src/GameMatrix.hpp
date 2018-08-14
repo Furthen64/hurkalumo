@@ -60,6 +60,8 @@ private:
 
     int minX = 7870;
     int minY = 7870;
+
+    std::string cn = "GameMatrix.cpp";
 };
 
 #endif

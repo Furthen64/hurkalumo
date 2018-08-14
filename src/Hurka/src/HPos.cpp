@@ -6,43 +6,58 @@
 
 
 
-/// \brief USE_ISO: Creates a HPos with rows and cols, assumes it's a grid sized object and creates gpix values thereof
-/// @param _y Vertical positioning, or on the isometric board= M the sloping down and left.
-/// @param _x Horizontal positioning, or on the isometric board= N the sloping down and right
-/// @param positionType USE_ISO or USE_GPIX , choose what values to store away.
+/// \brief USE_ISO: Creates an HPos with rows and cols, assumes it's a grid sized object and creates gpix values thereof
+/// \param _y Vertical positioning, or on the isometric board= M the sloping down and left.
+/// \param _x Horizontal positioning, or on the isometric board= N the sloping down and right
+/// \param positionType USE_ISO or USE_GPIX , choose what values to store away.
+/// \param typeOfElement 0=GRID, 1=GAMEMATRIX, 2=BLOCK
 // (--)
-HPos::HPos(int _y, int _x, int positionType)
+HPos::HPos(int _y, int _x, int positionType, int typeOfElement)
 {
-    // We have no idea what object it is ... alpha-0.2 could change that
-    // ummm but for now set gpix values as it would be a grid tile
+
     if(positionType == USE_ISO) {
+
         abs_iso_y = _y;
         abs_iso_x = _x;
         rel_iso_y = _y;
         rel_iso_x = _x;
 
 
-        gpix_y = Grid::convert_iso_to_gpix_y(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
-        gpix_x = Grid::convert_iso_to_gpix_x(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT,0);
+
+        gpix_y_topleft = Grid::convert_iso_to_gpix_y_topleft(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, typeOfElement);
+        gpix_x_topleft = Grid::convert_iso_to_gpix_x_topleft(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, typeOfElement);
+
+
+        gpix_y_middle = Grid::isoToGpixMiddleY(this, typeOfElement, 0);
+        gpix_x_middle = Grid::isoToGpixMiddleX(this, typeOfElement, 0);
 
 
     }
 
     if(positionType == USE_GPIX) {
 
-
         // alpha-0.2: please also update the abs iso positions based on the gpix, using findTile()
         abs_iso_y = 0;
         abs_iso_x = 0;
         rel_iso_y = 0;
         rel_iso_x = 0;
-        gpix_y = _y;
-        gpix_x = _x;
+        gpix_y_topleft = _y;
+        gpix_x_topleft  = _x;
         wpix_y = _y;
         wpix_x = _x;
 
     }
 }
+
+
+// Defaults to the "GRID" typeOfElement
+// Simplified constructor that does Constructor Delegating to the one doing anything
+HPos::HPos(int _y, int _x, int positionType) : HPos(_y, _x, positionType, 0)
+{
+}
+
+
+
 
 
 // (++)
@@ -52,8 +67,8 @@ HPos::HPos()
     abs_iso_x = 0;
     rel_iso_y = 0;
     rel_iso_x = 0;
-    gpix_y = 0;
-    gpix_y = 0;
+    gpix_y_topleft  = 0;
+    gpix_y_topleft  = 0;
 }
 
 
@@ -98,7 +113,7 @@ std::string HPos::relToString()
 
 /// \brief If "other" is an exact match to "this", we return 0.
 /// \return 0 on exact match, -1 if not.
-// (--) TEST
+// (--) TEST needs "middle" gpix comparison too!
 int HPos::compare(HPos *other)
 {
 
@@ -106,9 +121,9 @@ int HPos::compare(HPos *other)
        &&
        other->abs_iso_x == this->abs_iso_x
        &&
-       other->gpix_y == this->gpix_y
+       other->gpix_y_topleft  == this->gpix_y_topleft
        &&
-       other->gpix_x == this->gpix_x
+       other->gpix_x_topleft  == this->gpix_x_topleft
        &&
        other->rel_iso_y == this->rel_iso_y
        &&
@@ -148,8 +163,8 @@ int HPos::compareAbsIso(HPos *other)
 // (-+)
 void HPos::transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos)
 {
-    slotpos->hpos->gpix_y += 12;
-    slotpos->hpos->gpix_x += 10;
+    slotpos->hpos->gpix_y_topleft  += 12;
+    slotpos->hpos->gpix_x_topleft  += 10;
 }
 
 
@@ -159,11 +174,15 @@ void HPos::transform_gpix_to_slotpos(SlotPos *slotpos, HPos *hpos)
 // (--) test!!!!
 void HPos::synchGpixToIsoValues(int height, int width)
 {
-    // this->gpix_y and gpix_x are the ones we know are set, the rest are not
+    // this->gpix_y and gpix_x are the ones we know
+
+    std::cout << "ERROR! synchGpixToIsoValues needs rework.... needs to use findTile, lots of data in parameters for that\n";
+    return ;
 
 
+    /*HPos *workpos = Grid::convert_gpix_to_iso(this, width, height);
 
-    HPos *workpos = Grid::convert_gpix_to_iso(this, width, height);        // FIXME hardcoded
+
 
 
     this->abs_iso_y = workpos->abs_iso_y;
@@ -171,30 +190,21 @@ void HPos::synchGpixToIsoValues(int height, int width)
 
     this->rel_iso_y = -1;
     this->rel_iso_x = -1;
-
-
-
-
-    /*
-    nextPos->rel_iso_x = nextPos->abs_iso_x;
-    nextPos->rel_iso_y = nextPos->abs_iso_y;
-
-    // Calculate the GPix position
-    nextPos->gpix_y = Grid::convert_iso_to_gpix_y(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
-    nextPos->gpix_x = Grid::convert_iso_to_gpix_x(nextPos->abs_iso_y, nextPos->abs_iso_x, 64, 32, 2);
-    */
+*/
 }
 
 
 /// \brief Copies all the values from the original to the new one, returns newly allocated HPos
-// (-+)
+// (--)
 HPos *HPos::clone()
 {
     HPos *_pos = new HPos(abs_iso_y, abs_iso_x, USE_ISO);
     _pos->rel_iso_y = rel_iso_y;
     _pos->rel_iso_x = rel_iso_x;
-    _pos->gpix_y = gpix_y;
-    _pos->gpix_x = gpix_x;
+    _pos->gpix_y_topleft  = gpix_y_topleft ;
+    _pos->gpix_x_topleft  = gpix_x_topleft ;
+    _pos->gpix_y_middle = gpix_y_middle ;
+    _pos->gpix_x_middle  = gpix_x_middle ;
 
     return _pos;
 }
@@ -207,7 +217,8 @@ void HPos::dump(std::string ind)
     std::cout << ind << "{\n";
     std::cout << ind << "  abs_iso   y=" << abs_iso_y << ", x=" << abs_iso_x << "\n";
     std::cout << ind << "  rel_iso   y=" << rel_iso_y << ", x=" << rel_iso_x << "\n";
-    std::cout << ind << "  gpix      y=" << gpix_y << ", x=" << gpix_x << "\n";
+    std::cout << ind << "  gpix topleft y=" << gpix_y_topleft << ", x=" << gpix_x_topleft << "\n";
+    std::cout << ind << "  gpix middle y=" << gpix_y_middle << ", x=" << gpix_x_middle << "\n";
     std::cout << ind << "}\n";
 }
 
@@ -219,8 +230,6 @@ void HPos::dump(std::string ind)
 
 /// TEST FUNCTIONS
 
-
-// private function
 void HPos::testFunctions()
 {
 
@@ -246,6 +255,8 @@ void HPos::testFunctions()
 
 
     // Comparing ISO values
+    A->dump("A");
+    AA->dump("AA");
     assert(HPos::compareTwoAbsIso(A,AA) == 0);
     assert(HPos::compareTwoAbsIso(B,BB) == 0);
     assert(HPos::compareTwoAbsIso(C,CC) == 0);
@@ -253,13 +264,12 @@ void HPos::testFunctions()
 
 
     // Comparing GPIX values
-    assert(HPos::compareTwoGpix(D,DD) == 0);
-    assert(HPos::compareTwoGpix(E,EE) == 0);
-    assert(HPos::compareTwoGpix(F,FF) == 0);
+    assert(HPos::compareTwoGpixTopLeft(D,DD) == 0);
+    assert(HPos::compareTwoGpixTopLeft(E,EE) == 0);
+    assert(HPos::compareTwoGpixTopLeft(F,FF) == 0);
 
 
-    std::cout << "These SHOULD fail: \n";
-
+    //std::cout << "These SHOULD fail: \n";
     //assert(HPos::compareTwoAbsIso(A,BB) == 0);
     //assert(HPos::compareTwoAbsIso(B,AA) == 0);
     //assert(HPos::compareTwoAbsIso(C,AA) == 0);

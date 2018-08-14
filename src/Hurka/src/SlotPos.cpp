@@ -48,12 +48,12 @@ SlotPos::SlotPos(HPos *_hpos)
 // (--) TEST
 void SlotPos::draw( sf::RenderTarget& rt, HPos *viewHPos)
 {
-    int y = hpos->gpix_y;
-    int x = hpos->gpix_x;
+    int y = hpos->gpix_y_topleft;
+    int x = hpos->gpix_x_topleft;
 
     // Viewing offset
-    y += viewHPos->gpix_y;
-    x += viewHPos->gpix_x;
+    y += viewHPos->gpix_y_topleft;
+    x += viewHPos->gpix_x_topleft;
 
     sf::Vector2f vpos = {(float)x,(float)y};
 
