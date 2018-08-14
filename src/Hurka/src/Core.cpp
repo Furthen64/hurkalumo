@@ -47,6 +47,9 @@ LifecycleResult *Core::lifecycle()
 
         if(runRegressionTestAndExit) {
 
+
+
+
             std::cout << "  *** Running Regression tests on all classes ***\n{\n";
 
 
@@ -226,6 +229,9 @@ LifecycleResult *Core::lifecycle()
 
         }
 
+
+
+        /// Allocate
         retResult = allocateResources();
 
         if(retResult != 0) {
@@ -236,8 +242,11 @@ LifecycleResult *Core::lifecycle()
 
 
 
-        // User clicked on Load Map in previous cycle?
 
+
+        /// Load Resources
+
+        // User clicked on Load Map in previous cycle?
         if(lifecycleResult->intReturn == LF_LOAD_NEW_MAP) {
             retResult = loadResources( lifecycleResult->lfStr1);
         }
@@ -248,6 +257,8 @@ LifecycleResult *Core::lifecycle()
             retResult = loadResources( );
 
         } else {
+
+            /// Default, load a starting map
             retResult = loadResources( startmapFilename);
         }
         if(retResult != 0) {
@@ -257,6 +268,9 @@ LifecycleResult *Core::lifecycle()
         }
 
 
+
+
+        /// Setup
         retResult = setup(1024,768, "Hurkalumo Editor 0.1-alpha");
         if(retResult != 0) {
             std::cout << "\n\n*** Exiting with error.\n";
@@ -390,6 +404,8 @@ int Core::loadResources()
 
 
 
+
+/// \brief Loads map and creates a HurkaMap object out of it, also gets roadmatrix
 // Returns 0 when ok,
 // Return -1 when something failed
 // (-+)
@@ -476,7 +492,6 @@ int Core::setup(int width, int height, std::string title)
     std::cout << "\n\n\n---------------setup--------------------\n";
 
     initRandomizer();
-
 
 
 
