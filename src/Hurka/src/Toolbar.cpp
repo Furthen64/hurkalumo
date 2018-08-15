@@ -135,18 +135,15 @@ void Toolbar::draw( RenderTarget& rt, HPos *viewHPos)
 /// \brief Returns true if the given hpos is inside the rectangle of the toolbar
 /// \param mousepos An hpos with gpix values set
 // (--)
-bool Toolbar::isPosInsideToolbar(HPos *mousepos)
+bool Toolbar::isPosInsideToolbar(HPos *mousepos_wpix)
 {
 
-    if(mousepos == nullptr) { std::cout << "ERROR " << cn << " isPosInsideToolbar nullptr!\n"; return false; }
+    if(mousepos_wpix == nullptr) { std::cout << "ERROR " << cn << " isPosInsideToolbar nullptr!\n"; return false; }
 
     if(rect->absStart == nullptr) { std::cout << "ERROR " << cn << " toolbar's rect->absStart is nullptr!\n"; return false; }
     if(rect->absEnd == nullptr) { std::cout << "ERROR " << cn << " toolbar's rect->absEnd is nullptr!\n"; return false; }
 
 
-
-//     std::cout << "isPosInsideToolbar()------------!\n";          // FIXME delete all these stdcouts
-    // std::string ind = "   ";
 
     int tbStartY = rect->absStart->gpix_y_topleft;
     int tbStartX = rect->absStart->gpix_x_topleft;
@@ -154,22 +151,15 @@ bool Toolbar::isPosInsideToolbar(HPos *mousepos)
     int tbEndX = rect->absEnd->gpix_x_topleft;
 
 
-//     std::cout << " mouse wpix ( " << mousepos->wpix_y << "," << mousepos->wpix_x << " )\n";
-    // std::cout << " toolbar rect gpix ( " << rect->absStart->gpix_y << "," << rect->absStart->gpix_x << " ) -> ( " << rect->absEnd->gpix_y  << ", " << rect->absEnd->gpix_x << ")\n";
-
-
 
     // FIXME make rect functions for this, call it "isGpixPosInsideRect" or something
-    if(mousepos->wpix_y >= tbStartY && mousepos->wpix_y <= tbEndY) {
-        if(mousepos->wpix_x >= tbStartX && mousepos->wpix_x <= tbEndX) {
+    if(mousepos_wpix->wpix_y >= tbStartY && mousepos_wpix->wpix_y <= tbEndY) {
+        if(mousepos_wpix->wpix_x >= tbStartX && mousepos_wpix->wpix_x <= tbEndX) {
 
-            // std::cout << "\n\n\n";
             return true;
         }
     }
 
-
-//     std::cout << "\n\n\n";
 
     return false;
 }

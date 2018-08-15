@@ -133,7 +133,7 @@ private:
 
 
     //std::string startmapFilename = "data\\maps\\two_roads.txt";
-    std::string startmapFilename = "data\\maps\\garden.txt";
+    //std::string startmapFilename = "data\\maps\\garden.txt";
     //std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
     //std::string startmapFilename = "data\\maps\\roadnetwork_test.txt";                // Works 2018-05
     //std::string startmapFilename = "data\\maps\\roadnetwork_long.txt";                // require 43x43    Works 2018-05
@@ -150,7 +150,7 @@ private:
                                                                                         // 53 = very low very right
 
     //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Bugs... somehow! not sure yet. 2018-05
-    //std::string startmapFilename = "data\\maps\\bustest3.txt";                        // Works 2018-06
+    std::string startmapFilename = "data\\maps\\bustest3.txt";                        //  Bugs! CR #20 buses move +1 offset on the x-axis
 
 
     int consoleMode = false;
@@ -161,7 +161,7 @@ private:
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 60;
+    int lockFPS_n = 24;
 
 
 

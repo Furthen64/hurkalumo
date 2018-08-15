@@ -63,12 +63,21 @@ HRect *GameMatrix::getHRect()
 
 
 
-/// \brief Takes a HPos with iso values, checks if that's within the gamematrix
+/// \brief Takes an HPos with iso values, checks if that's within the gamematrix
 /// \param searchpos Iso abs values set
 /// \return returns true if inside, false if not
 // (--) untested
 bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
 {
+
+
+
+
+
+
+
+
+
 
     std::cout << "FIXME " << cn << " isPosInsideGameMatri() should make use of findTile plz\n";
     searchpos = Grid::convert_gpix_to_iso(searchpos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);

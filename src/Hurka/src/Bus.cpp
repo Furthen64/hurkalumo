@@ -2,17 +2,13 @@
 #include "RoadNetwork.hpp"
 
 
-
-
-
 // Seems to work
 // (-+)
 Bus::Bus()
 {
     slotPath = nullptr;
 
-
-    /// Setup texture and sprite
+    // Setup texture and sprite
     TextureManager *t;
     t=t->getInstance();
     texture = t->getTexture("BUS001");
@@ -22,17 +18,13 @@ Bus::Bus()
 
 
 
-
+// (--)
 void Bus::reset()
 {
     if(slotPath != nullptr) { delete slotPath; }
     slotPath = nullptr;
 
-
-
-
     // Ignore texture stuff, probably wont change since construction
-
 }
 
 
@@ -52,8 +44,6 @@ void Bus::reset()
 ///
 /// TRAFFIC FUNCTIONS
 ///
-
-
 
 
 
@@ -81,8 +71,8 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 
         // Make sure we get iso position too! use the size of a GRID to get it done
 
-        // Heavy duty tool tho, makes recursions and shit:
-        this->pos->synchGpixToIsoValues(GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
+        // alpha-0.2: Heavy duty tool tho, makes recursions and shit:
+        //this->pos->synchGpixToIsoValues(GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
 
     }
 }

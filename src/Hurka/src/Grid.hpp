@@ -303,7 +303,8 @@ static int isoToGpixMiddleY(HPos *iso_pos, int typeOfElement, int _debugLevel)
 
 
         // BLOCK
-        std::cout << "WARNING grid.hpp isoToGpixMiddleY() needs improvement...\n";
+
+        // alpha-0.2: not sure this one works as well as it should anymore.
 
          initialYOffset = globalYOffset + 0;     // Start at the top
 
@@ -339,13 +340,11 @@ static int isoToGpixMiddleY(HPos *iso_pos, int typeOfElement, int _debugLevel)
 
 
 
-// please make this smarter, prettier, more beautiful, a wonder to watch, something delightful!
-// right now it has a weird name, and I don't like the wonky iso_pos gpix jumping around within the same HPos..
+
 /// \param typeOfElement 0=GRID, 1=GAMEMATRIX,  2=BLOCK
-
-
 // (--) Completely rewritten, please test
-// wishlist: Add support for Block :>
+// Wishlist: Please make this smarter, prettier, more beautiful, a wonder to watch, something delightful!
+//           right now it has a weird name, and I don't like the wonky iso_pos gpix jumping around within the same HPos..
 static int isoToGpixMiddleX(HPos *iso_pos, int typeOfElement, int _debugLevel)
 {
 

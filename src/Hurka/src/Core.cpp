@@ -611,8 +611,6 @@ RunResult *Core::run()
         return runResult;
     }
 
-    std::cout << "\n\n\n---------------run--------------------\n";
-
 
 
 
@@ -713,10 +711,7 @@ RunResult *Core::run()
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
 
-
-
-
-            // CR - Break out all this panning stuff
+            // Wishlist: Break out all this panning stuff
 
             bool rightof = false;
             bool belowof = false;
@@ -865,15 +860,16 @@ RunResult *Core::run()
 
             // Get mouse position
             sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
-            HPos *mousepos = new HPos(mousePos_i.y, mousePos_i.x, USE_GPIX);
+            HPos *mousepos = new HPos();
+
+            // Toolbar uses the wpix values, so set them up
+            mousepos->wpix_y = mousePos_i.y;
+            mousepos->wpix_x = mousePos_i.x;
+
 
             // Redact ViewPosition rectangle from it in order to get to GameMatrix positioning
-
-            mousepos->gpix_y_topleft -= viewHPos->gpix_y_topleft;
-            mousepos->gpix_x_topleft -= viewHPos->gpix_x_topleft;
-
-
-
+            mousepos->gpix_y_middle = mousePos_i.y - viewHPos->gpix_y_topleft;
+            mousepos->gpix_x_middle = mousePos_i.x - viewHPos->gpix_x_topleft;
 
 
 
@@ -941,62 +937,57 @@ RunResult *Core::run()
 
 
 
-            // Is it inside the gamematrix?
-            if( gm->isPosInsideGameMatrix(mousepos))
-            {
 
 
-                // Find out what iso tile you clicked on        (runs recursive function, has a limiter of how many levels deep it can go)
+            // Find out what iso tile you clicked on        (runs recursive function, has a limiter of how many levels deep it can go)
 
 
-                mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos, "");
+            mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos, "");
 
-                if(mousepos != nullptr) {
+            if(mousepos != nullptr) {
 
 
-                    /// LMB Action!
+                /// LMB Action!
 
-                    // When you click on the left mousebutton many things can happen throughout different modes,
-                    // alpha-0.2: Might need to have more consideration to MODES.
+                // When you click on the left mousebutton many things can happen throughout different modes,
+                // alpha-0.2: Might need to have more consideration to MODES.
 
-                    switch(lmbmode)
-                    {
-                        case LMB_CLICK_CREATE_OR_SWAP:
+                switch(lmbmode)
+                {
+                    case LMB_CLICK_CREATE_OR_SWAP:
 
-                            grid->setVisible(mousepos);     // Light up the current tile
+                        grid->setVisible(mousepos);     // Light up the current tile
 
-                            hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
+                        hmap->placeNewOrSwapRoad(mousepos, debugLevel);     // Place new road or Change existing
 
-                            break;
+                        break;
 
-                        case LMB_CLICK_CREATE:
+                    case LMB_CLICK_CREATE:
 
-                            grid->setVisible(mousepos);
+                        grid->setVisible(mousepos);
 
-                            hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
+                        hmap->placeNewRoad(mousepos, debugLevel);     // Place new road ONLY if there is a blank space there
 
-                            break;
+                        break;
 
-                        case LMB_ENQUIRE:
-                            grid->setVisible(mousepos);
+                    case LMB_ENQUIRE:
+                        grid->setVisible(mousepos);
 
-                            // Find out what's under the cursor
-                            hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
+                        // Find out what's under the cursor
+                        hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
 
-                            break;
+                        break;
 
-                        case LMB_PANNING:
-                            break;
-                    }
-
-                } else {
-                   //std::cout << cn << "Mousepos is nullptr\n";
+                    case LMB_PANNING:
+                        break;
                 }
 
+            } else {
+               //std::cout << cn << "Mousepos is nullptr\n";
+            }
 
 
 
-            } // if inside the gamematrix when clicking LMB
         }
 
 
