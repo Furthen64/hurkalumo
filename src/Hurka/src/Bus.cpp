@@ -54,25 +54,41 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 {
 
 
+    SlotPos *workPosGpix;
+    HPos *tempPos = new HPos();
+
     if(slotPath->hasValues()) {
 
-        // make the bus use the slotpath it now has
-        SlotPos *workPos;
-        workPos = slotPath->stepAndGetPos(1);   // Make 1 step
+        // make the bus use its slotpath
 
-        if(workPos == nullptr) {
+        workPosGpix = slotPath->stepAndGetGpixPos(1);   // Make 1 step
+
+        if(workPosGpix == nullptr) {
             std::cout << "ERROR " << cn << " gameUpdate tried getting a slotPos from slotPath but ended up with a nullptr. \n";
             return ;
         }
 
 
-        // Update current Pos   (gpix only!)
-        this->pos = workPos->hpos;
+        // Update current Pos
+        this->pos = workPosGpix->hpos;
 
-        // Make sure we get iso position too! use the size of a GRID to get it done
+        this->pos->gpix_x_middle = this->pos->gpix_x_topleft;       // Ugh.. make sure the right gpix values are set
+        this->pos->gpix_y_middle = this->pos->gpix_y_topleft;
 
-        // alpha-0.2: Heavy duty tool tho, makes recursions and shit:
-        //this->pos->synchGpixToIsoValues(GRID_TEXTURE_HEIGHT, GRID_TEXTURE_WIDTH);
+
+
+        this->pos = Grid::convert_gpix_to_iso(this->pos);
+
+        std::cout << "ERROR " << cn << " gameUpdate() Make sure we get iso position too!";
+
+
+
+
+
+        this->pos = tempPos;
+
+
+
 
     }
 }
@@ -262,8 +278,9 @@ HPos *Bus::get_next_pos()
 // (-+)
 HPos *Bus::getNowPos()
 {
-    if(slotPath->nowPos != nullptr) {
-        return slotPath->nowPos->hpos;
+    if(slotPath->nowPos_gpix != nullptr) {
+        slotPath->nowPos_gpix->hpos->dump("slotpath-now:   ");
+        return slotPath->nowPos_gpix->hpos;
     }
 
     return nullptr;

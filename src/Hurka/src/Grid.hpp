@@ -288,17 +288,6 @@ static int isoToGpixMiddleY(HPos *iso_pos, int typeOfElement, int _debugLevel)
         }
 
 
-        if(_debugLevel >=1) {
-            std::cout << " finally at: 644,1724 ?    (" << yOffset << ", " << xOffset << ")\n";
-        }
-
-
-        yStep = 0;
-
-
-
-
-
     } else if(typeOfElement == 2) {
 
 
@@ -444,8 +433,6 @@ static int isoToGpixMiddleX(HPos *iso_pos, int typeOfElement, int _debugLevel)
 
 
     }
-
-
 
     return xOffset + xStep + (GRID_TEXTURE_WIDTH/2);
 
@@ -671,6 +658,19 @@ static HPos *convert_iso_to_gpix_middle(HPos *isopos)
 /// \brief Takes gpix data, defaults to GRID texture size, and converts to isometric tile position
 static HPos *convert_gpix_to_iso(HPos *pix_pos)
 {
+/*
+@HURKALUMO
+
+
+FRÅN ISOMETRIC TILL KVADRAT:
+
+	*		markera enbart isometriska gridden
+	*		scale höjdled 198%
+	*		rotate 45 degs
+*/
+
+
+
     std::cout << "ERROR grid.hpp convert_gpix_to_iso() Stub code for now, should use findTile later\n";
     return nullptr;
     //HPos *retobj = convert_gpix_to_iso(pix_pos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);

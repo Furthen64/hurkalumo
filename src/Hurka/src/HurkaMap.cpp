@@ -166,6 +166,7 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
 
 
     // roadNetwork?
+
     RoadNetwork *roadnet = tm->roadNetworkAtPos(searchPos);
 
     if(roadnet != nullptr) {
@@ -177,7 +178,7 @@ void HurkaMap::dumpEverythingAtPos(HPos *searchPos, TrafficManager *tm, std::str
     // Clicked on a bus ON that roadnetwork?
     if(roadnet != nullptr) {
 
-        Bus *bus = roadnet->busAtPos(searchPos);        // alpha-0.2: What if there are several buses at the same iso tile?
+        Bus *bus = roadnet->busAtPos(searchPos);        // alpha-0.2: What if there are several buses at the same iso tile? Loop!
 
         if(bus != nullptr) {
 
@@ -202,7 +203,7 @@ int **HurkaMap::getMatrix()
 // (-+)
 void HurkaMap::draw(RenderTarget& rt, HPos *viewHPos)
 {
-    // iterate over all items
+     // iterate over all items
      for (std::list<Block *>::iterator itAll = blockList.begin(); itAll != blockList.end(); ++itAll)
      {
        (*itAll)->draw(rt, viewHPos);

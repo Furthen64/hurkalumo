@@ -114,9 +114,10 @@ void Grid::draw( RenderTarget& rt, HPos *viewHPos)
 void Grid::setVisible(HPos *_pos)
 {
     if(_pos == nullptr) {
-            std::cout << "WARNING: setVisible: _pos is nullptr!\n";
-            return ;
+        std::cout << "WARNING: setVisible: _pos is nullptr!\n";
+        return ;
     }
+
     drawSelectedGrid = true;
 
     selected_iso_pos.y = _pos->abs_iso_y;
@@ -128,7 +129,6 @@ void Grid::setVisible(HPos *_pos)
 
 
 
-
 void Grid::hideVisible()
 {
     drawSelectedGrid = false;
@@ -136,29 +136,21 @@ void Grid::hideVisible()
 
 
 
-
-
-
-
-// Uses internal findTile() function
 /// \brief Converts gpix values to iso position, great for converting mouse click position to an iso tile
 /// \param rt can be null
 /// \param viewhpos can be null these are only used for painting on canvas if needed for debug reasons
-
 // For now its easy to make it spin out of control, needs more safety features.
 // (--)
-
-
 HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchpos_gpix_middle, std::string ind, RenderTarget& rt, HPos *viewHPos, std::string recursionName)
 {
-    int debugLevel = 2;
+    int debugLevel = 0;
 
     if(entireGameBoard->rows > GAMEMATRIX_MAX_ROWS ||
        entireGameBoard->cols > GAMEMATRIX_MAX_COLS) {
 
-           std::cout << "ERROR! " << cn << " findTile got an entireGameBoard with a too large hrect.\n";
-           return nullptr;
-       }
+       std::cout << "ERROR! " << cn << " findTile got an entireGameBoard with a too large hrect.\n";
+       return nullptr;
+    }
 
     HRect *relRect = new HRect(
                                     entireGameBoard->absStart,
@@ -200,7 +192,7 @@ HPos *Grid::findTile(HRect *entireGameBoard, HPos *searchpos_gpix_middle, std::s
 /// \brief Given a searchpos with gpix values set, find an iso inside a hmatrix
 /// \param entireGameBoard
 /// \param relRect A smaller than entireGameBoard rectangle, used in a divide n conquer manner
-/// \param searchPos Gpix values of search position
+/// \param searchpos_gpix_middle Gpix values of search position
 // RECURSIVE
 // (--) Needs more testing, especially after all those changes to gpix position (added topleft and middle)
 HPos *Grid::findTile(HRect *entireGameboard,
@@ -296,12 +288,8 @@ HPos *Grid::findTile(HRect *entireGameboard,
 
 	// Divide the submatrix into four squares
 
-
-
     int rows = relRect->rows;
     int cols = relRect->cols;
-
-
 
     int halfRows1 = -1;
     int halfRows2 = -1;
@@ -333,10 +321,6 @@ HPos *Grid::findTile(HRect *entireGameboard,
     }
 
 
-
-
-
-
 	HRect *sq0, *sq1, *sq2, *sq3;
 
 
@@ -352,9 +336,6 @@ HPos *Grid::findTile(HRect *entireGameboard,
 
 
 
-
-
-
 	/// sq1
 
 
@@ -365,7 +346,6 @@ HPos *Grid::findTile(HRect *entireGameboard,
 
     sq1 = new HRect( new HPos(fromY, fromX,  USE_ISO),
 	                 new HPos(toY, toX,      USE_ISO));
-
 
 
 
@@ -395,8 +375,6 @@ HPos *Grid::findTile(HRect *entireGameboard,
 
     sq3 = new HRect( new HPos(fromY, fromX,  USE_ISO),
 	                 new HPos(toY, toX,     USE_ISO));
-
-
 
 
 	if(debugLevel >=1) {
@@ -431,9 +409,6 @@ HPos *Grid::findTile(HRect *entireGameboard,
 
 
 
-
-
-
     return retpos;
 
 }
@@ -443,8 +418,7 @@ HPos *Grid::findTile(HRect *entireGameboard,
 
 
 
-// Bugfix CR#7 2018-06-25        from if( fromX <  searchPos_gpix_x  && searchPos_gpix_x < toX ) {
-//                              to if( fromX <= searchPos_gpix_x  && searchPos_gpix_x < toX ) {
+
 
 /// \brief internal function used by "findTile()" to go pixelline by line for every tile inside a relative rect
 /// \param entireGameBoard
@@ -476,19 +450,10 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
     // You have to figure out the starting position and use the ROWS and COLS
     // of the RELRECT
 
-
-
-
-
     int searchPos_gpix_y = searchpos_gpix_middle->gpix_y_middle;
     int searchPos_gpix_x = searchpos_gpix_middle->gpix_x_middle;
 
-
-
-
-
     int currentY = -1;
-
 
     for(int Y = relRect->absStart->abs_iso_y; Y < (relRect->absStart->abs_iso_y+relRect->rows); Y++)
     {
@@ -521,9 +486,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
                 rt.draw(currIsoPosRect);
             }
 
-
-
-
             // Rough check if inside x pixel bounds
             // Is this the the way to do it? Shouldnt it check against the hrect bounds? isopos is not a rect, so it does not have those. It has gpixx and we know the grid texture width
 
@@ -532,9 +494,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             } else {
                 continue; // No reason to look into pixel by pixel ... Next!
             }
-
-
-
 
 
             // Rough check if inside y pixel bounds
@@ -554,10 +513,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
             ///
             /// Now look at individual pixel lines to see if our gpix y,x is in there
             ///
-
-            //const int GRID_TEXTURE_HEIGHT = 32;
-            //const int GRID_TEXTURE_WIDTH  = 64;
-
 
 
 
@@ -692,11 +647,6 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
                 }
 
 
-
-
-
-
-
                 if( fromX <= searchPos_gpix_x  && searchPos_gpix_x < toX ) {
 
                     if(currentY == searchPos_gpix_y) {
@@ -732,36 +682,4 @@ HPos *Grid::bruteForceFindTile(HRect *entireGameboard, HRect *relRect, HPos *sea
 
     return nullptr;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -157,11 +157,11 @@ private:
 
     int runRegressionTestAndExit = false;
 
-    int debugLevel = 1;
+    int debugLevel = 0;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 24;
+    int lockFPS_n = 12;
 
 
 
@@ -193,7 +193,7 @@ private:
     // Testing for a while, remove when dijkstra is super stable (2018-05)
     bool dijkstraAutoEndpointsAdjust = true;            // If true, the fromRoad and toRoad vars below will bee adjusted automatically if out of bounds
     int dijkstraFromRoad= 0;
-    int dijkstraToRoad = 40;
+    int dijkstraToRoad = 5;
 
 
 

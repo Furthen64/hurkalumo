@@ -13,11 +13,11 @@ Core::~Core()
 
 
 /// \brief High level function for starting up and running the editor/game
-// Makes a Run(), looks at what happened in a run and responds accordingly.
+// Runs the function "Run()", looks at what happened in a run and responds accordingly.
 // Maybe user wanted to quit, load a new map or maybe even clear the gameboard and start fresh with an empty map.
 // All of this is taken care in this lifecycle function.
 //
-// (--) wishlist: Needs more testing
+// (--) wishlist: more testing
 LifecycleResult *Core::lifecycle()
 {
 
@@ -30,7 +30,7 @@ LifecycleResult *Core::lifecycle()
 
 
     //
-    /// Lifecycle loop
+    // Lifecycle loop
     //
 
     while(lifecycleActive)
@@ -46,9 +46,6 @@ LifecycleResult *Core::lifecycle()
         /// Let's do unit testing of all the classes and see if hurkalumo's base is stable
 
         if(runRegressionTestAndExit) {
-
-
-
 
             std::cout << "  *** Running Regression tests on all classes ***\n{\n";
 
@@ -572,8 +569,8 @@ RunResult *Core::run()
     bool alreadyButtonPressed = false;
     int inputCooldown = 0;
 
-    //int inputCooldownCyclesPaused = 256000; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
-    int inputCooldownCyclesPaused = 10; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
+    int inputCooldownCyclesPaused = 256000; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
+    //int inputCooldownCyclesPaused = 10; // how many cycles for input cooldown (cycles goes faster when its got nottin to do, so we need more steps!)
 
     int inputCooldownCyclesEditor = 10;  // how many cycles for input cooldown
     bool inputCooldownActive = false;
@@ -610,12 +607,6 @@ RunResult *Core::run()
         runResult->intReturn = -1;
         return runResult;
     }
-
-
-
-
-
-
 
 
 
@@ -702,9 +693,6 @@ RunResult *Core::run()
         ///
         /// RMB
         ///
-
-
-
 
         /// Right mouse button pressed - Pan the map                            even in paused mode
 
@@ -939,7 +927,8 @@ RunResult *Core::run()
 
 
 
-            // Find out what iso tile you clicked on        (runs recursive function, has a limiter of how many levels deep it can go)
+            // Clicked on a Tile?
+            // Find out what iso tile you clicked on (runs recursive function, has a limiter of how many levels deep it can go)
 
 
             mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos, "");
@@ -949,8 +938,9 @@ RunResult *Core::run()
 
                 /// LMB Action!
 
-                // When you click on the left mousebutton many things can happen throughout different modes,
-                // alpha-0.2: Might need to have more consideration to MODES.
+                // Depending on what Mode the game is in when user clicks LMB
+                // the game does different things:
+
 
                 switch(lmbmode)
                 {
@@ -974,7 +964,7 @@ RunResult *Core::run()
                         grid->setVisible(mousepos);
 
                         // Find out what's under the cursor
-                        hmap->dumpEverythingAtPos(mousepos, trafficMgr,  ind1);
+                        hmap->dumpEverythingAtPos(mousepos, trafficMgr, ind1);
 
                         break;
 

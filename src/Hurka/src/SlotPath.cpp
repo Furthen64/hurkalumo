@@ -103,8 +103,9 @@ void SlotPath::dump()
 
 /// \brief take a step in the slotpath, consume a Gpix HPos
 /// consumes that step in the std::list slotPositions!
+/// \return HPos with gpix values
 // (--)
-SlotPos *SlotPath::stepAndGetPos(int steps)
+SlotPos *SlotPath::stepAndGetGpixPos(int steps)
 {
     SlotPos *workPos = nullptr;
 
@@ -116,12 +117,12 @@ SlotPos *SlotPath::stepAndGetPos(int steps)
 
         // Pop the first in the list to use it
         workPos = slotPositions->front();
-        slotPositions->pop_front(); // Destroy first element
 
+        slotPositions->pop_front(); // Destroy first element
     }
 
-    nowPos = workPos;   // Store away in the slotpath as the current position
-    return workPos;     // Also return it
+    nowPos_gpix = workPos;   // Store away in the slotpath as the current position
+    return workPos;          // Also return it
 
 }
 

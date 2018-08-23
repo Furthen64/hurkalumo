@@ -3,13 +3,12 @@
 
 
 /// REDESIGN
-// 2018-06-22 jörgen engström     #CR29  Trying to remove annoying bug... Need to have sf::renderwindow exist before allocating any sf::texture object.
+// 2018-06-22  Fat64  #CR29  Trying to remove annoying bug... Need to have sf::renderwindow exist before allocating any sf::texture object.
+// 2018-08-15  Fat64  #CR29  Bug fixed.
 
 
 
-
-
-// Always push RUNNING code
+/// Always push RUNNING code
 //
 // - If it doesn't run, just stub out the errors and make it run before pushing to a branch
 // - If that is too much to do, make a new branch
@@ -33,6 +32,7 @@ GLContextSingleton* GLContextSingleton::m_instanceSingleton = nullptr;
 int main()
 {
 
+    /// OpenGL context
     // First time you run enableFallBackContext, an sf::Context will be created,
     // so that OpenGL calls have a GL Context to work with.
     // If we only create the primary windows (main menu, game window, editor window) that gets open and closed,
@@ -46,13 +46,9 @@ int main()
     std::cout << "main: Core completed its entire lifecycle *** \n";
 
     if(lfRes == nullptr) {
-            std::cout << "ERROR main received LifecycleResult = nullptr.\n";
-            return -1;
+        std::cout << "ERROR main received LifecycleResult = nullptr.\n";
+        return -1;
     }
-
-    // For now dump output, dont react to it
-
-    lfRes->dump();
 
 
     return 0;

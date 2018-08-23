@@ -11,12 +11,12 @@ public:
 
     void drawAllSlots(sf::RenderTarget &rt, HPos *viewHPos);
     void add(SlotPos *slotpos);
-    SlotPos *stepAndGetPos(int steps);
+    SlotPos *stepAndGetGpixPos(int steps);
     void reset();
     void dump();
     bool hasValues();
 
-    SlotPos *nowPos = nullptr;
+    SlotPos *nowPos_gpix = nullptr;
     void setListOfSlotPositions(std::list<SlotPos *> *_slotPositions);
     void addListOfSlotPositions(std::list<SlotPos *> *_slotPositions);
 

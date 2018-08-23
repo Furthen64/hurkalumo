@@ -592,9 +592,6 @@ void TrafficManager::updateAll(HPos *viewHPos)
             // Find out which network it is on
             currBus->gameUpdate(currRoadnet);
 
-
-//currBus->getNowPos()->dump("          ");
-
             busnr++;
         }
 
