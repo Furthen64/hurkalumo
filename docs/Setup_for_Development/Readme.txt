@@ -42,10 +42,13 @@ WINDOWS INSTALLATION
 
 
 
-	After it's done, I move the output of the compiled SFML library source from:
+	After it's done, move the output of the compiled SFML library source from:
 	   C:\SFML_build
 	To:
-	   C:\fat64\LIBS\SFML-2.4.0fat\ 
+	   C:\fat64\LIBS\SFML_2.5.0_FAT64
+
+	
+		(or something without the fat64 stuff)
 
 
 	

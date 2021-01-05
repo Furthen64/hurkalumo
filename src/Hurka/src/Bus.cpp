@@ -79,7 +79,8 @@ void Bus::gameUpdate(RoadNetwork *roadnet)
 
         this->pos = Grid::convert_gpix_to_iso(this->pos);
 
-        std::cout << "ERROR " << cn << " gameUpdate() Make sure we get iso position too!";
+
+        // FIXME: std::cout << "ERROR " << cn << " gameUpdate() Make sure we get iso position too!";
 
 
 

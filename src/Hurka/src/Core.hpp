@@ -82,7 +82,7 @@ public:
     }
 
     int quitresult;         // See Enum RUNRESULTS
-    int intReturn = -999;       // Magic nr to know if values has been set or not (uglycode)
+    int intReturn = -999;   // Magic nr to know if values has been set or not (uglycode)
     char charReturn;
     std::string retStr1 ;   // Usually used for filename
     std::string retStr2 ;
@@ -161,9 +161,7 @@ private:
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 12;
-
-
+    int lockFPS_n = 30;
 
 
 
@@ -196,10 +194,7 @@ private:
     int dijkstraToRoad = 5;
 
 
-
-
     TextureManager *textureMgr; // Singleton!
-
     TrafficManager *trafficMgr;
     GameMatrix *gm;
     Bus *bus = nullptr;

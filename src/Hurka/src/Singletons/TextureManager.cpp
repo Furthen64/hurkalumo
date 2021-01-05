@@ -1,9 +1,5 @@
 #include "TextureManager.hpp"
-
-
-
-
-
+ 
 
 #include <iostream>
 #include <fstream>

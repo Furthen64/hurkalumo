@@ -1567,7 +1567,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1534887786 source:c:\github\lumo\src\hurka\src\core.cpp
+1535661483 source:c:\github\lumo\src\hurka\src\core.cpp
 	"Core.hpp"
 
 1534365890 source:c:\github\lumo\src\hurka\src\grid.cpp
@@ -1663,7 +1663,7 @@
 	<SFML/Graphics.hpp>
 	"TrafficManager.hpp"
 
-1534887770 source:c:\github\lumo\src\hurka\src\bus.cpp
+1535657714 source:c:\github\lumo\src\hurka\src\bus.cpp
 	"Bus.hpp"
 	"RoadNetwork.hpp"
 
@@ -1700,7 +1700,7 @@
 	"Core.hpp"
 	"Utils.hpp"
 
-1534885587 c:\github\lumo\src\hurka\src\core.hpp
+1535657729 c:\github\lumo\src\hurka\src\core.hpp
 	<stdlib.h>
 	<iostream>
 	<unordered_map>

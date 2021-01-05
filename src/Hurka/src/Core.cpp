@@ -696,10 +696,48 @@ RunResult *Core::run()
 
         /// Right mouse button pressed - Pan the map                            even in paused mode
 
+
+
+
+        // Testar nytt sätt å panorera
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        {
+            sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
+
+
+
+
+            int clickedY = mousePos_i.y;
+            int clickedX = mousePos_i.x;
+
+            int centerY = ceil(SCREEN_HEIGHT/2);
+            int centerX = ceil(SCREEN_WIDTH/2);
+
+            // Find out how far it is to that clicked position
+            int relativeY = clickedY - centerY;
+
+            // Adjust value for pan speed / mouse sensitivity and also use magic nrs for ratio of screen
+            relativeY =  ( (float) relativeY * mouseSensitivity/80 );
+
+
+            // Now use that value to move our view closer to the clicked position, the farther away the clicked position compared to center point we are, the faster we pan
+            viewHPos->gpix_y_topleft -= relativeY;
+
+
+            // Now, do x
+            int relativeX = clickedX - centerX;
+            relativeX =  ( (float) relativeX * mouseSensitivity/120 );
+            viewHPos->gpix_x_topleft -= relativeX;
+
+
+        }
+
+        /*
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
 
             // Wishlist: Break out all this panning stuff
+
 
             bool rightof = false;
             bool belowof = false;
@@ -818,6 +856,7 @@ RunResult *Core::run()
                 std::cout << ind1 << " VIEWPOS x=" << viewHPos->gpix_x_topleft << ", y=" << viewHPos->gpix_y_topleft << "    CLICKEDPOS x=" << mousePos_i.x << ", y=" << mousePos_i.y << "\n";
             }
         }
+        */
 
 
 
