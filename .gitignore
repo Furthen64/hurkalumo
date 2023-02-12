@@ -30,3 +30,7 @@ src/Hurka/obj/Debug/src/FileManager.o
 src/Hurka/obj/Debug/src/Core.o
 src/Hurka/obj/Debug/src/Bus.o
 src/Hurka/obj/Debug/src/Block.o
+hurka_vs/Debug/hurka_vs.exe
+hurka_vs/Debug/hurka_vs.pdb
+hurka_vs/.vs/*
+*.obj
