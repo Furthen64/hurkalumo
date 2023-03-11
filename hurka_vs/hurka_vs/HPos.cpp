@@ -20,13 +20,10 @@ HPos::HPos(int _y, int _x, int positionType, int typeOfElement)
         abs_iso_y = _y;
         abs_iso_x = _x;
         rel_iso_y = _y;
-        rel_iso_x = _x;
-
-
+        rel_iso_x = _x; 
 
         gpix_y_topleft = Grid::convert_iso_to_gpix_y_topleft(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, typeOfElement);
         gpix_x_topleft = Grid::convert_iso_to_gpix_x_topleft(abs_iso_y, abs_iso_x, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT, typeOfElement);
-
 
         gpix_y_middle = Grid::isoToGpixMiddleY(this, typeOfElement, 0);
         gpix_x_middle = Grid::isoToGpixMiddleX(this, typeOfElement, 0);
@@ -53,7 +50,7 @@ HPos::HPos(int _y, int _x, int positionType, int typeOfElement)
 // Defaults to the "GRID" typeOfElement
 // Simplified constructor that does Constructor Delegating to the one doing anything
 HPos::HPos(int _y, int _x, int positionType) : HPos(_y, _x, positionType, 0)
-{
+{ 
 }
 
 

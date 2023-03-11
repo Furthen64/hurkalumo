@@ -17,6 +17,8 @@
 
 struct graphNodeCompare
  {
+	// (--) fails for now, assert issue...strictly weak ordering issue?
+	/*
    bool operator()(Node* l, Node* r)
    {
        //std::cout <<    "                            l->templabel=" << l->tempLabel << ",   r->templabel= " << r->tempLabel << "\n";
@@ -24,6 +26,25 @@ struct graphNodeCompare
             return 0;
        }
        return 1;
+   }
+   */
+
+   // From google result 2023:
+	// Funkar inte heller..
+	// Testar att ändra < till >=
+	// Funkar inte heller...
+	// Uhm....
+	// att lägga till en comparator för LIKHET då fungerade det! men bara om den returnar false?
+	// LIKHET måste returnera false. annars kraschar det igen.
+   bool operator()(Node* a, Node* b) 
+   {
+	   if (a->tempLabel == b->tempLabel) {
+		   return false;
+	   }
+	   if ( a->tempLabel > b->tempLabel) {
+		   return true;
+	   }
+	   return false;
    }
  };
 

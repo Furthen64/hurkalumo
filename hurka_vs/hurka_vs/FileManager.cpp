@@ -133,7 +133,7 @@ HurkaMap *FileManager::readRegularFile(std::string fullUri, int debugLevel, Game
     }
 
     if(mapRows > gameMatrix->getRows()) {
-        std::cout << "ERROR " << cn << " file loaded is larger in height than the gamematrix allows for!\n";
+        std::cout << "ERROR " << cn << " file loaded is larger in height than the gamematrix allows for! " << mapRows << " > " << gameMatrix->getRows() << "\n";
         return nullptr;
     }
 

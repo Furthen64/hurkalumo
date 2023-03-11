@@ -58,7 +58,7 @@ private:
     Texture texture;
 
 
-    int minX = 7870;
+    int minX = 7870; // TODO what kind of magic is this
     int minY = 7870;
 
     std::string cn = "GameMatrix.cpp";

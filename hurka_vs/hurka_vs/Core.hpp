@@ -54,10 +54,9 @@ public:
     void dump()
     {
         std::cout << "lfRes:      intReturn=" << intReturn << ", lfStr1= " << lfStr1 << ", lfStr2= " << lfStr2 << ", lfStr3 = " << lfStr3 << "\n";
-
     }
 
-    int intReturn;
+    int intReturn = 0;
     std::string lfStr1;
     std::string lfStr2;
     std::string lfStr3;
@@ -81,9 +80,9 @@ public:
 
     }
 
-    int quitresult;         // See Enum RUNRESULTS
+    int quitresult = 0;     // See Enum RUNRESULTS
     int intReturn = -999;   // Magic nr to know if values has been set or not (uglycode)
-    char charReturn;
+    char charReturn = 'a';
     std::string retStr1 ;   // Usually used for filename
     std::string retStr2 ;
     std::string retStr3 ;
@@ -103,7 +102,7 @@ public:
     Core();
     ~Core();
 
-    LifecycleResult * lifecycle();
+    LifecycleResult *lifecycle();
 
     int allocateResources();
 
@@ -117,7 +116,7 @@ public:
 
     void clearResources();
 
-    void updateTraffic();
+    //void updateTraffic();
 
     void allTestsSucceeded();
 
@@ -127,7 +126,6 @@ public:
 private:
 
     /// All the Maps
-
     //std::string startmapFilename = "data\\maps\\_default_.txt";
     //std::string startmapFilename = "data\\maps\\simple.txt";
 
@@ -135,7 +133,7 @@ private:
     //std::string startmapFilename = "data\\maps\\two_roads.txt";
     //std::string startmapFilename = "data\\maps\\garden.txt";
     //std::string startmapFilename = "data\\maps\\aztec.txt";                           // Works 2018-05    but BUG with drawing the tall house.
-    //std::string startmapFilename = "data\\maps\\roadnetwork_test.txt";                // Works 2018-05
+    std::string startmapFilename = "data\\maps\\roadnetwork_test.txt";                // Crashes 2023-03-11
     //std::string startmapFilename = "data\\maps\\roadnetwork_long.txt";                // require 43x43    Works 2018-05
     //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Works 2018-05
     //std::string startmapFilename = "data\\maps\\dijkstra_test_1.txt";                 // Works!
@@ -150,18 +148,18 @@ private:
                                                                                         // 53 = very low very right
 
     //std::string startmapFilename = "data\\maps\\bus_traffic_test.txt";                // Bugs... somehow! not sure yet. 2018-05
-    std::string startmapFilename = "data\\maps\\bustest3.txt";                        //  Bugs! CR #20 buses move +1 offset on the x-axis
+    //std::string startmapFilename = "data\\maps\\bustest3.txt";                        //  Bugs! CR #20 buses move +1 offset on the x-axis
 
 
     int consoleMode = false;
 
     int runRegressionTestAndExit = false;
 
-    int debugLevel = 0;
+    int debugLevel = 2;
     int SCREEN_WIDTH = 1280;
     int SCREEN_HEIGHT = 720;
     int lockFPS = true;
-    int lockFPS_n = 30;
+    int lockFPS_n = 60;
 
 
 
@@ -206,7 +204,7 @@ private:
     FileManager *fm;
 
     bool drawGm = 1;
-    bool drawLoco = 0;
+    bool drawLoco = 1;
     bool drawBuses = 1;
     bool drawToolbar = 1;
     bool drawGrid = 1;

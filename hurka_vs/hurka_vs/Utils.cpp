@@ -214,7 +214,6 @@ std::string getFullUri(std::string relativeFilepath)
 
 	std::string cn = "Utils.cpp";
 
-	// UNTESTED:
 	TCHAR buffer[MAX_PATH] = { 0 };
 	
 	GetModuleFileName(NULL, buffer, MAX_PATH);

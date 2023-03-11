@@ -36,7 +36,7 @@ HurkaMap::HurkaMap(std::string _fullUriMapName, int **_matrix, int mtxRows, int 
 // (-+)
 int HurkaMap::indexInBlockList(HPos *blockpos)
 {
-    int debugLevel = 0;
+    int debugLevel = 2;
     int nr = 0;
     Block *workBlock = nullptr;
     int searchId1 = -1;

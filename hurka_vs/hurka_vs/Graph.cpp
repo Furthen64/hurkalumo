@@ -390,7 +390,8 @@ void Graph::resetAllNodes()
 // I have tested
 //              dijkstra_test_1.txt         (0,0) to (2,1)                          Works!
 //              dijkstra_test_1.txt         With many different heads on the graph      Nope
-//
+//              roadnetworks_test_1.txt												Nope
+// 
 // Tested also from maany points to points in my road network, and it all seems to work
 // But that was when this was a graphProj and used Vector2f... 2018-02 . Now in 2018-05
 // It doesnt work...
@@ -398,7 +399,7 @@ void Graph::resetAllNodes()
 // DO i need to put nodes so many times in the VisitedNodes? Seems like a byproduct of old code?
 //
 // BUG: 2018-05   Somehow the graph gets modified so we have a NULL downwards from (1,0) in dijkstra_test_1.txt . Super weird!
-//                SOLVED Maybe Dijkstra could do a verification of the Graph before it runs, to see if there is complete duplex connection
+//                SOLVED Maybe Dijkstra could do a verification of the Graph before it runs, to see if there is "complete duplex connection"
 //                       because that was the issue.
 // (---)
 DijkstraResult *Graph::runDijkstra(Node *startNode, Node *endNode, int debugLevel)

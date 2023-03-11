@@ -7,6 +7,7 @@
 // (-+)
 GameMatrix::GameMatrix(int _rows, int _cols)
 {
+	std::cout << "allocating GameMatrix(" << _rows << ", " << _cols << ")\n";
     rows= _rows;
     cols = _cols;
 
@@ -79,7 +80,7 @@ bool GameMatrix::isPosInsideGameMatrix(HPos *searchpos)
 
 
 
-    std::cout << "FIXME " << cn << " isPosInsideGameMatri() should make use of findTile plz\n";
+    std::cout << "FIXME " << cn << " isPosInsideGameMatrix() should make use of findTile plz\n";
     searchpos = Grid::convert_gpix_to_iso(searchpos, GRID_TEXTURE_WIDTH, GRID_TEXTURE_HEIGHT);
 
     if(searchpos == nullptr) {

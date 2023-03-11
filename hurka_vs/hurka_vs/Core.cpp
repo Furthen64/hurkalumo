@@ -91,7 +91,7 @@ LifecycleResult *Core::lifecycle()
                 txtmgr= txtmgr->getInstance();
                 retStatus = txtmgr->loadTextures();
 
-                GameMatrix *gamematrix = new GameMatrix(64,64);
+				GameMatrix* gamematrix = new GameMatrix(GAMEMATRIX_MAX_ROWS, GAMEMATRIX_MAX_COLS);
 
                 assert(retStatus == 0);
 
@@ -459,21 +459,19 @@ int Core::loadResources(std::string _mapName)
 // (-+)
 int Core::loadMap(std::string _mapName, bool fullUriProvided)
 {
-
-
     std::cout << "Loading map \"" << _mapName << "\"\n";
     if(fullUriProvided) {
         hmap = fm->readRegularFile(_mapName,debugLevel, gm);
     } else {
         hmap = fm->readRegularFile(getFullUri(_mapName),debugLevel, gm);
     }
-
-    if(hmap->fullUriMapName == "empty") { std::cout << "ERROR Could not read map " << _mapName << ", exiting!\n"; return -1;  }
-
-
+	if (hmap == NULL) {
+		std::cout << "ERROR hmap is null in loadMap()\n";
+		return -1; 
+	}
+	if(hmap->fullUriMapName == "empty") { std::cout << "ERROR Could not read map " << _mapName << ", exiting!\n"; return -1;  }
 
     return 0;
-
 }
 
 
@@ -489,8 +487,7 @@ int Core::setup(int width, int height, std::string title)
     std::cout << "\n\n\n---------------setup--------------------\n";
 
     initRandomizer();
-
-
+	 
 
     /// Parse the current situation of roads into individual road networks
 
@@ -525,7 +522,6 @@ int Core::setup(int width, int height, std::string title)
     if(status != 0) { return status; }
 
 
-
     return 0;
 }
 
@@ -546,24 +542,19 @@ int Core::setup(int width, int height, std::string title)
 
 // Called from core:lifecycle
 
-/// \brief Run - The main loop for the editor/game
+/// \brief Run - The main loop for the editor
 RunResult *Core::run()
 {
-    RunResult *runResult  = new RunResult();
-
-
+    RunResult *runResult  = new RunResult();	 
 
     std::string ind1 = "   ";
     std::string ind2 = "      ";
     std::string ind3 = "         ";
-    std::string ind4 = "            ";
-
+    std::string ind4 = "            "; 
 
     std::string userLoadFileStr = "\\data\\maps\\dijkstra1.txt";
+	
 
-
-
-    /// Prepare for Running the Main Loop
 
     // Input Control (should be own class)
     bool alreadyButtonPressed = false;
@@ -577,7 +568,6 @@ RunResult *Core::run()
 
 
     /// Main Window
-
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, desktop.bitsPerPixel), "HurkaLumo editor 0.1-alpha");
@@ -594,12 +584,10 @@ RunResult *Core::run()
 
 
     // Check OPENGL for old versions or something off
-
     if(debugLevel >=2) {
         ContextSettings settings = window.getSettings();
         std::cout << "SFML window->OpenGL version used: " << settings.majorVersion << " - " << settings.minorVersion << "\n";
     }
-
 
     if(!window.isOpen()) {
         std::cout << "ERROR " << cn << " sf::window is not open!\n";
@@ -696,16 +684,10 @@ RunResult *Core::run()
 
         /// Right mouse button pressed - Pan the map                            even in paused mode
 
-
-
-
         // Testar nytt sätt å panorera
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
             sf::Vector2i mousePos_i = sf::Mouse::getPosition( window );
-
-
-
 
             int clickedY = mousePos_i.y;
             int clickedX = mousePos_i.x;
@@ -913,8 +895,6 @@ RunResult *Core::run()
 
                 switch(tbResult)
                 {
-
-
                     case TB_NEW_FILE:
                         std::cout << "User clicked New\n";
                         runResult->intReturn = 0;
@@ -963,12 +943,8 @@ RunResult *Core::run()
             }
 
 
-
-
-
             // Clicked on a Tile?
             // Find out what iso tile you clicked on (runs recursive function, has a limiter of how many levels deep it can go)
-
 
             mousepos = grid->findTile(gm->getHRect(), mousepos, "   ", window, viewHPos, "");
 
@@ -1048,7 +1024,6 @@ RunResult *Core::run()
         }
 
         if(drawGrid) {  grid->draw(window, viewHPos); }
-
 
         if(drawLoco) {  loco->draw(window, viewHPos); }
 
